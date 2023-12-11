@@ -349,10 +349,10 @@ struct SongDetailView: View {
                 .focused($isInputActive)
             // MARK: Bottom toolbar
             if songs != nil {
-                Divider()
-                HStack {
-                    Spacer()
-                    if wordCountBool {
+                if wordCountBool {
+                    Divider()
+                    HStack {
+                        Spacer()
                         HStack {
                             if isChecked == "Words" {
                                 Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
@@ -366,11 +366,11 @@ struct SongDetailView: View {
                         }
                         .foregroundColor(Color("Color"))
                         .font(.system(size: 16).weight(.semibold))
+                        Spacer()
                     }
-                    Spacer()
+                    .padding(.horizontal)
+                    .padding(.vertical)
                 }
-                .padding(.horizontal)
-                .padding(.vertical)
             }
         }
         .navigationBarBackButtonHidden()
