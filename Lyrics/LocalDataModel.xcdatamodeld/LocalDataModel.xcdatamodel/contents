@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22221.1" systemVersion="22G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="DataFolder" representedClassName="DataFolder" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="uid" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="DataLocalUser" representedClassName="DataLocalUser" syncable="YES" codeGenerationType="class">
+        <attribute name="currentVersion" optional="YES" attributeType="String"/>
+        <attribute name="email" attributeType="String"/>
+        <attribute name="fullname" attributeType="String"/>
+        <attribute name="hasCollapsedPremium" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="hasSubscription" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="showDataUnderSong" optional="YES" attributeType="String"/>
+        <attribute name="showsExplicitSongs" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="username" attributeType="String"/>
+        <attribute name="wordCount" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="wordCountStyle" optional="YES" attributeType="String"/>
+        <relationship name="folders" toMany="YES" deletionRule="Nullify" destinationEntity="DataFolder"/>
+        <relationship name="folderSongs" toMany="YES" deletionRule="Nullify" destinationEntity="DataSong"/>
+        <relationship name="recentlyDeletedSongs" toMany="YES" deletionRule="Nullify" destinationEntity="DataRecentlyDeletedSong"/>
+        <relationship name="songs" toMany="YES" deletionRule="Nullify" destinationEntity="DataSong"/>
+    </entity>
+    <entity name="DataRecentlyDeletedSong" representedClassName="DataRecentlyDeletedSong" syncable="YES" codeGenerationType="class">
+        <attribute name="alignment" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="artist" optional="YES" attributeType="String"/>
+        <attribute name="bpm" optional="YES" attributeType="String"/>
+        <attribute name="deletedTimestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="design" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="folderId" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="key" optional="YES" attributeType="String"/>
+        <attribute name="lineSpacing" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="lyrics" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="performanceView" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="pinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="songId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="uid" attributeType="String"/>
+        <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="DataSong" representedClassName="DataSong" syncable="YES" codeGenerationType="class">
+        <attribute name="alignment" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="artist" optional="YES" attributeType="String"/>
+        <attribute name="bpm" optional="YES" attributeType="String"/>
+        <attribute name="design" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="folderId" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="key" optional="YES" attributeType="String"/>
+        <attribute name="lineSpacing" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="lyrics" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="performanceView" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="pinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="songId" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="uid" attributeType="String"/>
+        <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+</model>

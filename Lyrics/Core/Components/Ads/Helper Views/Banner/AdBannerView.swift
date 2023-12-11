@@ -1,0 +1,38 @@
+//
+//  AdBannerView.swift
+//  Lyrics
+//
+//  Created by Liam Willey on 12/6/23.
+//
+
+import SwiftUI
+
+struct AdBannerView: View {
+    @EnvironmentObject var storeKitManager: StoreKitManager
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
+    let unitId: String
+    let height: CGFloat
+    
+    var body: some View {
+        if storeKitManager.purchasedProducts.isEmpty {
+            ZStack {
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text(NSLocalizedString("loading_ads", comment: "Loading Ads..."))
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Material.regular)
+                .foregroundColor(.gray)
+                .clipShape(Capsule())
+                BannerAd(adUnitID: unitId)
+            }
+            .frame(maxHeight: height)
+        }
+    }
+}
+
+#Preview {
+    AdBannerView(unitId: "ca-app-pub-5671219068273297/1642358928", height: 50)
+}

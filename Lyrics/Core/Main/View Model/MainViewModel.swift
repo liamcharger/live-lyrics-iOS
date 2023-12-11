@@ -1,0 +1,216 @@
+//
+//  MainViewModel.swift
+//  Lyrics
+//
+//  Created by Liam Willey on 5/4/23.
+//
+
+import Foundation
+import FirebaseAuth
+import Firebase
+import SwiftUI
+import CoreData
+
+class MainViewModel: ObservableObject {
+    let notificationManager = NotificationManager()
+    var remoteConfig: RemoteConfig!
+    
+    @Published var songs: [Song] = []
+    @Published var folderSongs: [Song] = []
+    @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
+    @Published var folders: [Folder] = []
+    @Published var isLoadingFolders = true
+    @Published var isLoadingFolderSongs = true
+    @Published var isLoadingSongs = true
+    @Published var isLoadingRecentlyDeletedSongs = true
+    
+    @Published var systemDoc: SystemDoc?
+    
+    @Published var notificationStatus: NotificationStatus?
+    @Published var notification: Notification?
+    
+    let service = SongService()
+    let userService = UserService()
+    
+    init() {
+        self.fetchFolders()
+        self.fetchSystemStatus()
+    }
+    
+    func removeSongEventListener() {
+        service.removeSongEventListener()
+    }
+    
+    func removeFolderSongEventListener() {
+        service.removeFolderSongEventListener()
+    }
+    
+    func removeFolderEventListener() {
+        service.removeFolderEventListener()
+    }
+    
+    func removeRecentSongEventListener() {
+        service.removeRecentSongEventListener()
+    }
+    
+    func fetchSystemStatus() {
+        userService.fetchSystemDoc { systemDoc in
+            self.systemDoc = systemDoc
+        }
+    }
+    
+    func receivedNotificationFromFirebase(_ notification: Notification) {
+        self.notificationStatus = .firebaseNotification
+        self.notification = notification
+    }
+    
+    func fetchSongs(_ folder: Folder) {
+        service.fetchSongs(folder) { songs in
+            self.folderSongs = songs
+            self.isLoadingFolderSongs = false
+        }
+    }
+    
+    func fetchSongs() {
+        service.fetchSongs() { songs in
+            self.songs = songs
+            self.isLoadingSongs = false
+        }
+    }
+    
+    func fetchRecentlyDeletedSongs() {
+        service.fetchRecentlyDeletedSongs { songs in
+            self.recentlyDeletedSongs = songs
+            self.isLoadingRecentlyDeletedSongs = false
+        }
+    }
+    
+    func fetchNotificationStatus() {
+        remoteConfig = RemoteConfig.remoteConfig()
+        let settings = RemoteConfigSettings()
+        settings.minimumFetchInterval = 0
+        remoteConfig.configSettings = settings
+        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
+        
+        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
+            guard let configUpdate, error == nil else {
+                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
+                return
+            }
+            
+            print("Updated keys: \(configUpdate.updatedKeys)")
+            
+            self.remoteConfig.activate { changed, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                DispatchQueue.main.async {
+                    if self.remoteConfig.configValue(forKey: "currentVersion").stringValue ?? "" != self.notificationManager.getCurrentAppVersion() {
+                        self.notificationStatus = .updateAvailable
+                    }
+                }
+            }
+        }
+    }
+    
+    func fetchFolders() {
+        service.fetchFolders { folders in
+            self.folders = folders
+            self.isLoadingFolders = false
+        }
+    }
+    
+    func updateLyrics(_ song: Song, lyrics: String) {
+        service.updateLyrics(song: song, lyrics: lyrics)
+    }
+    
+    func updateLyrics(_ folder: Folder, _ song: Song, lyrics: String) {
+        service.updateLyrics(folder: folder, song: song, lyrics: lyrics)
+    }
+    
+    func updateSongOrder() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let batch = Firestore.firestore().batch()
+        for(index, song) in songs.enumerated() {
+            let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+            batch.updateData(["order": index], forDocument: songRef)
+        }
+        batch.commit() { error in
+            if let error = error {
+                print("Error updating order in Firestore: \(error.localizedDescription)")
+            } else {
+                print("Order updated in Firestore")
+            }
+        }
+    }
+    
+    func updateSongOrder(folder: Folder) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let batch = Firestore.firestore().batch()
+        for(order, song) in folderSongs.enumerated() {
+            guard let songId = song.id else { continue }
+            print(songId)
+            print(order)
+            let songRef = Firestore.firestore()
+                .collection("users")
+                .document(uid)
+                .collection("folders")
+                .document(folder.id ?? "")
+                .collection("songs")
+                .document(songId)
+            
+            batch.updateData(["order": order], forDocument: songRef)
+        }
+        
+        batch.commit { error in
+            if let error = error {
+                print("Error updating order in Firestore: \(error.localizedDescription)")
+            } else {
+                print("Order updated in Firestore")
+            }
+        }
+    }
+    
+    func updateFolderOrder() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let batch = Firestore.firestore().batch()
+        for(index, folder) in folders.enumerated() {
+            let folderRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "")
+            batch.updateData(["order": index], forDocument: folderRef)
+        }
+        batch.commit() { error in
+            if let error = error {
+                print("Error updating order in Firestore: \(error.localizedDescription)")
+            } else {
+                print("Order updated in Firestore")
+            }
+        }
+    }
+    
+    func deleteSong(_ folder: Folder, _ song: Song) {
+        service.deleteSong(folder, song)
+    }
+    
+    func deleteSong(song: RecentlyDeletedSong) {
+        service.deleteSong(song: song)
+    }
+    
+    func deleteSong(_ song: Song) {
+        service.deleteSong(song)
+    }
+    
+    func deleteFolder(_ folder: Folder) {
+        service.deleteFolder(folder)
+    }
+    
+    func restoreSong(song: RecentlyDeletedSong) {
+        service.restoreSong(song: song)
+    }
+    
+    func restoreSongToFolder(song: RecentlyDeletedSong) {
+        service.restoreSongtoFolder(song: song)
+    }
+}
