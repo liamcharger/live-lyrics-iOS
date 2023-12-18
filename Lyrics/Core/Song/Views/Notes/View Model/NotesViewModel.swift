@@ -8,7 +8,7 @@
 import Foundation
 
 class NotesViewModel: ObservableObject {
-    @Published var notes: String  = ""
+    @Published var notes: String = ""
     @Published var isLoading = true
     
     init(song: Song) {

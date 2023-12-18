@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FASwiftUI
 
 struct AlertView: View {
     let title: String
@@ -16,7 +17,7 @@ struct AlertView: View {
     var body: some View {
         VStack {
             Spacer()
-            Image(systemName: imageName)
+            FAText(iconName: "triangle-exclamation", size: 50)
                 .font(.system(size: 50).weight(.bold))
             VStack(spacing: 10) {
                 Text(title)

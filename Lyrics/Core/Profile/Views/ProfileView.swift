@@ -8,6 +8,7 @@
 import SwiftUI
 #if os(iOS)
 import BottomSheet
+import FASwiftUI
 #endif
 
 
@@ -72,7 +73,7 @@ struct ProfileView: View {
                                 HStack(spacing: 7) {
                                     Text("Change Password")
                                     Spacer()
-                                    Image(systemName: "arrow.right")
+                                    FAText(iconName: "arrow-right", size: 20)
                                         .imageScale(.medium)
                                 }
                                 .foregroundColor(Color("Color"))
@@ -126,7 +127,7 @@ struct ProfileView: View {
                                 HStack(spacing: 7) {
                                     Text("Delete Account")
                                     Spacer()
-                                    Image(systemName: "trash")
+                                    FAText(iconName: "trash-can", size: 20)
                                 }
                                 .foregroundColor(.red)
                             }

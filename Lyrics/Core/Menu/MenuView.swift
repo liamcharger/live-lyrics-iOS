@@ -8,6 +8,7 @@
 import SwiftUI
 import MessageUI
 import StoreKit
+import FASwiftUI
 
 struct MenuView: View {
     @Environment(\.presentationMode) var presMode
@@ -68,11 +69,11 @@ struct MenuView: View {
                     .padding([.top, .bottom, .trailing])
                     Spacer()
                     Button(action: {showProfileView.toggle()}) {
-                        Image(systemName: "pencil")
+                        FAText(iconName: "pen", size: 18)
                             .imageScale(.medium)
                             .padding(12)
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(Color("Color"))
+                            .font(.body.weight(.bold))
+                            .foregroundColor(.primary)
                             .background(Material.regular)
                             .clipShape(Circle())
                     }
@@ -139,7 +140,7 @@ struct MenuView: View {
                 }
                 Spacer()
                 if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-5671219068273297/9887680452", height: 50)
+                    AdBannerView(unitId: "ca-app-pub-9538983146851531/2834324540", height: 50)
                         .padding(.bottom, 6)
                 }
                 Button(action: {
@@ -151,7 +152,7 @@ struct MenuView: View {
                                 Text("Privacy Policy")
                                     .fontWeight(.semibold)
                                 Spacer()
-                                Image(systemName: "lock.doc")
+                                FAText(iconName: "files", size: 20)
                                     .font(.body.weight(.semibold))
                             }
                             .foregroundColor(Color("Color"))
@@ -179,7 +180,7 @@ struct MenuView: View {
                                 Text("Settings")
                                     .fontWeight(.semibold)
                                 Spacer()
-                                Image(systemName: "gear")
+                                FAText(iconName: "gear", size: 20)
                                     .font(.body.weight(.semibold))
                             }
                             .foregroundColor(Color("Color"))
@@ -207,7 +208,7 @@ struct MenuView: View {
                                 Text("Send Feeback")
                                     .fontWeight(.semibold)
                                 Spacer()
-                                Image(systemName: "envelope")
+                                FAText(iconName: "envelope", size: 20)
                                     .font(.body.weight(.semibold))
                             }
                             .foregroundColor(Color.white)
@@ -237,7 +238,7 @@ struct MenuView: View {
                                 Text("Logout")
                                     .fontWeight(.semibold)
                                 Spacer()
-                                Image(systemName: "arrow.forward.square")
+                                FAText(iconName: "square-arrow-right", size: 20)
                                     .font(.body.weight(.semibold))
                             }
                             .foregroundColor(Color.white)

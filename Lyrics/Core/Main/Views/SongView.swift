@@ -174,7 +174,7 @@ struct SongView: View {
                                             HStack {
                                                 VStack(alignment: .leading, spacing: 6) {
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: folder)) {
-                                                        ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "pin" : "", icon: nil, subtitleForSong: song)
+                                                        ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                             .contextMenu {
                                                                 contextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
                                                             }
@@ -251,7 +251,7 @@ struct SongView: View {
                                                     .scaleEffect(isEditing ? 1.0 : 0.7)
                                                 }
                                                 NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: folder)) {
-                                                    ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "pin.fill" : "", icon: nil, subtitleForSong: song)
+                                                    ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                         .contextMenu {
                                                             contextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
                                                         }

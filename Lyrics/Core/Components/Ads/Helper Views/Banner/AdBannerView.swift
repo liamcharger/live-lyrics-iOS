@@ -34,5 +34,5 @@ struct AdBannerView: View {
 }
 
 #Preview {
-    AdBannerView(unitId: "ca-app-pub-5671219068273297/1642358928", height: 50)
+    AdBannerView(unitId: "ca-app-pub-9538983146851531/4662411532", height: 50)
 }

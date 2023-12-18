@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FASwiftUI
 
 struct ListRowView: View {
     @EnvironmentObject var viewModel: AuthViewModel
@@ -43,8 +44,10 @@ struct ListRowView: View {
             }
             Spacer()
             if let imageName = imageName {
-                Image(systemName: imageName)
-                    .foregroundColor(.yellow)
+                if imageName != "" {
+                    FAText(iconName: imageName, size: 18)
+                        .foregroundColor(.yellow)
+                }
             }
             if let navArrow = navArrow {
                 Image(systemName: navArrow)

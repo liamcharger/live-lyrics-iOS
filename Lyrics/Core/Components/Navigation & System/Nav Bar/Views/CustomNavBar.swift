@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FASwiftUI
 
 struct CustomNavBar: View {
     @ObservedObject var mainViewModel = MainViewModel()
@@ -39,15 +40,15 @@ struct CustomNavBar: View {
             }
             Text(title)
                 .lineLimit(1)
-                .font(.system(size: 28).weight(.bold))
+                .font(.system(size: 28, design: .rounded).weight(.bold))
             Spacer()
             switch navType {
             case .HomeView:
                 Button {
                     showSheet1.toggle()
                 } label: {
-                    Image(systemName: "folder.badge.plus")
-                        .modifier(NavBarRowViewModifier()) 
+                    FAText(iconName: "folder-plus", size: 20)
+                        .modifier(NavBarRowViewModifier())
                 }
                 .sheet(isPresented: $showSheet1) {
                     NewFolderView(isDisplayed: $showSheet1)
@@ -55,7 +56,7 @@ struct CustomNavBar: View {
                 Button {
                     showSheet2.toggle()
                 } label: {
-                    Image(systemName: "square.and.pencil")
+                    FAText(iconName: "pen-to-square", size: 20)
                         .modifier(NavBarRowViewModifier())
                 }
                 .sheet(isPresented: $showSheet2) {
@@ -64,7 +65,7 @@ struct CustomNavBar: View {
                 Button {
                     showSheet3.toggle()
                 } label: {
-                    Image(systemName: "person")
+                    FAText(iconName: "user", size: 20)
                         .modifier(NavBarRowViewModifier())
                 }
                 .sheet(isPresented: $showSheet3) {
@@ -87,7 +88,7 @@ struct CustomNavBar: View {
                 Button {
                     showSheet1.toggle()
                 } label: {
-                    Image(systemName: "square.and.pencil")
+                    FAText(iconName: "pen-to-square", size: 20)
                         .modifier(NavBarRowViewModifier())
                 }
                 .sheet(isPresented: $showSheet1) {

@@ -9,8 +9,9 @@ import Foundation
 import SwiftUI
 
 let showWhatsNewKey = "com.chargertech.Lyrics.firstTimeAlertShown"
-let firstTimeAlertKey = "com.chargertech.Lyrics.firstTimeAlertShown"
+let firstTimeAlertKey = "com.chargertech.Lyrics.firstTimeAppOpened"
 let firstTimeLocalDataKey = "com.chargertech.Lyrics.firstTimeUserHasOpenedAppWithLocal"
+let showNotesDesc = "com.chargertech.Lyrics.showNotesDesc"
 
 func hasHomeButton() -> Bool {
     if let keyWindow = UIApplication.shared.windows.first {

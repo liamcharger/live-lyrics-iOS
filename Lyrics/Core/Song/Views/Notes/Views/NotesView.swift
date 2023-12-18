@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FASwiftUI
 
 struct NotesView: View {
     // Let vars
@@ -18,6 +19,9 @@ struct NotesView: View {
     @Environment(\.presentationMode) var presMode
     @ObservedObject var viewModel: NotesViewModel
     
+    // AppStorage vars
+    @AppStorage(showNotesDesc) var showNotesTip = true
+    
     init(song: Song) {
         self.song = song
         self.viewModel = NotesViewModel(song: song)
@@ -26,7 +30,7 @@ struct NotesView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 Text("Notes")
                     .font(.title.weight(.bold))
@@ -36,13 +40,15 @@ struct NotesView: View {
                         .imageScale(.medium)
                         .padding(12)
                         .font(.body.weight(.semibold))
-                        .foregroundColor(Color("Color"))
+                        .foregroundColor(.primary)
                         .background(Material.regular)
                         .clipShape(Circle())
                 }
             }
             .padding([.leading, .top, .trailing], 5)
             .padding([.leading, .top, .trailing])
+            Divider()
+                .padding(.top)
             if viewModel.isLoading {
                 VStack {
                     Spacer()
@@ -51,12 +57,59 @@ struct NotesView: View {
                 }
             } else {
                 TextEditor(text: $viewModel.notes)
-                    .onChange(of: viewModel.notes, perform: { notes in
-                        viewModel.updateNotes(song, notes: viewModel.notes)
-                    })
                     .padding(.leading)
                     .focused($isInputActive)
             }
+            if showNotesTip {
+                Divider()
+                    .padding(.bottom)
+                HStack(alignment: .top, spacing: 15) {
+                    FAText(iconName: "lightbulb-on", size: 35)
+                        .foregroundColor(.blue)
+                        .padding(.top, 5)
+
+                    VStack(alignment: .leading, spacing: 7.5) {
+                        HStack {
+                            Text("Tip")
+                                .foregroundColor(.blue)
+                                .font(.title3.weight(.semibold))
+
+                            Spacer()
+
+                            Button(action: { showNotesTip = false }) {
+                                Image(systemName: "xmark")
+                                    .imageScale(.small)
+                                    .padding(9)
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.blue)
+                                    .clipShape(Circle())
+                                    .overlay {
+                                        Circle()
+                                            .stroke(.blue, lineWidth: 2.5)
+                                    }
+                            }
+                        }
+
+                        Text(NSLocalizedString("notes_tip", comment: "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances."))
+                            .lineSpacing(1.4)
+                    }
+                    .foregroundColor(.gray)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .strokeBorder(Color.blue, lineWidth: 2.5)
+                )
+                .cornerRadius(15)
+                .padding(.horizontal)
+            }
+        }
+        .onDisappear {
+            viewModel.updateNotes(song, notes: viewModel.notes)
         }
     }
+}
+
+#Preview {
+    NotesView(song: Song.song)
 }

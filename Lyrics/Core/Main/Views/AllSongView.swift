@@ -125,7 +125,7 @@ struct AllSongView: View {
                                                         .scaleEffect(isEditing ? 1.0 : 0.7)
                                                     }
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: nil)) {
-                                                        ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "pin" : "", icon: nil, subtitleForSong: song)
+                                                        ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                             .contextMenu {
                                                                 contextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
                                                             }
@@ -204,7 +204,7 @@ struct AllSongView: View {
                                                     }
                                                 }
                                                 NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: nil)) {
-                                                    ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "pin.fill" : "", icon: nil, subtitleForSong: song)
+                                                    ListRowView(isEditing: $isEditing, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack": "", icon: nil, subtitleForSong: song)
                                                         .contextMenu {
                                                             contextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
                                                         }

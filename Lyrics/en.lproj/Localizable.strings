@@ -18,6 +18,7 @@
 "welcome" = "Welcome";
 "hello" = "Hello";
 "next" = "Next";
+"" = "";
 
 "welcome_to_lyrics" = "Welcome to Live Lyrics.";
 "new_in_live_lyrics" = "What's New in Live Lyrics.";
@@ -32,3 +33,4 @@
 "loading_ads" = "Loading ads...";
 
 "play_view_description" = "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance.";
+"notes_tip" = "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances.";

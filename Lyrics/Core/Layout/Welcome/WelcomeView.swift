@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum GridItemType {
+    case full
+    case outline
+}
+
 struct WelcomeView: View {
     // Enivronment & Object vars
     @Environment(\.presentationMode) var presMode
@@ -16,6 +21,39 @@ struct WelcomeView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     
     let persistenceController = PersistenceController()
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 80))
+    ]
+    
+    func gridItem(title: String, subtitle: String, imageName: String, type: GridItemType) -> some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Image(systemName: imageName)
+                    .font(.title.weight(.regular))
+                    .padding([.top, .leading, .trailing], 10)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.body.weight(.bold))
+                    Text(subtitle)
+                        .font(.footnote)
+                }
+                .padding(12)
+            }
+            .frame(minHeight: 170)
+            .padding(12)
+            .background(type == .full ? .blue : .clear)
+            .foregroundColor(type == .full ? .white : .blue)
+            .cornerRadius(15)
+            .background {
+                if type == .outline {
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(.blue, lineWidth: 3.5)
+                }
+            }
+            Spacer()
+        }
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -28,53 +66,17 @@ struct WelcomeView: View {
                 .padding(.horizontal, -16)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Image(systemName: "sparkles")
-                                .font(.title.weight(.regular))
-                                .padding([.top, .leading, .trailing], 10)
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text("Brand new UI!")
-                                    .font(.body.weight(.bold))
-                                Text("Completely redesigned interface for ease of access.")
-                                    .font(.footnote)
-                                    .foregroundColor(Color(.white))
-                            }
-                            .padding(12)
-                        }
-                        .frame(minHeight: 155)
-                        .padding(12)
-                        .background(.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(15)
-                        VStack(alignment: .leading) {
-                            Image(systemName: "folder")
-                                .font(.title.weight(.regular))
-                                .padding([.top, .leading, .trailing], 10)
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text("Folders")
-                                    .font(.body.weight(.bold))
-                                Text("Organize your songs with folders.")
-                                    .font(.footnote)
-                            }
-                            .padding(12)
-                        }
-                        .frame(minHeight: 160)
-                        .padding(12)
-                        .foregroundColor(.blue)
-                        .cornerRadius(15)
-                        .background {
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(.blue, lineWidth: 3.5)
-                        }
+                    HStack(spacing: 10) {
+                        gridItem(title: "Brand new UI!", subtitle: "Completely redesigned interface for ease of access.", imageName: "sparkles", type: .full)
+                        gridItem(title: "Folders", subtitle: "Organize your songs with folders.", imageName: "folder", type: .outline)
                     }
-                    .padding(.trailing, 2)
                     ItemDetailView(title: .constant("Recently Deleted"), image: .constant("trash"), subtitle: .constant("Never accidentally delete a song."))
                     ItemDetailView(title: .constant("Notes"), image: .constant("doc.text"), subtitle: .constant("Add notes to your song to keep track of things you want to remember."))
                     ItemDetailView(title: .constant("Keys"), image: .constant("music.note"), subtitle: .constant("Add a key to your songs so you never forget them."))
                     ItemDetailView(title: .constant("And More"), image: .constant("ellipsis.circle"), subtitle: .constant("Play View, new customization options, and more."))
                 }
                 .padding(.top, 20)
+                .padding(5)
             }
             Divider().padding(.horizontal, -16)
             Button(action: {

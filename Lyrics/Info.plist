@@ -16,7 +16,7 @@
 		<dict/>
 	</array>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-5671219068273297~5392395078</string>
+	<string>ca-app-pub-9538983146851531~4296607695</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSServices</key>
@@ -221,6 +221,20 @@
 			<key>SKAdNetworkIdentifier</key>
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Font Awesome 6 Brands-Regular-400.otf</string>
+		<string>Font Awesome 6 Duotone-Solid-900.otf</string>
+		<string>Font Awesome 6 Pro-Light-300.otf</string>
+		<string>Font Awesome 6 Pro-Regular-400.otf</string>
+		<string>Font Awesome 6 Pro-Solid-900.otf</string>
+		<string>Font Awesome 6 Pro-Thin-100.otf</string>
+		<string>Font Awesome 6 Sharp-Light-300.otf</string>
+		<string>Font Awesome 6 Sharp-Regular-400.otf</string>
+		<string>Font Awesome 6 Sharp-Solid-900.otf</string>
+		<string>Font Awesome 6 Sharp-Thin-100.otf</string>
+		<string>Sonorous.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

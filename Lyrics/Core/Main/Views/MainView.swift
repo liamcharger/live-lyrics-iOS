@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MobileCoreServices
+import FASwiftUI
 
 struct MainView: View {
     @ObservedObject var mainViewModel = MainViewModel()
@@ -83,6 +84,12 @@ struct MainView: View {
     var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let persistenceController = PersistenceController()
     
+    func sortedSongs(songs: [Song]) -> [Song] {
+        return songs.sorted(by: { (song1, song2) -> Bool in
+            return song1.pinned ?? false && !(song2.pinned ?? false)
+        })
+    }
+    
     func move(from source: IndexSet, to destination: Int) {
         mainViewModel.folders.move(fromOffsets: source, toOffset: destination)
         mainViewModel.updateFolderOrder()
@@ -127,6 +134,7 @@ struct MainView: View {
         }
         
         self.mainViewModel.fetchSongs()
+        self.mainViewModel.fetchFolders()
         self.mainViewModel.fetchNotificationStatus()
     }
     
@@ -136,10 +144,6 @@ struct MainView: View {
                 .onAppear {
                     mainViewModel.fetchSongs()
                     mainViewModel.fetchNotificationStatus()
-                }
-                .onDisappear {
-//                    mainViewModel.removeSongEventListener()
-                    mainViewModel.removeFolderSongEventListener()
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarHidden(true)
@@ -159,7 +163,7 @@ struct MainView: View {
             Divider()
             ScrollView {
                 if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-5671219068273297/1642358928", height: 50)
+                    AdBannerView(unitId: "ca-app-pub-9538983146851531/4662411532", height: 50)
                         .padding([.leading, .top, .trailing])
                 }
                 VStack(spacing: 22) {
@@ -263,7 +267,7 @@ struct MainView: View {
                                                     }
                                                 } label: {
                                                     HStack {
-                                                        Image(systemName: "folder")
+                                                        FAText(iconName: "folder-closed", size: 18)
                                                         Text(folder.title)
                                                             .lineLimit(1)
                                                             .multilineTextAlignment(.leading)
@@ -324,7 +328,7 @@ struct MainView: View {
                                             }
                                             if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet {
                                                 VStack {
-                                                    ForEach(mainViewModel.folderSongs, id: \.id) { song in
+                                                    ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { song in
                                                         if song.title == "noSongs" {
                                                             Text("No Songs")
                                                                 .foregroundColor(Color.gray)
@@ -333,7 +337,7 @@ struct MainView: View {
                                                                 .moveDisabled(true)
                                                         } else {
                                                             NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: folder)) {
-                                                                ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "pin.fill" : "", icon: nil, subtitleForSong: song)
+                                                                ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                                     .contextMenu {
                                                                         Button {
                                                                             selectedSong = song
@@ -377,6 +381,21 @@ struct MainView: View {
                                                                             Label("Copy", systemImage: "doc")
                                                                         }
                                                                         
+                                                                        Button {
+                                                                                if song.pinned ?? false {
+                                                                                    songViewModel.unpinSong(song)
+                                                                                } else {
+                                                                                    songViewModel.pinSong(song)
+                                                                                }
+                                                                            mainViewModel.fetchSongs(folder)
+                                                                        } label: {
+                                                                            if song.pinned ?? false {
+                                                                                Label("Unpin", systemImage: "pin.slash")
+                                                                            } else {
+                                                                                Label("Pin", systemImage: "pin")
+                                                                            }
+                                                                        }
+                                                                        
                                                                         Button(role: .destructive) {
                                                                             selectedSong = song
                                                                             showFolderSongDeleteSheet.toggle()
@@ -412,12 +431,6 @@ struct MainView: View {
                                 }
                             }
                         }
-                    }
-                    .onAppear {
-                        self.mainViewModel.fetchFolders()
-                    }
-                    .onDisappear {
-                        self.mainViewModel.removeFolderEventListener()
                     }
                     // MARK: My Songs
                     VStack {
@@ -480,7 +493,7 @@ struct MainView: View {
                                             VStack(alignment: .leading, spacing: 6) {
                                                 HStack {
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: nil)) {
-                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "pin.fill" : "", icon: nil, subtitleForSong: song)
+                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                             .contextMenu {
                                                                 songContextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
                                                             }
@@ -615,7 +628,6 @@ struct MainView: View {
                     } else {
                         songViewModel.pinSong(song)
                     }
-                    mainViewModel.fetchSongs()
                 }
             } label: {
                 if showUnpinPinButton {

@@ -16,11 +16,13 @@ struct ContentView: View {
     @State private var showWhatsNew = false
     @State private var showChangeToLocal = false
     
+//    @AppStorage(firstTimeAlertKey) var firstOpen = true
+    
     var body: some View {
         VStack {
             if !(mainViewModel.systemDoc?.isDisplayed ?? false) {
                 if showWhatsNew {
-                    ShowWhatsNew(isDisplayed: $showWhatsNew)
+                        ShowWhatsNew(isDisplayed: $showWhatsNew)
                 } else {
                     // MARK: Execute main app
                     if viewModel.userSession == nil {

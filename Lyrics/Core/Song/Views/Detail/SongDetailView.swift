@@ -7,6 +7,7 @@
 
 import SwiftUI
 import BottomSheet
+import FASwiftUI
 
 struct SongDetailView: View {
     // State vars
@@ -106,6 +107,20 @@ struct SongDetailView: View {
         }
     }
     
+    var playButton: some View {
+        Button(action: {showFullScreenView.toggle()}, label: {
+            Image(systemName: "play")
+                .padding()
+                .font(.body.weight(.semibold))
+                .foregroundColor(.blue)
+                .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(.blue, lineWidth: 2.5)
+                }
+        })
+    }
+    
     // Initialization
     init(song: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong?, wordCountStyle: String, isDefaultSong: Bool, albumData: AlbumDetailsResponse?, folder: Folder?) {
         self.songs = songs
@@ -191,33 +206,13 @@ struct SongDetailView: View {
                     if !isInputActive {
                         if songs != nil {
                                 if #available(iOS 17.0, *) {
-                                    Button(action: {showFullScreenView.toggle()}, label: {
-                                        Image(systemName: "play")
-                                            .padding()
-                                            .font(.body.weight(.semibold))
-                                            .foregroundColor(.blue)
-                                            .clipShape(Circle())
-                                            .overlay {
-                                                Circle()
-                                                    .stroke(.blue, lineWidth: 2.5)
-                                            }
-                                    })
+                                    playButton
                                     .showTip()
                                 } else {
-                                    Button(action: {showFullScreenView.toggle()}, label: {
-                                        Image(systemName: "play")
-                                            .padding()
-                                            .font(.body.weight(.semibold))
-                                            .foregroundColor(.blue)
-                                            .clipShape(Circle())
-                                            .overlay {
-                                                Circle()
-                                                    .stroke(.blue, lineWidth: 2.5)
-                                            }
-                                    })
+                                    playButton
                                 }
                             Button(action: {showNotesView.toggle()}, label: {
-                                Image(systemName: "doc.text")
+                                FAText(iconName: "book", size: 18)
                                     .modifier(NavBarButtonViewModifier())
                             })
                             .sheet(isPresented: $showNotesView) {
@@ -377,6 +372,9 @@ struct SongDetailView: View {
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            self.mainViewModel.removeSongEventListener()
+            self.mainViewModel.removeFolderSongEventListener()
+            self.mainViewModel.removeFolderEventListener()
             if #available(iOS 17, *) {
                 Task {
                     await PlayViewTip.numberOfTimesVisited.donate()
@@ -720,7 +718,7 @@ struct SongDetailView: View {
                 Label("Delete", systemImage: "trash")
             })
         } label: {
-            Image(systemName: "gear")
+            FAText(iconName: "gear", size: 18)
                 .modifier(NavBarButtonViewModifier())
         }
     }

@@ -70,6 +70,18 @@
 		E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E079AE362A81928B006C4B55 /* NewPlayViewView.swift */; };
 		E08CBE1D2A79ACD300DF1E64 /* DefaultSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08CBE1C2A79ACD300DF1E64 /* DefaultSongsView.swift */; };
 		E096E6B32AF18CC9003ADB15 /* ReorderableForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = E096E6B22AF18CC9003ADB15 /* ReorderableForEach.swift */; };
+		E0986BE62B2B4D4D00CE938B /* FASwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E0986BE52B2B4D4D00CE938B /* FASwiftUI */; };
+		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
+		E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */; };
+		E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */; };
+		E0986BF72B2B516900CE938B /* Font Awesome 6 Pro-Thin-100.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF02B2B512400CE938B /* Font Awesome 6 Pro-Thin-100.otf */; };
+		E0986BF82B2B516900CE938B /* Font Awesome 6 Pro-Light-300.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEE2B2B512400CE938B /* Font Awesome 6 Pro-Light-300.otf */; };
+		E0986BF92B2B516900CE938B /* Font Awesome 6 Sharp-Thin-100.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */; };
+		E0986BFA2B2B516900CE938B /* Font Awesome 6 Pro-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEB2B2B512300CE938B /* Font Awesome 6 Pro-Regular-400.otf */; };
+		E0986BFB2B2B516900CE938B /* Font Awesome 6 Sharp-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */; };
+		E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */; };
+		E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */; };
+		E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */; };
 		E0A567E32AE8B934007313FC /* SongSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A567E22AE8B934007313FC /* SongSettingsView.swift */; };
 		E0A567E62AE8BE13007313FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0A567E82AE8BE13007313FC /* Localizable.strings */; };
 		E0A567EC2AE8C8FC007313FC /* SongSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A567EB2AE8C8FC007313FC /* SongSettingsViewModel.swift */; };
@@ -79,6 +91,7 @@
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
+		E0B8A0F42B2B61D100BF3159 /* Sonorous.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */; };
 		E0B9242A2A1FF435000BE5B9 /* FolderRowEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */; };
 		E0BA4D432A9D2F3B0043E621 /* SongDataRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */; };
 		E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C492E42A0BDFC6002E9EA0 /* Folder.swift */; };
@@ -189,6 +202,17 @@
 		E079AE362A81928B006C4B55 /* NewPlayViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlayViewView.swift; sourceTree = "<group>"; };
 		E08CBE1C2A79ACD300DF1E64 /* DefaultSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSongsView.swift; sourceTree = "<group>"; };
 		E096E6B22AF18CC9003ADB15 /* ReorderableForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableForEach.swift; sourceTree = "<group>"; };
+		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
+		E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Solid-900.otf"; sourceTree = "<group>"; };
+		E0986BEB2B2B512300CE938B /* Font Awesome 6 Pro-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Regular-400.otf"; sourceTree = "<group>"; };
+		E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Brands-Regular-400.otf"; sourceTree = "<group>"; };
+		E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Duotone-Solid-900.otf"; sourceTree = "<group>"; };
+		E0986BEE2B2B512400CE938B /* Font Awesome 6 Pro-Light-300.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Light-300.otf"; sourceTree = "<group>"; };
+		E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Light-300.otf"; sourceTree = "<group>"; };
+		E0986BF02B2B512400CE938B /* Font Awesome 6 Pro-Thin-100.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Thin-100.otf"; sourceTree = "<group>"; };
+		E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Regular-400.otf"; sourceTree = "<group>"; };
+		E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Thin-100.otf"; sourceTree = "<group>"; };
+		E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Solid-900.otf"; sourceTree = "<group>"; };
 		E0A567E22AE8B934007313FC /* SongSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongSettingsView.swift; sourceTree = "<group>"; };
 		E0A567E72AE8BE13007313FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E0A567EB2AE8C8FC007313FC /* SongSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -198,6 +222,7 @@
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
+		E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Sonorous.otf; sourceTree = "<group>"; };
 		E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderRowEditView.swift; sourceTree = "<group>"; };
 		E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDataRowView.swift; sourceTree = "<group>"; };
 		E0C492E42A0BDFC6002E9EA0 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
@@ -250,6 +275,7 @@
 				E02735A32B1FC2B10010C77D /* GoogleMobileAds in Frameworks */,
 				E02735A02B1FBB4A0010C77D /* FirebaseRemoteConfigSwift in Frameworks */,
 				E02735942B1FBB4A0010C77D /* FirebaseAnalyticsSwift in Frameworks */,
+				E0986BE62B2B4D4D00CE938B /* FASwiftUI in Frameworks */,
 				E02735982B1FBB4A0010C77D /* FirebaseFirestore in Frameworks */,
 				E027359A2B1FBB4A0010C77D /* FirebaseFirestoreSwift in Frameworks */,
 				E027359E2B1FBB4A0010C77D /* FirebaseRemoteConfig in Frameworks */,
@@ -389,6 +415,7 @@
 		E042474C2A02EF4E00CA48B3 /* Lyrics */ = {
 			isa = PBXGroup;
 			children = (
+				E0986BE92B2B50FC00CE938B /* Resources */,
 				E050D15C2A03035F004CC45E /* Extensions */,
 				E04247A92A02F6B500CA48B3 /* Service */,
 				E04247A42A02F6A400CA48B3 /* Utils */,
@@ -401,6 +428,7 @@
 				E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */,
 				E00E845E2B225C1000573A9F /* InAppPurchases.plist */,
 				E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */,
+				E0986BE72B2B50C400CE938B /* icons.json */,
 				E00E845B2B22290100573A9F /* Live Lyrics.storekit */,
 				E04247532A02EF4F00CA48B3 /* Lyrics.entitlements */,
 				E04247542A02EF4F00CA48B3 /* Preview Content */,
@@ -671,6 +699,32 @@
 				E079AE362A81928B006C4B55 /* NewPlayViewView.swift */,
 			);
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		E0986BE92B2B50FC00CE938B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E0986BF32B2B512500CE938B /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E0986BF32B2B512500CE938B /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */,
+				E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */,
+				E0986BEE2B2B512400CE938B /* Font Awesome 6 Pro-Light-300.otf */,
+				E0986BEB2B2B512300CE938B /* Font Awesome 6 Pro-Regular-400.otf */,
+				E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */,
+				E0986BF02B2B512400CE938B /* Font Awesome 6 Pro-Thin-100.otf */,
+				E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */,
+				E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */,
+				E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */,
+				E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */,
+				E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		E0A567E12AE8B62F007313FC /* Settings */ = {
@@ -984,6 +1038,7 @@
 				E027359D2B1FBB4A0010C77D /* FirebaseRemoteConfig */,
 				E027359F2B1FBB4A0010C77D /* FirebaseRemoteConfigSwift */,
 				E02735A22B1FC2B10010C77D /* GoogleMobileAds */,
+				E0986BE52B2B4D4D00CE938B /* FASwiftUI */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1062,6 +1117,7 @@
 				E0600D032A8BD28C0040ECFB /* XCRemoteSwiftPackageReference "Alamofire" */,
 				E02735902B1FBB4A0010C77D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E02735A12B1FC2B10010C77D /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				E0986BE42B2B4D4D00CE938B /* XCRemoteSwiftPackageReference "FASwiftUI" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1079,11 +1135,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */,
+				E0B8A0F42B2B61D100BF3159 /* Sonorous.otf in Resources */,
+				E0986BFA2B2B516900CE938B /* Font Awesome 6 Pro-Regular-400.otf in Resources */,
+				E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */,
 				E00E845F2B225C1000573A9F /* InAppPurchases.plist in Resources */,
 				E01EB4452B20CA3A009C48F2 /* remote_config_defaults.plist in Resources */,
+				E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */,
+				E0986BF72B2B516900CE938B /* Font Awesome 6 Pro-Thin-100.otf in Resources */,
 				E04247562A02EF4F00CA48B3 /* Preview Assets.xcassets in Resources */,
+				E0986BF82B2B516900CE938B /* Font Awesome 6 Pro-Light-300.otf in Resources */,
+				E0986BF92B2B516900CE938B /* Font Awesome 6 Sharp-Thin-100.otf in Resources */,
+				E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */,
+				E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */,
+				E0986BFB2B2B516900CE938B /* Font Awesome 6 Sharp-Regular-400.otf in Resources */,
 				E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */,
 				E0A567E62AE8BE13007313FC /* Localizable.strings in Resources */,
+				E0986BE82B2B50C400CE938B /* icons.json in Resources */,
 				E04247522A02EF4F00CA48B3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1622,6 +1690,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		E0986BE42B2B4D4D00CE938B /* XCRemoteSwiftPackageReference "FASwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattmaddux/FASwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1679,6 +1755,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E0600D032A8BD28C0040ECFB /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		E0986BE52B2B4D4D00CE938B /* FASwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0986BE42B2B4D4D00CE938B /* XCRemoteSwiftPackageReference "FASwiftUI" */;
+			productName = FASwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
