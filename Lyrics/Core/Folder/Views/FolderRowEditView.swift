@@ -43,7 +43,7 @@ struct FolderRowEditView: View {
             HStack(alignment: .center, spacing: 10) {
                 // MARK: User info
                 Text("Edit Folder")
-                    .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 SheetCloseButton(isPresented: $showProfileView)
             }

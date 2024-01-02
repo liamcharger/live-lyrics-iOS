@@ -25,6 +25,7 @@ struct NewFolderView: View {
             HStack {
                 Text("Enter a name for your folder.")
                     .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)

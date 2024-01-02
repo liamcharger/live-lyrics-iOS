@@ -54,7 +54,7 @@ struct ProfileView: View {
             HStack(alignment: .center) {
                 // MARK: User info
                 Text("Edit Profile")
-                    .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 SheetCloseButton(isPresented: $showProfileView)
             }

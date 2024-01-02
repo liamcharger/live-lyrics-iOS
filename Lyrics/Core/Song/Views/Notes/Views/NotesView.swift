@@ -33,7 +33,7 @@ struct NotesView: View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 Text("Notes")
-                    .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {presMode.wrappedValue.dismiss()}) {
                     Image(systemName: "xmark")

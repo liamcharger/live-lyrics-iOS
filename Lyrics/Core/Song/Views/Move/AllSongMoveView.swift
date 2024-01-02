@@ -8,6 +8,7 @@
 import SwiftUI
 #if os(iOS)
 import BottomSheet
+import FASwiftUI
 #endif
 
 struct AllSongMoveView: View {
@@ -41,12 +42,12 @@ struct AllSongMoveView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
                 // MARK: User info
                 Text("Move \"\(songTitle)\"")
-                    .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {showNewFolderView = true}) {
                     Image(systemName: "plus")
@@ -63,8 +64,9 @@ struct AllSongMoveView: View {
                 SheetCloseButton(isPresented: $showProfileView)
             }
             .padding([.leading, .top, .trailing])
+            .padding(.bottom, 8)
             .padding(8)
-            Spacer()
+            Divider()
             if mainViewModel.folders.isEmpty {
                 VStack {
                     Spacer()
@@ -77,7 +79,7 @@ struct AllSongMoveView: View {
                 }
             } else {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 15) {
+                    VStack(alignment: .leading) {
                         ForEach(mainViewModel.folders) { folder in
                             if folder.title == "noFolders" {
                                 Text("No Folders")
@@ -98,13 +100,23 @@ struct AllSongMoveView: View {
                                     }
                                 }
                                 }, label: {
-                                    RowView(title: folder.title, subtitle: nil, trackId: nil, id: nil, isExplicit: nil, isLoading: .constant(false))
+                                    HStack {
+                                        FAText(iconName: "folder-closed", size: 18)
+                                        Text(folder.title)
+                                            .lineLimit(1)
+                                            .multilineTextAlignment(.leading)
+                                        Spacer()
+                                    }
+                                    .padding()
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Capsule())
                                 })
                             }
                         }
                         Spacer()
                     }
-                    .padding(.horizontal)
+                    .padding()
                 }
             }
         }

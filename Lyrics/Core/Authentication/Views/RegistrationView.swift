@@ -38,7 +38,7 @@ struct RegistrationView: View {
                 // MARK: Navbar
                 HStack(alignment: .center, spacing: 10) {
                     Text("Sign Up")
-                        .font(.system(size: 26).weight(.bold))
+                        .font(.system(size: 28, design: .rounded).weight(.bold))
                     Spacer()
                     Button(action: {presMode.wrappedValue.dismiss()}) {
                         Image(systemName: "xmark")

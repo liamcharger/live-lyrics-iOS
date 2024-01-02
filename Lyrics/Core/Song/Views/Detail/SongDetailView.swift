@@ -313,7 +313,7 @@ struct SongDetailView: View {
                 .padding(.top, 10)
                 HStack(alignment: .center, spacing: 8) {
                     Text(title)
-                        .font(.system(size: 23).weight(.bold))
+                        .font(.system(size: 24, design: .rounded).weight(.bold))
                         .lineLimit(1).truncationMode(.tail)
                     Spacer()
                     Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
@@ -707,11 +707,6 @@ struct SongDetailView: View {
             }, label: {
                 Label("Edit", systemImage: "pencil")
             })
-            //            Button(action: {
-            //                showSettingsView.toggle()
-            //            }, label: {
-            //                Label("More", systemImage: "ellipsis")
-            //            })
             Button(role: .destructive, action: {
                 showDeleteSheet.toggle()
             }, label: {

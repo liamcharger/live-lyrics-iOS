@@ -48,7 +48,7 @@ struct NewSongView: View {
         VStack {
             HStack {
                 Text("Enter a name for your song.")
-                    .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)

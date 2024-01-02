@@ -54,7 +54,7 @@ struct SettingsView: View {
             HStack(alignment: .center, spacing: 10) {
                 // MARK: User info
                 Text("Settings")
-                    .font(.title.weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {presMode.wrappedValue.dismiss()}) {
                     Image(systemName: "xmark")

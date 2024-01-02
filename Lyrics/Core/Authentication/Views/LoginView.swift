@@ -37,7 +37,7 @@ struct LoginView: View {
             // MARK: Header View
             HStack(spacing: 8) {
                 Text("Login")
-                    .font(.system(size: 26).weight(.bold))
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
             }
             Spacer()

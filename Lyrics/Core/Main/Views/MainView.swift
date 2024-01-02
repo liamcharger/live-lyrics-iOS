@@ -8,11 +8,15 @@
 import SwiftUI
 import MobileCoreServices
 import FASwiftUI
+#if os(iOS)
+import BottomSheet
+#endif
 
 struct MainView: View {
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var networkManager = NetworkManager()
+    @ObservedObject var sortViewModel = SortViewModel()
     @ObservedObject var notificationManager = NotificationManager()
     
     @AppStorage(firstTimeLocalDataKey) var firstTimeLocalData: Bool = true
@@ -45,10 +49,9 @@ struct MainView: View {
     @State var showSongSearch = false
     @State var showFolderSearch = false
     @State var isLoadingFolderSongs = false
-    
     @State var displayFolderSongsSheet = false
-    
     @State var openedFolder = false
+    @State var showSortSheet = false
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
@@ -56,6 +59,8 @@ struct MainView: View {
     @State var notificationStatus: NotificationStatus?
     
     @State var selectedFolder: Folder?
+    
+    @State var sortSelection: SortSelectionEnum = .noSelection
     
     var searchableFolders: [Folder] {
         if folderSearchText.isEmpty {
@@ -70,17 +75,44 @@ struct MainView: View {
     var searchableSongs: [Song] {
         if songSearchText.isEmpty {
             return mainViewModel.songs.sorted(by: { (song1, song2) -> Bool in
-                return song1.pinned ?? false && !(song2.pinned ?? false)
+                switch sortSelection {
+                case .noSelection:
+                    return false
+                case .name:
+                    return song1.title < song2.title
+                case .artist:
+                    return song1.artist ?? "" < song2.artist ?? ""
+                case .key:
+                    return song1.key ?? "" < song2.key ?? ""
+                case .dateCreated:
+                    return song1.timestamp < song2.timestamp
+                case .pins:
+                    return song1.pinned ?? false && !(song2.pinned ?? false)
+                }
             })
         } else {
             let lowercasedQuery = songSearchText.lowercased()
             return mainViewModel.songs.sorted(by: { (song1, song2) -> Bool in
-                return song1.pinned ?? false && !(song2.pinned ?? false)
-            }).filter ({
+                switch sortSelection {
+                case .noSelection:
+                    return false
+                case .name:
+                    return song1.title < song2.title
+                case .artist:
+                    return song1.artist ?? "" < song2.artist ?? ""
+                case .key:
+                    return song1.key ?? "" < song2.key ?? ""
+                case .dateCreated:
+                    return song1.timestamp < song2.timestamp
+                case .pins:
+                    return song1.pinned ?? false && !(song2.pinned ?? false)
+                }
+            }).filter {
                 $0.title.lowercased().contains(lowercasedQuery)
-            })
+            }
         }
     }
+
     var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let persistenceController = PersistenceController()
     
@@ -144,6 +176,10 @@ struct MainView: View {
                 .onAppear {
                     mainViewModel.fetchSongs()
                     mainViewModel.fetchNotificationStatus()
+                    
+                    sortViewModel.loadFromUserDefaults { sortSelection in
+                        self.sortSelection = sortSelection
+                    }
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarHidden(true)
@@ -184,9 +220,9 @@ struct MainView: View {
                     VStack {
                         ListHeaderView(title: "Songs")
                         if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" || authViewModel.currentUser?.id ?? "" == "0ePGAEVPeGeuUKeAdoezprewzDt1" || authViewModel.currentUser?.id ?? "" == "GqFBjNFXsjVtzGd8mDXNO4Xm6Yf1" {
-//                            NavigationLink(destination: DefaultSongsView()) {
-//                                ListRowView(isEditing: $isEditingSongs, title: "All Songs", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
-//                            }
+                            //                            NavigationLink(destination: DefaultSongsView()) {
+                            //                                ListRowView(isEditing: $isEditingSongs, title: "All Songs", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
+                            //                            }
                         }
                         NavigationLink(destination: {
                             RecentlyDeletedView()
@@ -195,7 +231,7 @@ struct MainView: View {
                         }
                     }
                     // MARK: Tools
-//                    ToolsView()
+                    //                    ToolsView()
                     // MARK: Folders
                     VStack {
                         VStack {
@@ -215,13 +251,13 @@ struct MainView: View {
                                         .clipShape(Circle())
                                         .font(.footnote.weight(.bold))
                                 }
-//                                Button {
-//                                    withAnimation(.bouncy(extraBounce: 0.1)) {
-//                                        isEditingFolders.toggle()
-//                                    }
-//                                } label: {
-//                                    ListEditButtonView(isEditing: $isEditingFolders)
-//                                }
+                                //                                Button {
+                                //                                    withAnimation(.bouncy(extraBounce: 0.1)) {
+                                //                                        isEditingFolders.toggle()
+                                //                                    }
+                                //                                } label: {
+                                //                                    ListEditButtonView(isEditing: $isEditingFolders)
+                                //                                }
                                 Button {
                                     withAnimation(.bouncy(extraBounce: 0.1)) {
                                         isFoldersCollapsed.toggle()
@@ -232,7 +268,7 @@ struct MainView: View {
                                         .foregroundColor(Color.blue)
                                         .background(Material.regular)
                                         .clipShape(Circle())
-                                        .font(.footnote.weight(.bold))
+                                        .font(.system(size: 18).weight(.medium))
                                 }
                                 .rotationEffect(Angle(degrees: isFoldersCollapsed ? 90 : 0))
                             }
@@ -245,7 +281,7 @@ struct MainView: View {
                             LoadingView()
                         } else {
                             if !isFoldersCollapsed {
-                               ForEach(searchableFolders) { folder  in
+                                ForEach(searchableFolders) { folder  in
                                     if folder.title == "noFolders" {
                                         Text("No Folders")
                                             .foregroundColor(Color.gray)
@@ -263,7 +299,7 @@ struct MainView: View {
                                                             openFolder(folder)
                                                         }
                                                     } else {
-                                                       openFolder(folder)
+                                                        openFolder(folder)
                                                     }
                                                 } label: {
                                                     HStack {
@@ -357,23 +393,23 @@ struct MainView: View {
                                                                         Menu {
                                                                             Button {
                                                                                 selectedSong = song
-                                                            #if os(iOS)
+#if os(iOS)
                                                                                 let pasteboard = UIPasteboard.general
                                                                                 pasteboard.string = selectedSong?.title
-                                                            #else
+#else
                                                                                 copyToClipboard(text: selectedSong?.title ?? "")
-                                                            #endif
+#endif
                                                                             } label: {
                                                                                 Label("Copy Title", systemImage: "textformat")
                                                                             }
                                                                             Button {
                                                                                 selectedSong = song
-                                                            #if os(iOS)
+#if os(iOS)
                                                                                 let pasteboard = UIPasteboard.general
                                                                                 pasteboard.string = selectedSong?.lyrics
-                                                            #else
+#else
                                                                                 copyToClipboard(text: selectedSong?.lyrics ?? "")
-                                                            #endif
+#endif
                                                                             } label: {
                                                                                 Label("Copy Lyrics", systemImage: "doc.plaintext")
                                                                             }
@@ -382,11 +418,11 @@ struct MainView: View {
                                                                         }
                                                                         
                                                                         Button {
-                                                                                if song.pinned ?? false {
-                                                                                    songViewModel.unpinSong(song)
-                                                                                } else {
-                                                                                    songViewModel.pinSong(song)
-                                                                                }
+                                                                            if song.pinned ?? false {
+                                                                                songViewModel.unpinSong(song)
+                                                                            } else {
+                                                                                songViewModel.pinSong(song)
+                                                                            }
                                                                             mainViewModel.fetchSongs(folder)
                                                                         } label: {
                                                                             if song.pinned ?? false {
@@ -435,7 +471,7 @@ struct MainView: View {
                     // MARK: My Songs
                     VStack {
                         VStack {
-                            HStack {
+                            HStack(spacing: 3) {
                                 ListHeaderView(title: "My Songs")
                                 Spacer()
                                 Button {
@@ -451,13 +487,35 @@ struct MainView: View {
                                         .clipShape(Circle())
                                         .font(.footnote.weight(.bold))
                                 }
-//                                Button {
-//                                    withAnimation(.bouncy(extraBounce: 0.1)) {
-//                                        isEditingSongs.toggle()
-//                                    }
-//                                } label: {
-//                                    ListEditButtonView(isEditing: $isEditingSongs)
-//                                }
+                                //                                Button {
+                                //                                    withAnimation(.bouncy(extraBounce: 0.1)) {
+                                //                                        isEditingSongs.toggle()
+                                //                                    }
+                                //                                } label: {
+                                //                                    ListEditButtonView(isEditing: $isEditingSongs)
+                                //                                }
+                                Button {
+                                    showSortSheet.toggle()
+                                } label: {
+                                    if sortSelection == .noSelection {
+                                        Image(systemName: "line.3.horizontal.decrease")
+                                            .padding(12)
+                                            .foregroundColor(Color.blue)
+                                            .background(Material.regular)
+                                            .clipShape(Circle())
+                                            .font(.system(size: 18).weight(.bold))
+                                    } else {
+                                        Image(systemName: "line.3.horizontal.decrease")
+                                            .padding(12)
+                                            .foregroundColor(Color.white)
+                                            .background(Color.blue)
+                                            .clipShape(Circle())
+                                            .font(.system(size: 18).weight(.bold))
+                                    }
+                                }
+                                .bottomSheet(isPresented: $showSortSheet, detents: [.medium()]) {
+                                    SortView(isPresented: $showSortSheet, sortSelection: $sortSelection)
+                                }
                                 Button {
                                     withAnimation(.bouncy(extraBounce: 0.1)) {
                                         self.isSongsCollapsed.toggle()
@@ -468,7 +526,7 @@ struct MainView: View {
                                         .foregroundColor(Color.blue)
                                         .background(Material.regular)
                                         .clipShape(Circle())
-                                        .font(.footnote.weight(.bold))
+                                        .font(.system(size: 18).weight(.medium))
                                 }
                                 .rotationEffect(Angle(degrees: isSongsCollapsed ? 90 : 0))
                             }

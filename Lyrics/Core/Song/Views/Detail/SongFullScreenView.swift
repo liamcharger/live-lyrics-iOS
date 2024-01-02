@@ -148,7 +148,7 @@ struct SongFullScreenView: View {
                             .font(.title2.weight(.bold))
                             .lineLimit(1).truncationMode(.tail)
                         Spacer()
-                        Text("Key: " + key == "" ? "Not Set" : song.key ?? "Not Set")
+                        Text("Key: " + key == "" ? "Not Set" : key)
                             .foregroundColor(Color.gray)
                             .padding(.trailing, 6)
                         SheetCloseButton(isPresented: $dismiss)

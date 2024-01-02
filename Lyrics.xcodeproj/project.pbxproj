@@ -62,6 +62,8 @@
 		E0600D072A8C0BAE0040ECFB /* SongDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0600D062A8C0BAE0040ECFB /* SongDataView.swift */; };
 		E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B72A94BB5200ECB31F /* NotificationManager.swift */; };
 		E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B92A94C1DD00ECB31F /* SystemDoc.swift */; };
+		E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */; };
+		E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20E2B449E4500F035F7 /* SortViewModel.swift */; };
 		E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77832A17CAA50032332F /* EditPasswordView.swift */; };
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
@@ -94,6 +96,7 @@
 		E0B8A0F42B2B61D100BF3159 /* Sonorous.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */; };
 		E0B9242A2A1FF435000BE5B9 /* FolderRowEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */; };
 		E0BA4D432A9D2F3B0043E621 /* SongDataRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */; };
+		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C492E42A0BDFC6002E9EA0 /* Folder.swift */; };
 		E0CA85302B081D5100188CD0 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA85142B081D5100188CD0 /* AlertView.swift */; };
 		E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA85162B081D5100188CD0 /* ListRowView.swift */; };
@@ -194,6 +197,8 @@
 		E0600D062A8C0BAE0040ECFB /* SongDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDataView.swift; sourceTree = "<group>"; };
 		E06076B72A94BB5200ECB31F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E06076B92A94C1DD00ECB31F /* SystemDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDoc.swift; sourceTree = "<group>"; };
+		E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortSelectionEnum.swift; sourceTree = "<group>"; };
+		E065D20E2B449E4500F035F7 /* SortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewModel.swift; sourceTree = "<group>"; };
 		E06D77832A17CAA50032332F /* EditPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordView.swift; sourceTree = "<group>"; };
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
@@ -225,6 +230,7 @@
 		E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Sonorous.otf; sourceTree = "<group>"; };
 		E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderRowEditView.swift; sourceTree = "<group>"; };
 		E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDataRowView.swift; sourceTree = "<group>"; };
+		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		E0C492E42A0BDFC6002E9EA0 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		E0C492E62A0BE552002E9EA0 /* SongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongView.swift; sourceTree = "<group>"; };
 		E0CA85142B081D5100188CD0 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
@@ -554,6 +560,7 @@
 		E045BE212AF991FD00FC3EF1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				E065D20A2B449BEA00F035F7 /* Sort */,
 				E045BE222AF992FE00FC3EF1 /* ToolsView.swift */,
 			);
 			path = Components;
@@ -646,6 +653,24 @@
 				E05C98612A4A2B8000AA6286 /* ThesaurusView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E065D20A2B449BEA00F035F7 /* Sort */ = {
+			isa = PBXGroup;
+			children = (
+				E065D20D2B449E3A00F035F7 /* ViewModel */,
+				E0C078272B4463FB00F91287 /* SortView.swift */,
+				E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */,
+			);
+			path = Sort;
+			sourceTree = "<group>";
+		};
+		E065D20D2B449E3A00F035F7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E065D20E2B449E4500F035F7 /* SortViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		E06D77802A17B4240032332F /* Settings */ = {
@@ -1187,6 +1212,7 @@
 				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,
 				E04247B32A02F6DF00CA48B3 /* User.swift in Sources */,
+				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
 				E078B05A2AA61F48006C6CBE /* ChangeLogicView.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
 				E0CC33212A04064500CC38C6 /* SongService.swift in Sources */,
@@ -1249,11 +1275,13 @@
 				E0CA853F2B081D5100188CD0 /* ListHeaderView.swift in Sources */,
 				E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */,
 				E0CA85412B081D5100188CD0 /* NotificationRowView.swift in Sources */,
+				E0C078282B4463FB00F91287 /* SortView.swift in Sources */,
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
 				E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */,
 				E0CA85382B081D5100188CD0 /* Modifers.swift in Sources */,
 				E0CA85372B081D5100188CD0 /* NavBarEnum.swift in Sources */,
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
+				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
 				E0B9242A2A1FF435000BE5B9 /* FolderRowEditView.swift in Sources */,
 				E0B02B952AF572F8002E10D4 /* TipKitResources.swift in Sources */,
 				E04247992A02F5FB00CA48B3 /* LoginView.swift in Sources */,
