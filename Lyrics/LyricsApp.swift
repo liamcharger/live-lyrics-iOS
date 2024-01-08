@@ -8,9 +8,15 @@ import TipKit
 
 @main
 struct LyricsApp: App {
+    @Environment(\.scenePhase) var phase
+    
     @StateObject var viewModel = AuthViewModel()
     @StateObject var storeKitManager = StoreKitManager()
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    @AppStorage(showNewSongKey) var showNewSong = false
+    @AppStorage(showNewFolderKey) var showNewFolder = false
     
     init() {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
@@ -22,6 +28,27 @@ struct LyricsApp: App {
             ContentView()
                 .environmentObject(viewModel)
                 .environmentObject(storeKitManager)
+                .onChange(of: phase) { phase in
+                    switch phase {
+                    case .background:
+                        QuickAction.addQuickItems()
+                    case .inactive:
+                        break
+                    case .active:
+                        switch QuickAction.selectedAction?.type {
+                        case "new_song":
+                            showNewSong = true
+                        case "new_folder":
+                            showNewSong = true
+                        case .none:
+                            break
+                        case .some(_):
+                            break
+                        }
+                    default:
+                        break
+                    }
+                }
                 .task {
                     if #available(iOS 17, *) {
                         do {
@@ -80,5 +107,33 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for remote notifications:", error.localizedDescription)
+    }
+    
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        if let selectedAction = options.shortcutItem {
+            QuickAction.selectedAction = selectedAction
+        }
+        let sceneConfiguration = UISceneConfiguration (name: "Quick Action Scene", sessionRole: connectingSceneSession.role)
+        sceneConfiguration.delegateClass = QuickActionSceneDelegate.self
+        return sceneConfiguration
+    }
+}
+
+class QuickActionSceneDelegate: UIResponder, UIWindowSceneDelegate {
+    func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        QuickAction.selectedAction = shortcutItem
+    }
+}
+
+enum QuickAction {
+    static var selectedAction: UIApplicationShortcutItem?
+    
+    static var shortcutItems = [
+        UIApplicationShortcutItem(type: "new_folder", localizedTitle: "New Folder", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(systemImageName: "folder.badge.plus")),
+        UIApplicationShortcutItem(type: "new_song", localizedTitle: "New Song", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(systemImageName: "square.and.pencil"))
+    ]
+    
+    static func addQuickItems() {
+        UIApplication.shared.shortcutItems = QuickAction.shortcutItems
     }
 }

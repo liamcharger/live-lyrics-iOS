@@ -16,14 +16,12 @@ struct ContentView: View {
     @State private var showWhatsNew = false
     @State private var showChangeToLocal = false
     
-//    @AppStorage(firstTimeAlertKey) var firstOpen = true
-    
     var body: some View {
         VStack {
-            if !(mainViewModel.systemDoc?.isDisplayed ?? false) {
-                if showWhatsNew {
-                        ShowWhatsNew(isDisplayed: $showWhatsNew)
-                } else {
+            if showWhatsNew {
+                ShowWhatsNew(isDisplayed: $showWhatsNew)
+            } else {
+                if !(mainViewModel.systemDoc?.isDisplayed ?? false) {
                     // MARK: Execute main app
                     if viewModel.userSession == nil {
                         LoginView()
@@ -33,16 +31,13 @@ struct ContentView: View {
                             .environmentObject(viewModel)
                             .environmentObject(storeKitManager)
                     }
-                }
-            } else {
-                if let systemDoc = mainViewModel.systemDoc {
-                    AlertView(title: systemDoc.title ?? "Error", message: systemDoc.subtitle ?? "An unknown error has occured. Please try again later.", imageName: systemDoc.imageName ?? "exclamationmark.triangle", buttonText: systemDoc.buttonText ?? NSLocalizedString("continue", comment: "Continue"))
+                } else {
+                    if let systemDoc = mainViewModel.systemDoc {
+                        AlertView(title: systemDoc.title ?? "Error", message: systemDoc.subtitle ?? "An unknown error has occured. Please try again later.", imageName: systemDoc.imageName ?? "exclamationmark.triangle", buttonText: systemDoc.buttonText ?? NSLocalizedString("continue", comment: "Continue"))
+                    }
                 }
             }
         }
-//        .sheet(isPresented: $showWhatsNew) {
-//            WelcomeView()
-//        }
         .onAppear {
             notificationManager.checkForUpdate { isNewVersion in
                 if isNewVersion {
@@ -53,7 +48,6 @@ struct ContentView: View {
         }
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

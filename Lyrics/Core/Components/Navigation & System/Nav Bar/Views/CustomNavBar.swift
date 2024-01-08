@@ -24,7 +24,9 @@ struct CustomNavBar: View {
     @State var showSheet1 = false
     @State var showSheet2 = false
     @State var showSheet3 = false
-    @State var showSheet4 = false
+    
+    @AppStorage(showNewSongKey) var showNewSong = false
+    @AppStorage(showNewFolderKey) var showNewFolder = false
     
     var body: some View {
         HStack(spacing: 8) {
@@ -50,7 +52,7 @@ struct CustomNavBar: View {
                     FAText(iconName: "folder-plus", size: 20)
                         .modifier(NavBarRowViewModifier())
                 }
-                .sheet(isPresented: $showSheet1) {
+                .sheet(isPresented: $showNewFolder) {
                     NewFolderView(isDisplayed: $showSheet1)
                 }
                 Button {
@@ -59,8 +61,8 @@ struct CustomNavBar: View {
                     FAText(iconName: "pen-to-square", size: 20)
                         .modifier(NavBarRowViewModifier())
                 }
-                .sheet(isPresented: $showSheet2) {
-                    NewSongView(isDisplayed: $showSheet2, folder: nil)
+                .sheet(isPresented: $showNewSong) {
+                    NewSongView(isDisplayed: $showNewSong, folder: nil)
                 }
                 Button {
                     showSheet3.toggle()

@@ -20,7 +20,7 @@ struct NotesView: View {
     @ObservedObject var viewModel: NotesViewModel
     
     // AppStorage vars
-    @AppStorage(showNotesDesc) var showNotesTip = true
+    @AppStorage(showNotesDescKey) var showNotesTip = true
     
     init(song: Song) {
         self.song = song

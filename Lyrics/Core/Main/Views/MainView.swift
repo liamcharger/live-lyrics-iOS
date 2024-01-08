@@ -19,8 +19,6 @@ struct MainView: View {
     @ObservedObject var sortViewModel = SortViewModel()
     @ObservedObject var notificationManager = NotificationManager()
     
-    @AppStorage(firstTimeLocalDataKey) var firstTimeLocalData: Bool = true
-    
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
     
@@ -32,8 +30,6 @@ struct MainView: View {
     @State var selectedSong: Song?
     
     @State var showMenu = false
-    @State var showNewSong = false
-    @State var showNewFolder = false
     @State var showDeleteSheet = false
     @State var showEditSheet = false
     @State var showFolderSongDeleteSheet = false
@@ -103,7 +99,7 @@ struct MainView: View {
                 case .key:
                     return song1.key ?? "" < song2.key ?? ""
                 case .dateCreated:
-                    return song1.timestamp < song2.timestamp
+                    return song1.timestamp > song2.timestamp
                 case .pins:
                     return song1.pinned ?? false && !(song2.pinned ?? false)
                 }

@@ -93,7 +93,6 @@
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
-		E0B8A0F42B2B61D100BF3159 /* Sonorous.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */; };
 		E0B9242A2A1FF435000BE5B9 /* FolderRowEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */; };
 		E0BA4D432A9D2F3B0043E621 /* SongDataRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
@@ -227,7 +226,6 @@
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
-		E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Sonorous.otf; sourceTree = "<group>"; };
 		E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderRowEditView.swift; sourceTree = "<group>"; };
 		E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDataRowView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
@@ -747,7 +745,6 @@
 				E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */,
 				E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */,
 				E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */,
-				E0B8A0F32B2B61D100BF3159 /* Sonorous.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -1161,7 +1158,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */,
-				E0B8A0F42B2B61D100BF3159 /* Sonorous.otf in Resources */,
 				E0986BFA2B2B516900CE938B /* Font Awesome 6 Pro-Regular-400.otf in Resources */,
 				E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */,
 				E00E845F2B225C1000573A9F /* InAppPurchases.plist in Resources */,
@@ -1488,7 +1484,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 3.1.5;
+				MARKETING_VERSION = 2.1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chargertech.Lyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1535,7 +1531,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 3.1.5;
+				MARKETING_VERSION = 2.1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chargertech.Lyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

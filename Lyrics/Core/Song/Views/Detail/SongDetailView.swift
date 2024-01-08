@@ -65,9 +65,6 @@ struct SongDetailView: View {
     let isDefaultSong: Bool
     let albumData: AlbumDetailsResponse?
     
-    // App Storage vars
-    @AppStorage(firstTimeAlertKey) private var firstTimeAlertShown: Bool = false
-    
     // Standard vars
     var songs: [Song]?
     private var wordCount: Int {
