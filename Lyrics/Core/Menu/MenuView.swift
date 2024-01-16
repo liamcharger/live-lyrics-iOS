@@ -9,6 +9,7 @@ import SwiftUI
 import MessageUI
 import StoreKit
 import FASwiftUI
+import BottomSheet
 
 struct MenuView: View {
     @Environment(\.presentationMode) var presMode
@@ -23,26 +24,11 @@ struct MenuView: View {
     @State var showWebView = false
     @State var showPremiumView = false
     @State var showDeleteSheet = false
-    @State var isPurchased = true
+    @State var showPaywall = false
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     
     @Binding var showMenu: Bool
-    
-    func purchaseSubscription(product: Product) async {
-        do {
-            if try await storeKitManager.purchase(product) != nil {
-                viewModel.removeAds(showAds: false) { success, errorMessage in
-                    if success {
-                        viewModel.fetchUser()
-                        isPurchased = true
-                    }
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
     
     var isAuthorizedForPayments: Bool {
         return SKPaymentQueue.canMakePayments()
@@ -99,9 +85,7 @@ struct MenuView: View {
                     HStack {
                         ForEach(storeKitManager.storeProducts, id: \.self) { product in
                             Button {
-                                Task {
-                                    await purchaseSubscription(product: product)
-                                }
+                                showPaywall.toggle()
                             } label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 6) {
@@ -124,6 +108,10 @@ struct MenuView: View {
                             }
                             .disabled(!isAuthorizedForPayments)
                             .opacity(!isAuthorizedForPayments ? 0.5 : 1)
+                            .bottomSheet(isPresented: $showPaywall, detents: [.medium()]) {
+                                AdFreeConfirmationView(isDisplayed: $showPaywall)
+                                    .environmentObject(storeKitManager)
+                            }
                         }
                     }
                     //                        }

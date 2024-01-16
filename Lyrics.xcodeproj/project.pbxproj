@@ -32,6 +32,7 @@
 		E02735A32B1FC2B10010C77D /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E02735A22B1FC2B10010C77D /* GoogleMobileAds */; };
 		E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */; };
 		E02F21E52B21130600302646 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F21E42B21130600302646 /* AdBannerView.swift */; };
+		E03461932B5720CB00738817 /* AdFreeConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03461922B5720CB00738817 /* AdFreeConfirmation.swift */; };
 		E041055F2A90029900215FB0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* HapticManager.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
 		E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474F2A02EF4E00CA48B3 /* ContentView.swift */; };
@@ -89,7 +90,7 @@
 		E0A567EC2AE8C8FC007313FC /* SongSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A567EB2AE8C8FC007313FC /* SongSettingsViewModel.swift */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
 		E0AC30192AA0F58C00C899B9 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AC30182AA0F58C00C899B9 /* PersistenceController.swift */; };
-		E0B02B952AF572F8002E10D4 /* TipKitResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKitResources.swift */; };
+		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
@@ -163,6 +164,7 @@
 		E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = remote_config_defaults.plist; sourceTree = "<group>"; };
 		E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
+		E03461922B5720CB00738817 /* AdFreeConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdFreeConfirmation.swift; sourceTree = "<group>"; };
 		E041055E2A90029900215FB0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		E042474A2A02EF4E00CA48B3 /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsApp.swift; sourceTree = "<group>"; };
@@ -222,7 +224,7 @@
 		E0A567EB2AE8C8FC007313FC /* SongSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongSettingsViewModel.swift; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		E0AC30182AA0F58C00C899B9 /* PersistenceController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
-		E0B02B942AF572F8002E10D4 /* TipKitResources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKitResources.swift; sourceTree = "<group>"; };
+		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
@@ -587,6 +589,7 @@
 			isa = PBXGroup;
 			children = (
 				E050D1582A03031B004CC45E /* MenuView.swift */,
+				E03461922B5720CB00738817 /* AdFreeConfirmation.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -597,7 +600,7 @@
 				E050D15D2A030368004CC45E /* Extensions.swift */,
 				E096E6B22AF18CC9003ADB15 /* ReorderableForEach.swift */,
 				E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */,
-				E0B02B942AF572F8002E10D4 /* TipKitResources.swift */,
+				E0B02B942AF572F8002E10D4 /* TipKit.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1258,6 +1261,7 @@
 				E024A4C32B041F3900CA0406 /* AllSongView.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
 				E0AC30192AA0F58C00C899B9 /* PersistenceController.swift in Sources */,
+				E03461932B5720CB00738817 /* AdFreeConfirmation.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,
 				E05226522A1BBCFC00ECF255 /* AllSongMoveView.swift in Sources */,
 				E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */,
@@ -1279,7 +1283,7 @@
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
 				E0B9242A2A1FF435000BE5B9 /* FolderRowEditView.swift in Sources */,
-				E0B02B952AF572F8002E10D4 /* TipKitResources.swift in Sources */,
+				E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */,
 				E04247992A02F5FB00CA48B3 /* LoginView.swift in Sources */,
 				E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */,
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,

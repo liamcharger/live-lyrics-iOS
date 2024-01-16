@@ -79,7 +79,13 @@ struct MainView: View {
                 case .artist:
                     return song1.artist ?? "" < song2.artist ?? ""
                 case .key:
-                    return song1.key ?? "" < song2.key ?? ""
+                    if let key1 = song1.key, let key2 = song2.key {
+                        return key1 < key2
+                    } else if song1.key != nil {
+                        return true
+                    } else {
+                        return false
+                    }
                 case .dateCreated:
                     return song1.timestamp < song2.timestamp
                 case .pins:
@@ -97,7 +103,13 @@ struct MainView: View {
                 case .artist:
                     return song1.artist ?? "" < song2.artist ?? ""
                 case .key:
-                    return song1.key ?? "" < song2.key ?? ""
+                    if let key1 = song1.key, let key2 = song2.key {
+                        return key1 < key2
+                    } else if song1.key != nil {
+                        return true
+                    } else {
+                        return false
+                    }
                 case .dateCreated:
                     return song1.timestamp > song2.timestamp
                 case .pins:
@@ -108,7 +120,7 @@ struct MainView: View {
             }
         }
     }
-
+    
     var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let persistenceController = PersistenceController()
     

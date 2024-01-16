@@ -49,7 +49,7 @@ struct ProfileView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             // MARK: Navbar
             HStack(alignment: .center) {
                 // MARK: User info
@@ -60,6 +60,7 @@ struct ProfileView: View {
             }
             .padding([.leading, .top, .trailing])
             .padding(8)
+            Divider()
             ScrollView {
                 VStack(alignment: .leading) {
                     CustomTextField(text: $email, placeholder: "Email")
@@ -141,9 +142,9 @@ struct ProfileView: View {
                         }
                     }
                 }
-                .padding(.horizontal)
+                .padding()
             }
-            Spacer()
+            Divider()
             Button(action: {
                 viewModel.updateUser(withEmail: email, username: username, fullname: fullname) { success in
                     if success {

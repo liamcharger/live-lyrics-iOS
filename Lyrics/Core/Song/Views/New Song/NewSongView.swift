@@ -53,11 +53,9 @@ struct NewSongView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)
             }
-            .padding()
             .padding(.top)
             Spacer()
             CustomTextField(text: $title, placeholder: "Title")
-                .padding()
             Spacer()
             Button(action: {view2.toggle()}, label: {
                 HStack {
@@ -67,7 +65,6 @@ struct NewSongView: View {
                 }
                 .modifier(NavButtonViewModifier())
             })
-            .padding()
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .sheet(isPresented: $view2) {
@@ -81,6 +78,7 @@ struct NewSongView: View {
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
         }
+        .padding()
     }
     
     var nextView: some View {

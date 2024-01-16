@@ -28,7 +28,6 @@ struct RecentlyDeletedSong: Identifiable, Codable {
     var artist: String?
     var bpm: String?
     var pinned: Bool?
-    var songId: Int?
     var performanceView: Bool?
     var enableAutoscroll: Bool?
     var duration: Int?

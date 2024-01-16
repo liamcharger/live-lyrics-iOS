@@ -65,7 +65,6 @@ class StoreKitManager: ObservableObject {
                     //Always finish a transaction
                     await transaction.finish()
                 } catch {
-                    //storekit has a transaction that fails verification, don't delvier content to the user
                     print("Transaction failed verification")
                 }
             }
@@ -85,13 +84,10 @@ class StoreKitManager: ObservableObject {
         }
     }
     
-    
-    //Generics - check the verificationResults
     func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
         //check if JWS passes the StoreKit verification
         switch result {
         case .unverified:
-            //failed verificaiton
             throw StoreError.failedVerification
         case .verified(let signedType):
             //the result is verified, return the unwrapped value
@@ -99,32 +95,25 @@ class StoreKitManager: ObservableObject {
         }
     }
     
-    // update the customers products
     @MainActor
     func updateCustomerProductStatus() async {
         var purchasedCourses: [Product] = []
         
-        //iterate through all the user's purchased products
         for await result in Transaction.currentEntitlements {
             do {
-                //again check if transaction is verified
                 let transaction = try checkVerified(result)
                 // since we only have one type of producttype - .nonconsumables -- check if any storeProducts matches the transaction.productID then add to the purchasedCourses
                 if let course = storeProducts.first(where: { $0.id == transaction.productID}) {
                     purchasedCourses.append(course)
                 }
-                
             } catch {
-                //storekit has a transaction that fails verification, don't delvier content to the user
                 print("Transaction failed verification")
             }
             
-            //finally assign the purchased products
             self.purchasedProducts = purchasedCourses
         }
     }
     
-    // call the product purchase and returns an optional transaction
     func purchase(_ product: Product) async throws -> Transaction? {
         //make a purchase request - optional parameters available
         let result = try await product.purchase()
@@ -155,6 +144,4 @@ class StoreKitManager: ObservableObject {
         //as we only have one product type grouping .nonconsumable - we check if it belongs to the purchasedCourses which ran init()
         return purchasedProducts.contains(product)
     }
-    
-    
 }

@@ -94,7 +94,8 @@ class SongService {
 				
 				guard let documents = snapshot?.documents else {
 					print("No documents found")
-					completion([])
+					let noSongs = RecentlyDeletedSong(uid: "", timestamp: Date(), folderId: "", deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)
+					completion([noSongs])
 					return
 				}
 				
@@ -105,7 +106,6 @@ class SongService {
 					group.enter()
 					if let song = try? document.data(as: RecentlyDeletedSong.self) {
 						if song.timestamp < thirtyDaysAgo {
-							// Delete song from Firestore
 							document.reference.delete()
 							group.leave()
 						} else {
@@ -118,12 +118,7 @@ class SongService {
 				}
 				
 				group.notify(queue: .main) {
-//					if songs.isEmpty {
-//						let noSongs = RecentlyDeletedSong(uid: "", timestamp: Date(), folderId: "", deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)
-//						completion([noSongs])
-//					} else {
-						completion(songs)
-//					}
+					completion(songs)
 				}
 			}
 	}
@@ -614,7 +609,6 @@ class SongService {
 			"artist": song.artist,
 			"bpm": song.bpm,
 			"pinned": song.pinned,
-			"songId": song.songId,
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
 			"duration": song.duration
@@ -653,7 +647,7 @@ class SongService {
 			"artist": song.artist,
 			"bpm": song.bpm,
 			"pinned": song.pinned,
-			"songId": song.songId,
+//			"songId": song.songId,
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
 			"duration": song.duration
@@ -716,6 +710,8 @@ class SongService {
 		let songData = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
+			"folderId": folder.id,
+			"deletedTimestamp": Date.now,
 			"title": song.title,
 			"lyrics": song.lyrics,
 			"order": song.order,
@@ -729,11 +725,9 @@ class SongService {
 			"artist": song.artist,
 			"bpm": song.bpm,
 			"pinned": song.pinned,
-			"songId": song.songId,
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
-			"duration": song.duration,
-			"deletedTimestamp": Date.now
+			"duration": song.duration
 		] as [String: Any]
 		
 		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "").collection("songs").document(song.id ?? "")
@@ -768,6 +762,7 @@ class SongService {
 		let songData = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
+			"deletedTimestamp": Date.now,
 			"title": song.title,
 			"lyrics": song.lyrics,
 			"order": song.order,
@@ -781,11 +776,9 @@ class SongService {
 			"artist": song.artist,
 			"bpm": song.bpm,
 			"pinned": song.pinned,
-			"songId": song.songId,
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
-			"duration": song.duration,
-			"deletedTimestamp": Date.now
+			"duration": song.duration
 		] as [String: Any]
 
 		

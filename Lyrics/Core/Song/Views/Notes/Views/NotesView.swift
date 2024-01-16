@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FASwiftUI
+import TipKit
 
 struct NotesView: View {
     // Let vars
@@ -47,6 +48,10 @@ struct NotesView: View {
             }
             .padding([.leading, .top, .trailing], 5)
             .padding([.leading, .top, .trailing])
+            if #available(iOS 17, *) {
+                TipView(NotesViewTip())
+                    .padding([.top, .horizontal])
+            }
             Divider()
                 .padding(.top)
             if viewModel.isLoading {
@@ -59,49 +64,6 @@ struct NotesView: View {
                 TextEditor(text: $viewModel.notes)
                     .padding(.leading)
                     .focused($isInputActive)
-            }
-            if showNotesTip {
-                Divider()
-                    .padding(.bottom)
-                HStack(alignment: .top, spacing: 15) {
-                    FAText(iconName: "lightbulb-on", size: 35)
-                        .foregroundColor(.blue)
-                        .padding(.top, 5)
-
-                    VStack(alignment: .leading, spacing: 7.5) {
-                        HStack {
-                            Text("Tip")
-                                .foregroundColor(.blue)
-                                .font(.title3.weight(.semibold))
-
-                            Spacer()
-
-                            Button(action: { showNotesTip = false }) {
-                                Image(systemName: "xmark")
-                                    .imageScale(.small)
-                                    .padding(9)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.blue)
-                                    .clipShape(Circle())
-                                    .overlay {
-                                        Circle()
-                                            .stroke(.blue, lineWidth: 2.5)
-                                    }
-                            }
-                        }
-
-                        Text(NSLocalizedString("notes_tip", comment: "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances."))
-                            .lineSpacing(1.4)
-                    }
-                    .foregroundColor(.gray)
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .strokeBorder(Color.blue, lineWidth: 2.5)
-                )
-                .cornerRadius(15)
-                .padding(.horizontal)
             }
         }
         .onDisappear {

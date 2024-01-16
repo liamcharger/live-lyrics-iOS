@@ -47,16 +47,16 @@ struct CustomNavBar: View {
             switch navType {
             case .HomeView:
                 Button {
-                    showSheet1.toggle()
+                    showNewFolder.toggle()
                 } label: {
                     FAText(iconName: "folder-plus", size: 20)
                         .modifier(NavBarRowViewModifier())
                 }
                 .sheet(isPresented: $showNewFolder) {
-                    NewFolderView(isDisplayed: $showSheet1)
+                    NewFolderView(isDisplayed: $showNewFolder)
                 }
-                Button {
-                    showSheet2.toggle()
+                Button { 
+                    showNewSong.toggle()
                 } label: {
                     FAText(iconName: "pen-to-square", size: 20)
                         .modifier(NavBarRowViewModifier())

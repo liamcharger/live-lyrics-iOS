@@ -6,15 +6,13 @@
 //
 
 import Foundation
-#if canImport(TipKit)
 import TipKit
-#endif
 
 @available(iOS 17, *)
 struct PlayViewTip: Tip {
     @Parameter
     static var showTip: Bool = true
-    static var numberOfTimesVisited: Event = Event (id: "com.chargertech.Lyrics.numberOfTimesVisited")
+    static var numberOfTimesVisited: Event = Event (id: "com.chargertech.Lyrics.numberOfTimesPlayViewTipVisited")
     
     var title: Text {
         Text("Introducing Play View")
@@ -37,6 +35,27 @@ struct PlayViewTip: Tip {
     var rules: [Rule] {
         return [
             #Rule(Self.numberOfTimesVisited) { $0.donations.count > 0}
+        ]
+    }
+}
+
+@available(iOS 17, *)
+struct NotesViewTip: Tip {
+    @Parameter
+    static var showTip: Bool = true
+    static var numberOfTimesVisited: Event = Event(id: "com.chargertech.Lyrics.numberOfTimesNotesViewTipVisited")
+    
+    var title: Text {
+        Text("Tip")
+    }
+    
+    var message: Text? {
+        Text(NSLocalizedString("notes_tip", comment: "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances."))
+    }
+    
+    var options: [TipOption] {
+        return [
+            Tips.MaxDisplayCount(1)
         ]
     }
 }

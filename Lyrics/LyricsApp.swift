@@ -19,6 +19,7 @@ struct LyricsApp: App {
     @AppStorage(showNewFolderKey) var showNewFolder = false
     
     init() {
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ "df6aebfe758b46a1c5c8421e06e96fa4" ]
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         FirebaseApp.configure()
     }
