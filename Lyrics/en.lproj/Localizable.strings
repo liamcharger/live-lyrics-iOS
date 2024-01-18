@@ -18,7 +18,10 @@
 "welcome" = "Welcome";
 "hello" = "Hello";
 "next" = "Next";
-"" = "";
+
+"good_evening" = "Good Evening.";
+"good_afternoon" = "Good Afternoon.";
+"good_morning" = "Good Morning.";
 
 "welcome_to_lyrics" = "Welcome to Live Lyrics.";
 "new_in_live_lyrics" = "What's New in Live Lyrics.";

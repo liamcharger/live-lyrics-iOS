@@ -26,7 +26,7 @@ struct RegistrationView: View {
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
-    var attributedString: AttributedString = try! AttributedString(markdown: "[Privacy Policy](https://charger-tech-lyrics.web.app/privacypolicy.html)")
+    var attributedString: AttributedString = try! AttributedString(markdown: "[Privacy Policy](https://live-lyrics.web.app/privacypolicy.html)")
     
     // Environment vars
     @EnvironmentObject var viewModel: AuthViewModel
@@ -34,24 +34,10 @@ struct RegistrationView: View {
     
     var body: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 20) {
-                // MARK: Navbar
-                HStack(alignment: .center, spacing: 10) {
-                    Text("Sign Up")
-                        .font(.system(size: 28, design: .rounded).weight(.bold))
-                    Spacer()
-                    Button(action: {presMode.wrappedValue.dismiss()}) {
-                        Image(systemName: "xmark")
-                            .imageScale(.medium)
-                            .padding(12)
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(Color("Color"))
-                            .background(Material.regular)
-                            .clipShape(Circle())
-                    }
-                }
-                .padding([.leading, .top, .trailing], 4)
-                // MARK: Text Fields
+            VStack(alignment: .leading, spacing: 0) {
+                CustomNavBar(title: "Register", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
+                    .padding()
+                Divider()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
                         CustomTextField(text: $email, placeholder: "Email")
@@ -71,7 +57,9 @@ struct RegistrationView: View {
 #if os(iOS)
                     .autocapitalization(.none)
 #endif
+                    .padding()
                 }
+                Divider()
                 VStack(alignment: .leading, spacing: 15) {
                     HStack {
                         Text("By signing up, you're agree to our ")
@@ -102,8 +90,8 @@ struct RegistrationView: View {
                     .disabled(isEmpty)
                     .opacity(isEmpty ? 0.5 : 1.0)
                 }
+                .padding()
             }
-            .padding()
         }
         .sheet(isPresented: $showWebView) {
             WebView()
@@ -111,6 +99,8 @@ struct RegistrationView: View {
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
+        .navigationBarHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

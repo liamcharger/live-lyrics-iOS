@@ -151,8 +151,7 @@ struct AddSongsView: View {
                     }
                 }
             }
-            .padding([.leading, .top, .trailing])
-            .padding(8)
+            .padding()
             Spacer()
             if mainViewModel.isLoadingSongs {
                 VStack {

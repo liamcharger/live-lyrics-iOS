@@ -10,25 +10,14 @@ import FASwiftUI
 import TipKit
 
 struct NotesView: View {
-    // Let vars
-    let song: Song
+    @Binding var notes: String
+    @Binding var isLoading: Bool
     
-    // FocusState vars
     @FocusState var isInputActive: Bool
     
-    // Object vars
     @Environment(\.presentationMode) var presMode
-    @ObservedObject var viewModel: NotesViewModel
     
-    // AppStorage vars
     @AppStorage(showNotesDescKey) var showNotesTip = true
-    
-    init(song: Song) {
-        self.song = song
-        self.viewModel = NotesViewModel(song: song)
-        
-        self.viewModel.fetchNotesForInit(song: song)
-    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -54,24 +43,18 @@ struct NotesView: View {
             }
             Divider()
                 .padding(.top)
-            if viewModel.isLoading {
+            if isLoading {
                 VStack {
                     Spacer()
                     ProgressView()
                     Spacer()
                 }
             } else {
-                TextEditor(text: $viewModel.notes)
+                TextEditor(text: $notes)
                     .padding(.leading)
                     .focused($isInputActive)
             }
         }
-        .onDisappear {
-            viewModel.updateNotes(song, notes: viewModel.notes)
-        }
+        
     }
-}
-
-#Preview {
-    NotesView(song: Song.song)
 }

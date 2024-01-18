@@ -33,6 +33,7 @@
 		E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */; };
 		E02F21E52B21130600302646 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F21E42B21130600302646 /* AdBannerView.swift */; };
 		E03461932B5720CB00738817 /* AdFreeConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03461922B5720CB00738817 /* AdFreeConfirmation.swift */; };
+		E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BC0922B5C232B004261AF /* ChooseAuthView.swift */; };
 		E041055F2A90029900215FB0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* HapticManager.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
 		E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474F2A02EF4E00CA48B3 /* ContentView.swift */; };
@@ -165,6 +166,7 @@
 		E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		E03461922B5720CB00738817 /* AdFreeConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdFreeConfirmation.swift; sourceTree = "<group>"; };
+		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
 		E041055E2A90029900215FB0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		E042474A2A02EF4E00CA48B3 /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsApp.swift; sourceTree = "<group>"; };
@@ -231,6 +233,8 @@
 		E0B924292A1FF435000BE5B9 /* FolderRowEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderRowEditView.swift; sourceTree = "<group>"; };
 		E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDataRowView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
+		E0C168342B59BCBF00A12C59 /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
+		E0C168362B59BCEA00A12C59 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		E0C492E42A0BDFC6002E9EA0 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		E0C492E62A0BE552002E9EA0 /* SongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongView.swift; sourceTree = "<group>"; };
 		E0CA85142B081D5100188CD0 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
@@ -421,6 +425,7 @@
 		E042474C2A02EF4E00CA48B3 /* Lyrics */ = {
 			isa = PBXGroup;
 			children = (
+				E0C168332B59BC9900A12C59 /* Intents */,
 				E0986BE92B2B50FC00CE938B /* Resources */,
 				E050D15C2A03035F004CC45E /* Extensions */,
 				E04247A92A02F6B500CA48B3 /* Service */,
@@ -529,6 +534,7 @@
 				E04247952A02F5FB00CA48B3 /* LoginView.swift */,
 				E04247942A02F5FA00CA48B3 /* RegistrationView.swift */,
 				E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */,
+				E03BC0922B5C232B004261AF /* ChooseAuthView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -793,6 +799,15 @@
 				E0BA4D422A9D2F3B0043E621 /* SongDataRowView.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		E0C168332B59BC9900A12C59 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				E0C168342B59BCBF00A12C59 /* Shortcuts.swift */,
+				E0C168362B59BCEA00A12C59 /* Intents.swift */,
+			);
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		E0CA85112B081D5100188CD0 /* Components */ = {
@@ -1113,7 +1128,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					E04247492A02EF4E00CA48B3 = {
 						CreatedOnToolsVersion = 14.3;
@@ -1202,6 +1217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */,
+				E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */,
 				E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */,
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
 				E0600D072A8C0BAE0040ECFB /* SongDataView.swift in Sources */,
@@ -1341,6 +1357,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1404,6 +1421,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1461,6 +1479,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Lyrics/Lyrics.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1480,6 +1499,8 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1508,6 +1529,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Lyrics/Lyrics.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1527,6 +1549,8 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

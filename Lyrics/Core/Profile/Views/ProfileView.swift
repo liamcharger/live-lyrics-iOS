@@ -59,6 +59,7 @@ struct ProfileView: View {
                 SheetCloseButton(isPresented: $showProfileView)
             }
             .padding([.leading, .top, .trailing])
+            .padding(.bottom, 8)
             .padding(8)
             Divider()
             ScrollView {

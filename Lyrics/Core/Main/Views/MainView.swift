@@ -24,10 +24,15 @@ struct MainView: View {
     
     @FocusState var isSearching: Bool
     
+    @AppStorage(showNewSongKey) var showNewSong = false
+    @AppStorage(showNewFolderKey) var showNewFolder = false
     
     @State var newFolder = ""
     
     @State var selectedSong: Song?
+    @State var draggedSong: Song?
+    
+    @State var draggedFolder: Folder?
     
     @State var showMenu = false
     @State var showDeleteSheet = false
@@ -168,10 +173,10 @@ struct MainView: View {
     }
     
     init() {
-        if networkManager.isConnected {
-            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
-            mainViewModel.notificationStatus = .firebaseNotification
-        }
+        //        if !networkManager.isConnected {
+        //            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
+        //            mainViewModel.notificationStatus = .firebaseNotification
+        //        }
         
         self.mainViewModel.fetchSongs()
         self.mainViewModel.fetchFolders()
@@ -210,6 +215,39 @@ struct MainView: View {
                     AdBannerView(unitId: "ca-app-pub-9538983146851531/4662411532", height: 50)
                         .padding([.leading, .top, .trailing])
                 }
+                //                VStack(alignment: .center, spacing: 26) {
+                //                    if let fullname = authViewModel.currentUser?.fullname {
+                //                        Text(greetingLogic() + ",\n\(fullname)")
+                //                            .font(.largeTitle.weight(.bold))
+                //                    } else {
+                //                        Text(greetingLogic())
+                //                            .font(.largeTitle.weight(.bold))
+                //                    }
+                //                    Text("Here are some things to get you started.")
+                //                    VStack(spacing: 8) {
+                //                        Button {
+                //                            showNewSong = true
+                //                        } label: {
+                //                            Text("Create a New Song")
+                //                                .modifier(NavButtonViewModifier())
+                //                        }
+                //                        Button {
+                //                            showNewSong = true
+                //                        } label: {
+                //                            Text("Create a New Folder")
+                //                                .modifier(NavButtonViewModifier())
+                //                        }
+                //                        Button {
+                //
+                //                        } label: {
+                //                            Text("Do Something Else")
+                //                                .modifier(NavButtonViewModifier())
+                //                        }
+                //                    }
+                //                }
+                //                .multilineTextAlignment(.center)
+                //                .padding(.vertical, 25)
+                //                .padding(.horizontal)
                 VStack(spacing: 22) {
                     if let notificationStatus = mainViewModel.notificationStatus {
                         if !isSearching {
@@ -227,10 +265,10 @@ struct MainView: View {
                     }
                     VStack {
                         ListHeaderView(title: "Songs")
-                        if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" || authViewModel.currentUser?.id ?? "" == "0ePGAEVPeGeuUKeAdoezprewzDt1" || authViewModel.currentUser?.id ?? "" == "GqFBjNFXsjVtzGd8mDXNO4Xm6Yf1" {
-                            //                            NavigationLink(destination: DefaultSongsView()) {
-                            //                                ListRowView(isEditing: $isEditingSongs, title: "All Songs", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
-                            //                            }
+                        if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" {
+                            NavigationLink(destination: DefaultSongsView()) {
+                                ListRowView(isEditing: $isEditingSongs, title: "All Songs", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
+                            }
                         }
                         NavigationLink(destination: {
                             RecentlyDeletedView()
@@ -239,7 +277,7 @@ struct MainView: View {
                         }
                     }
                     // MARK: Tools
-                    //                    ToolsView()
+                    // ToolsView()
                     // MARK: Folders
                     VStack {
                         VStack {
@@ -272,7 +310,7 @@ struct MainView: View {
                                     }
                                 } label: {
                                     Image(systemName: "chevron.down")
-                                        .padding(12)
+                                        .padding(13.5)
                                         .foregroundColor(Color.blue)
                                         .background(Material.regular)
                                         .clipShape(Circle())
@@ -336,6 +374,7 @@ struct MainView: View {
                                                     .contentShape(.contextMenuPreview, Capsule())
                                                     .contextMenu {
                                                         Button {
+                                                            mainViewModel.folderSongs = []
                                                             showEditSheet = true
                                                             selectedFolder = folder
                                                         } label: {
@@ -343,6 +382,7 @@ struct MainView: View {
                                                         }
                                                         .scaleEffect(isEditingFolders ? 0.7 : 1.0)
                                                         Button(role: .destructive) {
+                                                            mainViewModel.folderSongs = []
                                                             showDeleteSheet = true
                                                             selectedFolder = folder
                                                         } label: {
@@ -351,8 +391,17 @@ struct MainView: View {
                                                         .scaleEffect(isEditingFolders ? 1.0 : 0.7)
                                                     }
                                                     .onDrag {
+                                                        self.draggedFolder = folder
                                                         return NSItemProvider()
                                                     }
+                                                    .onDrop(
+                                                        of: [.text],
+                                                        delegate: FolderDropViewDelegate(
+                                                            destinationItem: folder,
+                                                            items: $mainViewModel.folders,
+                                                            draggedItem: $draggedFolder
+                                                        )
+                                                    )
                                                 }
                                                 .disabled(isEditingFolders)
                                                 if isEditingFolders {
@@ -530,7 +579,7 @@ struct MainView: View {
                                     }
                                 } label: {
                                     Image(systemName: "chevron.down")
-                                        .padding(12)
+                                        .padding(13.5)
                                         .foregroundColor(Color.blue)
                                         .background(Material.regular)
                                         .clipShape(Circle())
@@ -587,10 +636,23 @@ struct MainView: View {
                                                 }
                                             }
                                         }
+                                        .onDrag {
+                                            sortViewModel.loadFromUserDefaults { sortSelection in
+                                                if sortSelection == .noSelection {
+                                                    self.draggedSong = song
+                                                }
+                                            }
+                                            return NSItemProvider()
+                                        }
+                                        .onDrop(
+                                            of: [.text],
+                                            delegate: SongDropViewDelegate(
+                                                destinationItem: song,
+                                                items: $mainViewModel.songs,
+                                                draggedItem: $draggedSong
+                                            )
+                                        )
                                     }
-                                }
-                                .onDrag {
-                                    return NSItemProvider()
                                 }
                             }
                         }
@@ -708,6 +770,72 @@ struct MainView: View {
                 showSongDeleteSheet.toggle()
             } label: {
                 Label("Delete", systemImage: "trash")
+            }
+        }
+    }
+}
+
+struct FolderDropViewDelegate: DropDelegate {
+    let destinationItem: Folder
+    @Binding var items: [Folder]
+    @Binding var draggedItem: Folder?
+    
+    @ObservedObject var mainViewModel = MainViewModel()
+    
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        return DropProposal(operation: .move)
+    }
+    
+    func performDrop(info: DropInfo) -> Bool {
+        draggedItem = nil
+        self.mainViewModel.folders = items
+        self.mainViewModel.updateFolderOrder()
+        return true
+    }
+    
+    func dropEntered(info: DropInfo) {
+        if let draggedItem {
+            let fromIndex = items.firstIndex(of: draggedItem)
+            if let fromIndex {
+                let toIndex = items.firstIndex(of: destinationItem)
+                if let toIndex, fromIndex != toIndex {
+                    withAnimation {
+                        self.items.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SongDropViewDelegate: DropDelegate {
+    let destinationItem: Song
+    @Binding var items: [Song]
+    @Binding var draggedItem: Song?
+    
+    @ObservedObject var mainViewModel = MainViewModel()
+    
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        return DropProposal(operation: .move)
+    }
+    
+    func performDrop(info: DropInfo) -> Bool {
+        draggedItem = nil
+        self.mainViewModel.songs = items
+        self.mainViewModel.updateSongOrder()
+        return true
+    }
+    
+    func dropEntered(info: DropInfo) {
+        if let draggedItem {
+            let fromIndex = items.firstIndex(of: draggedItem)
+            if let fromIndex {
+                let toIndex = items.firstIndex(of: destinationItem)
+                if let toIndex, fromIndex != toIndex {
+                    withAnimation {
+                        self.items.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
+                    }
+                }
             }
         }
     }

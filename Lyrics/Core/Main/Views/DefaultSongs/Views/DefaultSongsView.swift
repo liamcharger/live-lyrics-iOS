@@ -73,45 +73,38 @@ struct DefaultSongsView: View {
     }
     
     var body: some View {
-        if !networkManager.isConnected {
+        if networkManager.isConnected {
             if viewModel.currentUser?.hasSubscription ?? false {
                 content
             } else {
-                ZStack {
+//                ZStack {
                     content
-                        .blur(radius: 25)
-                        .disabled(true)
-                    VStack(spacing: 35) {
-                        VStack(spacing: 8) {
-                            Text("You've run into a Premium feature!")
-                                .multilineTextAlignment(.center)
-                                .font(.title.weight(.bold))
-                            Text("Subscribe to access it.")
-                        }
-                        VStack {
-                            Button {
-//                                viewModel.updateSubStatus(subStatus: true) { success, errorMessage in
-//                                    if success {
-//                                        print("Success!")
-//                                    } else {
-//                                        showError.toggle()
-//                                        self.errorMessage = errorMessage
-//                                    }
-//                                }
-                            } label: {
-                                Text("Subscribe")
-                                    .modifier(NavButtonViewModifier())
-                                    .padding(.horizontal)
-                            }
-                        }
-                    }
-                }
+//                        .blur(radius: 25)
+//                        .disabled(true)
+//                    VStack(spacing: 35) {
+//                        VStack(spacing: 8) {
+//                            Text("You've run into a Premium feature!")
+//                                .multilineTextAlignment(.center)
+//                                .font(.title.weight(.bold))
+//                            Text("Subscribe to access it.")
+//                        }
+//                        VStack {
+//                            Button {
+//                                
+//                            } label: {
+//                                Text("Subscribe")
+//                                    .modifier(NavButtonViewModifier())
+//                                    .padding(.horizontal)
+//                            }
+//                        }
+//                    }
+//                }
             }
         } else {
             ZStack {
                 VStack {
                     VStack(spacing: 10) {
-                        CustomNavBar(title: networkManager.isConnected ? "" : "Top Songs", navType: .DefaultSongs, folder: nil, showBackButton: true, isEditing: $networkManager.isConnected)
+                        CustomNavBar(title: "Top Songs", navType: .DefaultSongs, folder: nil, showBackButton: true, isEditing: $networkManager.isConnected)
                     }
                     .padding(.top)
                     .padding(.horizontal)
@@ -128,7 +121,7 @@ struct DefaultSongsView: View {
     var content: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: networkManager.isConnected ? "" : "Top Songs", navType: .DefaultSongs, folder: nil, showBackButton: true, isEditing: $networkManager.isConnected)
+                CustomNavBar(title: "Top Songs", navType: .DefaultSongs, folder: nil, showBackButton: true, isEditing: $networkManager.isConnected)
             }
             .padding(.top)
             .padding(.horizontal)

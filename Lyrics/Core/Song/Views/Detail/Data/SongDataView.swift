@@ -22,7 +22,7 @@ struct SongDataView: View {
     @State var isAlbumCollapsed = false
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
                 Text("Info")
@@ -38,6 +38,8 @@ struct SongDataView: View {
                         .clipShape(Circle())
                 }
             }
+            .padding()
+            Divider()
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 14) {
                     // MARK: Listen on text elements
@@ -83,7 +85,9 @@ struct SongDataView: View {
                                     }
                                 }
                             }
+                            .padding(.horizontal)
                         }
+                        .padding(.horizontal, -16)
                     }
                     // MARK: Artist
                     VStack {
@@ -134,12 +138,8 @@ struct SongDataView: View {
                             }
                         }
                     }
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Material.regular)
-                            .mask { RoundedRectangle(cornerRadius: 10, style: .continuous) }
-                    }
+                    .background(Material.regular)
+                    .cornerRadius(15)
                     // MARK: Album
                     if let albumData = albumData {
                         VStack {
@@ -186,18 +186,14 @@ struct SongDataView: View {
                                 .padding()
                             }
                         }
-                        .background {
-                            Rectangle()
-                                .fill(.clear)
-                                .background(Material.regular)
-                                .mask { RoundedRectangle(cornerRadius: 10, style: .continuous) }
-                        }
+                        .background(Material.regular)
+                        .cornerRadius(15)
                     }
                 }
+                .padding()
                 .animation(.bouncy)
             }
         }
-        .padding([.leading, .top, .trailing])
         .onAppear {
             if let albumData = albumData {
                 self.songDetailViewModel.fetchArtistDetails(artistId: albumData.message.body.album.artistId) { result in

@@ -12,4 +12,5 @@ enum NavBarEnum {
     case DetailView
     case RecentlyDeleted
     case DefaultSongs
+    case Auth
 }

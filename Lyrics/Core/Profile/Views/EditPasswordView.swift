@@ -49,8 +49,7 @@ struct EditPasswordView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $showProfileView)
             }
-            .padding([.leading, .top, .trailing])
-            .padding(8)
+            .padding()
             ScrollView {
                 VStack(alignment: .leading, spacing: 15) {
                     CustomPasswordField(text: $currentPassword, placeholder: "Current Password")

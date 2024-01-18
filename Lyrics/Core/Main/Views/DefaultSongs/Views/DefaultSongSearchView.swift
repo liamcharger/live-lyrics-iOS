@@ -75,42 +75,35 @@ struct DefaultSongSearchView: View {
     
     var body: some View {
         NavigationView {
-            if !networkManager.isConnected {
+            if networkManager.isConnected {
                 if viewModel.currentUser?.hasSubscription ?? false {
-                    content
+//                    content
                 } else {
-                    ZStack {
+//                    ZStack {
                         content
-                            .blur(radius: 25)
-                            .disabled(true)
-                        VStack(spacing: 35) {
-                            VStack(spacing: 8) {
-                                Text("You've run into a Premium feature!")
-                                    .multilineTextAlignment(.center)
-                                    .font(.title.weight(.bold))
-                                Text("Subscribe to access it.")
-                            }
-                            VStack {
-                                Button {
-//                                    viewModel.updateSubStatus(subStatus: true) { success, errorMessage in
-//                                        if success {
-//                                            print("Success!")
-//                                        } else {
-//                                            showError.toggle()
-//                                            self.errorMessage = errorMessage
-//                                        }
-//                                    }
-                                } label: {
-                                    Text("Subscribe")
-                                        .padding(12)
-                                        .background(.blue)
-                                        .foregroundColor(.white)
-                                        .clipShape(Capsule())
-                                        .padding(.horizontal)
-                                }
-                            }
-                        }
-                    }
+//                            .blur(radius: 25)
+//                            .disabled(true)
+//                        VStack(spacing: 35) {
+//                            VStack(spacing: 8) {
+//                                Text("You've run into a Premium feature!")
+//                                    .multilineTextAlignment(.center)
+//                                    .font(.title.weight(.bold))
+//                                Text("Subscribe to access it.")
+//                            }
+//                            VStack {
+//                                Button {
+//                                    
+//                                } label: {
+//                                    Text("Subscribe")
+//                                        .padding(12)
+//                                        .background(.blue)
+//                                        .foregroundColor(.white)
+//                                        .clipShape(Capsule())
+//                                        .padding(.horizontal)
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             } else {
                 ZStack {

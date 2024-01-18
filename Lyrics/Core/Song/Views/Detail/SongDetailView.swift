@@ -48,12 +48,14 @@ struct SongDetailView: View {
     @State var showPlayViewInfo = false
     @State var showError = false
     @State var hasDeletedSong = false
+    @State var showNotesStatusIcon = false
     
     // ObservedObject vars
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var songSettingsViewModel = SongSettingsViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var notesViewModel: NotesViewModel
     
     // Environment vars
     @Environment(\.presentationMode) var presMode
@@ -185,6 +187,8 @@ struct SongDetailView: View {
         self._artist = State(initialValue: song.artist == "" ? "Not Set" : song.artist ?? "Not Set")
         self._duration = State(initialValue: song.duration ?? "")
         self.albumData = albumData
+        
+        self.notesViewModel = NotesViewModel(song: song)
     }
     
     var body: some View {
@@ -202,7 +206,7 @@ struct SongDetailView: View {
                     Spacer()
                     if !isInputActive {
                         if songs != nil {
-                                if #available(iOS 17.0, *) {
+                                if #available(iOS 17, *) {
                                     playButton
                                     .showTip()
                                 } else {
@@ -211,9 +215,17 @@ struct SongDetailView: View {
                             Button(action: {showNotesView.toggle()}, label: {
                                 FAText(iconName: "book", size: 18)
                                     .modifier(NavBarButtonViewModifier())
+                                    .overlay {
+                                        if notesViewModel.notes != "" {
+                                            Circle()
+                                                .frame(width: 11, height: 11)
+                                                .foregroundColor(.blue)
+                                                .offset(x: 17, y: -18)
+                                        }
+                                    }
                             })
                             .sheet(isPresented: $showNotesView) {
-                                NotesView(song: song)
+                                NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
                             }
                             
                             menu
@@ -221,19 +233,10 @@ struct SongDetailView: View {
                             settings
                         } else {
                             if isDefaultSong {
-                                Button {
-                                    showFullScreenView.toggle()
-                                } label: {
-                                    Image(systemName: "play")
+                                Button(action: {saveSongToMySongs(song: song)}, label: {
+                                    FAText(iconName: "plus", size: 18)
                                         .modifier(NavBarButtonViewModifier())
-                                }
-                                .showTip()
-                                Button(action: {
-                                    saveSongToMySongs(song: song)
-                                }) {
-                                    Image(systemName: "plus")
-                                        .modifier(NavBarButtonViewModifier())
-                                }
+                                })
                                 .alert(isPresented: $showSongRepititionAlert) {
                                     Alert(
                                         title: Text("It looks like this song is already in your library."),
@@ -313,7 +316,9 @@ struct SongDetailView: View {
                         .font(.system(size: 24, design: .rounded).weight(.bold))
                         .lineLimit(1).truncationMode(.tail)
                     Spacer()
-                    Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
+                    if !isDefaultSong {
+                        Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
+                    }
                     if let albumData = albumData {
                         Button {
                             showSongDataView.toggle()

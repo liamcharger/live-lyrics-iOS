@@ -112,8 +112,8 @@ struct CustomNavBar: View {
                 .sheet(isPresented: $showSheet1) {
                     DefaultSongSearchView()
                 }
-                .disabled(isEditing)
-                .opacity(isEditing ? 0.5 : 1.0)
+            case .Auth:
+                EmptyView()
             }
         }
     }

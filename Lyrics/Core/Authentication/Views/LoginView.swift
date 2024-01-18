@@ -8,20 +8,18 @@
 import SwiftUI
 
 struct LoginView: View {
-    // State vars
     @State var email = ""
     @State var password = ""
     @State var errorMessage = ""
     
-    @State var showRegister = false
     @State var showResetPassword = false
     @State var showError = false
     
-    // Focus state vars
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
     
-    // Standard vars
+    @AppStorage("showRegisterView") var showRegisterView = false
+    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
     }
@@ -29,17 +27,12 @@ struct LoginView: View {
         isHighlighted1 || isHighlighted2
     }
     
-    //Environment vars
     @EnvironmentObject var viewModel: AuthViewModel
+    @Environment(\.presentationMode) var presMode
     
     var body: some View {
         VStack(spacing: 15) {
-            // MARK: Header View
-            HStack(spacing: 8) {
-                Text("Login")
-                    .font(.system(size: 28, design: .rounded).weight(.bold))
-                Spacer()
-            }
+            CustomNavBar(title: "Login", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
             Spacer()
             VStack(alignment: .leading, spacing: 15) {
                 CustomTextField(text: $email, placeholder: "Email")
@@ -75,7 +68,12 @@ struct LoginView: View {
                 })
                 .opacity(isEmpty ? 0.5 : 1.0)
                 .disabled(isEmpty)
-                Button(action: {showRegister.toggle()}, label: {
+                Button(action: {
+                    presMode.wrappedValue.dismiss()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                        showRegisterView = true
+                    }
+                }, label: {
                     Text("No account? ") + Text("Sign Up").bold()
                 })
             }
@@ -86,10 +84,6 @@ struct LoginView: View {
         .padding()
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showRegister) {
-            RegistrationView()
-                .environmentObject(viewModel)
-        }
         .sheet(isPresented: $showResetPassword) {
             ResetPasswordView(text: $email)
                 .environmentObject(viewModel)

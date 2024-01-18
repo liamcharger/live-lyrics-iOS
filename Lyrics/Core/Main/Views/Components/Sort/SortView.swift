@@ -58,7 +58,7 @@ struct SortRowView: View {
             HStack {
                 switch sortItem {
                 case .noSelection:
-                    Text("None")
+                    Text("Custom")
                         .multilineTextAlignment(.leading)
                 case .artist:
                     Text("Artist")

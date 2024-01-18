@@ -24,7 +24,7 @@ struct ContentView: View {
                 if !(mainViewModel.systemDoc?.isDisplayed ?? false) {
                     // MARK: Execute main app
                     if viewModel.userSession == nil {
-                        LoginView()
+                        ChooseAuthView()
                             .environmentObject(viewModel)
                     } else {
                         MainView()
@@ -41,7 +41,6 @@ struct ContentView: View {
         .onAppear {
             notificationManager.checkForUpdate { isNewVersion in
                 if isNewVersion {
-                    print(isNewVersion)
                     showWhatsNew = true
                 }
             }

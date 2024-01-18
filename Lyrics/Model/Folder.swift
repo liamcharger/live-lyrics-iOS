@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestoreSwift
 import FirebaseFirestore
 
-struct Folder: Identifiable, Codable {
+struct Folder: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let uid: String?
     let timestamp: Date

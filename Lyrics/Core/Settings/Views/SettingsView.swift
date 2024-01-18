@@ -72,22 +72,22 @@ struct SettingsView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {
-                    if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" || authViewModel.currentUser?.id ?? "" == "0ePGAEVPeGeuUKeAdoezprewzDt1" {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack(spacing: 7) {
-                                    Text("Show Explicit Songs")
-                                    Spacer()
-                                    Toggle(isOn: $isExplicit, label: {})
-                                }
-                                .foregroundColor(.primary)
-                            }
-                        }
-                        .padding()
-                        .background(Material.regular)
-                        .cornerRadius(20)
-                        .foregroundColor(.primary)
-                    }
+//                    if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" {
+//                        HStack {
+//                            VStack(alignment: .leading, spacing: 10) {
+//                                HStack(spacing: 7) {
+//                                    Text("Allow Explicit Songs")
+//                                    Spacer()
+//                                    Toggle(isOn: $isExplicit, label: {})
+//                                }
+//                                .foregroundColor(.primary)
+//                            }
+//                        }
+//                        .padding()
+//                        .background(Material.regular)
+//                        .cornerRadius(20)
+//                        .foregroundColor(.primary)
+//                    }
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {

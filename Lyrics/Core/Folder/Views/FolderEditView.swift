@@ -49,8 +49,7 @@ struct FolderEditView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $showProfileView)
             }
-            .padding([.leading, .top, .trailing])
-            .padding(8)
+            .padding()
             Spacer()
             VStack(alignment: .leading, spacing: 15) {
                 CustomTextField(text: $text, placeholder: "Title")
