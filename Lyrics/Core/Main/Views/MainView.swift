@@ -127,7 +127,6 @@ struct MainView: View {
     }
     
     var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
-    let persistenceController = PersistenceController()
     
     func sortedSongs(songs: [Song]) -> [Song] {
         return songs.sorted(by: { (song1, song2) -> Bool in
@@ -514,6 +513,18 @@ struct MainView: View {
                                                                         }
                                                                     }
                                                             }
+                                                            .onDrag {
+                                                                self.draggedSong = song
+                                                                return NSItemProvider()
+                                                            }
+                                                            .onDrop(
+                                                                of: [.text],
+                                                                delegate: SongDropViewDelegate(
+                                                                    destinationItem: song,
+                                                                    items: $mainViewModel.songs,
+                                                                    draggedItem: $draggedSong
+                                                                )
+                                                            )
                                                         }
                                                     }
                                                 }
@@ -770,72 +781,6 @@ struct MainView: View {
                 showSongDeleteSheet.toggle()
             } label: {
                 Label("Delete", systemImage: "trash")
-            }
-        }
-    }
-}
-
-struct FolderDropViewDelegate: DropDelegate {
-    let destinationItem: Folder
-    @Binding var items: [Folder]
-    @Binding var draggedItem: Folder?
-    
-    @ObservedObject var mainViewModel = MainViewModel()
-    
-    func dropUpdated(info: DropInfo) -> DropProposal? {
-        return DropProposal(operation: .move)
-    }
-    
-    func performDrop(info: DropInfo) -> Bool {
-        draggedItem = nil
-        self.mainViewModel.folders = items
-        self.mainViewModel.updateFolderOrder()
-        return true
-    }
-    
-    func dropEntered(info: DropInfo) {
-        if let draggedItem {
-            let fromIndex = items.firstIndex(of: draggedItem)
-            if let fromIndex {
-                let toIndex = items.firstIndex(of: destinationItem)
-                if let toIndex, fromIndex != toIndex {
-                    withAnimation {
-                        self.items.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
-                    }
-                }
-            }
-        }
-    }
-}
-
-struct SongDropViewDelegate: DropDelegate {
-    let destinationItem: Song
-    @Binding var items: [Song]
-    @Binding var draggedItem: Song?
-    
-    @ObservedObject var mainViewModel = MainViewModel()
-    
-    func dropUpdated(info: DropInfo) -> DropProposal? {
-        return DropProposal(operation: .move)
-    }
-    
-    func performDrop(info: DropInfo) -> Bool {
-        draggedItem = nil
-        self.mainViewModel.songs = items
-        self.mainViewModel.updateSongOrder()
-        return true
-    }
-    
-    func dropEntered(info: DropInfo) {
-        if let draggedItem {
-            let fromIndex = items.firstIndex(of: draggedItem)
-            if let fromIndex {
-                let toIndex = items.firstIndex(of: destinationItem)
-                if let toIndex, fromIndex != toIndex {
-                    withAnimation {
-                        self.items.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: (toIndex > fromIndex ? (toIndex + 1) : toIndex))
-                    }
-                }
             }
         }
     }

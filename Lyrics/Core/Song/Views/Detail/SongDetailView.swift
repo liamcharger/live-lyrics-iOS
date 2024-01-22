@@ -226,6 +226,9 @@ struct SongDetailView: View {
                             })
                             .sheet(isPresented: $showNotesView) {
                                 NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
+                                    .onDisappear {
+                                        notesViewModel.updateNotes(song, notes: notesViewModel.notes)
+                                    }
                             }
                             
                             menu

@@ -69,11 +69,8 @@
 		E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77832A17CAA50032332F /* EditPasswordView.swift */; };
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
-		E0760D3D2A5364C400E51F14 /* RichTextEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0760D3C2A5364C400E51F14 /* RichTextEditorViewController.swift */; };
-		E078B05A2AA61F48006C6CBE /* ChangeLogicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E078B0592AA61F48006C6CBE /* ChangeLogicView.swift */; };
 		E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E079AE362A81928B006C4B55 /* NewPlayViewView.swift */; };
 		E08CBE1D2A79ACD300DF1E64 /* DefaultSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08CBE1C2A79ACD300DF1E64 /* DefaultSongsView.swift */; };
-		E096E6B32AF18CC9003ADB15 /* ReorderableForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = E096E6B22AF18CC9003ADB15 /* ReorderableForEach.swift */; };
 		E0986BE62B2B4D4D00CE938B /* FASwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E0986BE52B2B4D4D00CE938B /* FASwiftUI */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
 		E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */; };
@@ -90,7 +87,6 @@
 		E0A567E62AE8BE13007313FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0A567E82AE8BE13007313FC /* Localizable.strings */; };
 		E0A567EC2AE8C8FC007313FC /* SongSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A567EB2AE8C8FC007313FC /* SongSettingsViewModel.swift */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
-		E0AC30192AA0F58C00C899B9 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AC30182AA0F58C00C899B9 /* PersistenceController.swift */; };
 		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
@@ -127,6 +123,8 @@
 		E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */; };
 		E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */; };
 		E0E779462A8AB82F001D9A6A /* DefaultSongSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E779452A8AB82F001D9A6A /* DefaultSongSearchView.swift */; };
+		E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */; };
+		E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */; };
 		E0F95C832A13C2E000C2D21C /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F95C822A13C2E000C2D21C /* MailView.swift */; };
 		E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F95C852A13C74C00C2D21C /* ProfileView.swift */; };
 		E0FD46262B1F7DBD00699587 /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FD46252B1F7DBD00699587 /* BannerAd.swift */; };
@@ -205,11 +203,8 @@
 		E06D77832A17CAA50032332F /* EditPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordView.swift; sourceTree = "<group>"; };
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
-		E0760D3C2A5364C400E51F14 /* RichTextEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichTextEditorViewController.swift; sourceTree = "<group>"; };
-		E078B0592AA61F48006C6CBE /* ChangeLogicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeLogicView.swift; sourceTree = "<group>"; };
 		E079AE362A81928B006C4B55 /* NewPlayViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlayViewView.swift; sourceTree = "<group>"; };
 		E08CBE1C2A79ACD300DF1E64 /* DefaultSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSongsView.swift; sourceTree = "<group>"; };
-		E096E6B22AF18CC9003ADB15 /* ReorderableForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableForEach.swift; sourceTree = "<group>"; };
 		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
 		E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Solid-900.otf"; sourceTree = "<group>"; };
 		E0986BEB2B2B512300CE938B /* Font Awesome 6 Pro-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Regular-400.otf"; sourceTree = "<group>"; };
@@ -225,7 +220,6 @@
 		E0A567E72AE8BE13007313FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E0A567EB2AE8C8FC007313FC /* SongSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongSettingsViewModel.swift; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
-		E0AC30182AA0F58C00C899B9 /* PersistenceController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
@@ -266,6 +260,8 @@
 		E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E0E779452A8AB82F001D9A6A /* DefaultSongSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSongSearchView.swift; sourceTree = "<group>"; };
+		E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderDropViewDelegate.swift; sourceTree = "<group>"; };
+		E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0F95C822A13C2E000C2D21C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		E0F95C852A13C74C00C2D21C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		E0FD46252B1F7DBD00699587 /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
@@ -545,10 +541,8 @@
 				E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */,
 				E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */,
 				E0F95C822A13C2E000C2D21C /* MailView.swift */,
-				E0760D3C2A5364C400E51F14 /* RichTextEditorViewController.swift */,
 				E041055E2A90029900215FB0 /* HapticManager.swift */,
 				E06076B72A94BB5200ECB31F /* NotificationManager.swift */,
-				E0AC30182AA0F58C00C899B9 /* PersistenceController.swift */,
 				E00E845C2B222AEB00573A9F /* StoreKitManager.swift */,
 			);
 			path = Utils;
@@ -586,7 +580,6 @@
 			children = (
 				E0B02B9D2AF5A374002E10D4 /* Intro */,
 				E050D14C2A02FD3D004CC45E /* WelcomeView.swift */,
-				E078B0592AA61F48006C6CBE /* ChangeLogicView.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -603,8 +596,8 @@
 		E050D15C2A03035F004CC45E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E0E79D4B2B5F00FF0030186C /* Delegates */,
 				E050D15D2A030368004CC45E /* Extensions.swift */,
-				E096E6B22AF18CC9003ADB15 /* ReorderableForEach.swift */,
 				E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */,
 				E0B02B942AF572F8002E10D4 /* TipKit.swift */,
 			);
@@ -1032,6 +1025,15 @@
 			path = "View Model";
 			sourceTree = "<group>";
 		};
+		E0E79D4B2B5F00FF0030186C /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */,
+				E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
 		E0ED899C2A4E091C00EB4A89 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1228,7 +1230,6 @@
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,
 				E04247B32A02F6DF00CA48B3 /* User.swift in Sources */,
 				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
-				E078B05A2AA61F48006C6CBE /* ChangeLogicView.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
 				E0CC33212A04064500CC38C6 /* SongService.swift in Sources */,
 				E024A4C22B041F3700CA0406 /* SongView.swift in Sources */,
@@ -1239,7 +1240,6 @@
 				E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */,
 				E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */,
 				E04FB1192A17D6F0002FEEA4 /* ProfileViewModel.swift in Sources */,
-				E0760D3D2A5364C400E51F14 /* RichTextEditorViewController.swift in Sources */,
 				E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */,
 				E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */,
 				E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */,
@@ -1263,7 +1263,6 @@
 				E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */,
 				E04FB1162A17D356002FEEA4 /* SettingsView.swift in Sources */,
 				E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */,
-				E096E6B32AF18CC9003ADB15 /* ReorderableForEach.swift in Sources */,
 				E0CC33232A040BB700CC38C6 /* NewSongView.swift in Sources */,
 				E08CBE1D2A79ACD300DF1E64 /* DefaultSongsView.swift in Sources */,
 				E050D1592A03031B004CC45E /* MenuView.swift in Sources */,
@@ -1273,10 +1272,10 @@
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
+				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0E779462A8AB82F001D9A6A /* DefaultSongSearchView.swift in Sources */,
 				E024A4C32B041F3900CA0406 /* AllSongView.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
-				E0AC30192AA0F58C00C899B9 /* PersistenceController.swift in Sources */,
 				E03461932B5720CB00738817 /* AdFreeConfirmation.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,
 				E05226522A1BBCFC00ECF255 /* AllSongMoveView.swift in Sources */,
@@ -1291,6 +1290,7 @@
 				E0CA853F2B081D5100188CD0 /* ListHeaderView.swift in Sources */,
 				E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */,
 				E0CA85412B081D5100188CD0 /* NotificationRowView.swift in Sources */,
+				E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */,
 				E0C078282B4463FB00F91287 /* SortView.swift in Sources */,
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
 				E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */,
@@ -1491,7 +1491,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Lyrics;
+				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -1541,7 +1541,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Lyrics;
+				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

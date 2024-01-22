@@ -13,14 +13,11 @@ enum GridItemType {
 }
 
 struct WelcomeView: View {
-    // Enivronment & Object vars
     @Environment(\.presentationMode) var presMode
     @ObservedObject var notificationManager = NotificationManager()
     @ObservedObject var mainViewModel = MainViewModel()
     
     @EnvironmentObject var authViewModel: AuthViewModel
-    
-    let persistenceController = PersistenceController()
     
     let columns = [
         GridItem(.adaptive(minimum: 80))
