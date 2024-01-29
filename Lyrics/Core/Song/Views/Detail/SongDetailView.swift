@@ -34,6 +34,7 @@ struct SongDetailView: View {
     @State var songIds: [String]?
     
     @State var showEditView = false
+    @State var showMoveView = false
     @State var showSettingsView = false
     @State var wordCountBool = false
     @State var showDeleteSheet = false
@@ -226,8 +227,8 @@ struct SongDetailView: View {
                             })
                             .sheet(isPresented: $showNotesView) {
                                 NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
-                                    .onDisappear {
-                                        notesViewModel.updateNotes(song, notes: notesViewModel.notes)
+                                    .onChange(of: notesViewModel.notes) { notes in
+                                        notesViewModel.updateNotes(song, notes: notes)
                                     }
                             }
                             
@@ -424,6 +425,9 @@ struct SongDetailView: View {
         }
         .sheet(isPresented: $showEditView) {
             SongEditView(song: song, showProfileView: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
+        }
+        .sheet(isPresented: $showMoveView) {
+            AllSongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
         }
         .bottomSheet(isPresented: $showSettingsView, detents: [.medium(), .large()]) {
             SongSettingsView(song: song, autoscrollDuration: $autoscrollDuration, hasDeletedSong: $hasDeletedSong)
@@ -712,6 +716,11 @@ struct SongDetailView: View {
             }, label: {
                 Label("Edit", systemImage: "pencil")
             })
+//            Button(action: {
+//                showMoveView.toggle()
+//            }, label: {
+//                Label("Move", systemImage: "folder")
+//            })
             Button(role: .destructive, action: {
                 showDeleteSheet.toggle()
             }, label: {

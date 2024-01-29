@@ -318,7 +318,7 @@ class SongService {
 	func fetchNotes(song: Song, completion: @escaping(String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").getDocument { snapshot, error in
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").addSnapshotListener { snapshot, error in
 			guard let snapshot = snapshot else { return }
 			guard let song = try? snapshot.data(as: Song.self) else { return }
 			
@@ -381,7 +381,6 @@ class SongService {
 						completionString(error.localizedDescription)
 					} else {
 						completionBool(true)
-						print("Song artist updated to \(artist)")
 					}
 				}
 			}

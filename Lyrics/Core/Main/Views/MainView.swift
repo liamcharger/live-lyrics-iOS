@@ -513,18 +513,18 @@ struct MainView: View {
                                                                         }
                                                                     }
                                                             }
-                                                            .onDrag {
-                                                                self.draggedSong = song
-                                                                return NSItemProvider()
-                                                            }
-                                                            .onDrop(
-                                                                of: [.text],
-                                                                delegate: SongDropViewDelegate(
-                                                                    destinationItem: song,
-                                                                    items: $mainViewModel.songs,
-                                                                    draggedItem: $draggedSong
-                                                                )
-                                                            )
+//                                                            .onDrag {
+//                                                                self.draggedSong = song
+//                                                                return NSItemProvider()
+//                                                            }
+//                                                            .onDrop(
+//                                                                of: [.text],
+//                                                                delegate: SongDropViewDelegate(
+//                                                                    destinationItem: song,
+//                                                                    items: $mainViewModel.songs,
+//                                                                    draggedItem: $draggedSong
+//                                                                )
+//                                                            )
                                                         }
                                                     }
                                                 }
@@ -686,7 +686,7 @@ struct MainView: View {
                     }
                 } message: {
                     if let selectedFolder = selectedFolder {
-                        Text("Are you sure you want to delete \"\(selectedFolder.title)\"?")
+                        Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"?")
                     }
                 }
                 .sheet(isPresented: $showSongMoveSheet) {

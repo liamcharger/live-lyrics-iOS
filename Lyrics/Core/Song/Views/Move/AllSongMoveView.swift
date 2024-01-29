@@ -12,29 +12,23 @@ import FASwiftUI
 #endif
 
 struct AllSongMoveView: View {
-    // Environment vars
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
     @Environment(\.presentationMode) var presMode
     
-    // Binding vars
     @Binding var showProfileView: Bool
     
-    // Let vars
     let song: Song
     let songTitle: String
     
-    // State vars
     @State var errorMessage = ""
     @State var text = ""
     
     @State var showError = false
     @State var showNewFolderView = false
     
-    // FocusState vars
     @FocusState var isFocused: Bool
     
-    // Init
     init(song: Song, showProfileView: Binding<Bool>, songTitle: String) {
         self.song = song
         self.songTitle = songTitle

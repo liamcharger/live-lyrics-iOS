@@ -24,7 +24,7 @@ struct MenuView: View {
     @State var showWebView = false
     @State var showPremiumView = false
     @State var showDeleteSheet = false
-    @State var showPaywall = false
+    @State var showRefreshDialog = false
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     
@@ -32,6 +32,16 @@ struct MenuView: View {
     
     var isAuthorizedForPayments: Bool {
         return SKPaymentQueue.canMakePayments()
+    }
+    
+    func purchaseSubscription(product: Product) async {
+        do {
+            if try await storeKitManager.purchase(product) != nil {
+                
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     var body: some View {
@@ -85,7 +95,9 @@ struct MenuView: View {
                     HStack {
                         ForEach(storeKitManager.storeProducts, id: \.self) { product in
                             Button {
-                                showPaywall.toggle()
+                                Task {
+                                    await purchaseSubscription(product: product)
+                                }
                             } label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 6) {
@@ -108,10 +120,10 @@ struct MenuView: View {
                             }
                             .disabled(!isAuthorizedForPayments)
                             .opacity(!isAuthorizedForPayments ? 0.5 : 1)
-                            .bottomSheet(isPresented: $showPaywall, detents: [.medium()]) {
-                                AdFreeConfirmationView(isDisplayed: $showPaywall)
-                                    .environmentObject(storeKitManager)
-                            }
+//                            .bottomSheet(isPresented: $showPaywall, detents: [.medium()]) {
+//                                AdFreeConfirmationView(isDisplayed: $showPaywall)
+//                                    .environmentObject(storeKitManager)
+//                            }
                         }
                     }
                     //                        }
