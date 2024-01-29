@@ -140,7 +140,7 @@ struct MenuView: View {
                 }
                 Spacer()
                 if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-9538983146851531/2834324540", height: 50)
+                    AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 50)
                         .padding(.bottom, 6)
                 }
                 Button(action: {

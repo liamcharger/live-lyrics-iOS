@@ -211,7 +211,7 @@ struct MainView: View {
             Divider()
             ScrollView {
                 if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-9538983146851531/4662411532", height: 50)
+                    AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 50)
                         .padding([.leading, .top, .trailing])
                 }
                 //                VStack(alignment: .center, spacing: 26) {
