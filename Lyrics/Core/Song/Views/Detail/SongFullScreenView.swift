@@ -37,7 +37,6 @@ struct SongFullScreenView: View {
     // ObservedObject vars
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
-    @ObservedObject var songSettingsViewModel = SongSettingsViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
     // Environment vars
@@ -53,7 +52,6 @@ struct SongFullScreenView: View {
     
     @Binding var duration: String
     
-    @State var showSettingsView = false
     @State var isScrolling = false
     
     @State private var contentOffset: CGPoint = .zero
@@ -249,7 +247,7 @@ struct SongFullScreenView: View {
                             .imageScale(.medium)
                             .padding()
                             .font(.body.weight(.semibold))
-                            .foregroundColor(Color("Color"))
+                            .foregroundColor(.primary)
                             .background(Material.regular)
                             .clipShape(Circle())
                     }
@@ -267,7 +265,7 @@ struct SongFullScreenView: View {
                         .imageScale(.medium)
                         .padding()
                         .font(.body.weight(.semibold))
-                        .foregroundColor(Color("Color"))
+                        .foregroundColor(.primary)
                         .background(Material.regular)
                         .clipShape(Capsule())
                     }
@@ -284,7 +282,7 @@ struct SongFullScreenView: View {
                             .imageScale(.medium)
                             .padding()
                             .font(.body.weight(.semibold))
-                            .foregroundColor(Color("Color"))
+                            .foregroundColor(.primary)
                             .background(Material.regular)
                             .clipShape(Circle())
                     }
@@ -292,9 +290,6 @@ struct SongFullScreenView: View {
             }
             .padding([.horizontal, .top])
             .padding(hasHomeButton() ? .bottom : [])
-        }
-        .bottomSheet(isPresented: $showSettingsView) {
-            SongSettingsView(song: song, autoscrollDuration: $duration, hasDeletedSong: $hasDeletedSong)
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {

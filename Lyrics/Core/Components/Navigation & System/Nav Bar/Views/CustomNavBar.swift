@@ -102,16 +102,6 @@ struct CustomNavBar: View {
                 }
             case .RecentlyDeleted:
                 EmptyView()
-            case .DefaultSongs:
-                Button {
-                    showSheet1.toggle()
-                } label: {
-                    Image(systemName: "magnifyingglass")
-                        .modifier(NavBarRowViewModifier())
-                }
-                .sheet(isPresented: $showSheet1) {
-                    DefaultSongSearchView()
-                }
             case .Auth:
                 EmptyView()
             }

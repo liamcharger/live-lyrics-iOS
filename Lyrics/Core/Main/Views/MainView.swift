@@ -126,7 +126,8 @@ struct MainView: View {
         }
     }
     
-    var idiom : UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+    var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+    let pasteboard = UIPasteboard.general
     
     func sortedSongs(songs: [Song]) -> [Song] {
         return songs.sorted(by: { (song1, song2) -> Bool in
@@ -214,39 +215,6 @@ struct MainView: View {
                     AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 50)
                         .padding([.leading, .top, .trailing])
                 }
-                //                VStack(alignment: .center, spacing: 26) {
-                //                    if let fullname = authViewModel.currentUser?.fullname {
-                //                        Text(greetingLogic() + ",\n\(fullname)")
-                //                            .font(.largeTitle.weight(.bold))
-                //                    } else {
-                //                        Text(greetingLogic())
-                //                            .font(.largeTitle.weight(.bold))
-                //                    }
-                //                    Text("Here are some things to get you started.")
-                //                    VStack(spacing: 8) {
-                //                        Button {
-                //                            showNewSong = true
-                //                        } label: {
-                //                            Text("Create a New Song")
-                //                                .modifier(NavButtonViewModifier())
-                //                        }
-                //                        Button {
-                //                            showNewSong = true
-                //                        } label: {
-                //                            Text("Create a New Folder")
-                //                                .modifier(NavButtonViewModifier())
-                //                        }
-                //                        Button {
-                //
-                //                        } label: {
-                //                            Text("Do Something Else")
-                //                                .modifier(NavButtonViewModifier())
-                //                        }
-                //                    }
-                //                }
-                //                .multilineTextAlignment(.center)
-                //                .padding(.vertical, 25)
-                //                .padding(.horizontal)
                 VStack(spacing: 22) {
                     if let notificationStatus = mainViewModel.notificationStatus {
                         if !isSearching {
@@ -264,19 +232,12 @@ struct MainView: View {
                     }
                     VStack {
                         ListHeaderView(title: "Songs")
-                        if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" {
-                            NavigationLink(destination: DefaultSongsView()) {
-                                ListRowView(isEditing: $isEditingSongs, title: "All Songs", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
-                            }
-                        }
                         NavigationLink(destination: {
                             RecentlyDeletedView()
                         }) {
                             ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
                         }
                     }
-                    // MARK: Tools
-                    // ToolsView()
                     // MARK: Folders
                     VStack {
                         VStack {
@@ -296,13 +257,6 @@ struct MainView: View {
                                         .clipShape(Circle())
                                         .font(.footnote.weight(.bold))
                                 }
-                                //                                Button {
-                                //                                    withAnimation(.bouncy(extraBounce: 0.1)) {
-                                //                                        isEditingFolders.toggle()
-                                //                                    }
-                                //                                } label: {
-                                //                                    ListEditButtonView(isEditing: $isEditingFolders)
-                                //                                }
                                 Button {
                                     withAnimation(.bouncy(extraBounce: 0.1)) {
                                         isFoldersCollapsed.toggle()
@@ -428,7 +382,7 @@ struct MainView: View {
                                                                 .deleteDisabled(true)
                                                                 .moveDisabled(true)
                                                         } else {
-                                                            NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: folder)) {
+                                                            NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
                                                                 ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                                     .contextMenu {
                                                                         Button {
@@ -555,13 +509,6 @@ struct MainView: View {
                                         .clipShape(Circle())
                                         .font(.footnote.weight(.bold))
                                 }
-                                //                                Button {
-                                //                                    withAnimation(.bouncy(extraBounce: 0.1)) {
-                                //                                        isEditingSongs.toggle()
-                                //                                    }
-                                //                                } label: {
-                                //                                    ListEditButtonView(isEditing: $isEditingSongs)
-                                //                                }
                                 Button {
                                     showSortSheet.toggle()
                                 } label: {
@@ -618,7 +565,7 @@ struct MainView: View {
                                         HStack {
                                             VStack(alignment: .leading, spacing: 6) {
                                                 HStack {
-                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", isDefaultSong: false, albumData: nil, folder: nil)) {
+                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: nil)) {
                                                         ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
                                                             .contextMenu {
                                                                 songContextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
@@ -672,7 +619,7 @@ struct MainView: View {
                 .padding()
                 .sheet(isPresented: $showEditSheet, onDismiss: {mainViewModel.fetchFolders()}) {
                     if let selectedFolder = selectedFolder {
-                        FolderRowEditView(folder: selectedFolder, showView: $showEditSheet)
+                        FolderEditView(folder: selectedFolder, showView: $showEditSheet, title: .constant(selectedFolder.title))
                     }
                 }
                 .confirmationDialog("Delete Folder", isPresented: $showDeleteSheet) {
@@ -737,23 +684,19 @@ struct MainView: View {
             Menu {
                 Button {
                     selectedSong = song
-#if os(iOS)
-                    let pasteboard = UIPasteboard.general
-                    pasteboard.string = selectedSong?.title
-#else
-                    copyToClipboard(text: selectedSong?.title ?? "")
-#endif
+                    
+                    if let title = selectedSong?.title {
+                        self.pasteboard.string = title
+                    }
                 } label: {
                     Label("Copy Title", systemImage: "textformat")
                 }
                 Button {
                     selectedSong = song
-#if os(iOS)
-                    let pasteboard = UIPasteboard.general
-                    pasteboard.string = selectedSong?.lyrics
-#else
-                    copyToClipboard(text: selectedSong?.lyrics ?? "")
-#endif
+                    
+                    if let lyrics = selectedSong?.lyrics {
+                        self.pasteboard.string = lyrics
+                    }
                 } label: {
                     Label("Copy Lyrics", systemImage: "doc.plaintext")
                 }

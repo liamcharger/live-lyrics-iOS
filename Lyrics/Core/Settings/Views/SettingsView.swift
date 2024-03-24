@@ -72,22 +72,6 @@ struct SettingsView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {
-//                    if authViewModel.currentUser?.id ?? "" == "HyeuTQD8PqfGWFzCIf242dFh0P83" {
-//                        HStack {
-//                            VStack(alignment: .leading, spacing: 10) {
-//                                HStack(spacing: 7) {
-//                                    Text("Allow Explicit Songs")
-//                                    Spacer()
-//                                    Toggle(isOn: $isExplicit, label: {})
-//                                }
-//                                .foregroundColor(.primary)
-//                            }
-//                        }
-//                        .padding()
-//                        .background(Material.regular)
-//                        .cornerRadius(20)
-//                        .foregroundColor(.primary)
-//                    }
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {
@@ -106,24 +90,6 @@ struct SettingsView: View {
                             .mask { Capsule() }
                     }
                     .foregroundColor(.primary)
-//                    HStack {
-//                        VStack(alignment: .leading, spacing: 10) {
-//                            HStack(spacing: 7) {
-//                                Text("Enable Autoscroll")
-//                                Spacer()
-//                                Toggle(isOn: $enableAutoscroll, label: {})
-//                            }
-//                            .foregroundColor(Color("Color"))
-//                        }
-//                    }
-//                    .padding()
-//                    .background {
-//                        Rectangle()
-//                            .fill(.clear)
-//                            .background(Material.regular)
-//                            .mask { Capsule() }
-//                    }
-//                    .foregroundColor(Color("Color"))
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {
@@ -143,11 +109,8 @@ struct SettingsView: View {
                                         Text("Paragraphs")
                                     }
                                 } label: {
-                                    HStack {
-                                        // Image(systemName: "chevron.down")
-                                        Text(wordCountStyle ?? "Choose an Option")
-                                    }
-                                    .foregroundColor(.blue)
+                                    Text(wordCountStyle ?? "Choose an Option")
+                                        .foregroundColor(.blue)
                                 }
                             }
                             .foregroundColor(.primary)
@@ -193,7 +156,7 @@ struct SettingsView: View {
                             .background(Material.regular)
                             .mask { Capsule() }
                     }
-                    .foregroundColor(Color("Color"))
+                    .foregroundColor(.primary)
                     Button {
                         Task {
                             try? await AppStore.sync()

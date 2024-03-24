@@ -43,7 +43,7 @@ struct RowView: View {
                 }
                 .padding()
                 .background(Material.regular)
-                .foregroundColor(Color("Color"))
+                .foregroundColor(.primary)
                 .cornerRadius(20)
             } else {
                 HStack {
@@ -61,7 +61,7 @@ struct RowView: View {
                 }
                 .padding()
                 .background(Material.regular)
-                .foregroundColor(Color("Color"))
+                .foregroundColor(.primary)
                 .cornerRadius(20)
             }
         } else {
@@ -75,7 +75,7 @@ struct RowView: View {
             }
             .padding()
             .background(Material.regular)
-            .foregroundColor(Color("Color"))
+            .foregroundColor(.primary)
             .cornerRadius(20)
         }
     }

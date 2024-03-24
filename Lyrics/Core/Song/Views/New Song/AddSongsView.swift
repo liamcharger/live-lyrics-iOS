@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct AddSongsView: View {
-    // Object vars
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
     @Environment(\.presentationMode) var presMode
     
-    // State vars
     @State var errorMessage = ""
     @State var searchText = ""
     
@@ -24,7 +22,6 @@ struct AddSongsView: View {
     
     @State var selectedSongs: [String: Bool] = [:]
     
-    // Standard vars
     let folder: Folder
     var songs: [Song]
     
@@ -43,7 +40,6 @@ struct AddSongsView: View {
         }
     }
     
-    // Functions
     func addToFolder() {
         var songs: [Song] = []
         
@@ -92,16 +88,13 @@ struct AddSongsView: View {
                     selectedSongs[songID] = true
                     print(song.title)
                 }
-                print("Song ID:", songID, "isSongInMainSongs:", isSongInMainSongs)
             }
         }
     }
     
     var body: some View {
         VStack {
-            // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
-                // MARK: User info
                 Text("Add Songs")
                     .font(.title.weight(.bold))
                 Spacer()
@@ -110,7 +103,7 @@ struct AddSongsView: View {
                         .imageScale(.medium)
                         .padding(12)
                         .font(.body.weight(.semibold))
-                        .foregroundColor(Color("Color"))
+                        .foregroundColor(.primary)
                         .background(Material.regular)
                         .clipShape(Capsule())
                 }
@@ -119,7 +112,7 @@ struct AddSongsView: View {
                         .imageScale(.medium)
                         .padding(12)
                         .font(.body.weight(.semibold))
-                        .foregroundColor(Color("Color"))
+                        .foregroundColor(.primary)
                         .background(Material.regular)
                         .clipShape(Capsule())
                 }
@@ -138,7 +131,7 @@ struct AddSongsView: View {
                                 .imageScale(.medium)
                                 .padding(12)
                                 .font(.body.weight(.semibold))
-                                .foregroundColor(Color("Color"))
+                                .foregroundColor(.primary)
                                 .background {
                                     Rectangle()
                                         .fill(.clear)
@@ -200,7 +193,7 @@ struct AddSongsView: View {
                                     }
                                     .padding()
                                     .background(Material.regular)
-                                    .foregroundColor(Color("Color"))
+                                    .foregroundColor(.primary)
                                     .clipShape(Capsule())
                                     .contextMenu {
                                         Button(action: {

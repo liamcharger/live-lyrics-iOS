@@ -16,7 +16,7 @@ struct SheetCloseButton: View {
                 .imageScale(.medium)
                 .padding(12)
                 .font(.body.weight(.semibold))
-                .foregroundColor(Color("Color"))
+                .foregroundColor(.primary)
                 .background(Material.regular)
                 .clipShape(Circle())
         }

@@ -611,7 +611,7 @@ class SongService {
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
 			"duration": song.duration
-		] as [String: Any]
+		] as [String: Any?]
 		
 		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
 			if let error = error {
@@ -650,7 +650,7 @@ class SongService {
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
 			"duration": song.duration
-		] as [String: Any]
+		] as [String: Any?]
 		
 		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
 			if let error = error {
@@ -727,7 +727,7 @@ class SongService {
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
 			"duration": song.duration
-		] as [String: Any]
+		] as [String: Any?]
 		
 		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "").collection("songs").document(song.id ?? "")
 			.delete { error in
@@ -778,7 +778,7 @@ class SongService {
 			"performanceView": song.performanceView,
 			"autoscrollDuration": song.autoscrollDuration,
 			"duration": song.duration
-		] as [String: Any]
+		] as [String: Any?]
 
 		
 		let firestore = Firestore.firestore()

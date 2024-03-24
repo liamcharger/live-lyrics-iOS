@@ -146,7 +146,7 @@ struct FeaturesSection: View {
                 .padding(12)
             }
             .padding(12)
-            .foregroundColor(Color("Color"))
+            .foregroundColor(.primary)
             .background(Material.regular)
             .cornerRadius(15)
             .frame(minHeight: 400)

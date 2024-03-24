@@ -14,17 +14,10 @@ let showNewFolderKey = "showNewFolderKey"
 
 func hasHomeButton() -> Bool {
     if let keyWindow = UIApplication.shared.windows.first {
-        if #available(iOS 11.0, *) {
-            // Check safe area insets for bottom inset
-            let bottomInset = keyWindow.safeAreaInsets.bottom
-            return bottomInset == 0
-        } else {
-            // For iOS versions earlier than 11, assume it has a home button
-            return true
-        }
+        let bottomInset = keyWindow.safeAreaInsets.bottom
+        return bottomInset == 0
     }
     
-    // Default to true if there is any error
     return true
 }
 

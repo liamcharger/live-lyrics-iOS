@@ -13,16 +13,13 @@ import FASwiftUI
 
 
 struct ProfileView: View {
-    // Environment vars
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.presentationMode) var presMode
     
-    // Binding vars
     @Binding var showProfileView: Bool
     
     let user: User
     
-    // State vars
     @State var fullname = ""
     @State var username = ""
     @State var email = ""
@@ -35,7 +32,6 @@ struct ProfileView: View {
     @State var showDeleteConfirmation = false
     @State var showManageSubscription = false
     
-    // Standard vars
     var isEmpty: Bool {
         fullname.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || email.trimmingCharacters(in: .whitespaces).isEmpty || user.fullname != fullname || user.username != username || user.email != email
     }
@@ -50,9 +46,7 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: Navbar
             HStack(alignment: .center) {
-                // MARK: User info
                 Text("Edit Profile")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
@@ -78,7 +72,7 @@ struct ProfileView: View {
                                     FAText(iconName: "arrow-right", size: 20)
                                         .imageScale(.medium)
                                 }
-                                .foregroundColor(Color("Color"))
+                                .foregroundColor(.primary)
                             }
                             Spacer()
                         }
@@ -89,38 +83,13 @@ struct ProfileView: View {
                                 .background(Material.regular)
                                 .mask { Capsule() }
                         }
-                        .foregroundColor(Color("Color"))
+                        .foregroundColor(.primary)
                     })
                     .sheet(isPresented: $showChangePasswordView) {
                         ResetPasswordView(text: $email)
                             .environmentObject(viewModel)
                     }
                     .padding(.top)
-//                    Button {
-//                        showManageSubscription = true
-//                    } label: {
-//                        HStack {
-//                            VStack(alignment: .leading, spacing: 10) {
-//                                HStack(spacing: 7) {
-//                                    Text("Manage Subscriptions")
-//                                    Spacer()
-//                                    Image(systemName: "arrow.right")
-//                                        .imageScale(.medium)
-//                                }
-//                                .foregroundColor(Color("Color"))
-//                            }
-//                            Spacer()
-//                        }
-//                        .padding()
-//                        .background {
-//                            Rectangle()
-//                                .fill(.clear)
-//                                .background(Material.regular)
-//                                .mask { Capsule() }
-//                        }
-//                        .foregroundColor(Color("Color"))
-//                    }
-//                    .manageSubscriptionsSheet(isPresented: $showManageSubscription)
                     Button(role: .destructive) {
                         showDeleteSheet.toggle()
                     } label: {

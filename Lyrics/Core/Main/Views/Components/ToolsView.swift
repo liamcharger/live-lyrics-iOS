@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct ToolsView: View {
-    
     var body: some View {
         VStack {
             ListHeaderView(title: "Tools")
-            NavigationLink(destination: DefaultSongsView()) {
+            NavigationLink(destination: EmptyView()) {
                 ListRowView(isEditing: .constant(false), title: "Live Queue", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
             }
         }

@@ -37,7 +37,7 @@ struct MenuView: View {
     func purchaseSubscription(product: Product) async {
         do {
             if try await storeKitManager.purchase(product) != nil {
-                
+                print("Product purchased successfully!")
             }
         } catch {
             print(error.localizedDescription)
@@ -47,15 +47,9 @@ struct MenuView: View {
     var body: some View {
         if let user = viewModel.currentUser {
             VStack(spacing: 10) {
-                // MARK: Navbar
                 HStack(alignment: .center, spacing: 10) {
-                    // MARK: User info
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 6) {
-                            //                            if viewModel.currentUser?.hasSubscription ?? false {
-                            //                                Image(systemName: "crown")
-                            //                                    .foregroundColor(.yellow)
-                            //                            }
                             Text(user.fullname)
                                 .font(.title2.weight(.semibold))
                         }
@@ -83,15 +77,6 @@ struct MenuView: View {
                     .padding(.horizontal, -16)
                     .padding(.bottom, 12)
                 if storeKitManager.purchasedProducts.isEmpty {
-                    //                    HStack {
-                    //                        VStack(alignment: .leading, spacing: 16) {
-                    //                            HStack {
-                    //                                Image(systemName: "crown")
-                    //                                Text("Remove Ads")
-                    //                                Spacer()
-                    //                            }
-                    //                            .padding(.top, 12)
-                    //                            .font(.title2.weight(.bold))
                     HStack {
                         ForEach(storeKitManager.storeProducts, id: \.self) { product in
                             Button {
@@ -120,23 +105,8 @@ struct MenuView: View {
                             }
                             .disabled(!isAuthorizedForPayments)
                             .opacity(!isAuthorizedForPayments ? 0.5 : 1)
-//                            .bottomSheet(isPresented: $showPaywall, detents: [.medium()]) {
-//                                AdFreeConfirmationView(isDisplayed: $showPaywall)
-//                                    .environmentObject(storeKitManager)
-//                            }
                         }
                     }
-                    //                        }
-                    //                    }
-                    //                    .frame(maxWidth: .infinity)
-                    //                    .padding(12)
-                    //                    .background {
-                    //                        Rectangle()
-                    //                            .fill(.clear)
-                    //                            .background(Material.regular)
-                    //                            .mask { RoundedRectangle(cornerRadius: 15, style: .continuous) }
-                    //                    }
-                    //                    .foregroundColor(Color("Color"))
                 }
                 Spacer()
                 if storeKitManager.purchasedProducts.isEmpty {
@@ -155,18 +125,14 @@ struct MenuView: View {
                                 FAText(iconName: "files", size: 20)
                                     .font(.body.weight(.semibold))
                             }
-                            .foregroundColor(Color("Color"))
+                            .foregroundColor(.primary)
                         }
                         Spacer()
                     }
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Material.regular)
-                            .mask { Capsule() }
-                    }
-                    .foregroundColor(Color("Color"))
+                    .background(Material.regular)
+                    .foregroundColor(.primary)
+                    .clipShape(Capsule())
                 })
                 .sheet(isPresented: $showWebView) {
                     WebView()
@@ -183,18 +149,14 @@ struct MenuView: View {
                                 FAText(iconName: "gear", size: 20)
                                     .font(.body.weight(.semibold))
                             }
-                            .foregroundColor(Color("Color"))
+                            .foregroundColor(.primary)
                         }
                         Spacer()
                     }
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Material.regular)
-                            .mask { Capsule() }
-                    }
-                    .foregroundColor(Color("Color"))
+                    .background(Material.regular)
+                    .foregroundColor(.primary)
+                    .clipShape(Capsule())
                 })
                 .sheet(isPresented: $showSettingsView) {
                     SettingsView(user: user)
@@ -216,19 +178,14 @@ struct MenuView: View {
                         Spacer()
                     }
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(.blue)
-                            .mask { Capsule() }
-                    }
+                    .background(Color.blue)
+                    .clipShape(Capsule())
                 })
                 .opacity(!MFMailComposeViewController.canSendMail() ? 0.5 : 1.0)
                 .disabled(!MFMailComposeViewController.canSendMail())
                 .sheet(isPresented: $showMailView) {
                     MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
                 }
-                // Logout Button
                 Button(action: {
                     showDeleteSheet.toggle()
                 }, label: {
@@ -246,12 +203,8 @@ struct MenuView: View {
                         Spacer()
                     }
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Color.red)
-                            .mask { Capsule() }
-                    }
+                    .background(Color.red)
+                    .clipShape(Capsule())
                 })
                 .confirmationDialog("Are you sure you want to log out? This action cannot be undone.", isPresented: $showDeleteSheet, titleVisibility: .visible) {
                     Button("Logout", role: .destructive) {

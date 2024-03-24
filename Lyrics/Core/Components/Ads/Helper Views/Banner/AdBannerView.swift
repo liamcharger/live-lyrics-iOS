@@ -27,6 +27,7 @@ struct AdBannerView: View {
                 .foregroundColor(.gray)
                 .clipShape(Capsule())
                 BannerAd(adUnitID: unitId)
+                    .frame(maxWidth: .infinity)
             }
             .frame(maxHeight: height)
         }
