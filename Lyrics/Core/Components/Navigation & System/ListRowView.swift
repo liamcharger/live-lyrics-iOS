@@ -26,18 +26,25 @@ struct ListRowView: View {
                 Text(title)
                     .lineLimit(1)
                     .multilineTextAlignment(.leading)
-                if let song = subtitleForSong {
-                    if viewModel.currentUser?.showDataUnderSong != "None" {
-                        if viewModel.currentUser?.showDataUnderSong == "Show Lyrics" {
-                            Text(subtitleForSong?.lyrics ?? "No lyrics")
-                                .lineLimit(2)
-                                .multilineTextAlignment(.leading)
-                                .foregroundColor(.gray)
-                        } else if viewModel.currentUser?.showDataUnderSong == "Show Date" {
+                if let song = subtitleForSong, let user = viewModel.currentUser {
+                    if user.showDataUnderSong != "None" {
+                        switch user.showDataUnderSong {
+                        case "Show Lyrics":
+                            Text(!song.lyrics.isEmpty ? song.lyrics : "No lyrics")
+                                .modifier(SubtitleViewModifier())
+                        case "Show Date":
                             Text(song.timestamp.formatted())
-                                .lineLimit(2)
-                                .multilineTextAlignment(.leading)
-                                .foregroundColor(.gray)
+                                .modifier(SubtitleViewModifier())
+                        case "Show Artist":
+                            if let artist = song.artist {
+                                Text(!artist.isEmpty ? artist : "No artist")
+                                    .modifier(SubtitleViewModifier())
+                            } else {
+                                Text("No artist")
+                                    .modifier(SubtitleViewModifier())
+                            }
+                        default:
+                            EmptyView()
                         }
                     }
                 }
@@ -58,17 +65,25 @@ struct ListRowView: View {
         .background(Material.regular)
         .foregroundColor(.primary)
         .modifier(ListViewModifier(capsule: subtitleForSong == nil))
-        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 30))
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 22))
     }
 }
 
+struct SubtitleViewModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .lineLimit(2)
+            .multilineTextAlignment(.leading)
+            .foregroundColor(.gray)
+    }
+}
 struct ListViewModifier: ViewModifier {
     let capsule: Bool
     
     func body(content: Content) -> some View {
         if !capsule {
             content
-                .cornerRadius(30)
+                .cornerRadius(22)
         } else {
             content
                 .clipShape(Capsule())

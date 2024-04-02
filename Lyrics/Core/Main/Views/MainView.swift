@@ -120,9 +120,15 @@ struct MainView: View {
                 case .pins:
                     return song1.pinned ?? false && !(song2.pinned ?? false)
                 }
-            }).filter {
-                $0.title.lowercased().contains(lowercasedQuery)
+            })
+            .filter { item in
+                if let artist = item.artist {
+                    return item.title.lowercased().contains(lowercasedQuery) || artist.lowercased().contains(lowercasedQuery)
+                } else {
+                    return item.title.lowercased().contains(lowercasedQuery)
+                }
             }
+
         }
     }
     
@@ -238,7 +244,6 @@ struct MainView: View {
                             ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
                         }
                     }
-                    // MARK: Folders
                     VStack {
                         VStack {
                             HStack {
@@ -294,7 +299,6 @@ struct MainView: View {
                                                             closeFolder()
                                                         } else {
                                                             closeFolder()
-                                                            
                                                             openFolder(folder)
                                                         }
                                                     } else {
@@ -490,7 +494,6 @@ struct MainView: View {
                             }
                         }
                     }
-                    // MARK: My Songs
                     VStack {
                         VStack {
                             HStack(spacing: 3) {

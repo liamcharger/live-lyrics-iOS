@@ -9,14 +9,11 @@ import SwiftUI
 import StoreKit
 
 struct SettingsView: View {
-    // Environment vars
     @Environment(\.presentationMode) var presMode
     @EnvironmentObject var authViewModel: AuthViewModel
     
-    // Let vars
     var user: User
     
-    // State vars
     @State var errorMessage = ""
     
     @State var showError = false
@@ -28,7 +25,6 @@ struct SettingsView: View {
     @State var selection: String?
     @State var wordCountStyle: String?
     
-    // ObservedObject vars
     @ObservedObject var settingsViewModel: SettingsViewModel
     
     func fetchUser(withUid uid: String) {
@@ -50,9 +46,7 @@ struct SettingsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
-                // MARK: User info
                 Text("Settings")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
@@ -131,13 +125,16 @@ struct SettingsView: View {
                                 Spacer()
                                 Menu {
                                     Button(action: {selection = "Show Date"}) {
-                                        Text("Show Date")
+                                        Label("Date", systemImage: selection == "Show Date" ? "checkmark" : "")
                                     }
                                     Button(action: {selection = "Show Lyrics"}) {
-                                        Text("Show Lyrics")
+                                        Label("Lyrics", systemImage: selection == "Show Lyrics" ? "checkmark" : "")
+                                    }
+                                    Button(action: {selection = "Show Artist"}) {
+                                        Label("Artist", systemImage: selection == "Show Artist" ? "checkmark" : "")
                                     }
                                     Button(action: {selection = "None"}) {
-                                        Text("None")
+                                        Label("None", systemImage: selection == "None" ? "checkmark" : "")
                                     }
                                 } label: {
                                     HStack {
