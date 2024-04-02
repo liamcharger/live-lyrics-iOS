@@ -27,9 +27,20 @@ struct ListRowView: View {
                 Image(systemName: icon)
             }
             VStack(alignment: .leading, spacing: 5) {
-                Text(title)
-                    .lineLimit(1)
-                    .multilineTextAlignment(.leading)
+                HStack(spacing: 7) {
+                    Text(title)
+                        .lineLimit(1)
+                        .multilineTextAlignment(.leading)
+                    if let tags = subtitleForSong?.tags {
+                        HStack(spacing: 5) {
+                            ForEach(tags, id: \.self) { tag in
+                                Circle()
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(songViewModel.getColorForTag(tag))
+                            }
+                        }
+                    }
+                }
                 if let song = subtitleForSong, let user = viewModel.currentUser {
                     if user.showDataUnderSong != "None" {
                         switch user.showDataUnderSong {
@@ -50,15 +61,6 @@ struct ListRowView: View {
                         default:
                             EmptyView()
                         }
-                    }
-                }
-            }
-            if let tags = subtitleForSong?.tags {
-                HStack(spacing: 5) {
-                    ForEach(tags, id: \.self) { tag in
-                        Circle()
-                            .frame(width: 12, height: 12)
-                            .foregroundColor(songViewModel.getColorForTag(tag))
                     }
                 }
             }
