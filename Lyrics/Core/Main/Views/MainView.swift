@@ -15,7 +15,6 @@ import BottomSheet
 struct MainView: View {
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
-    @ObservedObject var networkManager = NetworkManager()
     @ObservedObject var sortViewModel = SortViewModel()
     @ObservedObject var notificationManager = NotificationManager()
     
@@ -128,12 +127,12 @@ struct MainView: View {
                     return item.title.lowercased().contains(lowercasedQuery)
                 }
             }
-
         }
     }
     
     var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let pasteboard = UIPasteboard.general
+    let networkManager = NetworkManager.shared
     
     func sortedSongs(songs: [Song]) -> [Song] {
         return songs.sorted(by: { (song1, song2) -> Bool in
@@ -179,10 +178,10 @@ struct MainView: View {
     }
     
     init() {
-        //        if !networkManager.isConnected {
-        //            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
-        //            mainViewModel.notificationStatus = .firebaseNotification
-        //        }
+        if !networkManager.getNetworkState() {
+            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
+            mainViewModel.notificationStatus = .firebaseNotification
+        }
         
         self.mainViewModel.fetchSongs()
         self.mainViewModel.fetchFolders()

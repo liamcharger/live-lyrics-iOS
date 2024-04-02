@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct RecentlyDeletedView: View {
-    // Object vars
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
-    @ObservedObject var networkManager = NetworkManager()
     
     @EnvironmentObject var storeKitManager: StoreKitManager
     
     @StateObject var authViewModel = AuthViewModel()
     
-    // State vars
     @State var text = ""
     
     @State var showMenu = false
@@ -27,7 +24,6 @@ struct RecentlyDeletedView: View {
     @State private var selectedSong: RecentlyDeletedSong?
     @State private var showDeleteSheet = false
     
-    // Standard vars
     var searchableSongs: [RecentlyDeletedSong] {
         if text.isEmpty {
             return mainViewModel.recentlyDeletedSongs
@@ -187,8 +183,6 @@ struct RecentlyDeletedView: View {
     }
 }
 
-struct RecentlyDeletedView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecentlyDeletedView()
-    }
+#Preview {
+    RecentlyDeletedView()
 }

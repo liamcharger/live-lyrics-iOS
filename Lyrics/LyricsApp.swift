@@ -22,6 +22,9 @@ struct LyricsApp: App {
         GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ "df6aebfe758b46a1c5c8421e06e96fa4" ]
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         FirebaseApp.configure()
+        
+        // NWPathMonitor has a bug that forces getNetworkState() to return false on first fetch, fetch once on launch to unlock correct results
+        let _ = NetworkManager.shared.getNetworkState()
     }
     
     var body: some Scene {
