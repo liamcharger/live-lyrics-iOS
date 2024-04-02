@@ -36,6 +36,7 @@ struct MainView: View {
     @State var showMenu = false
     @State var showDeleteSheet = false
     @State var showEditSheet = false
+    @State var showTagSheet = false
     @State var showFolderSongDeleteSheet = false
     @State var showSongDeleteSheet = false
     @State var showSongEditSheet = false
@@ -94,6 +95,30 @@ struct MainView: View {
                     return song1.timestamp < song2.timestamp
                 case .pins:
                     return song1.pinned ?? false && !(song2.pinned ?? false)
+                case .tags:
+                    let tags1Exist = song1.tags != nil && !song1.tags!.isEmpty
+                    let tags2Exist = song2.tags != nil && !song2.tags!.isEmpty
+                    
+                    if tags1Exist && !tags2Exist {
+                        return true
+                    } else if !tags1Exist && tags2Exist {
+                        return false
+                    } else if tags1Exist && tags2Exist {
+                        let tags1Colors = Set(song1.tags!.map { $0.lowercased() })
+                        let tags2Colors = Set(song2.tags!.map { $0.lowercased() })
+                        let colorOrder: [String] = ["red", "blue", "green", "yellow", "orange"]
+                        
+                        let firstColor1 = colorOrder.first { tags1Colors.contains($0) }
+                        let firstColor2 = colorOrder.first { tags2Colors.contains($0) }
+                        
+                        if let index1 = firstColor1, let index2 = firstColor2 {
+                            return colorOrder.firstIndex(of: index1)! < colorOrder.firstIndex(of: index2)!
+                        } else {
+                            return tags1Colors.count < tags2Colors.count
+                        }
+                    } else {
+                        return false
+                    }
                 }
             })
         } else {
@@ -118,6 +143,30 @@ struct MainView: View {
                     return song1.timestamp > song2.timestamp
                 case .pins:
                     return song1.pinned ?? false && !(song2.pinned ?? false)
+                case .tags:
+                    let tags1Exist = song1.tags != nil && !song1.tags!.isEmpty
+                    let tags2Exist = song2.tags != nil && !song2.tags!.isEmpty
+                    
+                    if tags1Exist && !tags2Exist {
+                        return true
+                    } else if !tags1Exist && tags2Exist {
+                        return false
+                    } else if tags1Exist && tags2Exist {
+                        let tags1Colors = Set(song1.tags!.map { $0.lowercased() })
+                        let tags2Colors = Set(song2.tags!.map { $0.lowercased() })
+                        let colorOrder: [String] = ["red", "blue", "green", "yellow", "orange"]
+                        
+                        let firstColor1 = colorOrder.first { tags1Colors.contains($0) }
+                        let firstColor2 = colorOrder.first { tags2Colors.contains($0) }
+                        
+                        if let index1 = firstColor1, let index2 = firstColor2 {
+                            return colorOrder.firstIndex(of: index1)! < colorOrder.firstIndex(of: index2)!
+                        } else {
+                            return tags1Colors.count < tags2Colors.count
+                        }
+                    } else {
+                        return false
+                    }
                 }
             })
             .filter { item in
@@ -406,30 +455,28 @@ struct MainView: View {
                                                                         Menu {
                                                                             Button {
                                                                                 selectedSong = song
-#if os(iOS)
                                                                                 let pasteboard = UIPasteboard.general
                                                                                 pasteboard.string = selectedSong?.title
-#else
-                                                                                copyToClipboard(text: selectedSong?.title ?? "")
-#endif
                                                                             } label: {
                                                                                 Label("Copy Title", systemImage: "textformat")
                                                                             }
                                                                             Button {
                                                                                 selectedSong = song
-#if os(iOS)
                                                                                 let pasteboard = UIPasteboard.general
                                                                                 pasteboard.string = selectedSong?.lyrics
-#else
-                                                                                copyToClipboard(text: selectedSong?.lyrics ?? "")
-#endif
                                                                             } label: {
                                                                                 Label("Copy Lyrics", systemImage: "doc.plaintext")
                                                                             }
                                                                         } label: {
                                                                             Label("Copy", systemImage: "doc")
                                                                         }
-                                                                        
+                                                                        Button {
+                                                                            selectedFolder = folder
+                                                                            selectedSong = song
+                                                                            showTagSheet = true
+                                                                        } label: {
+                                                                            Label("Tags", systemImage: "tag")
+                                                                        }
                                                                         Button {
                                                                             if song.pinned ?? false {
                                                                                 songViewModel.unpinSong(song)
@@ -648,6 +695,17 @@ struct MainView: View {
                         SongEditView(song: selectedSong, showProfileView: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? "Not Set"), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
                     }
                 }
+                .sheet(isPresented: $showTagSheet, onDismiss: {
+                    mainViewModel.fetchSongs()
+                    if let folder = selectedFolder {
+                        mainViewModel.fetchSongs(folder)
+                    }
+                }) {
+                    if let selectedSong = selectedSong {
+                        let tags: [TagSelectionEnum] = selectedSong.tags?.compactMap { TagSelectionEnum(rawValue: $0) } ?? []
+                        SongTagView(isPresented: $showTagSheet, tags: tags, song: selectedSong)
+                    }
+                }
                 .confirmationDialog("Delete Song", isPresented: $showSongDeleteSheet) {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
@@ -720,7 +778,12 @@ struct MainView: View {
                     Label("Pin", systemImage: "pin")
                 }
             }
-            
+            Button {
+                selectedSong = song
+                showTagSheet = true
+            } label: {
+                Label("Tags", systemImage: "tag")
+            }
             Button(role: .destructive) {
                 selectedSong = song
                 showSongDeleteSheet.toggle()

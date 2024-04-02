@@ -14,7 +14,7 @@ struct SortView: View {
     @Binding var isPresented: Bool
     @Binding var sortSelection: SortSelectionEnum
     
-    private let sortOptions: [SortSelectionEnum] = [.noSelection, .artist, .key, .name, .pins, .dateCreated]
+    private let sortOptions: [SortSelectionEnum] = [.noSelection, .artist, .key, .name, .pins, .tags, .dateCreated]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -56,26 +56,25 @@ struct SortRowView: View {
     var body: some View {
         HStack {
             HStack {
-                switch sortItem {
-                case .noSelection:
-                    Text("Custom")
-                        .multilineTextAlignment(.leading)
-                case .artist:
-                    Text("Artist")
-                        .multilineTextAlignment(.leading)
-                case .key:
-                    Text("Key")
-                        .multilineTextAlignment(.leading)
-                case .name:
-                    Text("Name")
-                        .multilineTextAlignment(.leading)
-                case .pins:
-                    Text("Pins")
-                        .multilineTextAlignment(.leading)
-                case .dateCreated:
-                    Text("Date Created")
-                        .multilineTextAlignment(.leading)
+                Group {
+                    switch sortItem {
+                    case .noSelection:
+                        Text("Custom")
+                    case .artist:
+                        Text("Artist")
+                    case .key:
+                        Text("Key")
+                    case .name:
+                        Text("Name")
+                    case .pins:
+                        Text("Pins")
+                    case .tags:
+                        Text("Tags")
+                    case .dateCreated:
+                        Text("Date Created")
+                    }
                 }
+                .multilineTextAlignment(.leading)
                 Spacer()
                 if sortItem == sortSelection {
                     FAText(iconName: "check", size: 18)

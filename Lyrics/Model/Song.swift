@@ -30,4 +30,5 @@ struct Song: Identifiable, Codable, Equatable {
     var performanceView: Bool?
     var autoscrollDuration: String?
     var duration: String?
+    var tags: [String]?
 }

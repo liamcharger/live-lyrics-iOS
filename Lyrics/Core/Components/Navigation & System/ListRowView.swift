@@ -10,7 +10,11 @@ import FASwiftUI
 
 struct ListRowView: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    
+    @ObservedObject var songViewModel = SongViewModel()
+    
     @Binding var isEditing: Bool
+    
     let title: String
     let navArrow: String?
     let imageName: String?
@@ -46,6 +50,15 @@ struct ListRowView: View {
                         default:
                             EmptyView()
                         }
+                    }
+                }
+            }
+            if let tags = subtitleForSong?.tags {
+                HStack(spacing: 5) {
+                    ForEach(tags, id: \.self) { tag in
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(songViewModel.getColorForTag(tag))
                     }
                 }
             }

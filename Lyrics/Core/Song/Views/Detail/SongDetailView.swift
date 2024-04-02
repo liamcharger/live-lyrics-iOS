@@ -254,10 +254,19 @@ struct SongDetailView: View {
                 }
                 .padding([.horizontal])
                 .padding(.top, 10)
-                HStack(alignment: .center, spacing: 8) {
+                HStack(alignment: .center, spacing: 10) {
                     Text(title)
                         .font(.system(size: 24, design: .rounded).weight(.bold))
                         .lineLimit(1).truncationMode(.tail)
+                    if let tags = song.tags {
+                        HStack(spacing: 5) {
+                            ForEach(tags, id: \.self) { tag in
+                                Circle()
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(songViewModel.getColorForTag(tag))
+                            }
+                        }
+                    }
                     Spacer()
                     Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
                 }
@@ -623,7 +632,6 @@ struct SongDetailView: View {
                 .modifier(NavBarButtonViewModifier())
         }
     }
-    
     var settings: some View {
         Menu {
             Button(action: {

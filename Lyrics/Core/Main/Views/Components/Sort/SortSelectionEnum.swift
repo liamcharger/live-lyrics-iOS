@@ -14,4 +14,5 @@ enum SortSelectionEnum: String {
     case name
     case dateCreated
     case pins
+    case tags
 }

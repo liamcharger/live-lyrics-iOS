@@ -242,4 +242,32 @@ class SongViewModel: ObservableObject {
     func unpinSong(_ song: Song) {
         service.unpinSong(song)
     }
+    
+    func updateTagsForSong(_ song: Song, tags: [TagSelectionEnum]) {
+        service.updateTagsForSong(song, tags: tags) { error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+        }
+    }
+    
+    func getColorForTag(_ tagColor: String) -> Color {
+        switch tagColor {
+        case "red":
+            return .red
+        case "green":
+            return .green
+        case "blue":
+            return .blue
+        case "gray":
+            return .gray
+        case "orange":
+            return .orange
+        case "yellow":
+            return .yellow
+        default:
+            return .gray
+        }
+    }
 }

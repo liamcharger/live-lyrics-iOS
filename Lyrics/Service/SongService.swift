@@ -920,6 +920,14 @@ class SongService {
 		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").updateData(["pinned": false])
 	}
 	
+	func updateTagsForSong(_ song: Song, tags: [TagSelectionEnum], completion: ((Error?) -> Void)? = nil) {
+		guard let uid = Auth.auth().currentUser?.uid, let songId = song.id else { return }
+		
+		let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(songId)
+		
+		songRef.updateData(["tags": tags.map { $0.rawValue }], completion: completion)
+	}
+	
 	func fetchPinStatus(song: Song, completion: @escaping(Bool) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").addSnapshotListener { snapshot, error in
