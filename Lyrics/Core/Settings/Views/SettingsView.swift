@@ -84,32 +84,28 @@ struct SettingsView: View {
                             .mask { Capsule() }
                     }
                     .foregroundColor(.primary)
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Word Count Style")
-                                Spacer()
-                                Menu {
-                                    Button(action: {wordCountStyle = "Characters"}) {
-                                        Text("Characters")
-                                    }
-                                    Button(action: {wordCountStyle = "Words"}) {
-                                        Text("Words")
-                                    }
-                                    Button(action: {wordCountStyle = "Spaces"}) {
-                                        Text("Spaces")
-                                    }
-                                    Button(action: {wordCountStyle = "Paragraphs"}) {
-                                        Text("Paragraphs")
-                                    }
-                                } label: {
-                                    Text(wordCountStyle ?? "Choose an Option")
-                                        .foregroundColor(.blue)
-                                }
+                    HStack(spacing: 7) {
+                        Text("Word Count Style")
+                        Spacer()
+                        Menu {
+                            Button(action: {wordCountStyle = "Characters"}) {
+                                Text("Characters")
                             }
-                            .foregroundColor(.primary)
+                            Button(action: {wordCountStyle = "Words"}) {
+                                Text("Words")
+                            }
+                            Button(action: {wordCountStyle = "Spaces"}) {
+                                Text("Spaces")
+                            }
+                            Button(action: {wordCountStyle = "Paragraphs"}) {
+                                Text("Paragraphs")
+                            }
+                        } label: {
+                            Text(wordCountStyle ?? "Choose an Option")
+                                .foregroundColor(.blue)
                         }
                     }
+                    .foregroundColor(.primary)
                     .padding()
                     .background {
                         Rectangle()
@@ -118,6 +114,8 @@ struct SettingsView: View {
                             .mask { Capsule() }
                     }
                     .foregroundColor(.primary)
+                    .opacity(toggle ? 1 : 0.5)
+                    .disabled(!toggle)
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {
