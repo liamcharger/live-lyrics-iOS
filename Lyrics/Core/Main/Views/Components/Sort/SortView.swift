@@ -14,7 +14,7 @@ struct SortView: View {
     @Binding var isPresented: Bool
     @Binding var sortSelection: SortSelectionEnum
     
-    private let sortOptions: [SortSelectionEnum] = [.noSelection, .artist, .key, .name, .pins, .tags, .dateCreated]
+    private let sortOptions: [SortSelectionEnum] = [.noSelection, .artist, .key, .name, .tags, .dateCreated]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -66,8 +66,6 @@ struct SortRowView: View {
                         Text("Key")
                     case .name:
                         Text("Name")
-                    case .pins:
-                        Text("Pins")
                     case .tags:
                         Text("Tags")
                     case .dateCreated:
