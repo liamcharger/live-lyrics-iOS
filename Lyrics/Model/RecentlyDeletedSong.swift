@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestoreSwift
 import FirebaseFirestore
 
-struct RecentlyDeletedSong: Identifiable, Codable {
+struct RecentlyDeletedSong: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let uid: String
     let timestamp: Date
@@ -28,8 +28,9 @@ struct RecentlyDeletedSong: Identifiable, Codable {
     var artist: String?
     var bpm: String?
     var pinned: Bool?
+    var songId: Int?
     var performanceView: Bool?
-    var enableAutoscroll: Bool?
-    var duration: Int?
     var autoscrollDuration: String?
+    var duration: String?
+    var tags: [String]?
 }
