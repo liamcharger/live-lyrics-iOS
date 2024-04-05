@@ -645,7 +645,7 @@ struct SongDetailView: View {
                 Label("Delete", systemImage: "trash")
             })
         } label: {
-            FAText(iconName: "gear", size: 18)
+            FAText(iconName: "ellipsis", size: 18)
                 .modifier(NavBarButtonViewModifier())
         }
     }
