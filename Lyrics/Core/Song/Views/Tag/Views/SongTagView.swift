@@ -16,7 +16,6 @@ struct SongTagView: View {
     @State var tags: [TagSelectionEnum]
     
     let song: Song
-    private let tagOptions: [TagSelectionEnum] = [.blue, .green, .yellow, .red, .orange]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,7 +29,7 @@ struct SongTagView: View {
             Divider()
             ScrollView {
                 VStack {
-                    ForEach(tagOptions, id: \.self) { fullTag in
+                    ForEach(TagSelectionEnum.allTags, id: \.self) { fullTag in
                         Button(action: {
                             tags.removeAll()
                             tags.append(fullTag)

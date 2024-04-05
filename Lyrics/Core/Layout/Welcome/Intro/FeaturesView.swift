@@ -19,12 +19,9 @@ struct FeaturesView: View {
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
-        FeaturesSection(title: "Brand New UI!", subtitle: "Experience a completely redesigned interface.", imageName: "sparkles", type: .none),
-        FeaturesSection(title: "Folders", subtitle: "Organize your songs with folders.", imageName: "folder", type: .filled),
-        FeaturesSection(title: "Recently Deleted", subtitle: "Never accidentally delete a song.", imageName: "trash", type: .outlined),
-        FeaturesSection(title: "Notes", subtitle: "Add notes to your song to keep track of things you want to remember.", imageName: "doc.text", type: .none),
-        FeaturesSection(title: "Keys", subtitle: "Add a key to your songs so you never forget them.", imageName: "music.note", type: .none),
-        FeaturesSection(title: "And More", subtitle: "Play View, new customization options, and more.", imageName: "ellipsis.circle", type: .none)
+        FeaturesSection(title: "Tags", subtitle: "A new way to organize your songs.", imageName: "sparkles", type: .none),
+        FeaturesSection(title: "Search by Artist", subtitle: "Search for your songs by their artists.", imageName: "folder", type: .filled),
+        FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle", type: .none)
     ]
     
     var body: some View {
@@ -32,6 +29,7 @@ struct FeaturesView: View {
             Text(NSLocalizedString("new_in_live_lyrics", comment: "What's New in Live Lyrics"))
                 .frame(maxWidth: .infinity)
                 .font(.largeTitle.bold())
+                .multilineTextAlignment(.center)
             Spacer()
             VStack(spacing: 0) {
                 TabView(selection: $selectedTab) {

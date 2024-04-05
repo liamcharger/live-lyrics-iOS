@@ -22,7 +22,6 @@ struct ContentView: View {
                 ShowWhatsNew(isDisplayed: $showWhatsNew)
             } else {
                 if !(mainViewModel.systemDoc?.isDisplayed ?? false) {
-                    // MARK: Execute main app
                     if viewModel.userSession == nil {
                         ChooseAuthView()
                             .environmentObject(viewModel)

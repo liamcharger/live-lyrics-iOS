@@ -14,11 +14,6 @@ enum NotificationStatus {
 }
 
 class NotificationManager: ObservableObject {
-    
-    init() {
-        updateAppVersion()
-    }
-    
     func getCurrentAppVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
         let version = (appVersion as! String)

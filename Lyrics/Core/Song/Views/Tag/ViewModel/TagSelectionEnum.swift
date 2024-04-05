@@ -13,4 +13,6 @@ enum TagSelectionEnum: String {
     case orange = "orange"
     case yellow = "yellow"
     case blue = "blue"
+    
+    static let allTags: [TagSelectionEnum] = [.red, .green, .orange, .yellow, .blue]
 }
