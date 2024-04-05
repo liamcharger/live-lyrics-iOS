@@ -248,11 +248,11 @@ struct MainView: View {
                         }) {
                             ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
                         }
-                        NavigationLink(destination: {
-                            TaggedSongsView()
-                        }) {
-                            ListRowView(isEditing: $isEditingSongs, title: "Tagged", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
-                        }
+//                        NavigationLink(destination: {
+//                            TaggedSongsView()
+//                        }) {
+//                            ListRowView(isEditing: $isEditingSongs, title: "Tagged", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
+//                        }
                     }
                     VStack {
                         VStack {
