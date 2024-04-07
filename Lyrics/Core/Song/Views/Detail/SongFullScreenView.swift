@@ -33,7 +33,7 @@ struct SongFullScreenView: View {
     @State var performanceView = false
     
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
     
     @Environment(\.presentationMode) var presMode

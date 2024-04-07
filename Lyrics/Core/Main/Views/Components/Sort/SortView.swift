@@ -9,7 +9,7 @@ import SwiftUI
 import FASwiftUI
 
 struct SortView: View {
-    @ObservedObject var sortViewModel = SortViewModel()
+    @ObservedObject var sortViewModel = SortViewModel.shared
     
     @Binding var isPresented: Bool
     @Binding var sortSelection: SortSelectionEnum

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NewSongView: View {
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     @State var title = ""
     @State var lyrics = ""

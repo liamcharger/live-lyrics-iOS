@@ -8,20 +8,17 @@
 import SwiftUI
 
 struct SongEditView: View {
-    // Environment vars
-    @ObservedObject var viewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
     
     let song: Song
     
-    // Binding vars
     @Binding var showProfileView: Bool
     @Binding var title: String
     @Binding var key: String
     @Binding var duration: String
     @Binding var artist: String
     
-    // State vars
     @State var errorMessage = ""
     @State var stateArtist = ""
     @State var stateKey = ""
@@ -31,14 +28,12 @@ struct SongEditView: View {
     @State var showError = false
     @State var showNotesView = false
     
-    // Standard vars
     var isEmpty: Bool {
         title.trimmingCharacters(in: .whitespaces).isEmpty
     }
     
-    // Functions
     func update() {
-        viewModel.updateKey(song, key: stateKey) { success in
+        songViewModel.updateKey(song, key: stateKey) { success in
             if success {
                 self.key = stateKey
                 showProfileView = false
@@ -48,7 +43,7 @@ struct SongEditView: View {
         } completionString: { string in
             errorMessage = string
         }
-        viewModel.updateArtist(song, artist: stateArtist) { success in
+        songViewModel.updateArtist(song, artist: stateArtist) { success in
             if success {
                 self.artist = stateArtist
                 self.showProfileView = false
@@ -58,7 +53,7 @@ struct SongEditView: View {
         } completionString: { string in
             errorMessage = string
         }
-        viewModel.updateDuration(song, duration: stateDuration) { success in
+        songViewModel.updateDuration(song, duration: stateDuration) { success in
             if success {
                 self.duration = stateDuration
                 self.showProfileView = false
@@ -68,7 +63,7 @@ struct SongEditView: View {
         } completionString: { string in
             errorMessage = string
         }
-        viewModel.updateTitle(song, title: stateTitle) { success in
+        songViewModel.updateTitle(song, title: stateTitle) { success in
             if success {
                 self.title = stateTitle
                 self.showProfileView = false

@@ -14,9 +14,9 @@ import BottomSheet
 
 struct MainView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
-    @ObservedObject var sortViewModel = SortViewModel()
-    @ObservedObject var notificationManager = NotificationManager()
+    @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var sortViewModel = SortViewModel.shared
+    @ObservedObject var notificationManager = NotificationManager.shared
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager

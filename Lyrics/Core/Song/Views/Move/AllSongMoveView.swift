@@ -13,7 +13,7 @@ import FASwiftUI
 
 struct AllSongMoveView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
     
     @Binding var showProfileView: Bool

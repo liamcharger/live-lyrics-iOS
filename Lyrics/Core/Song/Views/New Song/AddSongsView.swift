@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddSongsView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
     
     @State var errorMessage = ""

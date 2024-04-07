@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FolderEditView: View {
-    @ObservedObject var viewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
     
     @Binding var showProfileView: Bool
@@ -46,7 +47,7 @@ struct FolderEditView: View {
                 .padding(.horizontal)
             Spacer()
             Button {
-                viewModel.updateTitle(folder, title: text) { success in
+                songViewModel.updateTitle(folder, title: text) { success in
                     if success {
                         self.title = text
                         showProfileView = false

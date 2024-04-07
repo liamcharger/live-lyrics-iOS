@@ -12,7 +12,7 @@ import SwiftUI
 import CoreData
 
 class MainViewModel: ObservableObject {
-    let notificationManager = NotificationManager()
+    let notificationManager = NotificationManager.shared
     var remoteConfig: RemoteConfig!
     
     @Published var songs: [Song] = []

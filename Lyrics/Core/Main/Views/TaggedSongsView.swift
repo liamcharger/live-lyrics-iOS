@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaggedSongsView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     @EnvironmentObject var storeKitManager: StoreKitManager
     

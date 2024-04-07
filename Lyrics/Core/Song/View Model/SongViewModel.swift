@@ -10,7 +10,9 @@ import SwiftUI
 
 class SongViewModel: ObservableObject {
     @ObservedObject var mainViewModel = MainViewModel.shared
+    
     let service = SongService()
+    static let shared = SongViewModel()
     
     func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in

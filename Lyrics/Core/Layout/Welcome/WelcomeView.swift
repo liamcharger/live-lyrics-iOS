@@ -14,7 +14,8 @@ enum GridItemType {
 
 struct WelcomeView: View {
     @Environment(\.presentationMode) var presMode
-    @ObservedObject var notificationManager = NotificationManager()
+    
+    @ObservedObject var notificationManager = NotificationManager.shared
     @ObservedObject var mainViewModel = MainViewModel.shared
     
     @EnvironmentObject var authViewModel: AuthViewModel

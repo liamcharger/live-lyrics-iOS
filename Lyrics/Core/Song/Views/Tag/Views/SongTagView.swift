@@ -9,7 +9,7 @@ import SwiftUI
 import FASwiftUI
 
 struct SongTagView: View {
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     @Binding var isPresented: Bool
     
@@ -31,12 +31,12 @@ struct SongTagView: View {
                 VStack {
                     ForEach(TagSelectionEnum.allTags, id: \.self) { fullTag in
                         Button(action: {
-                            if !tags.contains(fullTag) {
-                                tags.append(fullTag)
-                            } else {
-                                tags.removeAll()
-                            }
-                            songViewModel.updateTagsForSong(song, tags: tags)
+//                            if !tags.contains(fullTag) {
+//                                tags.append(fullTag)
+//                            } else {
+//                                tags.removeAll()
+//                            }
+//                            songViewModel.updateTagsForSong(song, tags: tags)
                         }) {
                             HStack {
                                 Text(fullTag.rawValue.capitalized)

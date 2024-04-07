@@ -9,6 +9,7 @@ import Foundation
 
 class SortViewModel: ObservableObject {
     private let sortSelectionKey = "sortSelection"
+    static let shared = SortViewModel()
     
     func saveToUserDefaults(sortSelection: SortSelectionEnum) {
         UserDefaults.standard.set(sortSelection.rawValue, forKey: self.sortSelectionKey)

@@ -11,7 +11,7 @@ import FASwiftUI
 struct ListRowView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     @Binding var isEditing: Bool
     
