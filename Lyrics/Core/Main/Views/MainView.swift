@@ -13,7 +13,7 @@ import BottomSheet
 #endif
 
 struct MainView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var sortViewModel = SortViewModel()
     @ObservedObject var notificationManager = NotificationManager()

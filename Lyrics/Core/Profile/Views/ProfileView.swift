@@ -52,9 +52,7 @@ struct ProfileView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $showProfileView)
             }
-            .padding([.leading, .top, .trailing])
-            .padding(.bottom, 8)
-            .padding(8)
+            .padding()
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {

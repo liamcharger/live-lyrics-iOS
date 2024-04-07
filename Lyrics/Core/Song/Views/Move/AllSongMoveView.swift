@@ -12,7 +12,7 @@ import FASwiftUI
 #endif
 
 struct AllSongMoveView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @Environment(\.presentationMode) var presMode
     
@@ -57,9 +57,7 @@ struct AllSongMoveView: View {
                 }
                 SheetCloseButton(isPresented: $showProfileView)
             }
-            .padding([.leading, .top, .trailing])
-            .padding(.bottom, 8)
-            .padding(8)
+            .padding()
             Divider()
             if mainViewModel.folders.isEmpty {
                 VStack {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddSongsView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @Environment(\.presentationMode) var presMode
     

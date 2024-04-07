@@ -50,7 +50,7 @@ struct SongDetailView: View {
     @State var hasDeletedSong = false
     @State var showNotesStatusIcon = false
     
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var notesViewModel: NotesViewModel

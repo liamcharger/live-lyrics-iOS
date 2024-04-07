@@ -35,14 +35,12 @@ struct NotesView: View {
                         .clipShape(Circle())
                 }
             }
-            .padding([.leading, .top, .trailing], 5)
-            .padding([.leading, .top, .trailing])
+            .padding()
             if #available(iOS 17, *) {
                 TipView(NotesViewTip())
                     .padding([.top, .horizontal])
             }
             Divider()
-                .padding(.top)
             if isLoading {
                 VStack {
                     Spacer()

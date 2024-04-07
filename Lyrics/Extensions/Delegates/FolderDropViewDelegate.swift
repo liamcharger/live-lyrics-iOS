@@ -13,7 +13,7 @@ struct FolderDropViewDelegate: DropDelegate {
     @Binding var items: [Folder]
     @Binding var draggedItem: Folder?
     
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     
     func dropUpdated(info: DropInfo) -> DropProposal? {
         return DropProposal(operation: .move)

@@ -60,9 +60,7 @@ struct SettingsView: View {
                         .clipShape(Circle())
                 }
             }
-            .padding([.leading, .top, .trailing])
-            .padding(.bottom, 8)
-            .padding(8)
+            .padding()
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {
@@ -89,16 +87,16 @@ struct SettingsView: View {
                         Spacer()
                         Menu {
                             Button(action: {wordCountStyle = "Characters"}) {
-                                Text("Characters")
+                                Label("Characters", systemImage: wordCountStyle == "Characters" ? "checkmark" : "")
                             }
                             Button(action: {wordCountStyle = "Words"}) {
-                                Text("Words")
+                                Label("Words", systemImage: wordCountStyle == "Words" ? "checkmark" : "")
                             }
                             Button(action: {wordCountStyle = "Spaces"}) {
-                                Text("Spaces")
+                                Label("Spaces", systemImage: wordCountStyle == "Spaces" ? "checkmark" : "")
                             }
                             Button(action: {wordCountStyle = "Paragraphs"}) {
-                                Text("Paragraphs")
+                                Label("Paragraphs", systemImage: wordCountStyle == "Paragraphs" ? "checkmark" : "")
                             }
                         } label: {
                             Text(wordCountStyle ?? "Choose an Option")

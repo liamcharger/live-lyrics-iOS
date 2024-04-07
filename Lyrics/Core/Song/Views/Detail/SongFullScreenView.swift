@@ -10,11 +10,9 @@ import BottomSheet
 import UIKit
 
 struct SongFullScreenView: View {
-    // Binding vars
     @Binding var dismiss: Bool
     @Binding var hasDeletedSong: Bool
     
-    // State vars
     @State var song: Song
     
     @State private var autoScrollTimer: Timer?
@@ -34,12 +32,10 @@ struct SongFullScreenView: View {
     
     @State var performanceView = false
     
-    // ObservedObject vars
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
-    // Environment vars
     @Environment(\.presentationMode) var presMode
     
     var songs: [Song]?

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class SongViewModel: ObservableObject {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     let service = SongService()
     
     func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
@@ -203,28 +203,24 @@ class SongViewModel: ObservableObject {
     
     func moveSongToRecentlyDeleted(_ song: Song) {
         DispatchQueue.main.async {
-            self.service.moveSongToRecentlyDeleted(song: song) { success in
+            self.service.moveSongToRecentlyDeleted(song: song) { success, errorMessage in
                 if success {
                     self.mainViewModel.fetchSongs()
                 } else {
                     
                 }
-            } completionString: { string in
-                
             }
         }
     }
     
     func moveSongToRecentlyDeleted(_ folder: Folder, _ song: Song) {
         DispatchQueue.main.async {
-            self.service.moveSongToRecentlyDeleted(folder: folder, song: song) { success in
+            self.service.moveSongToRecentlyDeleted(song: song, from: folder) { success, errorMessage in
                 if success {
-                    
+                    self.mainViewModel.fetchSongs(folder)
                 } else {
                     
                 }
-            } completionString: { string in
-                
             }
         }
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecentlyDeletedView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     
     @EnvironmentObject var storeKitManager: StoreKitManager

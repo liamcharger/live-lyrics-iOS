@@ -96,17 +96,13 @@ struct SongEditView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
-                // MARK: User info
                 Text("Edit Song")
                     .font(.title.weight(.bold))
                 Spacer()
                 SheetCloseButton(isPresented: $showProfileView)
             }
-            .padding([.leading, .top, .trailing])
-            .padding(.bottom, 8)
-            .padding(8)
+            .padding()
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {

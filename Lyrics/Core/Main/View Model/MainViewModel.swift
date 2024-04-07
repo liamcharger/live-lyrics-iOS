@@ -32,6 +32,8 @@ class MainViewModel: ObservableObject {
     let service = SongService()
     let userService = UserService()
     
+    static let shared = MainViewModel()
+    
     init() {
         self.fetchFolders()
         self.fetchSystemStatus()

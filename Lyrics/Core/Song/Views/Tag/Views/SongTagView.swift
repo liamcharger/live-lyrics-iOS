@@ -31,8 +31,11 @@ struct SongTagView: View {
                 VStack {
                     ForEach(TagSelectionEnum.allTags, id: \.self) { fullTag in
                         Button(action: {
-                            tags.removeAll()
-                            tags.append(fullTag)
+                            if !tags.contains(fullTag) {
+                                tags.append(fullTag)
+                            } else {
+                                tags.removeAll()
+                            }
                             songViewModel.updateTagsForSong(song, tags: tags)
                         }) {
                             HStack {
