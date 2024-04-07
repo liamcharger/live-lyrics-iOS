@@ -17,8 +17,6 @@ struct NotesView: View {
     
     @Environment(\.presentationMode) var presMode
     
-    @AppStorage(showNotesDescKey) var showNotesTip = true
-    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
@@ -38,7 +36,7 @@ struct NotesView: View {
             .padding()
             if #available(iOS 17, *) {
                 TipView(NotesViewTip())
-                    .padding([.top, .horizontal])
+                    .padding([.bottom, .horizontal])
             }
             Divider()
             if isLoading {

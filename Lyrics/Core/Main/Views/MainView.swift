@@ -254,8 +254,8 @@ struct MainView: View {
 //                            ListRowView(isEditing: $isEditingSongs, title: "Tagged", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
 //                        }
                     }
-                    VStack {
-                        VStack {
+                    LazyVStack {
+                        LazyVStack {
                             HStack {
                                 ListHeaderView(title: "Folders")
                                 Spacer()
@@ -387,7 +387,7 @@ struct MainView: View {
                                                 }
                                             }
                                             if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet {
-                                                VStack {
+                                                LazyVStack {
                                                     ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { song in
                                                         if song.title == "noSongs" {
                                                             Text("No Songs")
@@ -502,8 +502,8 @@ struct MainView: View {
                             }
                         }
                     }
-                    VStack {
-                        VStack {
+                    LazyVStack {
+                        LazyVStack {
                             HStack(spacing: 3) {
                                 ListHeaderView(title: "My Songs")
                                 Spacer()
