@@ -34,11 +34,6 @@ class MainViewModel: ObservableObject {
     
     static let shared = MainViewModel()
     
-    init() {
-        self.fetchFolders()
-        self.fetchSystemStatus()
-    }
-    
     func removeSongEventListener() {
         service.removeSongEventListener()
     }
@@ -62,72 +57,76 @@ class MainViewModel: ObservableObject {
     }
     
     func receivedNotificationFromFirebase(_ notification: Notification) {
-        self.notificationStatus = .firebaseNotification
-        self.notification = notification
+        DispatchQueue.main.async {
+            self.notificationStatus = .firebaseNotification
+            self.notification = notification
+        }
     }
     
     func fetchSongs(_ folder: Folder) {
-        service.fetchSongs(folder) { songs in
+        self.service.fetchSongs(folder) { songs in
             self.folderSongs = songs
             self.isLoadingFolderSongs = false
         }
     }
     
     func fetchSongs() {
-        service.fetchSongs() { songs in
+        self.service.fetchSongs() { songs in
             self.songs = songs
             self.isLoadingSongs = false
         }
     }
     
     func fetchRecentlyDeletedSongs() {
-        service.fetchRecentlyDeletedSongs { songs in
+        self.service.fetchRecentlyDeletedSongs { songs in
             self.recentlyDeletedSongs = songs
             self.isLoadingRecentlyDeletedSongs = false
         }
     }
     
     func fetchNotificationStatus() {
-        remoteConfig = RemoteConfig.remoteConfig()
-        let settings = RemoteConfigSettings()
-        settings.minimumFetchInterval = 0
-        remoteConfig.configSettings = settings
-        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
-        
-        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
-            guard let configUpdate, error == nil else {
-                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
-                return
-            }
-            
-            print("Updated keys: \(configUpdate.updatedKeys)")
-            
-            self.remoteConfig.activate { changed, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-                DispatchQueue.main.async {
-                    if self.remoteConfig.configValue(forKey: "currentVersion").stringValue ?? "" != self.notificationManager.getCurrentAppVersion() {
-                        self.notificationStatus = .updateAvailable
-                    }
-                }
-            }
-        }
+        //        remoteConfig = RemoteConfig.remoteConfig()
+        //        let settings = RemoteConfigSettings()
+        //        settings.minimumFetchInterval = 0
+        //        remoteConfig.configSettings = settings
+        //        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
+        //
+        //        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
+        //            guard let configUpdate, error == nil else {
+        //                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
+        //                return
+        //            }
+        //
+        //            print("Updated keys: \(configUpdate.updatedKeys)")
+        //
+        //            self.remoteConfig.activate { changed, error in
+        //                if let error = error {
+        //                    print(error.localizedDescription)
+        //                }
+        //                DispatchQueue.main.async {
+        //                    if self.remoteConfig.configValue(forKey: "currentVersion").stringValue ?? "" != self.notificationManager.getCurrentAppVersion() {
+        //                        self.notificationStatus = .updateAvailable
+        //                    }
+        //                }
+        //            }
+        //        }
     }
     
     func fetchFolders() {
-        service.fetchFolders { folders in
-            self.folders = folders
-            self.isLoadingFolders = false
+        DispatchQueue.main.async {
+            self.service.fetchFolders { folders in
+                self.folders = folders
+                self.isLoadingFolders = false
+            }
         }
     }
     
     func updateLyrics(_ song: Song, lyrics: String) {
-        service.updateLyrics(song: song, lyrics: lyrics)
+        self.service.updateLyrics(song: song, lyrics: lyrics)
     }
     
     func updateLyrics(_ folder: Folder, _ song: Song, lyrics: String) {
-        service.updateLyrics(folder: folder, song: song, lyrics: lyrics)
+        self.service.updateLyrics(folder: folder, song: song, lyrics: lyrics)
     }
     
     func updateSongOrder() {

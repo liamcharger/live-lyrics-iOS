@@ -198,9 +198,6 @@ struct MainView: View {
         NavigationView {
             content
                 .onAppear {
-                    mainViewModel.fetchSongs()
-                    mainViewModel.fetchNotificationStatus()
-                    
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
                     }

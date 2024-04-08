@@ -16,6 +16,10 @@ struct ContentView: View {
     @State private var showWhatsNew = false
     @State private var showChangeToLocal = false
     
+    init() {
+        mainViewModel.fetchSystemStatus()
+    }
+    
     var body: some View {
         VStack {
             if showWhatsNew {

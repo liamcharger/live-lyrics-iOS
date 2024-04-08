@@ -13,7 +13,7 @@ struct SongDropViewDelegate: DropDelegate {
     @Binding var items: [Song]
     @Binding var draggedItem: Song?
     
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     
     func dropUpdated(info: DropInfo) -> DropProposal? {
         return DropProposal(operation: .move)

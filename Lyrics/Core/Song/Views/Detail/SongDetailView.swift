@@ -279,10 +279,10 @@ struct SongDetailView: View {
                 .onChange(of: lyrics, perform: { newLyrics in
                     mainViewModel.updateLyrics(song, lyrics: newLyrics)
                 })
-                .padding(.leading, 11)
                 .font(.system(size: CGFloat(value), weight: weight, design: design))
                 .lineSpacing(lineSpacing)
                 .focused($isInputActive)
+                .padding(.leading, 11)
             if songs != nil {
                 if wordCountBool {
                     Divider()
