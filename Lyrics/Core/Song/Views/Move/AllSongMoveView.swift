@@ -12,7 +12,7 @@ import FASwiftUI
 #endif
 
 struct AllSongMoveView: View {
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
     

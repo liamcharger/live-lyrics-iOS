@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class SongViewModel: ObservableObject {
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     
     let service = SongService()
     static let shared = SongViewModel()

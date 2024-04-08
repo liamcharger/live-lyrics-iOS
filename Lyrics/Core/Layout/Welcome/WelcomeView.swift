@@ -16,7 +16,7 @@ struct WelcomeView: View {
     @Environment(\.presentationMode) var presMode
     
     @ObservedObject var notificationManager = NotificationManager.shared
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     
     @EnvironmentObject var authViewModel: AuthViewModel
     

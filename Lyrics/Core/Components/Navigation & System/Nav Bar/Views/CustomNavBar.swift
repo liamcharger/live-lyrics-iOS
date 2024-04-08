@@ -9,7 +9,7 @@ import SwiftUI
 import FASwiftUI
 
 struct CustomNavBar: View {
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     
     @Environment(\.presentationMode) var presMode
     @EnvironmentObject var storeKitManager: StoreKitManager

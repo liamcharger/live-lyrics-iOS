@@ -11,7 +11,7 @@ struct ContentView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
     @ObservedObject var notificationManager = NotificationManager.shared
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     
     @State private var showWhatsNew = false
     @State private var showChangeToLocal = false

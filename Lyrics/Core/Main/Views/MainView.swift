@@ -13,7 +13,7 @@ import BottomSheet
 #endif
 
 struct MainView: View {
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var sortViewModel = SortViewModel.shared
     @ObservedObject var notificationManager = NotificationManager.shared
@@ -251,8 +251,8 @@ struct MainView: View {
 //                            ListRowView(isEditing: $isEditingSongs, title: "Tagged", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
 //                        }
                     }
-                    LazyVStack {
-                        LazyVStack {
+                    VStack {
+                        VStack {
                             HStack {
                                 ListHeaderView(title: "Folders")
                                 Spacer()
@@ -384,7 +384,7 @@ struct MainView: View {
                                                 }
                                             }
                                             if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet {
-                                                LazyVStack {
+                                                VStack {
                                                     ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { song in
                                                         if song.title == "noSongs" {
                                                             Text("No Songs")
@@ -499,8 +499,8 @@ struct MainView: View {
                             }
                         }
                     }
-                    LazyVStack {
-                        LazyVStack {
+                    VStack {
+                        VStack {
                             HStack(spacing: 3) {
                                 ListHeaderView(title: "My Songs")
                                 Spacer()
