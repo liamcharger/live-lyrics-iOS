@@ -1,5 +1,5 @@
 {
-  "originHash" : "9c4e4f91e3e7dd208cf346ef91a65c9c913d31d6ffaff1f485da53c75d0b18fa",
+  "originHash" : "2c60440f49bd20c82c96bbbdc24e164cd7792ea80387d70a009f40153d5d4a65",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -26,15 +26,6 @@
       "state" : {
         "revision" : "0e6db002eeb5e3ba402e94dfe6a120f78b5a64df",
         "version" : "0.2.4"
-      }
-    },
-    {
-      "identity" : "faswiftui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mattmaddux/FASwiftUI",
-      "state" : {
-        "revision" : "f7e69239337e06ebb2c298d04ad86b7b2279e671",
-        "version" : "2.1.0"
       }
     },
     {

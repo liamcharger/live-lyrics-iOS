@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FASwiftUI
 
 struct ListRowView: View {
     @EnvironmentObject var viewModel: AuthViewModel

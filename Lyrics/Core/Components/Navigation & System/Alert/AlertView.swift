@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FASwiftUI
 
 struct AlertView: View {
     let title: String

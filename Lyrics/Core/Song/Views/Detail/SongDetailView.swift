@@ -7,7 +7,6 @@
 
 import SwiftUI
 import BottomSheet
-import FASwiftUI
 
 struct SongDetailView: View {
     @State var song: Song

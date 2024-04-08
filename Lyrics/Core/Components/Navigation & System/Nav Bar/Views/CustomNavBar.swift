@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FASwiftUI
 
 struct CustomNavBar: View {
     @ObservedObject var mainViewModel = MainViewModel()

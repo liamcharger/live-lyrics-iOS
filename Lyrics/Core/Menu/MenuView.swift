@@ -8,7 +8,6 @@
 import SwiftUI
 import MessageUI
 import StoreKit
-import FASwiftUI
 import BottomSheet
 
 struct MenuView: View {

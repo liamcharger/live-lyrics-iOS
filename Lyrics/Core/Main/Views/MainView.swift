@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MobileCoreServices
-import FASwiftUI
 #if os(iOS)
 import BottomSheet
 #endif
