@@ -11,7 +11,7 @@ import BottomSheet
 #endif
 
 struct AllSongMoveView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
     
@@ -36,10 +36,8 @@ struct AllSongMoveView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
-                // MARK: User info
-                Text("Move \"\(songTitle)\"")
+                Text("Move '\(songTitle)'")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {showNewFolderView = true}) {
@@ -58,18 +56,10 @@ struct AllSongMoveView: View {
             }
             .padding()
             Divider()
-            if mainViewModel.folders.isEmpty {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        LoadingView()
-                        Spacer()
-                    }
-                    Spacer()
-                }
-            } else {
-                ScrollView {
+            ScrollView {
+                if mainViewModel.folders.isEmpty {
+                    LoadingView()
+                } else {
                     VStack(alignment: .leading) {
                         ForEach(mainViewModel.folders) { folder in
                             if folder.title == "noFolders" {
