@@ -20,6 +20,8 @@ struct ShowWhatsNew: View {
     
     @Binding var isDisplayed: Bool
     
+    @State var isLoading = false
+    
     var body: some View {
         ZStack {
             Color.black
@@ -35,6 +37,9 @@ struct ShowWhatsNew: View {
                             animState = .none
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            withAnimation {
+                                isLoading = true
+                            }
                             withAnimation(Animation.bouncy(duration: 1.5)) {
                                 isDisplayed = false
                             }
@@ -55,13 +60,13 @@ struct ShowWhatsNew: View {
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .second ? 1.0 : 0.2)
                     .blur(radius: animState == .second ? 0 : 20)
-                
-                Group {
-                    Text(NSLocalizedString("hello", comment: "Hello"))
+                Text(NSLocalizedString("hello", comment: "Hello"))
+                    .font(.largeTitle.bold())
+                    .scaleEffect(animState == .first ? 1.0 : 0.2)
+                    .blur(radius: animState == .first ? 0 : 20)
+                if isLoading {
+                    ProgressView()
                 }
-                .font(.largeTitle.bold())
-                .scaleEffect(animState == .first ? 1.0 : 0.2)
-                .blur(radius: animState == .first ? 0 : 20)
             }
             .multilineTextAlignment(.center)
             .foregroundColor(.white)

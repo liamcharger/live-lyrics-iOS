@@ -11,7 +11,6 @@ import BottomSheet
 #endif
 
 struct RegistrationView: View {
-    // State vars
     @State var email = ""
     @State var password = ""
     @State var confirmPassword = ""
@@ -22,13 +21,11 @@ struct RegistrationView: View {
     @State var showWebView = false
     @State var showError = false
     
-    // Other vars
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
     var attributedString: AttributedString = try! AttributedString(markdown: "[Privacy Policy](https://live-lyrics.web.app/privacypolicy.html)")
     
-    // Environment vars
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.presentationMode) var presMode
     

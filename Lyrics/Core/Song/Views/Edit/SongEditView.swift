@@ -37,9 +37,10 @@ struct SongEditView: View {
         self.key = stateKey
         self.artist = stateArtist
         self.duration = stateDuration
+        self.isDisplayed = false
         songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist, duration: stateDuration) { success, errorMessage in
             if success {
-                self.isDisplayed = false
+//                self.isDisplayed = false
             } else {
                 self.showError = true
                 self.errorMessage = errorMessage

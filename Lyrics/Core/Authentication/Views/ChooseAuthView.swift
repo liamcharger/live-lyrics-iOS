@@ -41,30 +41,46 @@ struct ChooseAuthView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                Spacer()
-                Text(greetingLogic() + "\n" + NSLocalizedString("welcome_to_lyrics", comment: "Welcome to Live Lyrics."))
-                    .font(.largeTitle.bold())
-                    .multilineTextAlignment(.center)
-                Spacer()
-                NavigationLink(isActive: $showRegisterView) {
-                    RegistrationView()
-                } label: {
-                    Text("Sign Up")
-                        .modifier(NavButtonViewModifier())
+            ZStack {
+                Image("AuthBackground")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
+                VStack {
+                    Text(greetingLogic() + "\n" + NSLocalizedString("welcome_to_lyrics", comment: "Welcome to Live Lyrics."))
+                        .font(.largeTitle.bold())
+                        .multilineTextAlignment(.center)
+                    NavigationLink(isActive: $showRegisterView) {
+                        RegistrationView()
+                    } label: {
+                        Text("Sign Up")
+                            .modifier(NavButtonViewModifier())
+                    }
+                    NavigationLink {
+                        LoginView()
+                    } label: {
+                        Text("Sign In")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .font(.body.weight(.semibold))
+                            .background(Material.regular)
+                            .clipShape(Capsule())
+                    }
                 }
-                NavigationLink {
-                    LoginView()
-                } label: {
-                    Text("Sign In")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .font(.body.weight(.semibold))
-                        .background(Material.regular)
-                        .clipShape(Capsule())
-                }
+                .frame(maxWidth: 350, maxHeight: 400)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Material.thin)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 22)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                )
+                .clipped()
+                .shadow(color: .black.opacity(0.8), radius: 50)
+                .padding(25)
             }
-            .padding()
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

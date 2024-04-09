@@ -104,7 +104,29 @@ class MainViewModel: ObservableObject {
                     print(error.localizedDescription)
                 }
                 DispatchQueue.main.async {
-                    if self.remoteConfig.configValue(forKey: "currentVersion").stringValue ?? "" != self.notificationManager.getCurrentAppVersion() {
+                    guard let remoteVersionString = self.remoteConfig.configValue(forKey: "currentVersion").stringValue else {
+                        return
+                    }
+                    
+                    let remoteVersionComponents = remoteVersionString.split(separator: ".")
+                    
+                    let currentVersionString = self.notificationManager.getCurrentAppVersion()
+                    let currentVersionComponents = currentVersionString.split(separator: ".")
+                    
+                    for (remoteComponent, currentComponent) in zip(remoteVersionComponents, currentVersionComponents) {
+                        guard let remoteNumber = Int(remoteComponent), let currentNumber = Int(currentComponent) else {
+                            return
+                        }
+                        
+                        if remoteNumber < currentNumber {
+                            self.notificationStatus = .updateAvailable
+                            return
+                        } else if remoteNumber > currentNumber {
+                            return
+                        }
+                    }
+                    
+                    if remoteVersionComponents.count < currentVersionComponents.count {
                         self.notificationStatus = .updateAvailable
                     }
                 }
