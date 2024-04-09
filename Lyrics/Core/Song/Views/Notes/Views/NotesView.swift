@@ -45,9 +45,22 @@ struct NotesView: View {
                     Spacer()
                 }
             } else {
-                TextEditor(text: $notes)
-                    .padding(.leading)
-                    .focused($isInputActive)
+                ZStack {
+                    TextEditor(text: $notes)
+                        .padding(.leading, 13)
+                        .focused($isInputActive)
+                    if notes.isEmpty && !isInputActive {
+                        Text("Tap to enter your notes...")
+                            .foregroundColor(.gray.opacity(0.6))
+                            .font(.system(size: 20).weight(.semibold))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                            .padding(.leading, 17)
+                            .padding(.top, 8)
+                            .onTapGesture {
+                                isInputActive = true
+                            }
+                    }
+                }
             }
         }
         
