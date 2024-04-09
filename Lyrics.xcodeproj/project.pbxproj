@@ -79,6 +79,7 @@
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
 		E0C1D39F2BC07CB3004DD828 /* TaggedSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */; };
 		E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C492E42A0BDFC6002E9EA0 /* Folder.swift */; };
+		E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */; };
 		E0CA85302B081D5100188CD0 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA85142B081D5100188CD0 /* AlertView.swift */; };
 		E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA85162B081D5100188CD0 /* ListRowView.swift */; };
 		E0CA85342B081D5100188CD0 /* SheetCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA851A2B081D5100188CD0 /* SheetCloseButton.swift */; };
@@ -205,6 +206,7 @@
 		E0C168362B59BCEA00A12C59 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaggedSongsView.swift; sourceTree = "<group>"; };
 		E0C492E42A0BDFC6002E9EA0 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
+		E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeletedViewModel.swift; sourceTree = "<group>"; };
 		E0CA85142B081D5100188CD0 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		E0CA85162B081D5100188CD0 /* ListRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ListRowView.swift; path = "../Navigation & System/ListRowView.swift"; sourceTree = "<group>"; };
 		E0CA851A2B081D5100188CD0 /* SheetCloseButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SheetCloseButton.swift; sourceTree = "<group>"; };
@@ -670,6 +672,31 @@
 			path = Intents;
 			sourceTree = "<group>";
 		};
+		E0CA78BA2BC5A375004CEA73 /* RecentlyDeleted */ = {
+			isa = PBXGroup;
+			children = (
+				E0CA78BE2BC5A38A004CEA73 /* ViewModel */,
+				E0CA78BD2BC5A385004CEA73 /* Views */,
+			);
+			path = RecentlyDeleted;
+			sourceTree = "<group>";
+		};
+		E0CA78BD2BC5A385004CEA73 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E0CA78BE2BC5A38A004CEA73 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		E0CA85112B081D5100188CD0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -795,7 +822,7 @@
 				E045BE212AF991FD00FC3EF1 /* Components */,
 				E0CC33182A03FF8F00CC38C6 /* MainView.swift */,
 				E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */,
-				E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */,
+				E0CA78BA2BC5A375004CEA73 /* RecentlyDeleted */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1102,6 +1129,7 @@
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
 				E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */,
 				E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */,
+				E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */,
 				E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */,
 				E04FB1192A17D6F0002FEEA4 /* ProfileViewModel.swift in Sources */,
 				E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */,

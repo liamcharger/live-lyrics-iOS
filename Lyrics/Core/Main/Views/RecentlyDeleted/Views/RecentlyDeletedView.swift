@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecentlyDeletedView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
     
     @EnvironmentObject var storeKitManager: StoreKitManager
@@ -26,10 +26,10 @@ struct RecentlyDeletedView: View {
     
     var searchableSongs: [RecentlyDeletedSong] {
         if text.isEmpty {
-            return mainViewModel.recentlyDeletedSongs
+            return recentlyDeletedViewModel.songs
         } else {
             let lowercasedQuery = text.lowercased()
-            return mainViewModel.recentlyDeletedSongs.filter ({
+            return recentlyDeletedViewModel.songs.filter ({
                 $0.title.lowercased().contains(lowercasedQuery)
             })
         }
@@ -37,10 +37,9 @@ struct RecentlyDeletedView: View {
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            let song = mainViewModel.songs[index]
-            mainViewModel.deleteSong(song)
+            let song = recentlyDeletedViewModel.songs[index]
+            recentlyDeletedViewModel.deleteSong(song: song)
         }
-        mainViewModel.fetchSongs()
     }
     func performAction(for song: RecentlyDeletedSong) {
         selectedSong = song
@@ -48,7 +47,7 @@ struct RecentlyDeletedView: View {
     }
     
     init() {
-        mainViewModel.fetchRecentlyDeletedSongs()
+        recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
     }
     
     var body: some View {
@@ -65,7 +64,7 @@ struct RecentlyDeletedView: View {
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 50)
                             .padding(.bottom, 10)
                     }
-                    if !mainViewModel.isLoadingRecentlyDeletedSongs {
+                    if !recentlyDeletedViewModel.isLoadingSongs {
                         Text("Deleted songs are stored for thirty days before being permanently removed.")
                             .foregroundColor(Color.gray)
                             .deleteDisabled(true)
@@ -74,8 +73,11 @@ struct RecentlyDeletedView: View {
                                 Text("No Songs")
                                     .foregroundColor(Color.gray)
                                     .frame(maxWidth: .infinity)
-                                    .deleteDisabled(true)
-                                    .moveDisabled(true)
+                                    .padding()
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .cornerRadius(20)
+                                    .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
                             } else {
                                 let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
                                 
@@ -99,11 +101,11 @@ struct RecentlyDeletedView: View {
                                         Button {
                                             selectedSong = song
                                             if selectedSong?.folderId != nil {
-                                                mainViewModel.restoreSongToFolder(song: selectedSong!)
+                                                recentlyDeletedViewModel.restoreSongToFolder(song: selectedSong!)
                                             } else {
-                                                mainViewModel.restoreSong(song: selectedSong!)
+                                                recentlyDeletedViewModel.restoreSong(song: selectedSong!)
                                             }
-                                            mainViewModel.fetchRecentlyDeletedSongs()
+                                            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
                                         } label: {
                                             Label("Restore", systemImage: "clock.arrow.circlepath")
                                         }
@@ -127,8 +129,8 @@ struct RecentlyDeletedView: View {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
                             print("Deleting song: \(selectedSong.title)")
-                            mainViewModel.deleteSong(song: selectedSong)
-                            mainViewModel.fetchRecentlyDeletedSongs()
+                            recentlyDeletedViewModel.deleteSong(song: selectedSong)
+                            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
                         }
                         Button("Cancel", role: .cancel) { }
                     }

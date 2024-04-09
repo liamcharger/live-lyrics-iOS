@@ -83,7 +83,7 @@ class SongService {
 				for document in documents {
 					group.enter()
 					if let song = try? document.data(as: RecentlyDeletedSong.self) {
-						if song.timestamp < thirtyDaysAgo {
+						if song.deletedTimestamp < thirtyDaysAgo {
 							document.reference.delete()
 							group.leave()
 						} else {
@@ -633,7 +633,7 @@ class SongService {
 			"uid": song.uid,
 			"timestamp": song.timestamp,
 			"folderId": folder?.id,
-			"deletedTimestamp": Date().timeIntervalSince1970,
+			"deletedTimestamp": Date(),
 			"title": song.title,
 			"lyrics": song.lyrics,
 			"order": song.order,
