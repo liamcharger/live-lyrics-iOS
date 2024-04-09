@@ -67,7 +67,10 @@ struct LyricsApp: App {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+    @Environment(\.scenePhase) var phase
+    
     @ObservedObject var mainViewModel = MainViewModel.shared
+    
     let gcmMessageIDKey = "gcm.message_id"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
@@ -99,7 +102,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
            let title = alert["title"] as? String,
            let subtitle = alert["body"] as? String {
             mainViewModel.receivedNotificationFromFirebase(Notification(title: title, subtitle: subtitle, imageName: "envelope"))
-            print("Received notification: \(Notification(title: title, subtitle: subtitle, imageName: "enevelope"))")
         }
 
         completionHandler([.badge, .banner])

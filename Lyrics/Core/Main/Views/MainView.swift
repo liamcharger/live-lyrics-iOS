@@ -229,11 +229,13 @@ struct MainView: View {
                             VStack {
                                 switch notificationStatus {
                                 case .updateAvailable:
-                                    NotificationRowView(title: .constant("Update Available"), subtitle: .constant("Tap here to update Live Lyrics. This version may expire soon."), imageName: .constant("arrow.down"), notificationStatus: $mainViewModel.notificationStatus, showNavigationView: .constant(false))
+                                    NotificationRowView(title: "Update Available", subtitle: "Tap here to update Live Lyrics. This version may expire soon.", imageName: "arrow.down", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                 case .collaborationChanges:
-                                    NotificationRowView(title: .constant(mainViewModel.notification?.title ?? ""), subtitle: .constant(mainViewModel.notification?.subtitle ?? ""), imageName: .constant(mainViewModel.notification?.imageName ?? ""), notificationStatus: $mainViewModel.notificationStatus, showNavigationView: .constant(false))
+                                    NotificationRowView(title: mainViewModel.notification?.title ?? "", subtitle: mainViewModel.notification?.subtitle ?? "", imageName: mainViewModel.notification?.imageName ?? "", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                 case .firebaseNotification:
-                                    NotificationRowView(title: .constant(mainViewModel.notification?.title ?? ""), subtitle: .constant(mainViewModel.notification?.subtitle ?? ""), imageName: .constant(mainViewModel.notification?.imageName ?? ""), notificationStatus: $mainViewModel.notificationStatus, showNavigationView: .constant(false))
+                                    if let notification = mainViewModel.notification {
+                                        NotificationRowView(title: notification.title, subtitle: notification.subtitle, imageName: notification.imageName, notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
+                                    }
                                 }
                             }
                         }

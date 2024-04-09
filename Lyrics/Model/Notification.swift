@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct Notification {
+    let id = UUID()
     var title: String
     var subtitle: String
     var imageName: String

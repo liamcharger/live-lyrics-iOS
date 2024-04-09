@@ -28,7 +28,7 @@ struct CustomNavBar: View {
     @AppStorage(showNewFolderKey) var showNewFolder = false
     
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 12) {
             if showBackButton {
                 Button(action: {presMode.wrappedValue.dismiss()}, label: {
                     Image(systemName: "chevron.left")
