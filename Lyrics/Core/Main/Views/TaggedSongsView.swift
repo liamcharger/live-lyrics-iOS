@@ -28,7 +28,7 @@ struct TaggedSongsView: View {
         let selectedColor = selection.rawValue
         
         switch selection {
-        case .red, .green, .orange, .yellow, .blue:
+        case .none, .red, .green, .orange, .yellow, .blue:
             return mainViewModel.songs.filter { song in
                 if let colors = song.tags {
                     return colors.contains(selectedColor)
@@ -50,6 +50,8 @@ struct TaggedSongsView: View {
             return isYellowSongsCollapsed
         case .blue:
             return isBlueSongsCollapsed
+        case .none:
+            return false
         }
     }
 
@@ -59,12 +61,8 @@ struct TaggedSongsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 10) {
-                CustomNavBar(title: "Tagged", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
-            }
-            .padding(.top)
-            .padding(.horizontal)
-            .padding(.bottom, 12)
+            CustomNavBar(title: "Tagged", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
+                .padding()
             Divider()
             ScrollView {
                 VStack {
@@ -93,6 +91,8 @@ struct TaggedSongsView: View {
                                                 isYellowSongsCollapsed.toggle()
                                             case .blue:
                                                 isBlueSongsCollapsed.toggle()
+                                            case .none:
+                                                break
                                             }
                                         }
                                     } label: {

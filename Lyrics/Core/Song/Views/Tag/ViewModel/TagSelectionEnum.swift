@@ -8,6 +8,7 @@
 import Foundation
 
 enum TagSelectionEnum: String {
+    case none = "none"
     case red = "red"
     case green = "green"
     case orange = "orange"

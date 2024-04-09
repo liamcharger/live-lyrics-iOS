@@ -28,14 +28,28 @@ struct SongTagView: View {
             Divider()
             ScrollView {
                 VStack {
+                    Button(action: {
+                        tags.removeAll()
+                        songViewModel.updateTagsForSong(song, tags: tags)
+                    }) {
+                        HStack {
+                            Text("None")
+                            Spacer()
+                            if !tags.contains(.blue) && !tags.contains(.green) && !tags.contains(.orange) && !tags.contains(.red) && !tags.contains(.yellow) {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                        .padding()
+                        .font(.body.weight(.semibold))
+                        .background(Material.regular)
+                        .foregroundColor(.primary)
+                        .clipShape(Capsule())
+                    }
                     ForEach(TagSelectionEnum.allTags, id: \.self) { fullTag in
                         Button(action: {
-//                            if !tags.contains(fullTag) {
-//                                tags.append(fullTag)
-//                            } else {
-//                                tags.removeAll()
-//                            }
-//                            songViewModel.updateTagsForSong(song, tags: tags)
+                            tags.removeAll()
+                            tags.append(fullTag)
+                            songViewModel.updateTagsForSong(song, tags: tags)
                         }) {
                             HStack {
                                 Text(fullTag.rawValue.capitalized)
