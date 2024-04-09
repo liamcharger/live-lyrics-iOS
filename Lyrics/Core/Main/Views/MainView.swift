@@ -217,6 +217,7 @@ struct MainView: View {
             .padding(.horizontal)
             .padding(.bottom, 12)
             Divider()
+            ScrollViewReader { scrollViewProxy in
             ScrollView {
                 if storeKitManager.purchasedProducts.isEmpty {
                     AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 50)
@@ -498,6 +499,7 @@ struct MainView: View {
                             }
                         }
                     }
+                    .id("folders")
                     VStack {
                         VStack {
                             HStack(spacing: 3) {
@@ -622,6 +624,7 @@ struct MainView: View {
                             }
                         }
                     }
+                    .id("songs")
                 }
                 .padding()
                 .sheet(isPresented: $showEditSheet, onDismiss: {mainViewModel.fetchFolders()}) {
@@ -678,6 +681,7 @@ struct MainView: View {
                         Text("Are you sure you want to delete \"\(selectedSong.title)\"?")
                     }
                 }
+            }
             }
         }
     }
