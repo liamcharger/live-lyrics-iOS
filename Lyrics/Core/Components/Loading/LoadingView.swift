@@ -9,14 +9,12 @@ import SwiftUI
 
 struct LoadingView: View {
     var body: some View {
-        HStack {
-            Spacer()
+        HStack(spacing: 7) {
             ProgressView()
-                .padding(.trailing, 1)
             Text("Loading...")
                 .foregroundColor(.gray)
-            Spacer()
         }
+        .frame(maxWidth: .infinity)
         .padding(12)
         .background(Material.regular)
         .clipShape(Capsule())

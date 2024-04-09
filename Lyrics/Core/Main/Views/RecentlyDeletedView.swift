@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecentlyDeletedView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @StateObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
     
     @EnvironmentObject var storeKitManager: StoreKitManager
@@ -52,25 +52,12 @@ struct RecentlyDeletedView: View {
     }
     
     var body: some View {
-        content
-            .onAppear {
-                mainViewModel.fetchRecentlyDeletedSongs()
-            }
-            .onDisappear {
-                mainViewModel.removeRecentSongEventListener()
-            }
-            .navigationBarHidden(true)
-    }
-    
-    var content: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
                 CustomNavBar(title: "Recently Deleted", navType: .RecentlyDeleted, folder: nil, showBackButton: true, isEditing: $isEditing)
                 CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: "Search")
             }
-            .padding(.top)
-            .padding(.horizontal)
-            .padding(.bottom, 12)
+            .padding()
             Divider()
             ScrollView {
                 VStack {
@@ -86,7 +73,7 @@ struct RecentlyDeletedView: View {
                             if song.title == "noSongs" {
                                 Text("No Songs")
                                     .foregroundColor(Color.gray)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .frame(maxWidth: .infinity)
                                     .deleteDisabled(true)
                                     .moveDisabled(true)
                             } else {
@@ -108,26 +95,6 @@ struct RecentlyDeletedView: View {
                                     .foregroundColor(.primary)
                                     .cornerRadius(20)
                                     .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
-                                    .swipeActions {
-                                        Button {
-                                            performAction(for: song)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        .tint(.red)
-                                        Button(action: {
-                                            selectedSong = song
-                                            if selectedSong?.folderId != nil {
-                                                mainViewModel.restoreSongToFolder(song: selectedSong!)
-                                            } else {
-                                                mainViewModel.restoreSong(song: selectedSong!)
-                                            }
-                                            mainViewModel.fetchRecentlyDeletedSongs()
-                                        }, label: {
-                                            Label("Restore", systemImage: "clock.arrow.circlepath")
-                                        })
-                                        .tint(.blue)
-                                    }
                                     .contextMenu {
                                         Button {
                                             selectedSong = song
@@ -148,14 +115,6 @@ struct RecentlyDeletedView: View {
                                         }
                                     }
                                 })
-                            }
-                        }
-                        .onDelete { indexSet in
-                            let deletedSongs = indexSet.map { searchableSongs[$0] }
-                            for song in deletedSongs {
-                                if song.id != "noSongs" {
-                                    performAction(for: song)
-                                }
                             }
                         }
                     } else {
@@ -180,6 +139,8 @@ struct RecentlyDeletedView: View {
                 }
             }
         }
+        .navigationBarHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
