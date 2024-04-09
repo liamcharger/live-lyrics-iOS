@@ -13,7 +13,7 @@ struct SongEditView: View {
     
     let song: Song
     
-    @Binding var showProfileView: Bool
+    @Binding var isDisplayed: Bool
     @Binding var title: String
     @Binding var key: String
     @Binding var duration: String
@@ -33,51 +33,23 @@ struct SongEditView: View {
     }
     
     func update() {
-        songViewModel.updateKey(song, key: stateKey) { success in
+        self.title = stateTitle
+        self.key = stateKey
+        self.artist = stateArtist
+        self.duration = stateDuration
+        songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist, duration: stateDuration) { success, errorMessage in
             if success {
-                self.key = stateKey
-                showProfileView = false
+                self.isDisplayed = false
             } else {
-                showError.toggle()
+                self.showError = true
+                self.errorMessage = errorMessage
             }
-        } completionString: { string in
-            errorMessage = string
-        }
-        songViewModel.updateArtist(song, artist: stateArtist) { success in
-            if success {
-                self.artist = stateArtist
-                self.showProfileView = false
-            } else {
-                showError.toggle()
-            }
-        } completionString: { string in
-            errorMessage = string
-        }
-        songViewModel.updateDuration(song, duration: stateDuration) { success in
-            if success {
-                self.duration = stateDuration
-                self.showProfileView = false
-            } else {
-                showError.toggle()
-            }
-        } completionString: { string in
-            errorMessage = string
-        }
-        songViewModel.updateTitle(song, title: stateTitle) { success in
-            if success {
-                self.title = stateTitle
-                self.showProfileView = false
-            } else {
-                showError.toggle()
-            }
-        } completionString: { string in
-            errorMessage = string
         }
     }
     
-    init(song: Song, showProfileView: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>, duration: Binding<String>) {
+    init(song: Song, isDisplayed: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>, duration: Binding<String>) {
         self.song = song
-        self._showProfileView = showProfileView
+        self._isDisplayed = isDisplayed
         self._title = title
         self._key = key
         self._artist = artist
@@ -95,29 +67,25 @@ struct SongEditView: View {
                 Text("Edit Song")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton(isPresented: $isDisplayed)
             }
             .padding()
             Divider()
             ScrollView {
-                VStack(alignment: .leading) {
+                VStack {
                     CustomTextField(text: $stateTitle, placeholder: "Title")
                     CustomTextField(text: $stateKey, placeholder: "Key")
                     CustomTextField(text: $stateArtist, placeholder: "Artist")
                     CustomTextField(text: $stateDuration, placeholder: "Duration")
                 }
-                .padding(.top)
-                .padding(.horizontal)
+                .padding()
             }
             Divider()
-            Button(action: update, label: {
-                HStack {
-                    Spacer()
-                    Text(NSLocalizedString("save", comment: "Save"))
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            })
+            Button(action: update) {
+                Text(NSLocalizedString("save", comment: "Save"))
+                    .frame(maxWidth: .infinity)
+                    .modifier(NavButtonViewModifier())
+            }
             .opacity(isEmpty ? 0.5 : 1.0)
             .disabled(isEmpty)
             .padding()

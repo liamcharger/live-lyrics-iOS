@@ -461,7 +461,6 @@ struct MainView: View {
                                                                     .confirmationDialog("Delete Song", isPresented: $showFolderSongDeleteSheet) {
                                                                         if let selectedSong = selectedSong {
                                                                             Button("Delete", role: .destructive) {
-                                                                                print("Deleting song: \(selectedSong.title)")
                                                                                 songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                                                                 mainViewModel.fetchSongs()
                                                                             }
@@ -629,13 +628,12 @@ struct MainView: View {
                 .padding()
                 .sheet(isPresented: $showEditSheet, onDismiss: {mainViewModel.fetchFolders()}) {
                     if let selectedFolder = selectedFolder {
-                        FolderEditView(folder: selectedFolder, showView: $showEditSheet, title: .constant(selectedFolder.title))
+                        FolderEditView(folder: selectedFolder, isDisplayed: $showEditSheet, title: .constant(selectedFolder.title))
                     }
                 }
                 .confirmationDialog("Delete Folder", isPresented: $showDeleteSheet) {
                     if let selectedFolder = selectedFolder {
                         Button("Delete", role: .destructive) {
-                            print("Deleting folder: \(selectedFolder.title)")
                             mainViewModel.deleteFolder(selectedFolder)
                             mainViewModel.fetchFolders()
                         }
@@ -643,7 +641,7 @@ struct MainView: View {
                     }
                 } message: {
                     if let selectedFolder = selectedFolder {
-                        Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"?")
+                        Text("Are you sure you want to permanently delete '\(selectedFolder.title)'? WARNING: This action cannot be undone!")
                     }
                 }
                 .sheet(isPresented: $showSongMoveSheet) {
@@ -653,13 +651,14 @@ struct MainView: View {
                 }
                 .sheet(isPresented: $showSongEditSheet, onDismiss: mainViewModel.fetchSongs) {
                     if let selectedSong = selectedSong {
-                        SongEditView(song: selectedSong, showProfileView: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? "Not Set"), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
+                        SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? "Not Set"), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
                     }
                 }
                 .sheet(isPresented: $showTagSheet, onDismiss: {
-                    mainViewModel.fetchSongs()
                     if let folder = selectedFolder {
                         mainViewModel.fetchSongs(folder)
+                    } else {
+                        mainViewModel.fetchSongs()
                     }
                 }) {
                     if let selectedSong = selectedSong {
@@ -670,7 +669,6 @@ struct MainView: View {
                 .confirmationDialog("Delete Song", isPresented: $showSongDeleteSheet) {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
-                            print("Deleting song: \(selectedSong.title)")
                             songViewModel.moveSongToRecentlyDeleted(selectedSong)
                             mainViewModel.fetchSongs()
                         }

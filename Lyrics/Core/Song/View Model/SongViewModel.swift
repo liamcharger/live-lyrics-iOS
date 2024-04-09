@@ -88,7 +88,7 @@ class SongViewModel: ObservableObject {
     func updateTextProperties(_ song: Song, design: Double) {
         service.updateTextProperties(song: song, design: design)
     }
-
+    
     func updateTextProperties(_ song: Song, alignment: Double) {
         service.updateTextProperties(song: song, alignment: alignment)
     }
@@ -105,71 +105,19 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func updateTitle(_ song: Song, title: String, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        DispatchQueue.main.async {
-            self.service.updateTitle(song: song, title: title) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { string in
-                completionString(string)
+    func updateTitle(_ folder: Folder, title: String, completion: @escaping(Bool, String) -> Void) {
+        service.updateTitle(folder: folder, title: title) { success, errorMessage in
+            if success {
+                completion(true, "")
+            } else {
+                completion(false, errorMessage)
             }
         }
     }
     
-    func updateDuration(_ song: Song, duration: String, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        DispatchQueue.main.async {
-            self.service.updateDuration(song: song, duration: duration) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { string in
-                completionString(string)
-            }
-        }
-    }
-    
-    func updateArtist(_ song: Song, artist: String, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        DispatchQueue.main.async {
-            self.service.updateArtist(song: song, artist: artist) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { string in
-                completionString(string)
-            }
-        }
-    }
-    
-    func updateKey(_ song: Song, key: String, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-            self.service.updateKey(song: song, key: key) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { string in
-                completionString(string)
-            }
-    }
-    
-    func updateTitle(_ folder: Folder, title: String, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        DispatchQueue.main.async {
-            self.service.updateTitle(folder: folder, title: title) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { string in
-                completionString(string)
-            }
+    func updateSong(_ song: Song, title: String, key: String, artist: String, duration: String, completion: @escaping(Bool, String) -> Void) {
+        service.updateSong(song, title: title, key: key, artist: artist, duration: duration) { success, errorMessage in
+            completion(success, errorMessage)
         }
     }
     

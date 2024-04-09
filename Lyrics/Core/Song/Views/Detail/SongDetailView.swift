@@ -183,12 +183,12 @@ struct SongDetailView: View {
                     Spacer()
                     if !isInputActive {
                         if songs != nil {
-                                if #available(iOS 17, *) {
-                                    playButton
+                            if #available(iOS 17, *) {
+                                playButton
                                     .showTip()
-                                } else {
-                                    playButton
-                                }
+                            } else {
+                                playButton
+                            }
                             Button(action: {showNotesView.toggle()}, label: {
                                 FAText(iconName: "book", size: 18)
                                     .modifier(NavBarButtonViewModifier())
@@ -327,7 +327,7 @@ struct SongDetailView: View {
         }
         .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
             Button("Delete", role: .destructive) {
-                print("Deleting song: \(song.title)")
+                print("Deleting song: \(title)")
                 songViewModel.moveSongToRecentlyDeleted(song)
                 mainViewModel.fetchSongs()
                 presMode.wrappedValue.dismiss()
@@ -341,7 +341,7 @@ struct SongDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Are you sure you want to delete \"\(song.title)\"?")
+            Text("Are you sure you want to delete \"\(title)\"?")
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
@@ -350,7 +350,7 @@ struct SongDetailView: View {
             Alert(title: Text("Success"), message: Text("The song was successfully added to your library."), dismissButton: .cancel(Text("Close"), action: {}))
         }
         .sheet(isPresented: $showEditView) {
-            SongEditView(song: song, showProfileView: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
+            SongEditView(song: song, isDisplayed: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
         }
         .sheet(isPresented: $showMoveView) {
             AllSongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)

@@ -14,28 +14,6 @@ class SongService {
 	var folderSongListener: ListenerRegistration?
 	var folderListener: ListenerRegistration?
 	var recentSongListener: ListenerRegistration?
-	//	let context = PersistenceController.shared.container.viewContext
-	
-	//	func fetchLocalUser() -> LocalUser? {
-	//		let request: NSFetchRequest<LocalUser> = LocalUser.fetchRequest()
-	//
-	//		do {
-	//			let users = try context.fetch(request)
-	//			return users.first
-	//		} catch {
-	//			print("Error fetching local user: \(error.localizedDescription)")
-	//			return nil
-	//		}
-	//	}
-	
-	// Save local user data to Core Data
-	//	func saveLocalUser(_ localUser: LocalUser) {
-	//		do {
-	//			try context.save()
-	//		} catch {
-	//			print("Error saving local user: \(error.localizedDescription)")
-	//		}
-	//	}
 	
 	func removeSongEventListener() {
 		songListener?.remove()
@@ -266,18 +244,27 @@ class SongService {
 			}
 	}
 	
-	func updateTitle(folder: Folder, title: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
+	func updateTitle(folder: Folder, title: String, completion: @escaping(Bool, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
 		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "")
 			.updateData(["title": title]) { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						completionBool(false)
-						completionString(error.localizedDescription)
-					} else {
-						completionBool(true)
-					}
+				if let error = error {
+					completion(false, error.localizedDescription)
+				} else {
+					completion(true, "")
+				}
+			}
+	}
+	
+	func updateSong(_ song: Song, title: String, key: String, artist: String, duration: String, completion: @escaping(Bool, String) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+			.updateData(["title": title, "key": key, "artist": artist, "duration": duration]) { error in
+				if let error = error {
+					completion(false, error.localizedDescription)
+				} else {
+					completion(true, "")
 				}
 			}
 	}
@@ -335,70 +322,6 @@ class SongService {
 				guard let selectedSong = try? snapshot.data(as: Song.self) else { return }
 				
 				completion(selectedSong.title, selectedSong.key ?? "Not Set", selectedSong.artist ?? "Not Set", selectedSong.duration ?? "Not Set")
-			}
-	}
-	
-	func updateTitle(song: Song, title: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-			.updateData(["title": title]) { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						completionBool(false)
-						completionString(error.localizedDescription)
-					} else {
-						completionBool(true)
-					}
-				}
-			}
-	}
-	
-	func updateDuration(song: Song, duration: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-			.updateData(["duration": duration]) { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						completionBool(false)
-						completionString(error.localizedDescription)
-					} else {
-						completionBool(true)
-					}
-				}
-			}
-	}
-	
-	func updateArtist(song: Song, artist: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-			.updateData(["artist": artist]) { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						completionBool(false)
-						completionString(error.localizedDescription)
-					} else {
-						completionBool(true)
-					}
-				}
-			}
-	}
-	
-	func updateKey(song: Song, key: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-			.updateData(["key": key]) { error in
-				DispatchQueue.main.async {
-					if let error = error {
-						completionBool(false)
-						completionString(error.localizedDescription)
-					} else {
-						completionBool(true)
-					}
-				}
 			}
 	}
 	

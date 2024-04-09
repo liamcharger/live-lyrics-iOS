@@ -12,7 +12,7 @@ struct FolderEditView: View {
     
     @Environment(\.presentationMode) var presMode
     
-    @Binding var showProfileView: Bool
+    @Binding var isDisplayed: Bool
     @Binding var title: String
     
     let folder: Folder
@@ -26,11 +26,11 @@ struct FolderEditView: View {
         text.trimmingCharacters(in: .whitespaces).isEmpty
     }
     
-    init(folder: Folder, showView: Binding<Bool>, title: Binding<String>) {
+    init(folder: Folder, isDisplayed: Binding<Bool>, title: Binding<String>) {
         self.folder = folder
         self._title = title
         self._text = State(initialValue: folder.title)
-        self._showProfileView = showView
+        self._isDisplayed = isDisplayed
     }
     
     var body: some View {
@@ -39,7 +39,7 @@ struct FolderEditView: View {
                 Text("Edit Folder")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton(isPresented: $isDisplayed)
             }
             .padding()
             Spacer()
@@ -47,15 +47,14 @@ struct FolderEditView: View {
                 .padding(.horizontal)
             Spacer()
             Button {
-                songViewModel.updateTitle(folder, title: text) { success in
+                songViewModel.updateTitle(folder, title: text) { success, errorMessage in
                     if success {
                         self.title = text
-                        showProfileView = false
+                        self.isDisplayed = false
                     } else {
-                        showError.toggle()
+                        self.showError = true
+                        self.errorMessage = errorMessage
                     }
-                } completionString: { string in
-                    errorMessage = string
                 }
             } label: {
                 Text(NSLocalizedString("save", comment: "Save"))
