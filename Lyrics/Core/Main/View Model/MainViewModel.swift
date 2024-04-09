@@ -83,31 +83,31 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchNotificationStatus() {
-        //        remoteConfig = RemoteConfig.remoteConfig()
-        //        let settings = RemoteConfigSettings()
-        //        settings.minimumFetchInterval = 0
-        //        remoteConfig.configSettings = settings
-        //        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
-        //
-        //        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
-        //            guard let configUpdate, error == nil else {
-        //                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
-        //                return
-        //            }
-        //
-        //            print("Updated keys: \(configUpdate.updatedKeys)")
-        //
-        //            self.remoteConfig.activate { changed, error in
-        //                if let error = error {
-        //                    print(error.localizedDescription)
-        //                }
-        //                DispatchQueue.main.async {
-        //                    if self.remoteConfig.configValue(forKey: "currentVersion").stringValue ?? "" != self.notificationManager.getCurrentAppVersion() {
-        //                        self.notificationStatus = .updateAvailable
-        //                    }
-        //                }
-        //            }
-        //        }
+        remoteConfig = RemoteConfig.remoteConfig()
+        let settings = RemoteConfigSettings()
+        settings.minimumFetchInterval = 0
+        remoteConfig.configSettings = settings
+        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
+        
+        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
+            guard let configUpdate, error == nil else {
+                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
+                return
+            }
+            
+            print("Updated keys: \(configUpdate.updatedKeys)")
+            
+            self.remoteConfig.activate { changed, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                DispatchQueue.main.async {
+                    if self.remoteConfig.configValue(forKey: "currentVersion").stringValue ?? "" != self.notificationManager.getCurrentAppVersion() {
+                        self.notificationStatus = .updateAvailable
+                    }
+                }
+            }
+        }
     }
     
     func fetchFolders() {
