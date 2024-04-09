@@ -709,6 +709,7 @@ class SongService {
 		var songData: [String: Any?] = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
+			"folderId": folder?.id,
 			"deletedTimestamp": Date().timeIntervalSince1970,
 			"title": song.title,
 			"lyrics": song.lyrics,
