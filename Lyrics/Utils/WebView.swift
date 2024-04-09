@@ -20,7 +20,10 @@ struct Web: UIViewRepresentable {
     func updateUIView(_ webView: WKWebView, context: Context) {
         let request = URLRequest(url: url)
         webView.load(request)
-        isLoading = false
+        
+        while ((request.httpBody?.isEmpty) != nil) {
+            isLoading = false
+        }
     }
 }
 
@@ -36,12 +39,11 @@ struct WebView: View {
                 #if os(iOS)
                 Web(url: URL(string: "https://charger-tech-lyrics.web.app/privacypolicy.html")!, isLoading: $isLoading)
                 #endif
-                
                 if isLoading {
                     ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            
             #if os(iOS)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
