@@ -353,7 +353,7 @@ struct SongDetailView: View {
             SongEditView(song: song, isDisplayed: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
         }
         .sheet(isPresented: $showMoveView) {
-            AllSongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
+            SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
             SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $autoscrollDuration, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
@@ -637,6 +637,11 @@ struct SongDetailView: View {
                 showEditView.toggle()
             }, label: {
                 Label("Edit", systemImage: "pencil")
+            })
+            Button(action: {
+                showMoveView.toggle()
+            }, label: {
+                Label("Move", systemImage: "folder")
             })
             Button(role: .destructive, action: {
                 showDeleteSheet.toggle()

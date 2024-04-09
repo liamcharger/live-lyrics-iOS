@@ -646,7 +646,7 @@ struct MainView: View {
                 }
                 .sheet(isPresented: $showSongMoveSheet) {
                     if let selectedSong = selectedSong {
-                        AllSongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
+                        SongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
                     }
                 }
                 .sheet(isPresented: $showSongEditSheet, onDismiss: mainViewModel.fetchSongs) {

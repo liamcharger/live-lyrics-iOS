@@ -10,7 +10,7 @@ import SwiftUI
 import BottomSheet
 #endif
 
-struct AllSongMoveView: View {
+struct SongMoveView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
