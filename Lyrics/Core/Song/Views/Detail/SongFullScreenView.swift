@@ -43,6 +43,8 @@ struct SongFullScreenView: View {
     @State var isPulsing = false
     @State var isHeavyImpactPlaying = false
     @State var isScrolling = false
+    @State var isUserScrolling = false
+    @State var performanceMode = true
     
     @State var proxy: ScrollViewProxy?
     
@@ -154,7 +156,9 @@ struct SongFullScreenView: View {
     }
     func stopAutoscroll(scrollViewProxy: ScrollViewProxy) {
         isScrolling = false
+        scrollTimer?.invalidate()
         scrollTimer = nil
+        scrollPosition = 0
         currentLineIndex = 0
         withAnimation {
             scrollViewProxy.scrollTo(0, anchor: .top)
@@ -265,6 +269,20 @@ struct SongFullScreenView: View {
             return .trailing
         }
     }
+    func getBlur(for index: Int) -> CGFloat {
+        if !isUserScrolling {
+            let distance = abs(currentLineIndex - index)
+            let maxDistance = 1.2
+            
+            let blur = CGFloat(distance) / CGFloat(maxDistance)
+            
+            let squaredBlur = blur * blur
+            
+            return squaredBlur > 13 ? 13 : squaredBlur
+        } else {
+            return 0
+        }
+    }
     
     init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, songs: [Song]?, dismiss: Binding<Bool>, hasDeletedSong: Binding<Bool>) {
         self.songs = songs
@@ -320,18 +338,28 @@ struct SongFullScreenView: View {
                         .padding(.top)
                     ScrollViewReader { proxy in
                         ScrollView {
-                            VStack(alignment: hAlignment(from: alignment), spacing: lineSpacing) {
+                            VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
                                 ForEach(lines.indices, id: \.self) { index in
                                     let line = lines[index]
                                     
-                                    Text(line)
-                                        .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                        .font(.system(size: CGFloat(size), weight: weight, design: design))
-                                        .id(index)
+                                    if !performanceMode {
+                                        Text(line)
+                                            .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                            .font(.system(size: CGFloat(size), weight: weight, design: design))
+                                            .id(index)
+                                    } else {
+                                        Text(line)
+                                            .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                            .font(.system(size: 42, weight: .bold, design: .rounded))
+                                            .id(index)
+                                            .blur(radius: getBlur(for: index))
+                                            .animation(.spring(dampingFraction: 1))
+                                    }
                                 }
                             }
                             .padding()
                         }
+                        .scrollStatusByIntrospect(isScrolling: $isUserScrolling)
                         .onAppear {
                             self.proxy = proxy
                         }

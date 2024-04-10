@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E0019D272BC6E68100DABECB /* hi_click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E0019D252BC6E68100DABECB /* hi_click.wav */; };
 		E0019D282BC6E68100DABECB /* lo_click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E0019D262BC6E68100DABECB /* lo_click.wav */; };
+		E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */; };
 		E004F4262A69C2D40089B6DF /* SongFullScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E004F4252A69C2D40089B6DF /* SongFullScreenView.swift */; };
 		E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */; };
 		E006A0592A214CAA00CE468A /* RecentlyDeletedSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */; };
@@ -258,6 +259,7 @@
 				E03541012BC05A3400273830 /* FirebaseMessaging in Frameworks */,
 				E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */,
 				E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */,
+				E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */,
 				E03541082BC05A4200273830 /* BottomSheet in Frameworks */,
 				E03540FD2BC05A3400273830 /* FirebaseFirestore in Frameworks */,
 				E03540FB2BC05A3400273830 /* FirebaseAuth in Frameworks */,
@@ -992,6 +994,7 @@
 				E03541022BC05A3400273830 /* FirebaseRemoteConfig */,
 				E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */,
 				E03541072BC05A4200273830 /* BottomSheet */,
+				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1069,6 +1072,7 @@
 				E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E03541062BC05A4200273830 /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1609,6 +1613,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.3;
+			};
+		};
 		E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1636,6 +1648,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
+		};
 		E03540F82BC05A3400273830 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
