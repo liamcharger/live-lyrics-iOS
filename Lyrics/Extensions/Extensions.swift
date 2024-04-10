@@ -60,3 +60,15 @@ extension UINavigationController {
         interactivePopGestureRecognizer?.delegate = nil
     }
 }
+
+extension Color {
+    static var materialRegularGray: Color {
+        Color(UIColor { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return UIColor(red: 34/255, green: 34/255, blue: 36/255, alpha: 1.0)
+            } else {
+                return UIColor(red: 240/255, green: 240/255, blue: 243/255, alpha: 1.0)
+            }
+        })
+    }
+}

@@ -8,6 +8,12 @@
 import SwiftUI
 import BottomSheet
 import UIKit
+import AVFoundation
+
+enum BeatStyle {
+    case medium
+    case heavy
+}
 
 struct SongFullScreenView: View {
     @Binding var dismiss: Bool
@@ -23,18 +29,25 @@ struct SongFullScreenView: View {
     @State var title = ""
     @State var key = ""
     @State var selectedTool = ""
-    @State var bpm = ""
+    @State var bpm = 120
     @State var bpb = 4
     
     @State private var scrollPosition: CGFloat = 0
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
     @State private var linesHeight: CGFloat = 0.0
+    @State private var beatCounter: Int = 0
     
     @State var performanceView = false
     @State var isPlayingMetronome = false
+    @State var isPulsing = false
+    @State var isHeavyImpactPlaying = false
+    @State var isScrolling = false
     
     @State var proxy: ScrollViewProxy?
+    
+    @State var clickAudioPlayer: AVAudioPlayer?
+    @State var accentAudioPlayer: AVAudioPlayer?
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
@@ -43,6 +56,7 @@ struct SongFullScreenView: View {
     @Environment(\.presentationMode) var presMode
     
     var songs: [Song]?
+    @State var metronomeTimer: DispatchSourceTimer?
     
     let size: Int
     let weight: Font.Weight
@@ -50,9 +64,9 @@ struct SongFullScreenView: View {
     let lineSpacing: Double
     let alignment: TextAlignment
     
-    @Binding var duration: String
+    let metronomeDispatchQueue = DispatchQueue(label: "com.chargertech.Lyrics.metronome", attributes: .concurrent)
     
-    @State var isScrolling = false
+    @Binding var duration: String
     
     var lines: [String] {
         return lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
@@ -146,6 +160,91 @@ struct SongFullScreenView: View {
             scrollViewProxy.scrollTo(0, anchor: .top)
         }
     }
+    func startTimer() {
+        stopTimer()
+        
+        loadSounds()
+        
+        isPlayingMetronome = true
+        beatCounter = 0
+        
+        let interval = 60.0 / Double(bpm)
+        
+        metronomeTimer = DispatchSource.makeTimerSource(queue: metronomeDispatchQueue)
+        
+        metronomeTimer?.setEventHandler {
+            DispatchQueue.main.async {
+                if !isPlayingMetronome {
+                    return
+                }
+                
+                self.beatCounter += 1
+                
+                let shouldPlayHeavyBeat = self.beatCounter == 1 || (self.beatCounter - 1) % self.bpb == 0
+                
+                if shouldPlayHeavyBeat {
+                    self.playBeat(style: .heavy)
+                } else {
+                    self.playBeat(style: .medium)
+                }
+                
+                self.isPulsing.toggle()
+            }
+        }
+        
+        DispatchQueue.main.async {
+            if let metronomeTimer = metronomeTimer {
+                metronomeTimer.schedule(deadline: .now(), repeating: interval, leeway: .milliseconds(10))
+            }
+        }
+        metronomeTimer?.activate()
+    }
+
+    func stopTimer() {
+        isPlayingMetronome = false
+        isPulsing = false
+        beatCounter = 0
+        metronomeTimer?.cancel()
+        metronomeTimer = nil
+    }
+    func loadSounds() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback)
+            try session.setActive(true)
+        } catch {
+            print("Failed to set audio session category. Error: \(error)")
+        }
+        
+        guard let clickUrl = Bundle.main.url(forResource: "lo_click", withExtension: "wav") else {
+            fatalError("click sound not found.")
+        }
+        
+        guard let accentUrl = Bundle.main.url(forResource: "hi_click", withExtension: "wav") else {
+            fatalError("accent sound not found.")
+        }
+        
+        do {
+            clickAudioPlayer = try AVAudioPlayer(contentsOf: clickUrl)
+            clickAudioPlayer?.prepareToPlay()
+            
+            accentAudioPlayer = try AVAudioPlayer(contentsOf: accentUrl)
+            accentAudioPlayer?.prepareToPlay()
+        } catch {
+            fatalError("unable to load click sound: \(error)")
+        }
+    }
+    func playBeat(style: BeatStyle) {
+        switch style {
+        case .medium:
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            clickAudioPlayer?.play()
+        case .heavy:
+            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+            accentAudioPlayer?.play()
+        }
+    }
+
     func alignment(from alignment: TextAlignment) -> Alignment {
         switch alignment {
         case .leading:
@@ -198,25 +297,21 @@ struct SongFullScreenView: View {
                                 .foregroundColor(Color.gray)
                                 .padding(.trailing, 6)
                         }
-//                        Menu {
-//                            Button {
-//                                if selectedTool == "metronome" {
-//                                    selectedTool = ""
-//                                } else {
-//                                    selectedTool = "metronome"
-//                                }
-//                            } label: {
-//                                Label("Metronome", systemImage: selectedTool == "metronome" ? "checkmark" : "")
-//                            }
-//                        } label: {
-//                            FAText(iconName: "toolbox", size: 18)
-//                                .imageScale(.medium)
-//                                .padding(12)
-//                                .font(.body.weight(.semibold))
-//                                .foregroundColor(.primary)
-//                                .background(Material.regular)
-//                                .clipShape(Circle())
-//                        }
+                        Button {
+                            if selectedTool == "metronome" {
+                                selectedTool = ""
+                            } else {
+                                selectedTool = "metronome"
+                            }
+                        } label: {
+                            Image(systemName: "metronome")
+                                .imageScale(.medium)
+                                .padding(11)
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(selectedTool == "metronome" ? .white : .primary)
+                                .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
+                                .clipShape(Circle())
+                        }
                         SheetCloseButton(isPresented: $dismiss)
                     }
                     .padding(hasHomeButton() ? .top : [])
@@ -252,12 +347,16 @@ struct SongFullScreenView: View {
                             Text("METRONOME")
                                 .font(.caption.weight(.semibold))
                             HStack {
-                                Text("120 BPM")
-                                    .padding(10)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.primary)
-                                    .background(Material.regular)
-                                    .cornerRadius(8)
+                                Menu {
+                                    Stepper("\(bpm) BPM", value: $bpm, in: 25...260)
+                                } label: {
+                                    Text("\(bpm) BPM")
+                                        .padding(10)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(.primary)
+                                        .background(Material.regular)
+                                        .cornerRadius(8)
+                                }
                                 Menu {
                                     Button {
                                         bpb = 1
@@ -308,14 +407,17 @@ struct SongFullScreenView: View {
                                         .cornerRadius(8)
                                 }
                                 Spacer()
+                                if isPulsing {
+                                    Circle()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundColor(.primary)
+                                }
                                 Button {
                                     if isPlayingMetronome {
-                                        // Stop metronome
+                                        stopTimer()
                                     } else {
-                                        // Start metronome
+                                        startTimer()
                                     }
-                                    // SIMULATE
-                                    isPlayingMetronome.toggle()
                                 } label: {
                                     FAText(iconName: isPlayingMetronome ? "pause" : "play", size: 18)
                                         .padding()

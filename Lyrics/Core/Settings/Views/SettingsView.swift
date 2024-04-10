@@ -63,24 +63,24 @@ struct SettingsView: View {
             .padding()
             Divider()
             ScrollView {
-                if !NetworkManager.shared.getNetworkState() {
-                    VStack(spacing: 0) {
-                        Group {
-                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
-                        }
-                        .padding()
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .onTapGesture {
+//                if !NetworkManager.shared.getNetworkState() {
+//                    VStack(spacing: 0) {
+//                        Group {
+//                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
+//                        }
+//                        .padding()
+//                        .foregroundColor(.gray)
+//                        .frame(maxWidth: .infinity, alignment: .center)
+//                        .onTapGesture {
                             // Open Settings app without the deeplink to app settings
 //                            guard let settingsURL = URL(string: "") else { return }
 //                            if UIApplication.shared.canOpenURL(settingsURL) {
 //                                UIApplication.shared.open(settingsURL)
 //                            }
-                        }
-                        Divider()
-                    }
-                }
+//                        }
+//                        Divider()
+//                    }
+//                }
                 VStack(alignment: .leading) {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
@@ -216,8 +216,8 @@ struct SettingsView: View {
                 .autocapitalization(.none)
                 .padding(.top)
                 .padding(.horizontal)
-                .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
-                .disabled(!NetworkManager.shared.getNetworkState())
+//                .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
+//                .disabled(!NetworkManager.shared.getNetworkState())
             }
             Divider()
             Button {
