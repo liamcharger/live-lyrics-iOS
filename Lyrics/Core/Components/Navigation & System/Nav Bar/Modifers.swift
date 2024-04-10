@@ -23,7 +23,7 @@ struct NavBarButtonViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .frame(width: 23, height: 23)
-            .padding()
+            .padding(16)
             .font(.body.weight(.semibold))
             .background(Material.regular)
             .foregroundColor(.primary)

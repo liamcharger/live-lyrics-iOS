@@ -63,11 +63,29 @@ struct SettingsView: View {
             .padding()
             Divider()
             ScrollView {
+                if !NetworkManager.shared.getNetworkState() {
+                    VStack(spacing: 0) {
+                        Group {
+                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
+                        }
+                        .padding()
+                        .foregroundColor(.gray)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .onTapGesture {
+                            // Open Settings app without the deeplink to app settings
+//                            guard let settingsURL = URL(string: "") else { return }
+//                            if UIApplication.shared.canOpenURL(settingsURL) {
+//                                UIApplication.shared.open(settingsURL)
+//                            }
+                        }
+                        Divider()
+                    }
+                }
                 VStack(alignment: .leading) {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {
-                                Text("Show Word Count")
+                                Text("Enable Word Count")
                                 Spacer()
                                 Toggle(isOn: $toggle, label: {})
                             }
@@ -150,6 +168,24 @@ struct SettingsView: View {
                             .mask { Capsule() }
                     }
                     .foregroundColor(.primary)
+                    HStack {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack(spacing: 7) {
+                                Text("Enable Autoscroll")
+                                Spacer()
+                                Toggle(isOn: $enableAutoscroll, label: {})
+                            }
+                            .foregroundColor(.primary)
+                        }
+                    }
+                    .padding()
+                    .background {
+                        Rectangle()
+                            .fill(.clear)
+                            .background(Material.regular)
+                            .mask { Capsule() }
+                    }
+                    .foregroundColor(.primary)
                     Button {
                         Task {
                             try? await AppStore.sync()
@@ -180,26 +216,29 @@ struct SettingsView: View {
                 .autocapitalization(.none)
                 .padding(.top)
                 .padding(.horizontal)
+                .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
+                .disabled(!NetworkManager.shared.getNetworkState())
             }
             Divider()
-            Button(action: {
-                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit) { success in
+            Button {
+                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit) { success, errorMessage in
                     if success {
                         presMode.wrappedValue.dismiss()
                     } else {
                         self.showError = true
+                        self.errorMessage = errorMessage
                     }
-                } completionString: { string in
-                    self.errorMessage = string
                 }
-            }, label: {
+            } label: {
                 HStack {
                     Spacer()
                     Text(NSLocalizedString("save", comment: "Save"))
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
-            })
+            }
+            .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
+            .disabled(!NetworkManager.shared.getNetworkState())
             .padding()
         }
         .alert(isPresented: $showError) {

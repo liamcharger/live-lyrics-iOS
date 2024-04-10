@@ -26,7 +26,6 @@ struct SongDetailView: View {
     @State var artist = ""
     @State var errorMessage = ""
     @State var isChecked = ""
-    @State var autoscrollDuration = ""
     @State var duration = ""
     
     @State var songIds: [String]?
@@ -185,7 +184,7 @@ struct SongDetailView: View {
                         if songs != nil {
                             if #available(iOS 17, *) {
                                 playButton
-                                    .showTip()
+                                    .showPlayViewTip()
                             } else {
                                 playButton
                             }
@@ -356,7 +355,7 @@ struct SongDetailView: View {
             SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
-            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $autoscrollDuration, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
+            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $duration, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
         }
         .onChange(of: hasDeletedSong, perform: { value in
             if value == true {

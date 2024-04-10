@@ -12,7 +12,7 @@ import TipKit
 struct PlayViewTip: Tip {
     @Parameter
     static var showTip: Bool = true
-    static var numberOfTimesVisited: Event = Event (id: "com.chargertech.Lyrics.numberOfTimesPlayViewTipVisited")
+    static var numberOfTimesVisited: Event = Event(id: "com.chargertech.Lyrics.numberOfTimesPlayViewTipVisited")
     
     var title: Text {
         Text("Introducing Play View")
@@ -24,6 +24,37 @@ struct PlayViewTip: Tip {
     
     var asset: Image? {
         Image(systemName: "play")
+    }
+    
+    var options: [TipOption] {
+        return [
+            Tips.MaxDisplayCount(1)
+        ]
+    }
+    
+    var rules: [Rule] {
+        return [
+            #Rule(Self.numberOfTimesVisited) { $0.donations.count > 0}
+        ]
+    }
+}
+
+@available(iOS 17, *)
+struct AutoscrollSpeedTip: Tip {
+    @Parameter
+    static var showTip: Bool = true
+    static var numberOfTimesVisited: Event = Event(id: "com.chargertech.Lyrics.numberOfTimesAutoscrollSpeedTipVisited")
+    
+    var title: Text {
+        Text("Looking to adjust scroll speed?")
+    }
+    
+    var message: Text? {
+        Text("To adjust the scroll speed, open the song's settings and update its duration field.")
+    }
+    
+    var asset: Image? {
+        Image(systemName: "hare")
     }
     
     var options: [TipOption] {

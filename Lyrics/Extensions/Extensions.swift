@@ -23,15 +23,21 @@ func hasHomeButton() -> Bool {
 
 extension View {
     @ViewBuilder
-    func showTip() -> some View {
+    func showPlayViewTip() -> some View {
         if #available(iOS 17, *) {
             self
                 .popoverTip(PlayViewTip(), arrowEdge: .top)
         }
     }
-}
-
-extension View {
+    
+    @ViewBuilder
+    func showAutoScrollSpeedTip() -> some View {
+        if #available(iOS 17, *) {
+            self
+                .popoverTip(AutoscrollSpeedTip(), arrowEdge: .top)
+        }
+    }
+    
     @ViewBuilder public func hidden(_ shouldHide: Bool) -> some View {
         switch shouldHide {
         case true: self.hidden()

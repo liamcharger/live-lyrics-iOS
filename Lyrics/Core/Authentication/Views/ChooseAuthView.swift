@@ -67,19 +67,15 @@ struct ChooseAuthView: View {
                             .clipShape(Capsule())
                     }
                 }
-                .frame(maxWidth: 350, maxHeight: 400)
+                .frame(maxHeight: 400)
                 .padding()
                 .background(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: UIDevice.current.userInterfaceIdiom == .pad ? 20 : 0)
                         .fill(Material.thin)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 22)
-                                .stroke(Color.gray, lineWidth: 1)
-                        )
                 )
                 .clipped()
-                .shadow(color: .black.opacity(0.8), radius: 50)
-                .padding(25)
+                .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 350 : UIScreen.main.bounds.width)
+                .shadow(color: .black.opacity(0.8), radius: UIDevice.current.userInterfaceIdiom == .pad ? 50: 0)
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())

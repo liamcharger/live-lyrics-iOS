@@ -17,15 +17,13 @@ class SettingsViewModel: ObservableObject {
         self.fetchUser(withUid: user.id ?? "")
     }
     
-    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, enableAutoscroll: Bool, showsExplicitSongs: Bool, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        service.updateSettings(user, wordCount: wordCount, data: data, wordCountStyle: wordCountStyle, showsExplicitSongs: showsExplicitSongs, enableAutoscroll: enableAutoscroll) { success in
+    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, enableAutoscroll: Bool, showsExplicitSongs: Bool, completion: @escaping(Bool, String) -> Void) {
+        service.updateSettings(user, wordCount: wordCount, data: data, wordCountStyle: wordCountStyle, showsExplicitSongs: showsExplicitSongs, enableAutoscroll: enableAutoscroll) { success, errorMessage in
             if success {
-                completion(true)
+                completion(true, "")
             } else {
-                completion(false)
+                completion(false, errorMessage)
             }
-        } completionString: { string in
-            completionString(string)
         }
     }
     

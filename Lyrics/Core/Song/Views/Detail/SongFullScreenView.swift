@@ -15,8 +15,6 @@ struct SongFullScreenView: View {
     
     @State var song: Song
     
-    @State private var autoScrollTimer: Timer?
-    
     @State private var currentIndex = 0
     @State private var offset: CGFloat = 0
     
@@ -24,6 +22,9 @@ struct SongFullScreenView: View {
     @State var lyricsCollection = [""]
     @State var title = ""
     @State var key = ""
+    @State var selectedTool = ""
+    @State var bpm = ""
+    @State var bpb = 4
     
     @State private var scrollPosition: CGFloat = 0
     @State private var currentLineIndex: Int = 0
@@ -31,6 +32,9 @@ struct SongFullScreenView: View {
     @State private var linesHeight: CGFloat = 0.0
     
     @State var performanceView = false
+    @State var isPlayingMetronome = false
+    
+    @State var proxy: ScrollViewProxy?
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
@@ -50,23 +54,32 @@ struct SongFullScreenView: View {
     
     @State var isScrolling = false
     
-    @State private var contentOffset: CGPoint = .zero
-    
     var lines: [String] {
         return lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
-    var computedAlignment: HorizontalAlignment {
-        switch(alignment) {
-        case .leading:
-            return .leading
-        case .center:
-            return .center
-        case .trailing:
-            return .trailing
+    var autoscrollButton: some View {
+        Button(action: {
+            if let proxy = proxy {
+                if isScrolling {
+                    stopAutoscroll(scrollViewProxy: proxy)
+                } else {
+                    isScrolling = true
+                    startAutoscroll(scrollViewProxy: proxy)
+                }
+            }
+        }) {
+            HStack {
+                Image(systemName: isScrolling ? "stop" : "play")
+                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
+            }
+            .imageScale(.medium)
+            .padding()
+            .font(.body.weight(.semibold))
+            .foregroundColor(.white)
+            .background(isScrolling ? .red : .blue)
+            .clipShape(Capsule())
         }
     }
-    
-    // Functions
     func swipeLeft() {
         currentIndex += 1
         if currentIndex >= songs!.count {
@@ -76,6 +89,10 @@ struct SongFullScreenView: View {
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
+        self.duration = song.duration ?? "1:00"
+        if let proxy = proxy, isScrolling {
+            stopAutoscroll(scrollViewProxy: proxy)
+        }
     }
     func swipeRight() {
         currentIndex -= 1
@@ -86,6 +103,10 @@ struct SongFullScreenView: View {
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
+        self.duration = song.duration ?? "1:00"
+        if let proxy = proxy, isScrolling {
+            stopAutoscroll(scrollViewProxy: proxy)
+        }
     }
     func durationStringToSeconds(_ duration: String) -> Double {
         let components = duration.split(separator: ":")
@@ -100,22 +121,52 @@ struct SongFullScreenView: View {
     func startAutoscroll(scrollViewProxy: ScrollViewProxy) {
         isScrolling = true
         
-        //        scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
-        //            if isScrolling {
-        //                withAnimation {
-        //                    scrollPosition = CGFloat(currentLineIndex + 1)
-        //                    scrollViewProxy.scrollTo(scrollPosition, anchor: .top)
-        //                    currentLineIndex += 1
-        //
-        //                    if currentLineIndex >= lines.count {
-        //                        scrollTimer?.invalidate()
-        //                    }
-        //                }
-        //            }
-        //        }
+        scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
+            if isScrolling {
+                withAnimation {
+                    scrollPosition = CGFloat(currentLineIndex + 1)
+                    scrollViewProxy.scrollTo(Int(scrollPosition), anchor: .top)
+                    currentLineIndex += 1
+                    
+                    if currentLineIndex >= lines.count {
+                        scrollTimer?.invalidate()
+                        isScrolling = false
+                    }
+                    
+                    print(currentLineIndex)
+                }
+            }
+        }
+    }
+    func stopAutoscroll(scrollViewProxy: ScrollViewProxy) {
+        isScrolling = false
+        scrollTimer = nil
+        currentLineIndex = 0
+        withAnimation {
+            scrollViewProxy.scrollTo(0, anchor: .top)
+        }
+    }
+    func alignment(from alignment: TextAlignment) -> Alignment {
+        switch alignment {
+        case .leading:
+            return .leading
+        case .center:
+            return .center
+        case .trailing:
+            return .trailing
+        }
+    }
+    func hAlignment(from alignment: TextAlignment) -> HorizontalAlignment {
+        switch alignment {
+        case .leading:
+            return .leading
+        case .center:
+            return .center
+        case .trailing:
+            return .trailing
+        }
     }
     
-    // Initialization
     init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, songs: [Song]?, dismiss: Binding<Bool>, hasDeletedSong: Binding<Bool>) {
         self.songs = songs
         self._key = State(initialValue: key)
@@ -142,93 +193,156 @@ struct SongFullScreenView: View {
                             .font(.title2.weight(.bold))
                             .lineLimit(1).truncationMode(.tail)
                         Spacer()
-                        Text("Key: " + key == "" ? "Not Set" : key)
-                            .foregroundColor(Color.gray)
-                            .padding(.trailing, 6)
+                        if key != "" && key != "Not Set" {
+                            Text("Key: " + key)
+                                .foregroundColor(Color.gray)
+                                .padding(.trailing, 6)
+                        }
+//                        Menu {
+//                            Button {
+//                                if selectedTool == "metronome" {
+//                                    selectedTool = ""
+//                                } else {
+//                                    selectedTool = "metronome"
+//                                }
+//                            } label: {
+//                                Label("Metronome", systemImage: selectedTool == "metronome" ? "checkmark" : "")
+//                            }
+//                        } label: {
+//                            FAText(iconName: "toolbox", size: 18)
+//                                .imageScale(.medium)
+//                                .padding(12)
+//                                .font(.body.weight(.semibold))
+//                                .foregroundColor(.primary)
+//                                .background(Material.regular)
+//                                .clipShape(Circle())
+//                        }
                         SheetCloseButton(isPresented: $dismiss)
                     }
                     .padding(hasHomeButton() ? .top : [])
                     .padding(.horizontal)
                     Divider()
                         .padding(.top)
-                    ScrollView {
-//                        ScrollableView(self.$contentOffset, animationDuration: durationStringToSeconds(duration)) {
-                        HStack {
-//                            if viewModel.currentUser?.enableAutoscroll ?? true {
-//                            if false {
-//                                HStack {
-//                                    Button {
-//                                        if isScrolling {
-//                                            isScrolling = false
-//                                        } else {
-//                                            // Calculate the height of all lines
-//                                            let text = lyrics.split(separator: "\n")
-//                                            let lineHeight = geometry.size.height / CGFloat(text.count)
-//                                            linesHeight = lineHeight * CGFloat(text.count)
-//                                            
-//                                            // Scroll to the top of the lyrics
-//                                            self.contentOffset = CGPoint(x: 0, y: 0)
-//                                            
-//                                            // Start autoscrolling
-//                                            self.contentOffset = CGPoint(x: 0, y: linesHeight)
-//                                            isScrolling = true
-//                                        }
-//                                    } label: {
-//                                        HStack(spacing: 8) {
-//                                            Image(systemName: isScrolling ? "stop" : "play")
-//                                            Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
-//                                        }
-//                                        .modifier(NavButtonViewModifier())
-//                                    }
-//                                    .onChange(of: isScrolling) { value in
-//                                        if value == false {
-//                                            withAnimation {
-//                                                self.contentOffset = CGPoint(x: 0, y: 0)
-//                                            }
-//                                        }
-//                                    }
-//                                    Button {
-//                                        showSettingsView.toggle()
-//                                    } label: {
-//                                        Text(duration == "" ? "0:00" : duration)
-//                                            .padding()
-//                                            .font(.body.weight(.semibold))
-//                                            .background(Material.regular)
-//                                            .foregroundColor(.primary)
-//                                            .clipShape(Capsule())
-//                                    }
-//                                    Spacer()
-//                                    Menu {
-//                                        Button {
-//                                            performanceView.toggle()
-//                                            hapticByStyle(.medium)
-//                                        } label: {
-//                                            Label("Show Performance View", systemImage: performanceView ? "checkmark" : "")
-//                                        }
-//                                    } label: {
-//                                        Image(systemName: "gear")
-//                                            .padding()
-//                                            .font(.body.weight(.semibold))
-//                                            .foregroundColor(Color("Color"))
-//                                            .background(Material.regular)
-//                                            .cornerRadius(30)
-//                                    }
-//                                }
-//                                .padding(.top, 8)
-//                                .padding(.bottom, -10)
-//                                .padding(.horizontal)
-//                                Divider()
-//                                    .padding(.top)
-//                            }
-                            Text(lyrics)
-                                .font(.system(size: CGFloat(size), weight: weight, design: design))
-                                .multilineTextAlignment(alignment)
-                                .lineSpacing(CGFloat(lineSpacing))
-                                .padding()
-                            Spacer()
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            VStack(alignment: hAlignment(from: alignment), spacing: lineSpacing) {
+                                ForEach(lines.indices, id: \.self) { index in
+                                    let line = lines[index]
+                                    
+                                    Text(line)
+                                        .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                        .font(.system(size: CGFloat(size), weight: weight, design: design))
+                                        .id(index)
+                                }
+                            }
+                            .padding()
+                        }
+                        .onAppear {
+                            self.proxy = proxy
                         }
                     }
                 }
+            }
+            if !selectedTool.isEmpty {
+                Divider()
+                Group {
+                    switch selectedTool {
+                    case "metronome":
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("METRONOME")
+                                .font(.caption.weight(.semibold))
+                            HStack {
+                                Text("120 BPM")
+                                    .padding(10)
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .background(Material.regular)
+                                    .cornerRadius(8)
+                                Menu {
+                                    Button {
+                                        bpb = 1
+                                    } label: {
+                                        Label("1", systemImage: bpb == 1 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 2
+                                    } label: {
+                                        Label("2", systemImage: bpb == 2 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 3
+                                    } label: {
+                                        Label("3", systemImage: bpb == 23 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 4
+                                    } label: {
+                                        Label("4", systemImage: bpb == 4 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 5
+                                    } label: {
+                                        Label("5", systemImage: bpb == 5 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 6
+                                    } label: {
+                                        Label("6", systemImage: bpb == 6 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 7
+                                    } label: {
+                                        Label("7", systemImage: bpb == 7 ? "checkmark" : "")
+                                    }
+                                    Button {
+                                        bpb = 8
+                                    } label: {
+                                        Label("8", systemImage: bpb == 8 ? "checkmark" : "")
+                                    }
+                                } label: {
+                                    Text("\(bpb) BPB")
+                                        .padding(10)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(.primary)
+                                        .background(Material.regular)
+                                        .cornerRadius(8)
+                                }
+                                Spacer()
+                                Button {
+                                    if isPlayingMetronome {
+                                        // Stop metronome
+                                    } else {
+                                        // Start metronome
+                                    }
+                                    // SIMULATE
+                                    isPlayingMetronome.toggle()
+                                } label: {
+                                    FAText(iconName: isPlayingMetronome ? "pause" : "play", size: 18)
+                                        .padding()
+                                        .padding(.trailing, isPlayingMetronome ? 0 : -2)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(.white)
+                                        .background(isPlayingMetronome ? .red : .blue)
+                                        .clipShape(Circle())
+                                }
+                                Button {
+                                    isPlayingMetronome = false
+                                    selectedTool = ""
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .padding()
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(.white)
+                                        .background(Material.regular)
+                                        .clipShape(Circle())
+                                }
+                            }
+                        }
+                    default:
+                        EmptyView()
+                    }
+                }
+                .padding(12)
             }
             Divider()
             HStack {
@@ -248,22 +362,13 @@ struct SongFullScreenView: View {
                             .clipShape(Circle())
                     }
                 }
-                if isScrolling {
-                    Button(action: {
-                        isScrolling = false
-                        autoScrollTimer = nil
-                        currentLineIndex = 0
-                    }) {
-                        HStack {
-                            Image(systemName: "stop")
-                            Text("Stop")
-                        }
-                        .imageScale(.medium)
-                        .padding()
-                        .font(.body.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .background(Material.regular)
-                        .clipShape(Capsule())
+                Spacer()
+                if viewModel.currentUser?.enableAutoscroll ?? true {
+                    if #available(iOS 17, *) {
+                        autoscrollButton
+                            .showAutoScrollSpeedTip()
+                    } else {
+                        autoscrollButton
                     }
                 }
                 Spacer()
