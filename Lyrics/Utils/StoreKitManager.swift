@@ -8,9 +8,6 @@
 import Foundation
 import StoreKit
 
-import Foundation
-import StoreKit
-
 public enum StoreError: Error {
     case failedVerification
 }

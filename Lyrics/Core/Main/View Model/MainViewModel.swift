@@ -234,6 +234,6 @@ class MainViewModel: ObservableObject {
     }
     
     func restoreSongToFolder(song: RecentlyDeletedSong) {
-        service.restoreSongtoFolder(song: song)
+        service.restoreSong(song: song, restoreToFolder: true)
     }
 }

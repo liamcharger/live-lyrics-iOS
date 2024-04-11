@@ -24,11 +24,11 @@ struct Song: Identifiable, Codable, Equatable {
     var design: Double?
     var lineSpacing: Double?
     var artist: String?
-    var bpm: String?
+    var bpm: Int?
+    var bpb: Int?
     var pinned: Bool?
     var songId: Int?
-    var performanceView: Bool?
-    var autoscrollDuration: String?
+    var performanceMode: Bool?
     var duration: String?
     var tags: [String]?
 }

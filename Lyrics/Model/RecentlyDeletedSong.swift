@@ -26,11 +26,11 @@ struct RecentlyDeletedSong: Identifiable, Codable, Equatable {
     var design: Double?
     var lineSpacing: Double?
     var artist: String?
-    var bpm: String?
+    var bpb: Int?
+    var bpm: Int?
     var pinned: Bool?
     var songId: Int?
-    var performanceView: Bool?
-    var autoscrollDuration: String?
+    var performanceMode: Bool?
     var duration: String?
     var tags: [String]?
 }

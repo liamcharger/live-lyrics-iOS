@@ -35,7 +35,7 @@ extension View {
     func showAutoScrollSpeedTip() -> some View {
         if #available(iOS 17, *) {
             self
-                .popoverTip(AutoscrollSpeedTip(), arrowEdge: .top)
+                .popoverTip(AutoscrollSpeedTip(), arrowEdge: .bottom)
         }
     }
     
@@ -76,43 +76,56 @@ extension Color {
 
 final class ScrollDelegate: NSObject, UITableViewDelegate, UIScrollViewDelegate {
     var isScrolling: Binding<Bool>?
+    var isScrollingProgrammatically: Binding<Bool>?
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        // Set isProgrammaticScrolling to false when the user begins dragging
+        isScrollingProgrammatically?.wrappedValue = false
+    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let isScrolling = isScrolling?.wrappedValue,!isScrolling {
+        // Only update isScrolling if the scroll is not programmatically triggered
+        if let isScrolling = isScrolling?.wrappedValue, !isScrolling, !(isScrollingProgrammatically?.wrappedValue ?? false) {
             self.isScrolling?.wrappedValue = true
         }
     }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if let isScrolling = isScrolling?.wrappedValue, isScrolling {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.15) {
-                self.isScrolling?.wrappedValue = false
-            }
-        }
-    }
-    // When the user slowly drags the scrollable control, decelerate is false after the user releases their finger, so the scrollViewDidEndDecelerating method is not called.
+    
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            if let isScrolling = isScrolling?.wrappedValue, isScrolling {
+            // Only update isScrolling if the scroll is not decelerating
+            if let isScrolling = isScrolling?.wrappedValue, isScrolling, !(isScrollingProgrammatically?.wrappedValue ?? false) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.15) {
                     self.isScrolling?.wrappedValue = false
                 }
             }
         }
     }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        // Only update isScrolling if the scroll is not programmatically triggered
+        if let isScrolling = isScrolling?.wrappedValue, isScrolling, !(isScrollingProgrammatically?.wrappedValue ?? false) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.15) {
+                self.isScrolling?.wrappedValue = false
+            }
+        }
+    }
 }
+
 extension View {
-    func scrollStatusByIntrospect(isScrolling: Binding<Bool>) -> some View {
-        modifier(ScrollStatusByIntrospectModifier(isScrolling: isScrolling))
+    func scrollStatusByIntrospect(isScrolling: Binding<Bool>, isScrollingProgrammatically: Binding<Bool>) -> some View {
+        modifier(ScrollStatusByIntrospectModifier(isScrolling: isScrolling, isScrollingProgrammatically: isScrollingProgrammatically))
     }
 }
 struct ScrollStatusByIntrospectModifier: ViewModifier {
     @State var delegate = ScrollDelegate()
     @Binding var isScrolling: Bool
+    @Binding var isScrollingProgrammatically: Bool
     
     func body(content: Content) -> some View {
         content
             .onAppear {
                 self.delegate.isScrolling = $isScrolling
+                self.delegate.isScrollingProgrammatically = $isScrollingProgrammatically
             }
             .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { scrollView in
                 scrollView.delegate = delegate

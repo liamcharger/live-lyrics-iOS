@@ -229,6 +229,39 @@ class SongService {
 			}
 	}
 	
+	func updateBpb(song: Song, bpb: Int) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+			.updateData(["bpb": bpb]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+	}
+	
+	func updateBpm(song: Song, bpm: Int) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+			.updateData(["bpm": bpm]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+	}
+	
+	func updatePerformanceMode(song: Song, performanceMode: Bool) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+			.updateData(["performanceMode": performanceMode]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+	}
+	
 	func updateWordCountPreferences(preference: String, completion: @escaping(String, Bool) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
@@ -511,10 +544,10 @@ class SongService {
 		}
 	}
 	
-	func restoreSong(song: RecentlyDeletedSong) {
+	func restoreSong(song: RecentlyDeletedSong, restoreToFolder: Bool = false) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		let songData = [
+		let songData: [String: Any?] = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
 			"title": song.title,
@@ -529,49 +562,12 @@ class SongService {
 			"lineSpacing": song.lineSpacing,
 			"artist": song.artist,
 			"bpm": song.bpm,
+			"bpb": song.bpb,
 			"pinned": song.pinned,
-			"performanceView": song.performanceView,
-			"autoscrollDuration": song.autoscrollDuration,
-			"duration": song.duration
-		] as [String: Any?]
-		
-		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
-			if let error = error {
-				print("Error deleting song document: \(error.localizedDescription)")
-			} else {
-				Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").setData(songData) { error in
-					if let error = error {
-						print(error.localizedDescription)
-					}
-				}
-			}
-		}
-	}
-	
-	func restoreSongtoFolder(song: RecentlyDeletedSong) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		let songData = [
-			"uid": song.uid,
-			"timestamp": song.timestamp,
-			"title": song.title,
-			"lyrics": song.lyrics,
-			"order": song.order,
-			"size": song.size,
-			"key": song.key,
-			"notes": song.notes,
-			"weight": song.weight,
-			"alignment": song.alignment,
-			"design": song.design,
-			"lineSpacing": song.lineSpacing,
-			"artist": song.artist,
-			"bpm": song.bpm,
-			"pinned": song.pinned,
-			"performanceView": song.performanceView,
-			"autoscrollDuration": song.autoscrollDuration,
+			"performanceMode": song.performanceMode,
 			"duration": song.duration,
 			"tags": song.tags
-		] as [String: Any?]
+		]
 		
 		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
 			if let error = error {
@@ -581,9 +577,11 @@ class SongService {
 					if let error = error {
 						print(error.localizedDescription)
 					}
-					Firestore.firestore().collection("users").document(uid).collection("folders").document(song.folderId ?? "").collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
-						if let error = error {
-							print(error.localizedDescription)
+					if restoreToFolder, let folderId = song.folderId {
+						Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
+							if let error = error {
+								print(error.localizedDescription)
+							}
 						}
 					}
 				}
@@ -646,9 +644,9 @@ class SongService {
 			"lineSpacing": song.lineSpacing,
 			"artist": song.artist,
 			"bpm": song.bpm,
+			"bpb": song.bpb,
 			"pinned": song.pinned,
-			"performanceView": song.performanceView,
-			"autoscrollDuration": song.autoscrollDuration,
+			"performanceMode": song.performanceMode,
 			"duration": song.duration,
 			"tags": song.tags
 		]

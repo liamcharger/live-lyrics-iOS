@@ -27,6 +27,9 @@ struct SongDetailView: View {
     @State var errorMessage = ""
     @State var isChecked = ""
     @State var duration = ""
+    @State var bpm = 120
+    @State var bpb = 4
+    @State var performanceMode = true
     
     @State var songIds: [String]?
     
@@ -163,6 +166,9 @@ struct SongDetailView: View {
         self._key = State(initialValue: song.key == "" ? "Not Set" : song.key ?? "Not Set")
         self._artist = State(initialValue: song.artist == "" ? "Not Set" : song.artist ?? "Not Set")
         self._duration = State(initialValue: song.duration ?? "")
+        self._bpm = State(initialValue: song.bpm ?? 120)
+        self._bpb = State(initialValue: song.bpb ?? 4)
+        self._performanceMode = State(initialValue: song.performanceMode ?? true)
         
         self.notesViewModel = NotesViewModel(song: song)
     }
@@ -206,9 +212,7 @@ struct SongDetailView: View {
                                         notesViewModel.updateNotes(song, notes: notes)
                                     }
                             }
-                            
                             menu
-                            
                             settings
                         } else {
                             Button(action: {
@@ -355,7 +359,7 @@ struct SongDetailView: View {
             SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
-            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $duration, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
+            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $duration, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
         }
         .onChange(of: hasDeletedSong, perform: { value in
             if value == true {

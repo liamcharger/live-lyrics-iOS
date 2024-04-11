@@ -121,6 +121,18 @@ class SongViewModel: ObservableObject {
         }
     }
     
+    func updateBpm(for song: Song, with bpm: Int) {
+        service.updateBpm(song: song, bpm: bpm)
+    }
+    
+    func updateBpb(for song: Song, with bpb: Int) {
+        service.updateBpb(song: song, bpb: bpb)
+    }
+    
+    func updatePerformanceMode(for song: Song, with performanceMode: Bool) {
+        service.updatePerformanceMode(song: song, performanceMode: performanceMode)
+    }
+    
     func moveSongToFolder(fromFolder: Folder, toFolder: Folder, _ song: Song, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
         DispatchQueue.main.async {
             self.service.moveSongToFolder(currentFolder: fromFolder, toFolder: toFolder, song: song) { success in

@@ -18,6 +18,9 @@ enum BeatStyle {
 struct SongFullScreenView: View {
     @Binding var dismiss: Bool
     @Binding var hasDeletedSong: Bool
+    @Binding var bpm: Int
+    @Binding var bpb: Int
+    @Binding var performanceMode: Bool
     
     @State var song: Song
     
@@ -29,22 +32,22 @@ struct SongFullScreenView: View {
     @State var title = ""
     @State var key = ""
     @State var selectedTool = ""
-    @State var bpm = 120
-    @State var bpb = 4
     
-    @State private var scrollPosition: CGFloat = 0
+    @State private var scrollPosition: Int = 0
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
     @State private var linesHeight: CGFloat = 0.0
     @State private var beatCounter: Int = 0
+    @State private var pressedIndexId: Int = 0
+    @State private var scrollOffset: CGFloat = 0
     
-    @State var performanceView = false
     @State var isPlayingMetronome = false
     @State var isPulsing = false
     @State var isHeavyImpactPlaying = false
     @State var isScrolling = false
     @State var isUserScrolling = false
-    @State var performanceMode = true
+    @State var isScrollingProgrammatically = true
+    @State var isPressed = false
     
     @State var proxy: ScrollViewProxy?
     
@@ -73,27 +76,47 @@ struct SongFullScreenView: View {
     var lines: [String] {
         return lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
-    var autoscrollButton: some View {
-        Button(action: {
-            if let proxy = proxy {
-                if isScrolling {
-                    stopAutoscroll(scrollViewProxy: proxy)
-                } else {
-                    isScrolling = true
-                    startAutoscroll(scrollViewProxy: proxy)
+    var autoscrollButtons: some View {
+        HStack {
+            Button(action: {
+                if let proxy = proxy {
+                    if isScrolling {
+                        stopAutoscroll(scrollViewProxy: proxy)
+                    } else {
+                        startAutoscroll(scrollViewProxy: proxy)
+                    }
                 }
+            }) {
+                HStack {
+                    Image(systemName: isScrolling ? "stop" : "play")
+                    Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
+                }
+                .imageScale(.medium)
+                .padding()
+                .font(.body.weight(.semibold))
+                .foregroundColor(.white)
+                .background(isScrolling ? .red : .blue)
+                .clipShape(Capsule())
             }
-        }) {
-            HStack {
-                Image(systemName: isScrolling ? "stop" : "play")
-                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
+            Menu {
+                Button {
+                    performanceMode.toggle()
+                } label: {
+                    Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                }
+            } label: {
+                FAText(iconName: "gear", size: 20)
+                    .imageScale(.medium)
+                    .padding()
+                    .font(.body.weight(.semibold))
+                    .foregroundColor(.primary)
+                    .background(Material.regular)
+                    .clipShape(Circle())
             }
-            .imageScale(.medium)
-            .padding()
-            .font(.body.weight(.semibold))
-            .foregroundColor(.white)
-            .background(isScrolling ? .red : .blue)
-            .clipShape(Capsule())
+            .onChange(of: performanceMode) { performanceMode in
+                print("PM updated: \(performanceMode)")
+                songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+            }
         }
     }
     func swipeLeft() {
@@ -101,7 +124,9 @@ struct SongFullScreenView: View {
         if currentIndex >= songs!.count {
             currentIndex = 0
         }
-        self.song = self.songs![currentIndex]
+        if let songs = songs {
+            self.song = songs[currentIndex]
+        }
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
@@ -115,7 +140,9 @@ struct SongFullScreenView: View {
         if currentIndex < 0 {
             currentIndex = songs!.count - 1
         }
-        self.song = self.songs![currentIndex]
+        if let songs = songs {
+            self.song = songs[currentIndex]
+        }
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
@@ -136,21 +163,29 @@ struct SongFullScreenView: View {
     }
     func startAutoscroll(scrollViewProxy: ScrollViewProxy) {
         isScrolling = true
+        isScrollingProgrammatically = true
         
         scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
-            if isScrolling {
-                withAnimation {
-                    scrollPosition = CGFloat(currentLineIndex + 1)
-                    scrollViewProxy.scrollTo(Int(scrollPosition), anchor: .top)
-                    currentLineIndex += 1
-                    
-                    if currentLineIndex >= lines.count {
-                        scrollTimer?.invalidate()
-                        isScrolling = false
-                    }
-                    
-                    print(currentLineIndex)
+            withAnimation {
+                isScrollingProgrammatically = true
+                
+                scrollPosition = currentLineIndex + 1
+                scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
+                currentLineIndex += 1
+                
+                if currentLineIndex >= lines.count {
+                    scrollTimer?.invalidate()
+                    isScrolling = false
                 }
+            }
+        }
+    }
+    func scrollTo(_ index: Int) {
+        if let scrollViewProxy = proxy {
+            withAnimation {
+                scrollPosition = index
+                scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
+                currentLineIndex = scrollPosition
             }
         }
     }
@@ -270,21 +305,32 @@ struct SongFullScreenView: View {
         }
     }
     func getBlur(for index: Int) -> CGFloat {
-        if !isUserScrolling {
-            let distance = abs(currentLineIndex - index)
-            let maxDistance = 1.2
-            
-            let blur = CGFloat(distance) / CGFloat(maxDistance)
-            
-            let squaredBlur = blur * blur
-            
-            return squaredBlur > 13 ? 13 : squaredBlur
+        if performanceMode {
+            if isScrollingProgrammatically && !isUserScrolling {
+                let distance = abs(currentLineIndex - index)
+                
+                if distance == 0 {
+                    return 0
+                } else if distance == 1 {
+                    return 4
+                } else if distance == 2 {
+                    return 8
+                } else {
+                    return 11
+                }
+            } else {
+                return 0
+            }
         } else {
-            return 0
+            if currentLineIndex != index {
+                return 2.2
+            } else {
+                return 0
+            }
         }
     }
     
-    init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, songs: [Song]?, dismiss: Binding<Bool>, hasDeletedSong: Binding<Bool>) {
+    init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>, hasDeletedSong: Binding<Bool>) {
         self.songs = songs
         self._key = State(initialValue: key)
         self._currentIndex = State(initialValue: song.order ?? 0)
@@ -294,6 +340,9 @@ struct SongFullScreenView: View {
         self.design = design
         self.weight = weight
         self.size = size
+        self._bpb = bpb
+        self._bpm = bpm
+        self._performanceMode = performanceMode
         self._duration = duration
         self._song = State(initialValue: song)
         self._lyrics = State(initialValue: lyrics)
@@ -338,6 +387,14 @@ struct SongFullScreenView: View {
                         .padding(.top)
                     ScrollViewReader { proxy in
                         ScrollView {
+                            GeometryReader { geometry in
+                                Color.clear.preference(key: OffsetPreferenceKey.self, value: geometry.frame(in: .named("scrollView")).minY)
+                            }
+                            .frame(height: 0)
+                            .onPreferenceChange(OffsetPreferenceKey.self) { offset in
+                                scrollOffset = offset
+                                print(offset)
+                            }
                             VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
                                 ForEach(lines.indices, id: \.self) { index in
                                     let line = lines[index]
@@ -347,19 +404,30 @@ struct SongFullScreenView: View {
                                             .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
                                             .font(.system(size: CGFloat(size), weight: weight, design: design))
                                             .id(index)
-                                    } else {
-                                        Text(line)
-                                            .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                            .font(.system(size: 42, weight: .bold, design: .rounded))
-                                            .id(index)
                                             .blur(radius: getBlur(for: index))
-                                            .animation(.spring(dampingFraction: 1))
+                                    } else {
+                                        Button {
+                                            scrollTo(index)
+                                        } label: {
+                                            Text(line)
+                                                .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                                .font(.system(size: 42, weight: .bold, design: .rounded))
+                                                .foregroundColor(.primary)
+                                                .id(index)
+                                                .padding(5)
+                                                .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
+                                                .background((isPressed && pressedIndexId == index) ? Color.materialRegularGray.opacity(0.75) : .clear)
+                                                .cornerRadius(10)
+                                                .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
+                                                .animation(.spring(dampingFraction: 1.0))
+                                        }
+                                        .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
                                     }
                                 }
                             }
                             .padding()
                         }
-                        .scrollStatusByIntrospect(isScrolling: $isUserScrolling)
+                        .scrollStatusByIntrospect(isScrolling: $isUserScrolling, isScrollingProgrammatically: $isScrollingProgrammatically)
                         .onAppear {
                             self.proxy = proxy
                         }
@@ -376,7 +444,7 @@ struct SongFullScreenView: View {
                                 .font(.caption.weight(.semibold))
                             HStack {
                                 Menu {
-                                    Stepper("\(bpm) BPM", value: $bpm, in: 25...260)
+                                    Stepper("\(bpm) Beats Per Minute", value: $bpm, in: 25...260)
                                 } label: {
                                     Text("\(bpm) BPM")
                                         .padding(10)
@@ -384,6 +452,10 @@ struct SongFullScreenView: View {
                                         .foregroundColor(.primary)
                                         .background(Material.regular)
                                         .cornerRadius(8)
+                                }
+                                .onChange(of: bpm) { bpm in
+                                    print("BPM updated: \(bpm)")
+                                    songViewModel.updateBpm(for: song, with: bpm)
                                 }
                                 Menu {
                                     Button {
@@ -433,6 +505,10 @@ struct SongFullScreenView: View {
                                         .foregroundColor(.primary)
                                         .background(Material.regular)
                                         .cornerRadius(8)
+                                }
+                                .onChange(of: bpb) { bpb in
+                                    print("BPB updated: \(bpb)")
+                                    songViewModel.updateBpm(for: song, with: bpb)
                                 }
                                 Spacer()
                                 if isPulsing {
@@ -495,10 +571,10 @@ struct SongFullScreenView: View {
                 Spacer()
                 if viewModel.currentUser?.enableAutoscroll ?? true {
                     if #available(iOS 17, *) {
-                        autoscrollButton
+                        autoscrollButtons
                             .showAutoScrollSpeedTip()
                     } else {
-                        autoscrollButton
+                        autoscrollButtons
                     }
                 }
                 Spacer()
@@ -525,14 +601,34 @@ struct SongFullScreenView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
-            if song.autoscrollDuration != nil || song.autoscrollDuration == "" {
-                self.duration = song.autoscrollDuration ?? ""
-            } else if song.duration != nil {
-                self.duration = song.duration ?? ""
+            if let duration = song.duration {
+                self.duration = duration
             }
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
         }
+    }
+}
+
+struct ScaleButtonStyle: ButtonStyle {
+    @Binding var isPressed: Bool
+    @Binding var pressedIndexId: Int
+    let index: Int
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed) { isPressed in
+                self.isPressed = isPressed
+                self.pressedIndexId = index
+            }
+    }
+}
+
+struct OffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
