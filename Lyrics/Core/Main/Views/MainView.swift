@@ -217,7 +217,7 @@ struct MainView: View {
             ScrollViewReader { scrollViewProxy in
             ScrollView {
                 if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 50)
+                    AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 70)
                         .padding([.leading, .top, .trailing])
                 }
                 VStack(spacing: 22) {

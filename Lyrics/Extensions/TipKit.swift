@@ -10,10 +10,6 @@ import TipKit
 
 @available(iOS 17, *)
 struct PlayViewTip: Tip {
-    @Parameter
-    static var showTip: Bool = true
-    static var numberOfTimesVisited: Event = Event(id: "com.chargertech.Lyrics.numberOfTimesPlayViewTipVisited")
-    
     var title: Text {
         Text("Introducing Play View")
     }
@@ -31,20 +27,10 @@ struct PlayViewTip: Tip {
             Tips.MaxDisplayCount(1)
         ]
     }
-    
-    var rules: [Rule] {
-        return [
-            #Rule(Self.numberOfTimesVisited) { $0.donations.count > 0}
-        ]
-    }
 }
 
 @available(iOS 17, *)
 struct AutoscrollSpeedTip: Tip {
-    @Parameter
-    static var showTip: Bool = true
-    static var numberOfTimesVisited: Event = Event(id: "com.chargertech.Lyrics.numberOfTimesAutoscrollSpeedTipVisited")
-    
     var title: Text {
         Text("Looking to adjust scroll speed?")
     }
@@ -62,20 +48,10 @@ struct AutoscrollSpeedTip: Tip {
             Tips.MaxDisplayCount(1)
         ]
     }
-    
-    var rules: [Rule] {
-        return [
-            #Rule(Self.numberOfTimesVisited) { $0.donations.count > 0}
-        ]
-    }
 }
 
 @available(iOS 17, *)
 struct NotesViewTip: Tip {
-    @Parameter
-    static var showTip: Bool = true
-    static var numberOfTimesVisited: Event = Event(id: "com.chargertech.Lyrics.numberOfTimesNotesViewTipVisited")
-    
     var title: Text {
         Text("Tip")
     }

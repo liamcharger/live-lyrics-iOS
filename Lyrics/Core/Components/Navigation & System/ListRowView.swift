@@ -78,7 +78,25 @@ struct ListRowView: View {
         .padding()
         .background(Material.regular)
         .foregroundColor(.primary)
-        .modifier(ListViewModifier(capsule: subtitleForSong == nil))
+        .modifier(ListViewModifier(capsule: {
+            if let song = subtitleForSong {
+                if let user = viewModel.currentUser {
+                    if let showDataUnderSong = user.showDataUnderSong {
+                        if showDataUnderSong == "None" {
+                            return true
+                        } else {
+                            return false
+                        }
+                    } else {
+                        return true
+                    }
+                } else {
+                    return true
+                }
+            } else {
+                return true
+            }
+        }()))
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 22))
     }
 }

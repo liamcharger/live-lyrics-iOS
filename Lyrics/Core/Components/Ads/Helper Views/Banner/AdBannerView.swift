@@ -23,17 +23,18 @@ struct AdBannerView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
+                .frame(height: height)
                 .background(Material.regular)
                 .foregroundColor(.gray)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: 20))
                 BannerAd(adUnitID: unitId)
                     .frame(maxWidth: .infinity)
             }
-            .frame(maxHeight: height)
+            .frame(height: height)
         }
     }
 }
 
 #Preview {
-    AdBannerView(unitId: "ca-app-pub-9538983146851531/4662411532", height: 50)
+    AdBannerView(unitId: "ca-app-pub-9538983146851531/4662411532", height: 70)
 }

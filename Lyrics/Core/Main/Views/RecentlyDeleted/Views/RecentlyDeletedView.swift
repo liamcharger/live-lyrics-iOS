@@ -61,7 +61,7 @@ struct RecentlyDeletedView: View {
             ScrollView {
                 VStack {
                     if storeKitManager.purchasedProducts.isEmpty {
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 50)
+                        AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 70)
                             .padding(.bottom, 10)
                     }
                     if !recentlyDeletedViewModel.isLoadingSongs {

@@ -9,6 +9,7 @@ import SwiftUI
 import BottomSheet
 import UIKit
 import AVFoundation
+import TipKit
 
 enum BeatStyle {
     case medium
@@ -75,49 +76,6 @@ struct SongFullScreenView: View {
     var lines: [String] {
         return lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
-    var autoscrollButtons: some View {
-        HStack {
-            Button(action: {
-                if let proxy = proxy {
-                    if isScrolling {
-                        stopAutoscroll(scrollViewProxy: proxy)
-                    } else {
-                        startAutoscroll(scrollViewProxy: proxy)
-                    }
-                }
-            }) {
-                HStack {
-                    Image(systemName: isScrolling ? "stop" : "play")
-                    Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
-                }
-                .imageScale(.medium)
-                .padding()
-                .font(.body.weight(.semibold))
-                .foregroundColor(.white)
-                .background(isScrolling ? .red : .blue)
-                .clipShape(Capsule())
-            }
-            Menu {
-                Button {
-                    performanceMode.toggle()
-                } label: {
-                    Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
-                }
-            } label: {
-                FAText(iconName: "gear", size: 20)
-                    .imageScale(.medium)
-                    .padding()
-                    .font(.body.weight(.semibold))
-                    .foregroundColor(.primary)
-                    .background(Material.regular)
-                    .clipShape(Circle())
-            }
-            .onChange(of: performanceMode) { performanceMode in
-                print("PM updated: \(performanceMode)")
-                songViewModel.updatePerformanceMode(for: song, with: performanceMode)
-            }
-        }
-    }
     func swipeLeft() {
         currentIndex += 1
         if currentIndex >= songs!.count {
@@ -129,7 +87,7 @@ struct SongFullScreenView: View {
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
-        self.duration = song.duration ?? "1:00"
+        self.duration = duration
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
@@ -148,7 +106,7 @@ struct SongFullScreenView: View {
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
-        self.duration = song.duration ?? "1:00"
+        self.duration = duration
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
@@ -169,6 +127,11 @@ struct SongFullScreenView: View {
     func startAutoscroll(scrollViewProxy: ScrollViewProxy) {
         isScrolling = true
         isScrollingProgrammatically = true
+        
+        var duration = "1:00"
+        if !self.duration.isEmpty {
+            self.duration = duration
+        }
         
         scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
             withAnimation {
@@ -411,9 +374,8 @@ struct SongFullScreenView: View {
                         }
                     }
                     .padding(hasHomeButton() ? .top : [])
-                    .padding(.horizontal)
+                    .padding([.horizontal, .bottom])
                     Divider()
-                        .padding(.top)
                     ScrollViewReader { proxy in
                         ScrollView {
                             VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
@@ -590,11 +552,52 @@ struct SongFullScreenView: View {
                 }
                 Spacer()
                 if viewModel.currentUser?.enableAutoscroll ?? true {
+                    let buttons = HStack {
+                        Button(action: {
+                            if let proxy = proxy {
+                                if isScrolling {
+                                    stopAutoscroll(scrollViewProxy: proxy)
+                                } else {
+                                    startAutoscroll(scrollViewProxy: proxy)
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: isScrolling ? "stop" : "play")
+                                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
+                            }
+                            .imageScale(.medium)
+                            .padding()
+                            .font(.body.weight(.semibold))
+                            .foregroundColor(.white)
+                            .background(isScrolling ? .red : .blue)
+                            .clipShape(Capsule())
+                        }
+                        Menu {
+                            Button {
+                                performanceMode.toggle()
+                            } label: {
+                                Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                            }
+                        } label: {
+                            FAText(iconName: "gear", size: 20)
+                                .imageScale(.medium)
+                                .padding()
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .background(Material.regular)
+                                .clipShape(Circle())
+                        }
+                        .onChange(of: performanceMode) { performanceMode in
+                            songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                        }
+                    }
+                    
                     if #available(iOS 17, *) {
-                        autoscrollButtons
-                            .showAutoScrollSpeedTip()
+                        buttons
+                            .showAutoscrollSpeedTip()
                     } else {
-                        autoscrollButtons
+                        buttons
                     }
                 }
                 Spacer()

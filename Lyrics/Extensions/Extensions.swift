@@ -32,7 +32,7 @@ extension View {
     }
     
     @ViewBuilder
-    func showAutoScrollSpeedTip() -> some View {
+    func showAutoscrollSpeedTip() -> some View {
         if #available(iOS 17, *) {
             self
                 .popoverTip(AutoscrollSpeedTip(), arrowEdge: .bottom)

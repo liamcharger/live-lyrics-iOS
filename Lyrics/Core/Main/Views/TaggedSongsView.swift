@@ -67,7 +67,7 @@ struct TaggedSongsView: View {
             ScrollView {
                 VStack {
                     if storeKitManager.purchasedProducts.isEmpty {
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/6110262484", height: 50)
+                        AdBannerView(unitId: "ca-app-pub-5671219068273297/6110262484", height: 70)
                             .padding(.bottom, 10)
                     }
                     if !mainViewModel.isLoadingSongs {

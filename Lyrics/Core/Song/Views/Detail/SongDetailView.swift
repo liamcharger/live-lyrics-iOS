@@ -329,11 +329,6 @@ struct SongDetailView: View {
             self.mainViewModel.removeSongEventListener()
             self.mainViewModel.removeFolderSongEventListener()
             self.mainViewModel.removeFolderEventListener()
-            if #available(iOS 17, *) {
-                Task {
-                    await PlayViewTip.numberOfTimesVisited.donate()
-                }
-            }
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -375,7 +370,13 @@ struct SongDetailView: View {
             SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
-            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $duration, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
+            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
+                if duration.isEmpty {
+                    return .constant("")
+                } else {
+                    return $duration
+                }
+            }(), bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
         }
         .onChange(of: hasDeletedSong, perform: { value in
             if value == true {
