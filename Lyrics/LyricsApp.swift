@@ -42,8 +42,10 @@ struct LyricsApp: App {
                         switch QuickAction.selectedAction?.type {
                         case "new_song":
                             showNewSong = true
+                            QuickAction.selectedAction = nil
                         case "new_folder":
                             showNewSong = true
+                            QuickAction.selectedAction = nil
                         case .none:
                             break
                         case .some(_):

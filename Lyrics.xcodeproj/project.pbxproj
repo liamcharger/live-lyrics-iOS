@@ -547,13 +547,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		E052264A2A1BB12600ECF255 /* New Song */ = {
+		E052264A2A1BB12600ECF255 /* New */ = {
 			isa = PBXGroup;
 			children = (
 				E0CC33222A040BB700CC38C6 /* NewSongView.swift */,
 				E01520E12A872EF4005C4F8C /* AddSongsView.swift */,
 			);
-			path = "New Song";
+			path = New;
 			sourceTree = "<group>";
 		};
 		E052264B2A1BB12F00ECF255 /* Edit */ = {
@@ -867,7 +867,7 @@
 				E0710A8E2A2A73F0004D62E8 /* Detail */,
 				E052264E2A1BB99300ECF255 /* Move */,
 				E052264B2A1BB12F00ECF255 /* Edit */,
-				E052264A2A1BB12600ECF255 /* New Song */,
+				E052264A2A1BB12600ECF255 /* New */,
 			);
 			path = Views;
 			sourceTree = "<group>";

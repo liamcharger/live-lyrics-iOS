@@ -22,9 +22,6 @@ struct MainView: View {
     
     @FocusState var isSearching: Bool
     
-    @AppStorage(showNewSongKey) var showNewSong = false
-    @AppStorage(showNewFolderKey) var showNewFolder = false
-    
     @State var newFolder = ""
     
     @State var selectedSong: Song?
@@ -628,7 +625,7 @@ struct MainView: View {
                     .id("songs")
                 }
                 .padding()
-                .sheet(isPresented: $showEditSheet, onDismiss: {mainViewModel.fetchFolders()}) {
+                .sheet(isPresented: $showEditSheet) {
                     if let selectedFolder = selectedFolder {
                         FolderEditView(folder: selectedFolder, isDisplayed: $showEditSheet, title: .constant(selectedFolder.title))
                     }
@@ -651,21 +648,15 @@ struct MainView: View {
                         SongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
                     }
                 }
-                .sheet(isPresented: $showSongEditSheet, onDismiss: mainViewModel.fetchSongs) {
+                .sheet(isPresented: $showSongEditSheet) {
                     if let selectedSong = selectedSong {
                         SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? "Not Set"), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
                     }
                 }
-                .sheet(isPresented: $showTagSheet, onDismiss: {
-                    if let folder = selectedFolder {
-                        mainViewModel.fetchSongs(folder)
-                    } else {
-                        mainViewModel.fetchSongs()
-                    }
-                }) {
+                .sheet(isPresented: $showTagSheet) {
                     if let selectedSong = selectedSong {
                         let tags: [TagSelectionEnum] = selectedSong.tags?.compactMap { TagSelectionEnum(rawValue: $0) } ?? []
-                        SongTagView(isPresented: $showTagSheet, tags: tags, song: selectedSong)
+                        SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
                     }
                 }
                 .confirmationDialog("Delete Song", isPresented: $showSongDeleteSheet) {

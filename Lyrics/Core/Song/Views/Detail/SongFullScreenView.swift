@@ -39,7 +39,6 @@ struct SongFullScreenView: View {
     @State private var linesHeight: CGFloat = 0.0
     @State private var beatCounter: Int = 0
     @State private var pressedIndexId: Int = 0
-    @State private var scrollOffset: CGFloat = 0
     
     @State var isPlayingMetronome = false
     @State var isPulsing = false
@@ -131,6 +130,9 @@ struct SongFullScreenView: View {
         self.title = song.title
         self.key = song.key ?? "Not Set"
         self.duration = song.duration ?? "1:00"
+        self.bpb = song.bpb ?? 4
+        self.bpm = song.bpm ?? 120
+        self.performanceMode = song.performanceMode ?? true
         if let proxy = proxy, isScrolling {
             stopAutoscroll(scrollViewProxy: proxy)
         }
@@ -147,6 +149,9 @@ struct SongFullScreenView: View {
         self.title = song.title
         self.key = song.key ?? "Not Set"
         self.duration = song.duration ?? "1:00"
+        self.bpb = song.bpb ?? 4
+        self.bpm = song.bpm ?? 120
+        self.performanceMode = song.performanceMode ?? true
         if let proxy = proxy, isScrolling {
             stopAutoscroll(scrollViewProxy: proxy)
         }
@@ -169,13 +174,15 @@ struct SongFullScreenView: View {
             withAnimation {
                 isScrollingProgrammatically = true
                 
-                scrollPosition = currentLineIndex + 1
-                scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
-                currentLineIndex += 1
-                
                 if currentLineIndex >= lines.count {
+                    currentLineIndex = 0
+                    scrollTo(0)
                     scrollTimer?.invalidate()
                     isScrolling = false
+                } else {
+                    scrollPosition = currentLineIndex + 1
+                    scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
+                    currentLineIndex += 1
                 }
             }
         }
@@ -238,7 +245,7 @@ struct SongFullScreenView: View {
         }
         metronomeTimer?.activate()
     }
-
+    
     func stopTimer() {
         isPlayingMetronome = false
         isPulsing = false
@@ -274,16 +281,26 @@ struct SongFullScreenView: View {
         }
     }
     func playBeat(style: BeatStyle) {
-        switch style {
-        case .medium:
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            clickAudioPlayer?.play()
-        case .heavy:
-            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-            accentAudioPlayer?.play()
+        if let user = viewModel.currentUser, let metronomeStyle = user.metronomeStyle {
+            switch style {
+            case .medium:
+                if metronomeStyle.contains("Vibrations") {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+                if metronomeStyle.contains("Audio") {
+                    clickAudioPlayer?.play()
+                }
+            case .heavy:
+                if metronomeStyle.contains("Vibrations") {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                }
+                if metronomeStyle.contains("Audio") {
+                    accentAudioPlayer?.play()
+                }
+            }
         }
     }
-
+    
     func alignment(from alignment: TextAlignment) -> Alignment {
         switch alignment {
         case .leading:
@@ -379,7 +396,21 @@ struct SongFullScreenView: View {
                                 .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
                                 .clipShape(Circle())
                         }
-                        SheetCloseButton(isPresented: $dismiss)
+                        Button(action: {
+                            if let proxy = proxy {
+                                stopAutoscroll(scrollViewProxy: proxy)
+                            }
+                            stopTimer()
+                            dismiss = false
+                        }) {
+                            Image(systemName: "xmark")
+                                .imageScale(.medium)
+                                .padding(12)
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .background(Material.regular)
+                                .clipShape(Circle())
+                        }
                     }
                     .padding(hasHomeButton() ? .top : [])
                     .padding(.horizontal)
@@ -387,14 +418,6 @@ struct SongFullScreenView: View {
                         .padding(.top)
                     ScrollViewReader { proxy in
                         ScrollView {
-                            GeometryReader { geometry in
-                                Color.clear.preference(key: OffsetPreferenceKey.self, value: geometry.frame(in: .named("scrollView")).minY)
-                            }
-                            .frame(height: 0)
-                            .onPreferenceChange(OffsetPreferenceKey.self) { offset in
-                                scrollOffset = offset
-                                print(offset)
-                            }
                             VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
                                 ForEach(lines.indices, id: \.self) { index in
                                     let line = lines[index]
@@ -622,13 +645,5 @@ struct ScaleButtonStyle: ButtonStyle {
                 self.isPressed = isPressed
                 self.pressedIndexId = index
             }
-    }
-}
-
-struct OffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }

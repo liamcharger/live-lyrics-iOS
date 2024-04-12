@@ -11,6 +11,7 @@ struct SongTagView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
     @Binding var isPresented: Bool
+    @Binding var tagsToUpdate: [String]
     
     @State var tags: [TagSelectionEnum]
     
@@ -30,7 +31,12 @@ struct SongTagView: View {
                 VStack {
                     Button(action: {
                         tags.removeAll()
+                        tagsToUpdate.removeAll()
                         songViewModel.updateTagsForSong(song, tags: tags)
+                        
+                        for tag in tags {
+                            self.tagsToUpdate.append(tag.rawValue)
+                        }
                     }) {
                         HStack {
                             Text("None")
@@ -48,8 +54,13 @@ struct SongTagView: View {
                     ForEach(TagSelectionEnum.allTags, id: \.self) { fullTag in
                         Button(action: {
                             tags.removeAll()
+                            tagsToUpdate.removeAll()
                             tags.append(fullTag)
                             songViewModel.updateTagsForSong(song, tags: tags)
+                            
+                            for tag in tags {
+                                self.tagsToUpdate.append(tag.rawValue)
+                            }
                         }) {
                             HStack {
                                 Text(fullTag.rawValue.capitalized)

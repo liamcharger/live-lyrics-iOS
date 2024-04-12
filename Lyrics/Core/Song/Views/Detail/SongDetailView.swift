@@ -30,10 +30,12 @@ struct SongDetailView: View {
     @State var bpm = 120
     @State var bpb = 4
     @State var performanceMode = true
+    @State var tags: [String] = []
     
     @State var songIds: [String]?
     
     @State var showEditView = false
+    @State var showTagSheet = false
     @State var showMoveView = false
     @State var showSettingsView = false
     @State var wordCountBool = false
@@ -61,6 +63,7 @@ struct SongDetailView: View {
     @FocusState var isInputActive: Bool
     
     var songs: [Song]?
+    let pasteboard = UIPasteboard.general
     private var wordCount: Int {
         let words = lyrics.split { !$0.isLetter }
         return words.count
@@ -169,6 +172,7 @@ struct SongDetailView: View {
         self._bpm = State(initialValue: song.bpm ?? 120)
         self._bpb = State(initialValue: song.bpb ?? 4)
         self._performanceMode = State(initialValue: song.performanceMode ?? true)
+        self._tags = State(initialValue: song.tags ?? ["none"])
         
         self.notesViewModel = NotesViewModel(song: song)
     }
@@ -223,14 +227,22 @@ struct SongDetailView: View {
                                 }
                                 presMode.wrappedValue.dismiss()
                             }, label: {
-                                Image(systemName: "clock.arrow.circlepath")
-                                    .modifier(NavBarButtonViewModifier())
+                                FAText(iconName: "rotate-left", size: 18)
+                                    .padding()
+                                    .font(.body.weight(.semibold))
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Circle())
                             })
                             Button(action: {
                                 self.showDeleteSheet.toggle()
                             }, label: {
-                                Image(systemName: "trash")
-                                    .modifier(NavBarButtonViewModifier())
+                                FAText(iconName: "trash-can", size: 18)
+                                    .padding()
+                                    .font(.body.weight(.semibold))
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Circle())
                             })
                             .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
                                 Button("Delete", role: .destructive) {
@@ -260,7 +272,7 @@ struct SongDetailView: View {
                     Text(title)
                         .font(.system(size: 24, design: .rounded).weight(.bold))
                         .lineLimit(1).truncationMode(.tail)
-                    if let tags = song.tags {
+                    if tags.count > 0 {
                         HStack(spacing: 5) {
                             ForEach(tags, id: \.self) { tag in
                                 Circle()
@@ -357,6 +369,10 @@ struct SongDetailView: View {
         }
         .sheet(isPresented: $showMoveView) {
             SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
+        }
+        .sheet(isPresented: $showTagSheet) {
+            let tags: [TagSelectionEnum] = tags.compactMap { TagSelectionEnum(rawValue: $0) }
+            SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
             SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $duration, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
@@ -646,6 +662,25 @@ struct SongDetailView: View {
             }, label: {
                 Label("Move", systemImage: "folder")
             })
+            Menu {
+                Button {
+                    self.pasteboard.string = title
+                } label: {
+                    Label("Copy Title", systemImage: "textformat")
+                }
+                Button {
+                    self.pasteboard.string = lyrics
+                } label: {
+                    Label("Copy Lyrics", systemImage: "doc.plaintext")
+                }
+            } label: {
+                Label("Copy", systemImage: "doc")
+            }
+            Button {
+                showTagSheet = true
+            } label: {
+                Label("Tags", systemImage: "tag")
+            }
             Button(role: .destructive, action: {
                 showDeleteSheet.toggle()
             }, label: {

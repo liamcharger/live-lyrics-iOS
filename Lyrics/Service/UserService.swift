@@ -63,9 +63,9 @@ struct UserService {
             })
     }
     
-    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, showsExplicitSongs: Bool, enableAutoscroll: Bool, completion: @escaping(Bool, String) -> Void) {
+    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, showsExplicitSongs: Bool, enableAutoscroll: Bool, metronomeStyle: [String], completion: @escaping(Bool, String) -> Void) {
         Firestore.firestore().collection("users").document(user.id ?? "")
-            .updateData(["wordCount": wordCount, "showDataUnderSong": data, "wordCountStyle": wordCountStyle, "showsExplicitSongs": showsExplicitSongs, "enableAutoscroll": enableAutoscroll]) {
+            .updateData(["wordCount": wordCount, "showDataUnderSong": data, "wordCountStyle": wordCountStyle, "showsExplicitSongs": showsExplicitSongs, "enableAutoscroll": enableAutoscroll, "metronomeStyle": metronomeStyle]) {
                 error in
                 if let error = error {
                     completion(false, error.localizedDescription)

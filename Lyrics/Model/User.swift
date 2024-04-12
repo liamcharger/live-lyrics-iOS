@@ -1,3 +1,10 @@
+//
+//  User.swift
+//  Lyrics
+//
+//  Created by Liam Willey on 5/3/23.
+//
+
 import FirebaseFirestoreSwift
 
 struct User: Identifiable, Codable {
@@ -16,4 +23,5 @@ struct User: Identifiable, Codable {
     var showsExplicitSongs: Bool?
     var enableAutoscroll: Bool?
     var isLocal: Bool?
+    var metronomeStyle: [String]?
 }

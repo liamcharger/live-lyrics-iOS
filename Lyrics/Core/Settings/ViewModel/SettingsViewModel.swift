@@ -17,8 +17,8 @@ class SettingsViewModel: ObservableObject {
         self.fetchUser(withUid: user.id ?? "")
     }
     
-    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, enableAutoscroll: Bool, showsExplicitSongs: Bool, completion: @escaping(Bool, String) -> Void) {
-        service.updateSettings(user, wordCount: wordCount, data: data, wordCountStyle: wordCountStyle, showsExplicitSongs: showsExplicitSongs, enableAutoscroll: enableAutoscroll) { success, errorMessage in
+    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, enableAutoscroll: Bool, showsExplicitSongs: Bool, metronomeStyle: [String], completion: @escaping(Bool, String) -> Void) {
+        service.updateSettings(user, wordCount: wordCount, data: data, wordCountStyle: wordCountStyle, showsExplicitSongs: showsExplicitSongs, enableAutoscroll: enableAutoscroll, metronomeStyle: metronomeStyle) { success, errorMessage in
             if success {
                 completion(true, "")
             } else {

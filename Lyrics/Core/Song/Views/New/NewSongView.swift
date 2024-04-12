@@ -115,7 +115,7 @@ struct NewSongView: View {
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
-        .alert("Your song doesn't have any lyrics.", isPresented: $showInfo, actions: {
+        .alert("Your song doesn't have any lyrics. Create it anyway?", isPresented: $showInfo, actions: {
             Button(action: createSong, label: {Text(NSLocalizedString("continue", comment: "Continue"))})
             Button(role: .cancel, action: {}, label: {Text("Cancel")})
         })

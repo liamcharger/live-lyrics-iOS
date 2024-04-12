@@ -24,6 +24,7 @@ struct SettingsView: View {
     @State var isExplicit: Bool
     @State var selection: String?
     @State var wordCountStyle: String?
+    @State var metronomeStyle: [String] = []
     
     @ObservedObject var settingsViewModel: SettingsViewModel
     
@@ -40,9 +41,9 @@ struct SettingsView: View {
         _isExplicit = State(initialValue: user.showsExplicitSongs ?? true)
         _selection = State(initialValue: user.showDataUnderSong ?? "None")
         _wordCountStyle = State(initialValue: user.wordCountStyle ?? "Words")
+        _metronomeStyle = State(initialValue: user.metronomeStyle ?? ["Audio", "Vibrations"])
     }
-
-
+    
     
     var body: some View {
         VStack(spacing: 0) {
@@ -63,29 +64,29 @@ struct SettingsView: View {
             .padding()
             Divider()
             ScrollView {
-//                if !NetworkManager.shared.getNetworkState() {
-//                    VStack(spacing: 0) {
-//                        Group {
-//                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
-//                        }
-//                        .padding()
-//                        .foregroundColor(.gray)
-//                        .frame(maxWidth: .infinity, alignment: .center)
-//                        .onTapGesture {
-                            // Open Settings app without the deeplink to app settings
-//                            guard let settingsURL = URL(string: "") else { return }
-//                            if UIApplication.shared.canOpenURL(settingsURL) {
-//                                UIApplication.shared.open(settingsURL)
-//                            }
-//                        }
-//                        Divider()
-//                    }
-//                }
+                //                if !NetworkManager.shared.getNetworkState() {
+                //                    VStack(spacing: 0) {
+                //                        Group {
+                //                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
+                //                        }
+                //                        .padding()
+                //                        .foregroundColor(.gray)
+                //                        .frame(maxWidth: .infinity, alignment: .center)
+                //                        .onTapGesture {
+                // Open Settings app without the deeplink to app settings
+                //                            guard let settingsURL = URL(string: "") else { return }
+                //                            if UIApplication.shared.canOpenURL(settingsURL) {
+                //                                UIApplication.shared.open(settingsURL)
+                //                            }
+                //                        }
+                //                        Divider()
+                //                    }
+                //                }
                 VStack(alignment: .leading) {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {
-                                Text("Enable Word Count")
+                                Text("Enable\nWord Count")
                                 Spacer()
                                 Toggle(isOn: $toggle, label: {})
                             }
@@ -93,12 +94,8 @@ struct SettingsView: View {
                         }
                     }
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Material.regular)
-                            .mask { Capsule() }
-                    }
+                    .background(Material.regular)
+                    .cornerRadius(20)
                     .foregroundColor(.primary)
                     HStack(spacing: 7) {
                         Text("Word Count Style")
@@ -121,15 +118,10 @@ struct SettingsView: View {
                                 .foregroundColor(.blue)
                         }
                     }
-                    .foregroundColor(.primary)
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Material.regular)
-                            .mask { Capsule() }
-                    }
+                    .background(Material.regular)
                     .foregroundColor(.primary)
+                    .clipShape(Capsule())
                     .opacity(toggle ? 1 : 0.5)
                     .disabled(!toggle)
                     HStack {
@@ -186,6 +178,49 @@ struct SettingsView: View {
                             .mask { Capsule() }
                     }
                     .foregroundColor(.primary)
+                    HStack(spacing: 7) {
+                        Text("Metronome Style")
+                        Spacer()
+                        Menu {
+                            Button(action: {
+                                let index = metronomeStyle.firstIndex(of: "Audio")
+                                
+                                if let index = index {
+                                    metronomeStyle.remove(at: index)
+                                } else {
+                                    metronomeStyle.append("Audio")
+                                }
+                            }) {
+                                Label("Audio", systemImage: metronomeStyle.contains("Audio") ? "checkmark" : "")
+                            }
+                            Button(action: {
+                                let index = metronomeStyle.firstIndex(of: "Vibrations")
+                                
+                                if let index = index {
+                                    metronomeStyle.remove(at: index)
+                                } else {
+                                    metronomeStyle.append("Vibrations")
+                                }
+                            }) {
+                                Label("Vibrations", systemImage: metronomeStyle.contains("Vibrations") ? "checkmark" : "")
+                            }
+                        } label: {
+                            Text({
+                                if metronomeStyle.count > 1 {
+                                    return "\(metronomeStyle.first ?? ""), \(metronomeStyle.last ?? "")"
+                                } else if metronomeStyle.count == 1 {
+                                    return metronomeStyle.first ?? ""
+                                } else {
+                                    return "None"
+                                }
+                            }())
+                            .foregroundColor(.blue)
+                        }
+                    }
+                    .padding()
+                    .background(Material.regular)
+                    .foregroundColor(.primary)
+                    .clipShape(Capsule())
                     Button {
                         Task {
                             try? await AppStore.sync()
@@ -216,12 +251,12 @@ struct SettingsView: View {
                 .autocapitalization(.none)
                 .padding(.top)
                 .padding(.horizontal)
-//                .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
-//                .disabled(!NetworkManager.shared.getNetworkState())
+                //                .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
+                //                .disabled(!NetworkManager.shared.getNetworkState())
             }
             Divider()
             Button {
-                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit) { success, errorMessage in
+                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
                     if success {
                         presMode.wrappedValue.dismiss()
                     } else {
@@ -237,8 +272,8 @@ struct SettingsView: View {
                 }
                 .modifier(NavButtonViewModifier())
             }
-            .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
-            .disabled(!NetworkManager.shared.getNetworkState())
+//            .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
+//            .disabled(!NetworkManager.shared.getNetworkState())
             .padding()
         }
         .alert(isPresented: $showError) {
