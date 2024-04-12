@@ -224,6 +224,8 @@ class SongViewModel: ObservableObject {
             return .orange
         case "yellow":
             return .yellow
+        case "none":
+            return .clear
         default:
             return .gray
         }

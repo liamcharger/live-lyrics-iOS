@@ -699,13 +699,11 @@ class SongService {
 			}
 			
 			guard !(document?.exists ?? false) else {
-				// Document exists, handle accordingly
 				completionBool(false)
 				completionString("\"\(song.title)\" is already in the specified folder.")
 				return
 			}
 			
-			// Document doesn't exist, proceed with creating it
 			songDocumentRef.setData(["order": 0]) { error in
 				if let error = error {
 					completionBool(false)
@@ -725,26 +723,12 @@ class SongService {
 		for song in songs {
 			let songDocumentRef = songsCollectionRef.document(song.id ?? "")
 			
-			songDocumentRef.getDocument { document, error in
+			songDocumentRef.setData(["order": 0]) { error in
 				if let error = error {
 					completion(false, error.localizedDescription)
 					return
 				}
-				
-				guard !(document?.exists ?? false) else {
-					// Document exists, handle accordingly
-					completion(false, "\"\(song.title)\" is already in the specified folder.")
-					return
-				}
-				
-				// Document doesn't exist, proceed with creating it
-				songDocumentRef.setData(["order": 0]) { error in
-					if let error = error {
-						completion(false, error.localizedDescription)
-						return
-					}
-					completion(true, "")
-				}
+				completion(true, "")
 			}
 		}
 	}

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddSongsView: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     @Environment(\.presentationMode) var presMode
     
@@ -23,7 +23,6 @@ struct AddSongsView: View {
     @State var selectedSongs: [String: Bool] = [:]
     
     let folder: Folder
-    var songs: [Song]
     
     var searchableSongs: [Song] {
         if searchText.isEmpty {
@@ -41,59 +40,68 @@ struct AddSongsView: View {
     }
     
     func addToFolder() {
-        var songs: [Song] = []
-        
-        let dispatchGroup = DispatchGroup()
-        
-        for(songID, isSelected) in selectedSongs {
-            guard isSelected else {
-                continue
+//        if NetworkManager.shared.getNetworkState() {
+            for song in mainViewModel.folderSongs {
+                if let songID = song.id, selectedSongs[songID] == nil {
+                    mainViewModel.deleteSong(folder, song)
+                }
             }
             
-            dispatchGroup.enter()
+            var songs: [Song] = []
             
-            self.songViewModel.fetchSong(songID) { song in
-                songs.append(song)
-                dispatchGroup.leave()
+            let dispatchGroup = DispatchGroup()
+            
+            for(songID, isSelected) in selectedSongs {
+                guard isSelected else {
+                    continue
+                }
+                
+                dispatchGroup.enter()
+                
+                self.songViewModel.fetchSong(songID) { song in
+                    songs.append(song)
+                    dispatchGroup.leave()
+                }
             }
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { success, errorMessage in
-                if success {
-                    presMode.wrappedValue.dismiss()
-                    self.isLoading = false
-                } else {
-                    if errorMessage == "Failed to get document because the client is offline." {
-                        self.errorMessage = "Please connect to the internet to perform this action."
-                        self.showError = true
-                        self.isLoading = false
-                    } else if errorMessage.contains("is already in the specified folder") {
-                        self.songAlreadyInFolder = true
+            
+            dispatchGroup.notify(queue: .main) {
+                self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { success, errorMessage in
+                    if success {
+                        presMode.wrappedValue.dismiss()
                         self.isLoading = false
                     } else {
-                        self.errorMessage = errorMessage
-                        self.showError = true
-                        self.isLoading = false
+                        if errorMessage == "Failed to get document because the client is offline." {
+                            self.errorMessage = "Please connect to the internet to perform this action."
+                            self.showError = true
+                            self.isLoading = false
+                        } else {
+                            self.errorMessage = errorMessage
+                            self.showError = true
+                            self.isLoading = false
+                        }
                     }
                 }
             }
-        }
+//        } else {
+//            self.errorMessage = "Please connect to the internet to perform this action."
+//            self.showError = true
+//            self.isLoading = false
+//        }
     }
+
     func checkForSongs() {
         for song in mainViewModel.folderSongs {
             if let songID = song.id {
                 let isSongInMainSongs = mainViewModel.songs.contains(where: { $0.id == songID })
                 if isSongInMainSongs {
                     selectedSongs[songID] = true
-                    print(song.title)
                 }
             }
         }
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 Text("Add Songs")
                     .font(.title.weight(.bold))
@@ -121,38 +129,31 @@ struct AddSongsView: View {
                         isLoading = true
                         addToFolder()
                     }) {
+                        Image(systemName: "checkmark")
+                            .imageScale(.medium)
+                            .padding(12)
+                            .font(.body.weight(.semibold))
+                            .foregroundColor(isLoading ? .clear : .white)
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                    }
+                    .opacity(isLoading ? 0.5 : 1.0)
+                    .disabled(isLoading)
+                    .overlay {
                         if isLoading {
                             ProgressView()
-                                .padding(12)
-                                .background(Material.regular)
-                                .clipShape(Circle())
-                        } else {
-                            Image(systemName: "checkmark")
-                                .imageScale(.medium)
-                                .padding(12)
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .background {
-                                    Rectangle()
-                                        .fill(.clear)
-                                        .background(Material.regular)
-                                        .mask { Circle()
-                                            
-                                        }
-                                }
+                                .opacity(1)
+                                .tint(.primary)
                         }
                     }
                 }
             }
             .padding()
-            Spacer()
-            if mainViewModel.isLoadingSongs {
-                VStack {
-                    ScrollView {
-                        LoadingView()
-                    }
-                }
-                .padding()
+            Divider()
+            if mainViewModel.isLoadingSongs || mainViewModel.isLoadingFolderSongs {
+                LoadingView()
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .padding()
             } else {
                 ScrollView {
                     VStack(alignment: .leading) {
@@ -170,9 +171,9 @@ struct AddSongsView: View {
                                 Button(action: {
                                     if let songID = song.id {
                                         if selectedSongs[songID] != nil {
-                                            selectedSongs[songID] = nil // Deselect
+                                            selectedSongs[songID] = nil
                                         } else {
-                                            selectedSongs[songID] = true // Select
+                                            selectedSongs[songID] = true
                                         }
                                     }
                                 }) {
@@ -217,14 +218,15 @@ struct AddSongsView: View {
                                 }
                             }
                         }
-                        Spacer()
                     }
-                    .padding(.horizontal)
+                    .padding()
                 }
             }
         }
         .onAppear {
-            mainViewModel.fetchSongs()
+            checkForSongs()
+        }
+        .onChange(of: mainViewModel.folderSongs) { _ in
             checkForSongs()
         }
         .alert("Enter the name of the song you're looking for.", isPresented: $showSearchAlert) {

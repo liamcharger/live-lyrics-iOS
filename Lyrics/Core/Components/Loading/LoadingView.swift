@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct LoadingView: View {
+    let title: String? = nil
+    
     var body: some View {
         HStack(spacing: 7) {
             ProgressView()
-            Text("Loading...")
+            Text(title ?? "Loading...")
                 .foregroundColor(.gray)
         }
         .frame(maxWidth: .infinity)

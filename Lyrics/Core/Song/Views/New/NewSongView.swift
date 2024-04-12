@@ -82,7 +82,7 @@ struct NewSongView: View {
     }
     
     var nextView: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Enter the lyrics for your song.")
                     .font(.title.weight(.bold))
@@ -91,11 +91,10 @@ struct NewSongView: View {
                 SheetCloseButton(isPresented: $view2)
             }
             .padding()
-            .padding(.top)
-            Spacer()
+            Divider()
             TextEditor(text: $lyrics)
                 .padding(.horizontal)
-            Spacer()
+            Divider()
             Button(action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()

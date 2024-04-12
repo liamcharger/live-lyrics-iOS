@@ -52,7 +52,7 @@
 		E050D1592A03031B004CC45E /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E050D1582A03031B004CC45E /* MenuView.swift */; };
 		E050D15E2A030368004CC45E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E050D15D2A030368004CC45E /* Extensions.swift */; };
 		E052264D2A1BB1CF00ECF255 /* FolderEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E052264C2A1BB1CF00ECF255 /* FolderEditView.swift */; };
-		E05226522A1BBCFC00ECF255 /* AllSongMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05226512A1BBCFC00ECF255 /* AllSongMoveView.swift */; };
+		E05226522A1BBCFC00ECF255 /* SongMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05226512A1BBCFC00ECF255 /* SongMoveView.swift */; };
 		E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B72A94BB5200ECB31F /* NotificationManager.swift */; };
 		E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B92A94C1DD00ECB31F /* SystemDoc.swift */; };
 		E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */; };
@@ -179,7 +179,7 @@
 		E050D1582A03031B004CC45E /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		E050D15D2A030368004CC45E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E052264C2A1BB1CF00ECF255 /* FolderEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderEditView.swift; sourceTree = "<group>"; };
-		E05226512A1BBCFC00ECF255 /* AllSongMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllSongMoveView.swift; sourceTree = "<group>"; };
+		E05226512A1BBCFC00ECF255 /* SongMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMoveView.swift; sourceTree = "<group>"; };
 		E05F2E7B2A55CFFD005E819C /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		E06076B72A94BB5200ECB31F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E06076B92A94C1DD00ECB31F /* SystemDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDoc.swift; sourceTree = "<group>"; };
@@ -567,7 +567,7 @@
 		E052264E2A1BB99300ECF255 /* Move */ = {
 			isa = PBXGroup;
 			children = (
-				E05226512A1BBCFC00ECF255 /* AllSongMoveView.swift */,
+				E05226512A1BBCFC00ECF255 /* SongMoveView.swift */,
 				E0106C832A1EA1A0007D99DF /* MoveRowView.swift */,
 			);
 			path = Move;
@@ -1185,7 +1185,7 @@
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,
-				E05226522A1BBCFC00ECF255 /* AllSongMoveView.swift in Sources */,
+				E05226522A1BBCFC00ECF255 /* SongMoveView.swift in Sources */,
 				E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */,
 				E050D1502A02FD3D004CC45E /* WelcomeView.swift in Sources */,
 				E02F21E52B21130600302646 /* AdBannerView.swift in Sources */,

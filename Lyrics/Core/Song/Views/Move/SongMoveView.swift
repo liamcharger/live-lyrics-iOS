@@ -6,9 +6,6 @@
 //
 
 import SwiftUI
-#if os(iOS)
-import BottomSheet
-#endif
 
 struct SongMoveView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared

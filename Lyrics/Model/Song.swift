@@ -27,7 +27,6 @@ struct Song: Identifiable, Codable, Equatable {
     var bpm: Int?
     var bpb: Int?
     var pinned: Bool?
-    var songId: Int?
     var performanceMode: Bool?
     var duration: String?
     var tags: [String]?
