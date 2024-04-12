@@ -54,7 +54,7 @@ struct SongFullScreenView: View {
     @State var accentAudioPlayer: AVAudioPlayer?
     
     @ObservedObject var mainViewModel = MainViewModel()
-    @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
     @Environment(\.presentationMode) var presMode
@@ -245,7 +245,6 @@ struct SongFullScreenView: View {
         }
         metronomeTimer?.activate()
     }
-    
     func stopTimer() {
         isPlayingMetronome = false
         isPulsing = false
@@ -300,7 +299,6 @@ struct SongFullScreenView: View {
             }
         }
     }
-    
     func alignment(from alignment: TextAlignment) -> Alignment {
         switch alignment {
         case .leading:
@@ -339,8 +337,8 @@ struct SongFullScreenView: View {
                 return 0
             }
         } else {
-            if currentLineIndex != index {
-                return 2.2
+            if currentLineIndex != index && (isScrollingProgrammatically && !isUserScrolling) {
+                return 1.8
             } else {
                 return 0
             }
@@ -428,6 +426,7 @@ struct SongFullScreenView: View {
                                             .font(.system(size: CGFloat(size), weight: weight, design: design))
                                             .id(index)
                                             .blur(radius: getBlur(for: index))
+                                            .animation(.spring(dampingFraction: 1.0))
                                     } else {
                                         Button {
                                             scrollTo(index)
@@ -477,7 +476,6 @@ struct SongFullScreenView: View {
                                         .cornerRadius(8)
                                 }
                                 .onChange(of: bpm) { bpm in
-                                    print("BPM updated: \(bpm)")
                                     songViewModel.updateBpm(for: song, with: bpm)
                                 }
                                 Menu {
@@ -530,7 +528,6 @@ struct SongFullScreenView: View {
                                         .cornerRadius(8)
                                 }
                                 .onChange(of: bpb) { bpb in
-                                    print("BPB updated: \(bpb)")
                                     songViewModel.updateBpm(for: song, with: bpb)
                                 }
                                 Spacer()

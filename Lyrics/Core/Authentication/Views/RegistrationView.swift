@@ -6,9 +6,6 @@
 //
 
 import SwiftUI
-#if os(iOS)
-import BottomSheet
-#endif
 
 struct RegistrationView: View {
     @State var email = ""
@@ -21,6 +18,8 @@ struct RegistrationView: View {
     @State var showWebView = false
     @State var showError = false
     
+    @AppStorage("authViewState") var authViewState = "choose"
+    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
@@ -32,8 +31,23 @@ struct RegistrationView: View {
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 0) {
-                CustomNavBar(title: "Register", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
-                    .padding()
+                HStack(spacing: 12) {
+                    Button(action: {
+                        authViewState = "choose"
+                    }, label: {
+                        Image(systemName: "chevron.left")
+                            .padding()
+                            .font(.body.weight(.semibold))
+                            .background(Material.regular)
+                            .foregroundColor(.primary)
+                            .clipShape(Circle())
+                    })
+                    Text("Register")
+                        .lineLimit(1)
+                        .font(.system(size: 28, design: .rounded).weight(.bold))
+                    Spacer()
+                }
+                .padding()
                 Divider()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {

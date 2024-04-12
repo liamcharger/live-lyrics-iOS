@@ -23,7 +23,8 @@
 "good_afternoon" = "Good Afternoon.";
 "good_morning" = "Good Morning.";
 
-"welcome_to_lyrics" = "Welcome to Live Lyrics.";
+"welcome_to" = "Welcome to";
+"live_lyrics" = "Live Lyrics.";
 "new_in_live_lyrics" = "What's New?";
 "first_signin" = "Next, let's sign you in.";
 "thanks_for_updating" = "Thanks for updating!";

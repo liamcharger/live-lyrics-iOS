@@ -8,80 +8,124 @@
 import SwiftUI
 
 struct ChooseAuthView: View {
-    @AppStorage("showRegisterView") var showRegisterView = false
+    @AppStorage("authViewState") var authViewState = "choose"
+    
+    @State private var blurLoginView = true
+    @State private var blurRegisterView = true
+    
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     func greetingLogic() -> String {
-        let date = NSDate()
-        let calendar = NSCalendar.current
-        let currentHour = calendar.component(.hour, from: date as Date)
-        let hourInt = Int(currentHour.description)!
-        
-        let newDay = 0
-        let noon = 12
-        let sunset = 18
-        let midnight = 24
+        let date = Date()
+        let calendar = Calendar.current
+        let currentHour = calendar.component(.hour, from: date)
         
         var greetingText = "Hello."
-        if hourInt >= newDay && hourInt <= noon {
+        switch currentHour {
+        case 0..<12:
             greetingText = NSLocalizedString("good_morning", comment: "Good Morning.")
-        }
-        else if hourInt > noon && hourInt <= sunset {
+        case 12..<18:
             greetingText = NSLocalizedString("good_afternoon", comment: "Good Afternoon.")
-        }
-        else if hourInt > sunset && hourInt <= midnight {
+        default:
             greetingText = NSLocalizedString("good_evening", comment: "Good Evening.")
         }
-        
         return greetingText
     }
     
     init() {
-        showRegisterView = false
+        authViewState = "choose"
     }
     
     var body: some View {
         NavigationView {
             ZStack {
-                Image("AuthBackground")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
                 VStack {
-                    Text(greetingLogic() + "\n" + NSLocalizedString("welcome_to_lyrics", comment: "Welcome to Live Lyrics."))
-                        .font(.largeTitle.bold())
-                        .multilineTextAlignment(.center)
-                    NavigationLink(isActive: $showRegisterView) {
-                        RegistrationView()
-                    } label: {
-                        Text("Sign Up")
-                            .modifier(NavButtonViewModifier())
+                    VStack {
+                        Text(greetingLogic())
+                        Text(NSLocalizedString("welcome_to", comment: "Welcome to"))
+                        Text(NSLocalizedString("live_lyrics", comment: "Live Lyrics."))
                     }
-                    NavigationLink {
-                        LoginView()
-                    } label: {
-                        Text("Sign In")
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .font(.body.weight(.semibold))
-                            .background(Material.regular)
-                            .clipShape(Capsule())
+                    .font(.largeTitle.bold())
+                    .multilineTextAlignment(.center)
+                    Wave(strength: 5, frequency: 50)
+                        .stroke(Color.primary, lineWidth: 4.5)
+                        .padding(.horizontal, -18)
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.clear)
+                    VStack {
+                        Button {
+                            withAnimation {
+                                blurLoginView = true
+                                blurRegisterView = false
+                                authViewState = "register"
+                            }
+                        } label: {
+                            Text("Sign Up")
+                                .modifier(NavButtonViewModifier())
+                        }
+                        Button {
+                            withAnimation {
+                                blurLoginView = true
+                                blurRegisterView = false
+                                authViewState = "login"
+                            }
+                        } label: {
+                            Text("Sign In")
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .font(.body.weight(.semibold))
+                                .background(Material.regular)
+                                .clipShape(Capsule())
+                        }
                     }
                 }
-                .frame(maxHeight: 400)
                 .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: UIDevice.current.userInterfaceIdiom == .pad ? 20 : 0)
-                        .fill(Material.thin)
-                )
-                .clipped()
-                .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 350 : UIScreen.main.bounds.width)
-                .shadow(color: .black.opacity(0.8), radius: UIDevice.current.userInterfaceIdiom == .pad ? 50: 0)
+                .frame(maxHeight: 350)
+                .blur(radius: (blurLoginView && blurRegisterView) ? 0 : 5)
+                .opacity((blurLoginView && blurRegisterView) ? 1 : 0)
+                .disabled(!(blurLoginView && blurRegisterView))
+                .zIndex((blurLoginView && blurRegisterView) ? 1 : 0)
+                VStack {
+                    LoginView()
+                        .environmentObject(authViewModel)
+                }
+                .blur(radius: blurLoginView ? 5 : 0)
+                .opacity(blurLoginView ? 0 : 1)
+                .disabled(blurLoginView)
+                .zIndex(blurLoginView ? 1 : 0)
+                VStack {
+                    RegistrationView()
+                        .environmentObject(authViewModel)
+                }
+                .blur(radius: blurRegisterView ? 5 : 0)
+                .opacity(blurRegisterView ? 0 : 1)
+                .disabled(blurRegisterView)
+                .zIndex(blurRegisterView ? 1 : 0)
             }
+            .onChange(of: authViewState) { newValue in
+                if newValue == "login" {
+                    withAnimation {
+                        blurLoginView = false
+                        blurRegisterView = true
+                    }
+                } else if newValue == "register" {
+                    withAnimation {
+                        blurLoginView = true
+                        blurRegisterView = false
+                    }
+                } else {
+                    withAnimation {
+                        blurLoginView = true
+                        blurRegisterView = true
+                    }
+                }
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
 #Preview {
     ChooseAuthView()
+        .environmentObject(AuthViewModel())
 }

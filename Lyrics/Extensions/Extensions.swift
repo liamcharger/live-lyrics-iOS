@@ -132,3 +132,33 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
             }
     }
 }
+
+struct Wave: Shape {
+    var strength: Double
+    var frequency: Double
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath()
+        
+        let width = Double(rect.width)
+        let height = Double(rect.height)
+        let midWidth = width / 2
+        let midHeight = height / 2
+        
+        let wavelength = width / frequency
+        
+        path.move(to: CGPoint(x: 0, y: midHeight))
+        
+        for x in stride(from: 0, through: width, by: 1) {
+            let relativeX = x / wavelength
+            
+            let sin = sin(relativeX)
+            
+            let y = strength * sin + midHeight
+            
+            path.addLine(to: CGPoint(x: x, y: y))
+        }
+        
+        return Path(path.cgPath)
+    }
+}

@@ -18,7 +18,7 @@ struct LoginView: View {
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
     
-    @AppStorage("showRegisterView") var showRegisterView = false
+    @AppStorage("authViewState") var authViewState = "choose"
     
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
@@ -32,7 +32,22 @@ struct LoginView: View {
     
     var body: some View {
         VStack(spacing: 15) {
-            CustomNavBar(title: "Login", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
+            HStack(spacing: 12) {
+                Button(action: {
+                    authViewState = "choose"
+                }, label: {
+                    Image(systemName: "chevron.left")
+                        .padding()
+                        .font(.body.weight(.semibold))
+                        .background(Material.regular)
+                        .foregroundColor(.primary)
+                        .clipShape(Circle())
+                })
+                Text("Login")
+                    .lineLimit(1)
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
+                Spacer()
+            }
             Spacer()
             VStack(alignment: .leading, spacing: 15) {
                 CustomTextField(text: $email, placeholder: "Email")
@@ -69,10 +84,7 @@ struct LoginView: View {
                 .opacity(isEmpty ? 0.5 : 1.0)
                 .disabled(isEmpty)
                 Button(action: {
-                    presMode.wrappedValue.dismiss()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                        showRegisterView = true
-                    }
+                    authViewState = "register"
                 }, label: {
                     Text("No account? ") + Text("Sign Up").bold()
                 })

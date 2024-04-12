@@ -30,7 +30,9 @@ struct CustomNavBar: View {
     var body: some View {
         HStack(spacing: 12) {
             if showBackButton {
-                Button(action: {presMode.wrappedValue.dismiss()}, label: {
+                Button(action: {
+                    presMode.wrappedValue.dismiss()
+                }, label: {
                     Image(systemName: "chevron.left")
                         .padding()
                         .font(.body.weight(.semibold))
