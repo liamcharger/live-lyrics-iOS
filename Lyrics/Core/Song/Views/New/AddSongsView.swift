@@ -16,9 +16,8 @@ struct AddSongsView: View {
     @State var searchText = ""
     
     @State var showError = false
-    @State var showSearchAlert = false
+    @State var showSearchBar = false
     @State var isLoading = false
-    @State var songAlreadyInFolder = false
     
     @State var selectedSongs: [String: Bool] = [:]
     
@@ -28,67 +27,57 @@ struct AddSongsView: View {
         if searchText.isEmpty {
             return mainViewModel.songs
         } else {
-            if !showSearchAlert {
-                let lowercasedQuery = searchText.lowercased()
-                return mainViewModel.songs.filter ({
-                    $0.title.lowercased().contains(lowercasedQuery)
-                })
-            } else {
-                return mainViewModel.songs
-            }
+            let lowercasedQuery = searchText.lowercased()
+            return mainViewModel.songs.filter ({
+                $0.title.lowercased().contains(lowercasedQuery)
+            })
         }
     }
     
     func addToFolder() {
-//        if NetworkManager.shared.getNetworkState() {
-            for song in mainViewModel.folderSongs {
-                if let songID = song.id, selectedSongs[songID] == nil {
-                    mainViewModel.deleteSong(folder, song)
-                }
+        for song in mainViewModel.folderSongs {
+            if let songID = song.id, selectedSongs[songID] == nil {
+                mainViewModel.deleteSong(folder, song)
+            }
+        }
+        
+        var songs: [Song] = []
+        
+        let dispatchGroup = DispatchGroup()
+        
+        for(songID, isSelected) in selectedSongs {
+            guard isSelected else {
+                continue
             }
             
-            var songs: [Song] = []
+            dispatchGroup.enter()
             
-            let dispatchGroup = DispatchGroup()
-            
-            for(songID, isSelected) in selectedSongs {
-                guard isSelected else {
-                    continue
-                }
-                
-                dispatchGroup.enter()
-                
-                self.songViewModel.fetchSong(songID) { song in
-                    songs.append(song)
-                    dispatchGroup.leave()
-                }
+            self.songViewModel.fetchSong(songID) { song in
+                songs.append(song)
+                dispatchGroup.leave()
             }
-            
-            dispatchGroup.notify(queue: .main) {
-                self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { success, errorMessage in
-                    if success {
-                        presMode.wrappedValue.dismiss()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { success, errorMessage in
+                if success {
+                    presMode.wrappedValue.dismiss()
+                    self.isLoading = false
+                } else {
+                    if errorMessage == "Failed to get document because the client is offline." {
+                        self.errorMessage = "Please connect to the internet to perform this action."
+                        self.showError = true
                         self.isLoading = false
                     } else {
-                        if errorMessage == "Failed to get document because the client is offline." {
-                            self.errorMessage = "Please connect to the internet to perform this action."
-                            self.showError = true
-                            self.isLoading = false
-                        } else {
-                            self.errorMessage = errorMessage
-                            self.showError = true
-                            self.isLoading = false
-                        }
+                        self.errorMessage = errorMessage
+                        self.showError = true
+                        self.isLoading = false
                     }
                 }
             }
-//        } else {
-//            self.errorMessage = "Please connect to the internet to perform this action."
-//            self.showError = true
-//            self.isLoading = false
-//        }
+        }
     }
-
+    
     func checkForSongs() {
         for song in mainViewModel.folderSongs {
             if let songID = song.id {
@@ -106,14 +95,20 @@ struct AddSongsView: View {
                 Text("Add Songs")
                     .font(.title.weight(.bold))
                 Spacer()
-                Button(action: {showSearchAlert.toggle()}) {
-                    Image(systemName: "magnifyingglass")
-                        .imageScale(.medium)
-                        .padding(12)
-                        .font(.body.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .background(Material.regular)
-                        .clipShape(Capsule())
+                if !showSearchBar {
+                    Button(action: {
+                        withAnimation(.bouncy(extraBounce: 0.1)) {
+                            showSearchBar.toggle()
+                        }
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .imageScale(.medium)
+                            .padding(12)
+                            .font(.body.weight(.semibold))
+                            .foregroundColor(.primary)
+                            .background(Material.regular)
+                            .clipShape(Capsule())
+                    }
                 }
                 Button(action: {presMode.wrappedValue.dismiss()}) {
                     Image(systemName: "xmark")
@@ -152,10 +147,29 @@ struct AddSongsView: View {
             Divider()
             if mainViewModel.isLoadingSongs || mainViewModel.isLoadingFolderSongs {
                 LoadingView()
-                    .frame(maxHeight: .infinity, alignment: .top)
                     .padding()
             } else {
                 ScrollView {
+                    if showSearchBar {
+                        HStack(spacing: 6) {
+                            CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search")
+                            Button(action: {
+                                withAnimation(.bouncy(extraBounce: 0.1)) {
+                                    searchText = ""
+                                    showSearchBar.toggle()
+                                }
+                            }) {
+                                Image(systemName: "xmark")
+                                    .imageScale(.medium)
+                                    .padding(12)
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .background(Material.regular)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                        .padding([.horizontal, .top])
+                    }
                     VStack(alignment: .leading) {
                         if searchableSongs.isEmpty {
                             Text("No Songs")
@@ -229,16 +243,8 @@ struct AddSongsView: View {
         .onChange(of: mainViewModel.folderSongs) { _ in
             checkForSongs()
         }
-        .alert("Enter the name of the song you're looking for.", isPresented: $showSearchAlert) {
-            TextField("Search...", text: $searchText)
-            Button("Cancel", role: .cancel) { }
-            Button("Search", action: {})
-        }
         .alert(isPresented: $showError) {
             Alert(title: Text("Can't save song to \"\(folder.title)\""), message: Text(errorMessage), dismissButton: .cancel(Text("Cancel"), action: {}))
-        }
-        .alert(isPresented: $songAlreadyInFolder) {
-            Alert(title: Text("One or more songs were not added because they were already in \"\(folder.title)\""), dismissButton: .cancel(Text("OK"), action: {presMode.wrappedValue.dismiss()}))
         }
     }
 }
