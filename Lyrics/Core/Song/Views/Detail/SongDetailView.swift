@@ -56,6 +56,7 @@ struct SongDetailView: View {
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var notesViewModel: NotesViewModel
     
@@ -222,7 +223,7 @@ struct SongDetailView: View {
                         } else {
                             Button(action: {
                                 if let song = restoreSong {
-                                    mainViewModel.restoreSong(song: song)
+                                    recentlyDeletedViewModel.restoreSong(song: song)
                                 } else {
                                     errorMessage = "There was an error restoring the song."
                                     showError = true

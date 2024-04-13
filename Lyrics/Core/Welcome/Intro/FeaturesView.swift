@@ -20,7 +20,8 @@ struct FeaturesView: View {
     
     var features: [FeaturesSection] = [
         FeaturesSection(title: "Tags", subtitle: "A new way to organize your songs.", imageName: "sparkles", type: .none),
-        FeaturesSection(title: "Search by Artist", subtitle: "Search for your songs by their artists.", imageName: "folder", type: .filled),
+        FeaturesSection(title: "Autoscroll", subtitle: "Ensure smooth scrolling while you focus on performing.", imageName: "folder", type: .filled),
+        FeaturesSection(title: "Metronome", subtitle: "Keep your rhythm steady with our built-in metronome.", imageName: "folder", type: .filled),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle", type: .none)
     ]
     
@@ -75,7 +76,7 @@ struct FeaturesView: View {
                 .font(.title)
                 .fontWeight(.bold)
             Text(feature.subtitle)
-                .font(.subheadline)
+                .font(.system(size: 11))
                 .foregroundColor(.gray)
         }
         .padding()

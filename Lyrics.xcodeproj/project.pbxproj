@@ -48,7 +48,6 @@
 		E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E045BE222AF992FE00FC3EF1 /* ToolsView.swift */; };
 		E04FB1162A17D356002FEEA4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04FB1152A17D356002FEEA4 /* SettingsView.swift */; };
 		E04FB1192A17D6F0002FEEA4 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04FB1182A17D6F0002FEEA4 /* ProfileViewModel.swift */; };
-		E050D1502A02FD3D004CC45E /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E050D14C2A02FD3D004CC45E /* WelcomeView.swift */; };
 		E050D1592A03031B004CC45E /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E050D1582A03031B004CC45E /* MenuView.swift */; };
 		E050D15E2A030368004CC45E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E050D15D2A030368004CC45E /* Extensions.swift */; };
 		E052264D2A1BB1CF00ECF255 /* FolderEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E052264C2A1BB1CF00ECF255 /* FolderEditView.swift */; };
@@ -176,7 +175,6 @@
 		E045BE222AF992FE00FC3EF1 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		E04FB1152A17D356002FEEA4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E04FB1182A17D6F0002FEEA4 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
-		E050D14C2A02FD3D004CC45E /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		E050D1582A03031B004CC45E /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		E050D15D2A030368004CC45E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E052264C2A1BB1CF00ECF255 /* FolderEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderEditView.swift; sourceTree = "<group>"; };
@@ -425,7 +423,7 @@
 				E06D77802A17B4240032332F /* Settings */,
 				E0F95C842A13C74100C2D21C /* Profile */,
 				E050D1552A030303004CC45E /* Menu */,
-				E050D1482A02FD3D004CC45E /* Layout */,
+				E050D14B2A02FD3D004CC45E /* Welcome */,
 				E04247902A02F5FA00CA48B3 /* Authentication */,
 				E04247792A02EF6E00CA48B3 /* Song */,
 			);
@@ -513,19 +511,10 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		E050D1482A02FD3D004CC45E /* Layout */ = {
-			isa = PBXGroup;
-			children = (
-				E050D14B2A02FD3D004CC45E /* Welcome */,
-			);
-			path = Layout;
-			sourceTree = "<group>";
-		};
 		E050D14B2A02FD3D004CC45E /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
 				E0B02B9D2AF5A374002E10D4 /* Intro */,
-				E050D14C2A02FD3D004CC45E /* WelcomeView.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -1191,7 +1180,6 @@
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,
 				E05226522A1BBCFC00ECF255 /* SongMoveView.swift in Sources */,
 				E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */,
-				E050D1502A02FD3D004CC45E /* WelcomeView.swift in Sources */,
 				E02F21E52B21130600302646 /* AdBannerView.swift in Sources */,
 				E0CA85352B081D5100188CD0 /* CustomNavBar.swift in Sources */,
 				E0CA85362B081D5100188CD0 /* CustomSearchBar.swift in Sources */,

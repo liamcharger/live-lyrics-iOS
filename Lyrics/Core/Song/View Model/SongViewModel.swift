@@ -101,7 +101,9 @@ class SongViewModel: ObservableObject {
     
     func fetchSong(_ id: String, completion: @escaping(Song) -> Void) {
         service.fetchSong(withId: id) { song in
-            completion(song)
+            if let song = song {
+                completion(song)
+            }
         }
     }
     
@@ -159,7 +161,9 @@ class SongViewModel: ObservableObject {
     
     func fetchSongPinStatus(_ song: Song, completion: @escaping(Bool) -> Void) {
         service.fetchSong(withId: song.id ?? "") { song in
-            completion(song.pinned ?? false)
+            if let song = song {
+                completion(song.pinned ?? false)
+            }
         }
     }
     

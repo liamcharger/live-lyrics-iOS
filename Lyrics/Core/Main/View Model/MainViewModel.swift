@@ -227,8 +227,4 @@ class MainViewModel: ObservableObject {
     func deleteFolder(_ folder: Folder) {
         service.deleteFolder(folder)
     }
-    
-    func restoreSong(song: RecentlyDeletedSong) {
-        service.restoreSong(song: song)
-    }
 }

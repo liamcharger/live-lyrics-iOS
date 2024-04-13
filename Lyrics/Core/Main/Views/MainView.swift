@@ -164,6 +164,7 @@ struct MainView: View {
     func openFolder(_ folder: Folder) {
         self.openedFolder = true
         self.selectedFolderForFolderUse = folder
+        self.mainViewModel.folderSongs = []
         self.mainViewModel.fetchSongs(folder)
         self.isLoadingFolderSongs = true
         

@@ -121,7 +121,9 @@ class SongService {
 					group.enter()
 					let songId = document.documentID
 					self.fetchSong(withId: songId) { song in
-						completedSongs.append(song)
+						if let song = song {
+							completedSongs.append(song)
+						}
 						group.leave()
 					}
 				}
@@ -136,18 +138,28 @@ class SongService {
 			}
 	}
 	
-	func fetchSong(withId id: String, completion: @escaping (Song) -> Void) {
+	func fetchSong(withId id: String, folder: Folder? = nil, completion: @escaping (Song?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("songs").document(id).getDocument { snapshot, error in
 			if let error = error {
 				print("Error fetching song with ID \(id): \(error.localizedDescription)")
+				completion(nil)
 				return
 			}
 			
 			guard let snapshot = snapshot else { return }
 			guard let song = try? snapshot.data(as: Song.self) else {
-				print("There was an error parsing the song.")
+				print("Error parsing song: \(id)")
+				if let folder = folder {
+					self.fetchRecentlyDeletedSongs { songs in
+						print(songs)
+						if !songs.contains(where: { $0.id == id }) {
+							self.deleteSongRef(id: id, folder: folder)
+						}
+					}
+				}
+				completion(nil)
 				return
 			}
 			completion(song)
@@ -493,41 +505,26 @@ class SongService {
 	func deleteSong(_ song: Song) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		Firestore.firestore().collection("users").document(uid).collection("folders").getDocuments { snapshot, error in
-			if let error = error {
-				print("Error retrieving folder documents: \(error.localizedDescription)")
-				return
-			}
-			
-			guard let documents = snapshot?.documents else {
-				print("No folder documents found")
-				return
-			}
-			
-			for document in documents {
-				document.reference.collection("songs")
-					.document(song.id ?? "").getDocument { snapshot, error in
-						if let error = error {
-							print("Error retrieving song document within folder: \(error.localizedDescription)")
-							return
-						}
-						
-						if let songDocument = snapshot, songDocument.exists {
-							songDocument.reference.delete { error in
-								if let error = error {
-									print("Error deleting song document within folder: \(error.localizedDescription)")
-								}
-							}
-						}
-					}
-			}
+		let batch = Firestore.firestore().batch()
+		let dispatch = DispatchGroup()
+		
+		let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+		batch.deleteDocument(songRef)
+		
+		dispatch.enter()
+		for folder in MainViewModel.shared.folders {
+			let folderRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "").collection("songs").document(song.id ?? "")
+			batch.deleteDocument(folderRef)
+			dispatch.leave()
 		}
 		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").delete { error in
-			if let error = error {
-				print("Error deleting song document: \(error.localizedDescription)")
-			} else {
-				print("Song deleted successfully")
+		dispatch.notify(queue: .main) {
+			batch.commit { error in
+				if let error = error {
+					print("Error deleting song documents: \(error.localizedDescription)")
+				} else {
+					print("Song deleted successfully")
+				}
 			}
 		}
 	}
@@ -540,6 +537,18 @@ class SongService {
 				print("Error deleting song document: \(error.localizedDescription)")
 			} else {
 				print("Song deleted successfully")
+			}
+		}
+	}
+	
+	func deleteSongRef(id: String, folder: Folder) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "").collection("songs").document(id).delete { error in
+			if let error = error {
+				print("Error deleting song document: \(error.localizedDescription)")
+			} else {
+				print("Song ref deleted successfully")
 			}
 		}
 	}
@@ -574,21 +583,22 @@ class SongService {
 				print(error.localizedDescription)
 				return
 			}
-			if let folderIds = song.folderIds {
-				for folderId in folderIds {
-					Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
-						if let error = error {
-							print(error.localizedDescription)
-							return
-						}
-						Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
-							if let error = error {
-								print("Error deleting song document: \(error.localizedDescription)")
-								return
-							}
-						}
+		}
+		if let folderIds = song.folderIds {
+			for folderId in folderIds {
+				Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
+					if let error = error {
+						print(error.localizedDescription)
+						return
 					}
+					
 				}
+			}
+		}
+		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
+			if let error = error {
+				print("Error deleting song document: \(error.localizedDescription)")
+				return
 			}
 		}
 	}
