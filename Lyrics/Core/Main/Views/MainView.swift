@@ -483,18 +483,19 @@ struct MainView: View {
                                                                             }
                                                                         }
                                                                 }
-                                                                //                                                            .onDrag {
-                                                                //                                                                self.draggedSong = song
-                                                                //                                                                return NSItemProvider()
-                                                                //                                                            }
-                                                                //                                                            .onDrop(
-                                                                //                                                                of: [.text],
-                                                                //                                                                delegate: SongDropViewDelegate(
-                                                                //                                                                    destinationItem: song,
-                                                                //                                                                    items: $mainViewModel.folderSongs,
-                                                                //                                                                    draggedItem: $draggedSong
-                                                                //                                                                )
-                                                                //                                                            )
+                                                                .onDrag {
+                                                                    self.draggedSong = song
+                                                                    return NSItemProvider()
+                                                                }
+                                                                .onDrop(
+                                                                    of: [.text],
+                                                                    delegate: FolderSongDropViewDelegate(
+                                                                        folder: folder,
+                                                                        destinationItem: song,
+                                                                        items: $mainViewModel.folderSongs,
+                                                                        draggedItem: $draggedSong
+                                                                    )
+                                                                )
                                                             }
                                                         }
                                                     }

@@ -1,17 +1,18 @@
 //
-//  FolderDropViewDelegate.swift
+//  FolderSongDropViewDelegate.swift
 //  Lyrics
 //
-//  Created by Liam Willey on 1/22/24.
+//  Created by Liam Willey on 4/12/24.
 //
 
 import Foundation
 import SwiftUI
 
-struct FolderDropViewDelegate: DropDelegate {
-    let destinationItem: Folder
-    @Binding var items: [Folder]
-    @Binding var draggedItem: Folder?
+struct FolderSongDropViewDelegate: DropDelegate {
+    let folder: Folder
+    let destinationItem: Song
+    @Binding var items: [Song]
+    @Binding var draggedItem: Song?
     
     @ObservedObject var mainViewModel = MainViewModel.shared
     
@@ -21,8 +22,8 @@ struct FolderDropViewDelegate: DropDelegate {
     
     func performDrop(info: DropInfo) -> Bool {
         draggedItem = nil
-        self.mainViewModel.folders = items
-        self.mainViewModel.updateFolderOrder()
+        self.mainViewModel.folderSongs = items
+        self.mainViewModel.updateSongOrder(folder: folder)
         return true
     }
     

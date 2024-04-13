@@ -174,8 +174,7 @@ class MainViewModel: ObservableObject {
         let batch = Firestore.firestore().batch()
         for(order, song) in folderSongs.enumerated() {
             guard let songId = song.id else { continue }
-            print(songId)
-            print(order)
+            
             let songRef = Firestore.firestore()
                 .collection("users")
                 .document(uid)

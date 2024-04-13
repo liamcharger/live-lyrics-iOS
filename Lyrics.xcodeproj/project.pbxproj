@@ -80,6 +80,7 @@
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
+		E0C139EA2BCA30B300317A7B /* FolderSongDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */; };
 		E0C1D39F2BC07CB3004DD828 /* TaggedSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */; };
 		E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C492E42A0BDFC6002E9EA0 /* Folder.swift */; };
 		E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */; };
@@ -207,6 +208,7 @@
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
+		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0C168342B59BCBF00A12C59 /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		E0C168362B59BCEA00A12C59 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaggedSongsView.swift; sourceTree = "<group>"; };
@@ -935,6 +937,7 @@
 			isa = PBXGroup;
 			children = (
 				E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */,
+				E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */,
 				E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */,
 			);
 			path = Delegates;
@@ -1155,6 +1158,7 @@
 				E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */,
 				E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */,
 				E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */,
+				E0C139EA2BCA30B300317A7B /* FolderSongDropViewDelegate.swift in Sources */,
 				E0CA853A2B081D5100188CD0 /* CustomTextField.swift in Sources */,
 				E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */,
 				E0CA85342B081D5100188CD0 /* SheetCloseButton.swift in Sources */,
