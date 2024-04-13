@@ -64,19 +64,19 @@ struct SongMoveView: View {
                                     .foregroundColor(Color.gray)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             } else {
-                                Button(action: {songViewModel.moveSongToFolder(toFolder: folder, song) { success in
-                                    if success {
-                                        showProfileView = false
-                                    } else {
-                                        showError = true
+                                Button(action: {
+                                    songViewModel.moveSongsToFolder(folder: folder, songs: [song]) { success, errorMessage in
+                                        if success {
+                                            showProfileView = false
+                                        } else {
+                                            if errorMessage == "Failed to get document because the client is offline." {
+                                                self.errorMessage = "Please connect to the internet to perform this action."
+                                            } else {
+                                                self.errorMessage = errorMessage
+                                            }
+                                            showError = true
+                                        }
                                     }
-                                } completionString: { errorMessage in
-                                    if errorMessage == "Failed to get document because the client is offline." {
-                                        self.errorMessage = "Please connect to the internet to perform this action."
-                                    } else {
-                                        self.errorMessage = errorMessage
-                                    }
-                                }
                                 }, label: {
                                     HStack {
                                         FAText(iconName: "folder-closed", size: 18)
