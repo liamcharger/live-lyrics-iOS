@@ -7,6 +7,7 @@
 
 import SwiftUI
 import BottomSheet
+import SwiftUIIntrospect
 
 struct SongDetailView: View {
     @State var song: Song
@@ -183,7 +184,7 @@ struct SongDetailView: View {
                 HStack {
                     Button(action: {presMode.wrappedValue.dismiss()}, label: {
                         Image(systemName: "chevron.left")
-                            .padding()
+                            .padding(18)
                             .font(.body.weight(.semibold))
                             .background(Material.regular)
                             .foregroundColor(.primary)
@@ -288,15 +289,22 @@ struct SongDetailView: View {
                 .padding([.horizontal, .bottom])
             }
             Divider()
-            TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
-                .multilineTextAlignment(alignment)
-                .onChange(of: lyrics, perform: { newLyrics in
-                    mainViewModel.updateLyrics(song, lyrics: newLyrics)
-                })
-                .font(.system(size: CGFloat(value), weight: weight, design: design))
-                .lineSpacing(lineSpacing)
-                .focused($isInputActive)
-                .padding(.leading, 11)
+//            ScrollView {
+                TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
+                    .multilineTextAlignment(alignment)
+                    .onChange(of: lyrics, perform: { newLyrics in
+                        mainViewModel.updateLyrics(song, lyrics: newLyrics)
+                    })
+                    .font(.system(size: CGFloat(value), weight: weight, design: design))
+                    .lineSpacing(lineSpacing)
+                    .focused($isInputActive)
+                    .padding(.leading, 11)
+//                    .frame(maxHeight: .infinity)
+//                    .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17)) { textEditor in
+//                        textEditor.isScrollEnabled = false
+//                        textEditor.scrollsToTop = false
+//                    }
+//            }
             if songs != nil {
                 if wordCountBool {
                     Divider()
