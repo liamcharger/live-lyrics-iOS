@@ -185,7 +185,7 @@ struct MainView: View {
     init() {
         if !networkManager.getNetworkState() {
             mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
-            mainViewModel.notificationStatus = .firebaseNotification
+            mainViewModel.notificationStatus = .network
         }
         
         self.mainViewModel.fetchSongs()
@@ -199,6 +199,11 @@ struct MainView: View {
                 .onAppear {
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
+                    }
+                }
+                .onChange(of: networkManager.getNetworkState()) { state in
+                    if state && notificationStatus == .network {
+                        mainViewModel.notificationStatus = nil
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
@@ -232,7 +237,7 @@ struct MainView: View {
                                     NotificationRowView(title: "Update Available", subtitle: "Tap here to update Live Lyrics. This version may expire soon.", imageName: "arrow.down", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                 case .collaborationChanges:
                                     NotificationRowView(title: mainViewModel.notification?.title ?? "", subtitle: mainViewModel.notification?.subtitle ?? "", imageName: mainViewModel.notification?.imageName ?? "", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
-                                case .firebaseNotification:
+                                case .firebaseNotification, .network:
                                     if let notification = mainViewModel.notification {
                                         NotificationRowView(title: notification.title, subtitle: notification.subtitle, imageName: notification.imageName, notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                     }

@@ -11,6 +11,7 @@ enum NotificationStatus {
     case updateAvailable
     case collaborationChanges
     case firebaseNotification
+    case network
 }
 
 class NotificationManager: ObservableObject {
