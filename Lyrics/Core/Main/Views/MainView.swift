@@ -57,6 +57,7 @@ struct MainView: View {
     @State var notificationStatus: NotificationStatus?
     
     @State var selectedFolder: Folder?
+    @State var selectedFolderForFolderUse: Folder?
     
     @State var sortSelection: SortSelectionEnum = .noSelection
     
@@ -162,7 +163,7 @@ struct MainView: View {
     }
     func openFolder(_ folder: Folder) {
         self.openedFolder = true
-        self.selectedFolder = folder
+        self.selectedFolderForFolderUse = folder
         self.mainViewModel.fetchSongs(folder)
         self.isLoadingFolderSongs = true
         
@@ -175,7 +176,7 @@ struct MainView: View {
     func closeFolder() {
         withAnimation(.bouncy) {
             self.openedFolder = false
-            self.selectedFolder = nil
+            self.selectedFolderForFolderUse = nil
             self.isLoadingFolderSongs = false
         }
     }
@@ -302,7 +303,7 @@ struct MainView: View {
                                             HStack {
                                                 Button {
                                                     if openedFolder {
-                                                        if selectedFolder?.id == folder.id {
+                                                        if selectedFolderForFolderUse?.id == folder.id {
                                                             closeFolder()
                                                         } else {
                                                             closeFolder()
@@ -319,7 +320,7 @@ struct MainView: View {
                                                             .multilineTextAlignment(.leading)
                                                         Spacer()
                                                         if isLoadingFolderSongs {
-                                                            if selectedFolder?.id == folder.id {
+                                                            if selectedFolderForFolderUse?.id == folder.id {
                                                                 ProgressView()
                                                             } else {
                                                                 Image(systemName: "chevron.right")
@@ -328,7 +329,7 @@ struct MainView: View {
                                                         } else {
                                                             Image(systemName: "chevron.right")
                                                                 .foregroundColor(.gray)
-                                                                .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolder?.id == folder.id ? 90 : 0))
+                                                                .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolderForFolderUse?.id == folder.id ? 90 : 0))
                                                         }
                                                     }
                                                     .padding()
@@ -388,7 +389,7 @@ struct MainView: View {
                                                     }
                                                 }
                                             }
-                                            if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet {
+                                            if !isLoadingFolderSongs && selectedFolderForFolderUse?.id == folder.id && !isEditingFolders && !showEditSheet {
                                                 VStack {
                                                     if mainViewModel.folderSongs.isEmpty {
                                                         LoadingView()
