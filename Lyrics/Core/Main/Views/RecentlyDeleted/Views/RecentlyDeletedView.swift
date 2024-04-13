@@ -99,17 +99,10 @@ struct RecentlyDeletedView: View {
                                     .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
                                     .contextMenu {
                                         Button {
-                                            selectedSong = song
-                                            if selectedSong?.folderId != nil {
-                                                recentlyDeletedViewModel.restoreSongToFolder(song: selectedSong!)
-                                            } else {
-                                                recentlyDeletedViewModel.restoreSong(song: selectedSong!)
-                                            }
-                                            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
+                                            recentlyDeletedViewModel.restoreSong(song: song)
                                         } label: {
                                             Label("Restore", systemImage: "clock.arrow.circlepath")
                                         }
-                                        
                                         Button(role: .destructive) {
                                             performAction(for: song)
                                         } label: {

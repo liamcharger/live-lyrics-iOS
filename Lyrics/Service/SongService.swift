@@ -72,7 +72,7 @@ class SongService {
 				
 				guard let documents = snapshot?.documents else {
 					print("No documents found")
-					let noSongs = RecentlyDeletedSong(uid: "", timestamp: Date(), folderId: "", deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)
+					let noSongs = RecentlyDeletedSong(uid: "", timestamp: Date(), folderIds: [], deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)
 					completion([noSongs])
 					return
 				}
@@ -544,7 +544,7 @@ class SongService {
 		}
 	}
 	
-	func restoreSong(song: RecentlyDeletedSong, restoreToFolder: Bool = false) {
+	func restoreSong(song: RecentlyDeletedSong) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		let songData: [String: Any?] = [
@@ -569,18 +569,22 @@ class SongService {
 			"tags": song.tags
 		]
 		
-		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").setData(songData) { error in
 			if let error = error {
-				print("Error deleting song document: \(error.localizedDescription)")
-			} else {
-				Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").setData(songData) { error in
-					if let error = error {
-						print(error.localizedDescription)
-					}
-					if restoreToFolder, let folderId = song.folderId {
-						Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
+				print(error.localizedDescription)
+				return
+			}
+			if let folderIds = song.folderIds {
+				for folderId in folderIds {
+					Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
+						if let error = error {
+							print(error.localizedDescription)
+							return
+						}
+						Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
 							if let error = error {
-								print(error.localizedDescription)
+								print("Error deleting song document: \(error.localizedDescription)")
+								return
 							}
 						}
 					}
@@ -599,28 +603,6 @@ class SongService {
 		}
 	}
 	
-	func moveSongToFolder(currentFolder: Folder, toFolder: Folder, song: Song, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		Firestore.firestore().collection("users").document(uid).collection("folders").document(currentFolder.id ?? "").collection("songs").document(song.id ?? "")
-			.delete { error in
-				if let error = error {
-					completionBool(false)
-					completionString(error.localizedDescription)
-					return
-				}
-				Firestore.firestore().collection("users").document(uid).collection("folders").document(toFolder.id ?? "").collection("songs").document(song.id ?? "")
-					.setData(["order": 0]) { error in
-						if let error = error {
-							completionBool(false)
-							completionString(error.localizedDescription)
-							return
-						}
-						completionBool(true)
-					}
-			}
-	}
-	
 	func moveSongToRecentlyDeleted(song: Song, from folder: Folder? = nil, completion: @escaping (Bool, String?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else {
 			completion(false, "User not authenticated.")
@@ -630,7 +612,24 @@ class SongService {
 		var songData: [String: Any?] = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
-			"folderId": folder?.id,
+			"folderIds": {
+				var ids: [String] = []
+				
+				self.fetchFolders { folders in
+					for folder in folders {
+						self.fetchSongs(folder) { songs in
+							for i in songs {
+								if let songId = i.id, let folderId = folder.id, song.id == songId {
+									ids.append(folderId)
+								}
+							}
+						}
+					}
+				}
+				
+				print(ids)
+				return ids
+			}(),
 			"deletedTimestamp": Date(),
 			"title": song.title,
 			"lyrics": song.lyrics,
@@ -679,38 +678,6 @@ class SongService {
 				completion(false, error.localizedDescription)
 			} else {
 				completion(true, nil)
-			}
-		}
-	}
-	
-	
-	func moveSongToFolder(toFolder: Folder, song: Song, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		let songsCollectionRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(toFolder.id ?? "").collection("songs")
-		
-		let songDocumentRef = songsCollectionRef.document(song.id ?? "")
-		
-		songDocumentRef.getDocument { document, error in
-			if let error = error {
-				completionBool(false)
-				completionString(error.localizedDescription)
-				return
-			}
-			
-			guard !(document?.exists ?? false) else {
-				completionBool(false)
-				completionString("\"\(song.title)\" is already in the specified folder.")
-				return
-			}
-			
-			songDocumentRef.setData(["order": 0]) { error in
-				if let error = error {
-					completionBool(false)
-					completionString(error.localizedDescription)
-					return
-				}
-				completionBool(true)
 			}
 		}
 	}

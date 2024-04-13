@@ -13,7 +13,7 @@ struct RecentlyDeletedSong: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let uid: String
     let timestamp: Date
-    let folderId: String?
+    let folderIds: [String]?
     let deletedTimestamp: Date
     var title: String
     var lyrics: String

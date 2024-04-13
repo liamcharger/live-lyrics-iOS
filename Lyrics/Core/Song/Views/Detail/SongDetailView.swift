@@ -221,10 +221,11 @@ struct SongDetailView: View {
                             settings
                         } else {
                             Button(action: {
-                                if restoreSong?.folderId == nil {
-                                    mainViewModel.restoreSong(song: restoreSong!)
+                                if let song = restoreSong {
+                                    mainViewModel.restoreSong(song: song)
                                 } else {
-                                    mainViewModel.restoreSongToFolder(song: restoreSong!)
+                                    errorMessage = "There was an error restoring the song."
+                                    showError = true
                                 }
                                 presMode.wrappedValue.dismiss()
                             }, label: {

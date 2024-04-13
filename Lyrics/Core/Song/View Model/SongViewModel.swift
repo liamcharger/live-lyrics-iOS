@@ -133,36 +133,6 @@ class SongViewModel: ObservableObject {
         service.updatePerformanceMode(song: song, performanceMode: performanceMode)
     }
     
-    func moveSongToFolder(fromFolder: Folder, toFolder: Folder, _ song: Song, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        DispatchQueue.main.async {
-            self.service.moveSongToFolder(currentFolder: fromFolder, toFolder: toFolder, song: song) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { error in
-                completionString(error)
-            }
-
-        }
-    }
-    
-    func moveSongToFolder(toFolder: Folder, _ song: Song, completion: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        DispatchQueue.main.async {
-            self.service.moveSongToFolder(toFolder: toFolder, song: song) { success in
-                if success {
-                    completion(true)
-                } else {
-                    completion(false)
-                }
-            } completionString: { error in
-                completionString(error)
-            }
-
-        }
-    }
-    
     func moveSongToRecentlyDeleted(_ song: Song) {
         DispatchQueue.main.async {
             self.service.moveSongToRecentlyDeleted(song: song) { success, errorMessage in
