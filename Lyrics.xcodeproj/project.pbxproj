@@ -10,7 +10,7 @@
 		E0019D272BC6E68100DABECB /* hi_click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E0019D252BC6E68100DABECB /* hi_click.wav */; };
 		E0019D282BC6E68100DABECB /* lo_click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E0019D262BC6E68100DABECB /* lo_click.wav */; };
 		E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */; };
-		E004F4262A69C2D40089B6DF /* SongFullScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E004F4252A69C2D40089B6DF /* SongFullScreenView.swift */; };
+		E004F4262A69C2D40089B6DF /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E004F4252A69C2D40089B6DF /* PlayView.swift */; };
 		E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */; };
 		E006A0592A214CAA00CE468A /* RecentlyDeletedSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */; };
 		E00E845D2B222AEB00573A9F /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00E845C2B222AEB00573A9F /* StoreKitManager.swift */; };
@@ -141,7 +141,7 @@
 /* Begin PBXFileReference section */
 		E0019D252BC6E68100DABECB /* hi_click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = hi_click.wav; sourceTree = "<group>"; };
 		E0019D262BC6E68100DABECB /* lo_click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lo_click.wav; sourceTree = "<group>"; };
-		E004F4252A69C2D40089B6DF /* SongFullScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongFullScreenView.swift; sourceTree = "<group>"; };
+		E004F4252A69C2D40089B6DF /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeletedView.swift; sourceTree = "<group>"; };
 		E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeletedSong.swift; sourceTree = "<group>"; };
 		E00E845B2B22290100573A9F /* Live Lyrics.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Live Lyrics.storekit"; sourceTree = "<group>"; };
@@ -638,7 +638,7 @@
 		E0710A8E2A2A73F0004D62E8 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				E004F4252A69C2D40089B6DF /* SongFullScreenView.swift */,
+				E004F4252A69C2D40089B6DF /* PlayView.swift */,
 				E042477E2A02EF8F00CA48B3 /* SongDetailView.swift */,
 				E079AE362A81928B006C4B55 /* NewPlayViewView.swift */,
 			);
@@ -1140,7 +1140,7 @@
 				E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */,
 				E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */,
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
-				E004F4262A69C2D40089B6DF /* SongFullScreenView.swift in Sources */,
+				E004F4262A69C2D40089B6DF /* PlayView.swift in Sources */,
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
 				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,

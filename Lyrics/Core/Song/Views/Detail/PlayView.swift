@@ -16,7 +16,7 @@ enum BeatStyle {
     case heavy
 }
 
-struct SongFullScreenView: View {
+struct PlayView: View {
     @Binding var dismiss: Bool
     @Binding var hasDeletedSong: Bool
     @Binding var bpm: Int
@@ -87,7 +87,7 @@ struct SongFullScreenView: View {
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
-        self.duration = duration
+        self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
@@ -106,7 +106,7 @@ struct SongFullScreenView: View {
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? "Not Set"
-        self.duration = duration
+        self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
@@ -128,9 +128,9 @@ struct SongFullScreenView: View {
         isScrolling = true
         isScrollingProgrammatically = true
         
-        var duration = "1:00"
-        if !self.duration.isEmpty {
-            self.duration = duration
+        var duration = "2:00"
+        if !self.duration.isEmpty || self.duration != "" {
+            duration = self.duration
         }
         
         scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
@@ -163,8 +163,6 @@ struct SongFullScreenView: View {
         isScrolling = false
         scrollTimer?.invalidate()
         scrollTimer = nil
-        scrollPosition = 0
-        currentLineIndex = 0
         withAnimation {
             scrollViewProxy.scrollTo(0, anchor: .top)
         }
@@ -624,9 +622,6 @@ struct SongFullScreenView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
-            if let duration = song.duration {
-                self.duration = duration
-            }
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false

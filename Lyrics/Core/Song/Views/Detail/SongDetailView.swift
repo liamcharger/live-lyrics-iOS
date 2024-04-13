@@ -370,7 +370,7 @@ struct SongDetailView: View {
             SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
-            SongFullScreenView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
+            PlayView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
                 if duration.isEmpty {
                     return .constant("")
                 } else {
