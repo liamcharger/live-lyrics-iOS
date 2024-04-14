@@ -19,10 +19,13 @@ class MainViewModel: ObservableObject {
     @Published var folderSongs: [Song] = []
     @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
     @Published var folders: [Folder] = []
+    @Published var incomingShareRequests: [ShareRequest] = []
+    @Published var outgoingShareRequests: [ShareRequest] = []
     @Published var isLoadingFolders = true
     @Published var isLoadingFolderSongs = true
     @Published var isLoadingSongs = true
     @Published var isLoadingRecentlyDeletedSongs = true
+    @Published var isLoadingInvites = false
     
     @Published var systemDoc: SystemDoc?
     
@@ -226,5 +229,24 @@ class MainViewModel: ObservableObject {
     
     func deleteFolder(_ folder: Folder) {
         service.deleteFolder(folder)
+    }
+    
+    func fetchInvites() {
+        self.isLoadingInvites = true
+        service.fetchIncomingInvites { incomingShareRequests in
+            self.incomingShareRequests = incomingShareRequests
+        }
+        service.fetchOutgoingInvites { outgoingShareRequests in
+            self.outgoingShareRequests = outgoingShareRequests
+        }
+        self.isLoadingInvites = false
+    }
+    
+    func declineInvite(request: ShareRequest) {
+        service.declineInvite(request: request)
+    }
+    
+    func acceptInvite(request: ShareRequest) {
+        service.acceptInvite(request: request)
     }
 }

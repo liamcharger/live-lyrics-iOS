@@ -30,4 +30,7 @@ struct Song: Identifiable, Codable, Equatable {
     var performanceMode: Bool?
     var duration: String?
     var tags: [String]?
+    var joinedUsers: [String]?
+    // For checking whether the parsed song is a SharedSong or not
+    var isSharedSong: Bool?
 }

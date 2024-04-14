@@ -1,0 +1,172 @@
+//
+//  SongShareDetailView.swift
+//  Lyrics
+//
+//  Created by Liam Willey on 4/2/24.
+//
+
+import SwiftUI
+
+enum ShareRequestType {
+    case outgoing
+    case incoming
+}
+
+struct SongShareDetailView: View {
+    @ObservedObject var mainViewModel = MainViewModel.shared
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
+    let userService = UserService()
+    let songService = SongService()
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            CustomNavBar(title: "Share Requests", navType: .ShareDetail, folder: nil, showBackButton: true, isEditing: .constant(false))
+                .padding()
+            Divider()
+            if NetworkManager.shared.getNetworkState() {
+                if mainViewModel.isLoadingInvites {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty {
+                        FullscreenMessage(imageName: "circle.slash", title: "It doesn't look like you have any shared songs/folders being sent or received.", spaceNavbar: true)
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 16) {
+                                VStack {
+                                    ListHeaderView(title: "Outgoing")
+                                    ForEach(mainViewModel.outgoingShareRequests) { request in
+                                        rowView(request: request, type: .outgoing)
+                                    }
+                                }
+                                VStack {
+                                    ListHeaderView(title: "Incoming")
+                                    ForEach(mainViewModel.incomingShareRequests) { request in
+                                        rowView(request: request, type: .incoming)
+                                    }
+                                }
+                            }
+                            .padding()
+                        }
+                    }
+                }
+            } else {
+                FullscreenMessage(imageName: "wifi.slash", title: "Please connect to the internet to view your share requests.", spaceNavbar: true)
+            }
+        }
+        .onAppear {
+            // Move to init...
+            // Debug:
+//            mainViewModel.outgoingShareRequests = [ShareRequest(timestamp: Date(), from: authViewModel.currentUser?.id ?? "", to: ["two", "two"], songId: "test", contentType: "Song")]
+//            mainViewModel.incomingShareRequests = [ShareRequest(timestamp: Date(), from: "random", to: ["two", authViewModel.currentUser?.id ?? ""], songId: "test", contentType: "Folder")]
+            
+            mainViewModel.fetchInvites()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
+    }
+        
+    func rowView(request: ShareRequest, type: ShareRequestType) -> some View {
+        return VStack {
+            HStack {
+                VStack(alignment: .leading, spacing: 7) {
+                    HStack(spacing: 5) {
+                        Text({
+                            var songName = "Loading"
+                            
+                            songService.fetchSong(withId: request.contentId) { song in
+                                if let song = song {
+                                    songName = song.title
+                                } else {
+                                    songName = "Error"
+                                }
+                            }
+                            
+                            return songName
+                        }())
+                        .font(.title2.weight(.semibold))
+                        Text(request.contentType)
+                            .padding(6)
+                            .padding(.horizontal, 2)
+                            .background(Material.thin)
+                            .font(.subheadline.weight(.medium))
+                            .clipShape(Capsule())
+                    }
+                    if type == .incoming {
+                        Text({
+                            var users = "Loading..."
+                            
+                            for to in request.to {
+                                userService.fetchUser(withUid: to) { user in
+                                    users += ", \(user.username)"
+                                }
+                            }
+                            
+                            return users
+                        }())
+                    }
+                }
+                Spacer()
+                if type == .outgoing {
+                    Text({
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "M/D/YYYY"
+                        
+                        return dateFormatter.string(from: request.timestamp)
+                    }())
+                } else {
+                    HStack(spacing: 6) {
+                        Button {
+                            mainViewModel.acceptInvite(request: request)
+                        } label: {
+                            Image(systemName: "checkmark")
+                                .padding(12)
+                                .font(.body.weight(.semibold))
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .clipShape(Circle())
+                        }
+                        Button {
+                            mainViewModel.declineInvite(request: request)
+                        } label: {
+                            Image(systemName: "xmark")
+                                .padding(12)
+                                .font(.body.weight(.semibold))
+                                .background(Material.thin)
+                                .foregroundColor(.primary)
+                                .clipShape(Circle())
+                        }
+                    }
+                }
+            }
+            if type == .outgoing {
+                VStack(alignment: .leading, spacing: 12) {
+                    Divider()
+                        .padding(.horizontal, -16)
+                    Text({
+                        var users = "Loading..."
+                        
+                        for to in request.to {
+                            userService.fetchUser(withUid: to) { user in
+                                users += ", \(user.username)"
+                            }
+                        }
+                        
+                        return users
+                    }())
+                    .foregroundColor(.gray)
+                }
+            }
+        }
+        .padding()
+        .background(Material.regular)
+        .foregroundColor(.primary)
+        .cornerRadius(20)
+    }
+}
+
+#Preview {
+    SongShareDetailView()
+        .environmentObject(AuthViewModel())
+}

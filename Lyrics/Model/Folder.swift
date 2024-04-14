@@ -15,4 +15,6 @@ struct Folder: Identifiable, Codable, Equatable {
     let timestamp: Date
     var title: String
     var order: Int
+    // For checking whether the parsed folder is a SharedFolder or not
+    var isSharedFolder: Bool?
 }

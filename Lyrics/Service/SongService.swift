@@ -584,17 +584,6 @@ class SongService {
 				return
 			}
 		}
-		if let folderIds = song.folderIds {
-			for folderId in folderIds {
-				Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs").document(song.id ?? "").setData(["order": 0]) { error in
-					if let error = error {
-						print(error.localizedDescription)
-						return
-					}
-					
-				}
-			}
-		}
 		Firestore.firestore().collection("users").document(uid).collection("recentlydeleted").document(song.id ?? "").delete { error in
 			if let error = error {
 				print("Error deleting song document: \(error.localizedDescription)")
@@ -622,24 +611,6 @@ class SongService {
 		var songData: [String: Any?] = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
-			"folderIds": {
-				var ids: [String] = []
-				
-				self.fetchFolders { folders in
-					for folder in folders {
-						self.fetchSongs(folder) { songs in
-							for i in songs {
-								if let songId = i.id, let folderId = folder.id, song.id == songId {
-									ids.append(folderId)
-								}
-							}
-						}
-					}
-				}
-				
-				print(ids)
-				return ids
-			}(),
 			"deletedTimestamp": Date(),
 			"title": song.title,
 			"lyrics": song.lyrics,
@@ -746,5 +717,178 @@ class SongService {
 				completion(false)
 			}
 		}
+	}
+	
+	func sendInviteToUser(request: ShareRequest, completion: @escaping(Error?) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		let id = UUID().uuidString
+		
+		let requestData: [String: Any?] = [
+			"timestamp": request.timestamp,
+			"from": request.from,
+			"to": request.to,
+			"songId": request.contentId,
+			"type": request.type
+		]
+		
+		Firestore.firestore().collection("users").document(uid).collection("outgoing-share-requests").document(id).setData(requestData) { error in
+			if let error = error {
+				print(error.localizedDescription)
+				return
+			}
+		}
+		
+		for toUser in request.to {
+			Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(id).setData(requestData) { error in
+				if let error = error {
+					print(error.localizedDescription)
+					return
+				}
+			}
+		}
+		
+		// Send notification to user's device
+		//		if let fcmId = toUser.fcmId {
+		//			UserService().sendNotificationToFCM(deviceToken: fcmId, title: "Live Lyrics", body: "\(fromUser.username) has sent a song. Tap to view.")
+		//		}
+	}
+	
+	func fetchIncomingInvites(completion: @escaping ([ShareRequest]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").addSnapshotListener { snapshot, error in
+			if let error = error {
+				print(error.localizedDescription)
+				return
+			}
+			
+			guard let documents = snapshot?.documents else {
+				print("No incoming invites")
+				completion([])
+				return
+			}
+			
+			let incomingInvites = documents.compactMap { try? $0.data(as: ShareRequest.self) }
+			completion(incomingInvites)
+		}
+	}
+	
+	func fetchOutgoingInvites(completion: @escaping ([ShareRequest]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("outgoing-share-requests").addSnapshotListener { snapshot, error in
+			if let error = error {
+				print(error.localizedDescription)
+				return
+			}
+			
+			guard let documents = snapshot?.documents else {
+				print("No outgoing invites")
+				completion([])
+				return
+			}
+			
+			let outgoingInvites = documents.compactMap { try? $0.data(as: ShareRequest.self) }
+			completion(outgoingInvites)
+		}
+	}
+	
+	func declineInvite(request: ShareRequest) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		if request.type == "collab" {
+			// TODO: Implement logic to check if it's the last user to join, and if so, delete the outgoing request from the sender's collection
+			Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
+				if let error = error {
+					print(error.localizedDescription)
+					return
+				}
+			}
+		} else {
+			Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
+				if let error = error {
+					print(error.localizedDescription)
+					return
+				}
+			}
+		}
+		
+		// Send notification to user's device
+		//		if let fcmId = toUser.fcmId {
+		//			UserService().sendNotificationToFCM(deviceToken: fcmId, title: "Live Lyrics", body: "\(fromUser.username) has declined a shared \(request.contentType.lowercased()).")
+		//		}
+	}
+	
+	func acceptInvite(request: ShareRequest) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
+			if let error = error {
+				print(error.localizedDescription)
+				return
+			}
+		}
+		self.fetchSong(withId: request.contentId) { song in
+			if request.type == "collab" {
+				if request.contentType == "folder" {
+					// TODO: Add logic for creating folders
+				} else {
+					guard var joinedUsers = song?.joinedUsers else { return }
+					print(joinedUsers)
+					joinedUsers.append(uid)
+					print(joinedUsers)
+					if let song = song {
+						Firestore.firestore().collection("users").document(request.from).collection("songs").document(request.contentId).updateData(["joinedUsers": joinedUsers]) { error in
+							if let error = error {
+								print(error.localizedDescription)
+								return
+							}
+						}
+					}
+				}
+				// TODO: Implement logic to check if it's the last user to join, and if so, delete the outgoing request from the sender's collection
+			} else if request.type == "copy" {
+				if request.contentType == "folder" {
+					// TODO: Add logic for creating folders
+				} else {
+					if let song = song {
+						let songData: [String: Any?] = [
+							"uid": song.uid,
+							"timestamp": song.timestamp,
+							"deletedTimestamp": Date(),
+							"title": song.title,
+							"lyrics": song.lyrics,
+							"order": song.order,
+							"size": song.size,
+							"key": song.key,
+							"notes": song.notes,
+							"weight": song.weight,
+							"alignment": song.alignment,
+							"design": song.design,
+							"lineSpacing": song.lineSpacing,
+							"artist": song.artist,
+							"bpm": song.bpm,
+							"bpb": song.bpb,
+							"pinned": song.pinned,
+							"performanceMode": song.performanceMode,
+							"duration": song.duration,
+							"tags": song.tags
+						]
+						
+						Firestore.firestore().collection("users").document(uid).collection("songs").document().setData(songData) { error in
+							if let error = error {
+								print(error.localizedDescription)
+								return
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// Send notification to user's device
+		//		if let fcmId = toUser.fcmId {
+		//			UserService().sendNotificationToFCM(deviceToken: fcmId, title: "Live Lyrics", body: "\(fromUser.username) has accepted a shared \(request.contentType.lowercased()).")
+		//		}
 	}
 }

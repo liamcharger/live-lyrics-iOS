@@ -38,6 +38,7 @@ struct SongDetailView: View {
     @State var showEditView = false
     @State var showTagSheet = false
     @State var showMoveView = false
+    @State var showShareSheet = false
     @State var showSettingsView = false
     @State var wordCountBool = false
     @State var showDeleteSheet = false
@@ -369,6 +370,9 @@ struct SongDetailView: View {
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Success"), message: Text("The song was successfully added to your library."), dismissButton: .cancel(Text("Close"), action: {}))
         }
+        .sheet(isPresented: $showShareSheet) {
+            ShareView(isDisplayed: $showShareSheet, song: song)
+        }
         .sheet(isPresented: $showEditView) {
             SongEditView(song: song, isDisplayed: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
         }
@@ -667,6 +671,11 @@ struct SongDetailView: View {
                 showEditView.toggle()
             }, label: {
                 Label("Edit", systemImage: "pencil")
+            })
+            Button(action: {
+                showShareSheet = true
+            }, label: {
+                Label("Share", systemImage: "square.and.arrow.up")
             })
             Button(action: {
                 showMoveView.toggle()

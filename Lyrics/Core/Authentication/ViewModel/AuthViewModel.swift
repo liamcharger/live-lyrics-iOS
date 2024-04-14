@@ -10,12 +10,15 @@ import Firebase
 import FirebaseFirestore
 
 class AuthViewModel: ObservableObject {
+    @Published var users: [User] = []
     @Published var userSession: FirebaseAuth.User?
     @Published var didAuthenticateUser = false
+    @Published var isLoadingUsers = false
     @Published var currentUser: User?
-    private var tempUserSession: FirebaseAuth.User?
     
+    private var tempUserSession: FirebaseAuth.User?
     private let service = UserService()
+    private let songService = SongService()
     
     init() {
         self.userSession = Auth.auth().currentUser
@@ -169,6 +172,24 @@ class AuthViewModel: ObservableObject {
                 return
             }
             completion(true, "Success!")
+        }
+    }
+    
+    func fetchUsers(username: String) {
+        self.isLoadingUsers = true
+        service.fetchUsers(withUsername: username) { users in
+            self.users = users
+            self.isLoadingUsers = false
+        }
+    }
+    
+    func updateFCMId(_ user: User, id: String) {
+        service.updateFCMId(user, id: id)
+    }
+    
+    func sendInviteToUser(request: ShareRequest, completion: @escaping(Error?) -> Void) {
+        songService.sendInviteToUser(request: request) { error in
+            completion(error)
         }
     }
 }
