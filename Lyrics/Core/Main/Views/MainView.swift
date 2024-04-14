@@ -34,6 +34,7 @@ struct MainView: View {
     @State var showAddSongSheet = false
     @State var showEditSheet = false
     @State var showTagSheet = false
+    @State var showShareSheet = false
     @State var showFolderSongDeleteSheet = false
     @State var showSongDeleteSheet = false
     @State var showSongEditSheet = false
@@ -250,12 +251,12 @@ struct MainView: View {
                         NavigationLink(destination: {
                             RecentlyDeletedView()
                         }) {
-                            ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
+                            ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right")
                         }
                         NavigationLink(destination: {
                             SongShareDetailView()
                         }) {
-                            ListRowView(isEditing: $isEditingSongs, title: "Share Requests", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
+                            ListRowView(isEditing: $isEditingSongs, title: "Share Requests", navArrow: "chevron.right", badge: "NEW")
                         }
                     }
                     VStack {
@@ -345,21 +346,25 @@ struct MainView: View {
                                                     .contentShape(.contextMenuPreview, Capsule())
                                                     .contextMenu {
                                                         Button {
-                                                            mainViewModel.folderSongs = []
-                                                            showEditSheet = true
-                                                            selectedFolder = folder
-                                                        } label: {
-                                                            Label("Edit", systemImage: "pencil")
-                                                        }
-                                                        Button {
                                                             mainViewModel.fetchSongs(folder)
                                                             selectedFolder = folder
                                                             showAddSongSheet = true
                                                         } label: {
                                                             Label("Add Songs", systemImage: "plus")
                                                         }
+                                                        Button {
+                                                            showEditSheet = true
+                                                            selectedFolder = folder
+                                                        } label: {
+                                                            Label("Edit", systemImage: "pencil")
+                                                        }
+                                                        Button {
+                                                            selectedFolder = folder
+                                                            showShareSheet.toggle()
+                                                        } label: {
+                                                            Label("Share", systemImage: "square.and.arrow.up")
+                                                        }
                                                         Button(role: .destructive) {
-                                                            mainViewModel.folderSongs = []
                                                             showDeleteSheet = true
                                                             selectedFolder = folder
                                                         } label: {
@@ -409,7 +414,7 @@ struct MainView: View {
                                                                     .moveDisabled(true)
                                                             } else {
                                                                 NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
-                                                                    ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
+                                                                    ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                         .contextMenu {
                                                                             Button {
                                                                                 selectedSong = song
@@ -419,6 +424,12 @@ struct MainView: View {
                                                                                 showSongEditSheet.toggle()
                                                                             } label: {
                                                                                 Label("Edit", systemImage: "pencil")
+                                                                            }
+                                                                            Button {
+                                                                                selectedSong = song
+                                                                                showShareSheet.toggle()
+                                                                            } label: {
+                                                                                Label("Share", systemImage: "square.and.arrow.up")
                                                                             }
                                                                             Button {
                                                                                 selectedSong = song
@@ -591,7 +602,7 @@ struct MainView: View {
                                             VStack(alignment: .leading, spacing: 6) {
                                                 HStack {
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: nil)) {
-                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
+                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                             .contextMenu {
                                                                 songContextMenu(song: song, showUnpinPinButton: song.pinned ?? false)
                                                             }
@@ -646,6 +657,13 @@ struct MainView: View {
                 .sheet(isPresented: $showEditSheet) {
                     if let selectedFolder = selectedFolder {
                         FolderEditView(folder: selectedFolder, isDisplayed: $showEditSheet, title: .constant(selectedFolder.title))
+                    }
+                }
+                .sheet(isPresented: $showShareSheet) {
+                    if let song = selectedSong {
+                        ShareView(isDisplayed: $showShareSheet, song: song)
+                    }  else if let folder = selectedFolder {
+                        ShareView(isDisplayed: $showShareSheet, folder: folder)
                     }
                 }
                 .sheet(isPresented: $showAddSongSheet, onDismiss: {mainViewModel.fetchSongs(selectedFolder!)}) {
@@ -704,12 +722,15 @@ struct MainView: View {
         return VStack {
             Button {
                 selectedSong = song
-                songViewModel.fetchSong(selectedSong?.id ?? "") { song in
-                    selectedSong = song
-                }
                 showSongEditSheet.toggle()
             } label: {
                 Label("Edit", systemImage: "pencil")
+            }
+            Button {
+                selectedSong = song
+                showShareSheet.toggle()
+            } label: {
+                Label("Share", systemImage: "square.and.arrow.up")
             }
             Button {
                 selectedSong = song

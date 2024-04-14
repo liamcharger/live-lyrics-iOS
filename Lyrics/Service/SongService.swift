@@ -727,7 +727,8 @@ class SongService {
 			"timestamp": request.timestamp,
 			"from": request.from,
 			"to": request.to,
-			"songId": request.contentId,
+			"contentId": request.contentId,
+			"contentType": request.contentType,
 			"type": request.type
 		]
 		

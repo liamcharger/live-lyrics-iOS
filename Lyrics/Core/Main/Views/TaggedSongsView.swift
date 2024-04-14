@@ -117,7 +117,7 @@ struct TaggedSongsView: View {
                                                 .moveDisabled(true)
                                         } else {
                                             NavigationLink(destination: SongDetailView(song: song, songs: songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: nil), label: {
-                                                ListRowView(isEditing: .constant(false), title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
+                                                ListRowView(isEditing: .constant(false), title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                             })
                                         }
                                     }

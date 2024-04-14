@@ -158,7 +158,15 @@ struct ShareView: View {
                     }
                 }
             } else {
-                FullscreenMessage(imageName: "wifi.slash", title: "Please connect to the internet to share songs.", spaceNavbar: true)
+                FullscreenMessage(imageName: "wifi.slash", title: {
+                    if let song = song {
+                        return "Please connect to the internet to share '\(song.title)'."
+                    } else if let folder = folder {
+                        return "Please connect to the internet to share '\(folder.title)'."
+                    } else {
+                        return "Please connect to the internet to share."
+                    }
+                }(), spaceNavbar: true)
             }
         }
     }

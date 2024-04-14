@@ -86,7 +86,7 @@ struct SongShareDetailView: View {
                             return songName
                         }())
                         .font(.title2.weight(.semibold))
-                        Text(request.contentType)
+                        Text(request.contentType.uppercased())
                             .padding(6)
                             .padding(.horizontal, 2)
                             .background(Material.thin)
