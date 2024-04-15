@@ -359,6 +359,7 @@ struct MainView: View {
                                                             Label("Edit", systemImage: "pencil")
                                                         }
                                                         Button {
+                                                            selectedSong = nil
                                                             selectedFolder = folder
                                                             showShareSheet.toggle()
                                                         } label: {
@@ -632,7 +633,7 @@ struct MainView: View {
                                         }
                                         .onDrag {
                                             sortViewModel.loadFromUserDefaults { sortSelection in
-                                                // Come up with a way to give user ability to move collaborative songs
+                                                // TODO: Come up with a way to give user ability to move collaborative songs
                                                 if sortSelection == .noSelection && song.uid == authViewModel.currentUser?.id ?? "" {
                                                     self.draggedSong = song
                                                 }
@@ -644,7 +645,8 @@ struct MainView: View {
                                             delegate: SongDropViewDelegate(
                                                 destinationItem: song,
                                                 items: $mainViewModel.songs,
-                                                draggedItem: $draggedSong
+                                                draggedItem: $draggedSong,
+                                                authViewModel: authViewModel
                                             )
                                         )
                                     }

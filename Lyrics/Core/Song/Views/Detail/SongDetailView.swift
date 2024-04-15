@@ -93,6 +93,9 @@ struct SongDetailView: View {
         
         return input
     }
+    func isShared() -> Bool {
+        return song.id ?? "" == viewModel.currentUser?.id ?? ""
+    }
     
     var playButton: some View {
         Button(action: {showFullScreenView.toggle()}, label: {
@@ -219,7 +222,9 @@ struct SongDetailView: View {
                                         notesViewModel.updateNotes(song, notes: notes)
                                     }
                             }
-                            menu
+                            if !isShared() {
+                                menu
+                            }
                             settings
                         } else {
                             Button(action: {
@@ -667,16 +672,18 @@ struct SongDetailView: View {
     }
     var settings: some View {
         Menu {
-            Button(action: {
-                showEditView.toggle()
-            }, label: {
-                Label("Edit", systemImage: "pencil")
-            })
-            Button(action: {
-                showShareSheet = true
-            }, label: {
-                Label("Share", systemImage: "square.and.arrow.up")
-            })
+            if !isShared() {
+                Button(action: {
+                    showEditView.toggle()
+                }, label: {
+                    Label("Edit", systemImage: "pencil")
+                })
+                Button(action: {
+                    showShareSheet = true
+                }, label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                })
+            }
             Button(action: {
                 showMoveView.toggle()
             }, label: {
@@ -696,15 +703,25 @@ struct SongDetailView: View {
             } label: {
                 Label("Copy", systemImage: "doc")
             }
-            Button {
-                showTagSheet = true
-            } label: {
-                Label("Tags", systemImage: "tag")
+            if !isShared() {
+                Button {
+                    showTagSheet = true
+                } label: {
+                    Label("Tags", systemImage: "tag")
+                }
             }
             Button(role: .destructive, action: {
-                showDeleteSheet.toggle()
+                if !isShared() {
+                    showDeleteSheet.toggle()
+                } else {
+                    // TODO: Leave song, not delete it
+                }
             }, label: {
-                Label("Delete", systemImage: "trash")
+                if isShared() {
+                    Label("Leave", systemImage: "arrow.backward.square")
+                } else {
+                    Label("Delete", systemImage: "trash")
+                }
             })
         } label: {
             FAText(iconName: "ellipsis", size: 18)

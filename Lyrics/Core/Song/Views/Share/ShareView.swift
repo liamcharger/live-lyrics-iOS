@@ -96,30 +96,29 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            // Disabled until full collab features are enabled
-//            HStack {
-//                Text("Type:")
-//                Spacer()
-//                Menu {
-//                    Button(action: {
-//                        collaborate = true
-//                    }, label: {
-//                        Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
-//                    })
-//                    Button(action: {
-//                        collaborate = false
-//                    }, label: {
-//                        Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
-//                    })
-//                } label: {
-//                    HStack(spacing: 4) {
-//                        Text(collaborate ? "Collaborate" : "Send Copy")
-//                        Image(systemName: "chevron.down")
-//                    }
-//                }
-//            }
-//            .padding()
-//            Divider()
+            HStack {
+                Text("Type:")
+                Spacer()
+                Menu {
+                    Button(action: {
+                        collaborate = true
+                    }, label: {
+                        Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
+                    })
+                    Button(action: {
+                        collaborate = false
+                    }, label: {
+                        Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
+                    })
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(collaborate ? "Collaborate" : "Send Copy")
+                        Image(systemName: "chevron.down")
+                    }
+                }
+            }
+            .padding()
+            Divider()
             if networkManager.getNetworkState() {
                 CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search by username...")
                     .textInputAutocapitalization(.never)
@@ -143,7 +142,7 @@ struct ShareView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty || !recentSearches.isEmpty {
+                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) {
                         ScrollView {
                             VStack {
                                 if !authViewModel.users.isEmpty {
