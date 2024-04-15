@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 class SongViewModel: ObservableObject {
     @ObservedObject var mainViewModel = MainViewModel()
@@ -56,16 +57,13 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createFolder(title: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        service.createFolder(title: title) { success in
-            if success {
-                self.mainViewModel.fetchFolders()
-                completionBool(true)
-            } else {
-                completionBool(false)
-            }
-        } completionString: { string in
-            completionString(string)
+    func createFolder(title: String, completion: @escaping(Error?) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let folder = Folder(uid: uid, timestamp: Date(), title: title, order: 0)
+        
+        service.createFolder(folder: folder) { error in
+            self.mainViewModel.fetchFolders()
+            completion(error)
         }
     }
     

@@ -15,5 +15,8 @@ struct ShareRequest: Codable, Identifiable {
     var to: [String]
     var contentId: String
     var contentType: String
+    var contentName: String
     var type: String
+    var toUsername: [String]
+    var fromUsername: String
 }

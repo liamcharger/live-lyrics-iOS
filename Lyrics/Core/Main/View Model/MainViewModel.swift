@@ -242,11 +242,15 @@ class MainViewModel: ObservableObject {
         self.isLoadingInvites = false
     }
     
-    func declineInvite(request: ShareRequest) {
-        service.declineInvite(request: request)
+    func declineInvite(request: ShareRequest, completion: @escaping() -> Void) {
+        service.declineInvite(request: request) {
+            completion()
+        }
     }
     
-    func acceptInvite(request: ShareRequest) {
-        service.acceptInvite(request: request)
+    func acceptInvite(request: ShareRequest, completion: @escaping() -> Void) {
+        service.acceptInvite(request: request) {
+            completion()
+        }
     }
 }

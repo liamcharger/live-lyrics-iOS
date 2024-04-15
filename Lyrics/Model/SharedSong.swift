@@ -12,5 +12,6 @@ import FirebaseFirestore
 struct SharedSong: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let from: String
+    let songId: String
     var order: Int
 }

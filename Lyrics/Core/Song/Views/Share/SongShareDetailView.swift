@@ -16,6 +16,9 @@ struct SongShareDetailView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @EnvironmentObject var authViewModel: AuthViewModel
     
+    @State var isLoadingAction = false
+    @State var loadingId = ""
+    
     let userService = UserService()
     let songService = SongService()
     
@@ -72,70 +75,62 @@ struct SongShareDetailView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 7) {
                     HStack(spacing: 5) {
-                        Text({
-                            var songName = "Loading"
-                            
-                            songService.fetchSong(withId: request.contentId) { song in
-                                if let song = song {
-                                    songName = song.title
-                                } else {
-                                    songName = "Error"
-                                }
-                            }
-                            
-                            return songName
-                        }())
+                        Text(request.contentName)
                         .font(.title2.weight(.semibold))
                         Text(request.contentType.uppercased())
                             .padding(6)
                             .padding(.horizontal, 2)
                             .background(Material.thin)
-                            .font(.subheadline.weight(.medium))
+                            .font(.system(size: 11).weight(.medium))
                             .clipShape(Capsule())
                     }
                     if type == .incoming {
-                        Text({
-                            var users = "Loading..."
-                            
-                            for to in request.to {
-                                userService.fetchUser(withUid: to) { user in
-                                    users += ", \(user.username)"
-                                }
-                            }
-                            
-                            return users
-                        }())
+                        Text(request.fromUsername)
                     }
                 }
                 Spacer()
                 if type == .outgoing {
                     Text({
                         let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "M/D/YYYY"
+                        dateFormatter.dateFormat = "MM/dd/yyyy"
                         
                         return dateFormatter.string(from: request.timestamp)
                     }())
                 } else {
                     HStack(spacing: 6) {
-                        Button {
-                            mainViewModel.acceptInvite(request: request)
-                        } label: {
-                            Image(systemName: "checkmark")
-                                .padding(12)
-                                .font(.body.weight(.semibold))
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                        }
-                        Button {
-                            mainViewModel.declineInvite(request: request)
-                        } label: {
-                            Image(systemName: "xmark")
-                                .padding(12)
-                                .font(.body.weight(.semibold))
-                                .background(Material.thin)
-                                .foregroundColor(.primary)
-                                .clipShape(Circle())
+                        if !isLoadingAction && loadingId != request.id ?? "" {
+                            Button {
+                                self.loadingId = request.id ?? ""
+                                self.isLoadingAction = true
+                                mainViewModel.acceptInvite(request: request) {
+                                    self.loadingId = ""
+                                    self.isLoadingAction = false
+                                }
+                            } label: {
+                                Image(systemName: "checkmark")
+                                    .padding(12)
+                                    .font(.body.weight(.semibold))
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .clipShape(Circle())
+                            }
+                            Button {
+                                self.loadingId = request.id ?? ""
+                                self.isLoadingAction = true
+                                mainViewModel.declineInvite(request: request) {
+                                    self.loadingId = ""
+                                    self.isLoadingAction = false
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .padding(12)
+                                    .font(.body.weight(.semibold))
+                                    .background(Material.thin)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Circle())
+                            }
+                        } else {
+                            ProgressView()
                         }
                     }
                 }
@@ -145,15 +140,13 @@ struct SongShareDetailView: View {
                     Divider()
                         .padding(.horizontal, -16)
                     Text({
-                        var users = "Loading..."
+                        var users = ""
                         
-                        for to in request.to {
-                            userService.fetchUser(withUid: to) { user in
-                                users += ", \(user.username)"
-                            }
+                        for to in request.toUsername {
+                            users += "\(users.isEmpty ? "" : ", ")\(to)"
                         }
                         
-                        return users
+                        return users.isEmpty ? "Loading..." : "To: " + users
                     }())
                     .foregroundColor(.gray)
                 }

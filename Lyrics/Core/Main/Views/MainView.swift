@@ -632,7 +632,8 @@ struct MainView: View {
                                         }
                                         .onDrag {
                                             sortViewModel.loadFromUserDefaults { sortSelection in
-                                                if sortSelection == .noSelection {
+                                                // Come up with a way to give user ability to move collaborative songs
+                                                if sortSelection == .noSelection && song.uid == authViewModel.currentUser?.id ?? "" {
                                                     self.draggedSong = song
                                                 }
                                             }

@@ -41,11 +41,20 @@ struct ListRowView: View {
                     Text(title)
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
+                    if let song = song, let userId = viewModel.currentUser?.id, song.uid != userId {
+                        Text("Shared")
+                            .padding(6)
+                            .padding(.horizontal, 1.5)
+                            .font(.system(size: 13).weight(.medium))
+                            .background(Material.thin)
+                            .foregroundColor(.primary)
+                            .clipShape(Capsule())
+                    }
                     if let badge = badge {
                         Text(badge)
                             .padding(6)
                             .padding(.horizontal, 1.5)
-                            .font(.system(size: 11).weight(.medium))
+                            .font(.system(size: 13).weight(.medium))
                             .background(Color.blue)
                             .foregroundColor(.white)
                             .clipShape(Capsule())

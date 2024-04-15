@@ -9,14 +9,14 @@ import SwiftUI
 
 struct SongShareRowView: View {
     let user: User
-    @Binding var selectedUsers: [String]
+    @Binding var selectedUsers: [String: String]
     
     var body: some View {
         HStack {
             Text(user.username)
                 .font(.body.weight(.semibold))
             Spacer()
-            if selectedUsers.contains(user.id ?? "") {
+            if selectedUsers.keys.contains(user.id ?? "") {
                 Image(systemName: "checkmark.circle")
             } else {
                 Image(systemName: "circle")
@@ -30,5 +30,5 @@ struct SongShareRowView: View {
 }
 
 #Preview {
-    SongShareRowView(user: User(email: "email@user.com", username: "username", fullname: "Full Name"), selectedUsers: .constant(["uid", "uid1", "uid2"]))
+    SongShareRowView(user: User(email: "email@user.com", username: "username", fullname: "Full Name"), selectedUsers: .constant(["key": "uid", "key2": "uid"]))
 }

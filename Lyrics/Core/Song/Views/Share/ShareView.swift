@@ -13,19 +13,23 @@ struct ShareView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     
     @Binding var isDisplayed: Bool
-    @State var selectedUsers: [String] = []
+    @State var selectedUsers = [String: String]()
     @State var searchText = ""
     @State var collaborate = false
     @State var firstSearch = true
+    @State var isSendingRequest = false
     
     @State var selectedUser: User?
+    
+    @AppStorage("ShareView.recentSearches") var recentSearches = ""
     
     let song: Song?
     let folder: Folder?
     let networkManager = NetworkManager.shared
+    let userService = UserService()
     
     var disabled: Bool {
-        selectedUsers.isEmpty || !networkManager.getNetworkState()
+        selectedUsers.isEmpty || !networkManager.getNetworkState() || isSendingRequest
     }
     
     init(isDisplayed: Binding<Bool>, song: Song? = nil, folder: Folder? = nil) {
@@ -41,35 +45,50 @@ struct ShareView: View {
                     .font(.title.weight(.bold))
                 Spacer()
                 Button {
-                    if let user = selectedUser, let currentUser = authViewModel.currentUser {
-                        authViewModel.sendInviteToUser(request: {
-                            let timestamp = Date()
-                            let from = currentUser.id ?? ""
-                            let to = selectedUsers
-                            let type = collaborate ? "collaborate" : "copy"
-                            
-                            if let song = song {
-                                return ShareRequest(timestamp: timestamp, from: from, to: to, contentId: song.id ?? "", contentType: "song", type: type)
-                            } else if let folder = folder {
-                                return ShareRequest(timestamp: timestamp, from: from, to: to, contentId: folder.id ?? "", contentType: "folder", type: type)
-                            }
-                            // Should never be executed
-                            return ShareRequest(timestamp: timestamp, from: from, to: to, contentId: "", contentType: "", type: type)
-                        }()) { error in
+                   let timestamp = Date()
+                    guard let fromUser = authViewModel.currentUser else { return }
+                    let to = Array(selectedUsers.keys)
+                    let type = collaborate ? "collaborate" : "copy"
+                    let toUsernames = Array(selectedUsers.values)
+                    
+                    var request: ShareRequest?
+                    
+                    if let song = song {
+                        request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: to, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
+                    } else if let folder = folder {
+                        request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: to, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
+                    } else {
+                        print("Song and folder are nil")
+                    }
+                    
+                    if let request = request {
+                        self.isSendingRequest = true
+                        authViewModel.sendInviteToUser(request: request) { error in
                             if let error = error {
                                 print(error.localizedDescription)
                                 return
                             }
+                            self.isSendingRequest = false
                             presMode.wrappedValue.dismiss()
                         }
+                    } else {
+                        print("Error: request is nil")
                     }
                 } label: {
-                    Text("Invite" + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)))
-                        .padding(12)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .font(.body.weight(.semibold))
-                        .clipShape(Capsule())
+                    if isSendingRequest {
+                        ProgressView()
+                            .tint(.primary)
+                            .padding(12)
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                    } else {
+                        Text("Invite" + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)))
+                            .padding(12)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .font(.body.weight(.semibold))
+                            .clipShape(Capsule())
+                    }
                 }
                 .opacity(disabled ? 0.5 : 1.0)
                 .disabled(disabled)
@@ -107,6 +126,9 @@ struct ShareView: View {
                     .autocorrectionDisabled()
                     .submitLabel(.search)
                     .onSubmit {
+                        if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) {
+                            recentSearches.append(",\(searchText)")
+                        }
                         firstSearch = false
                         if searchText == "" {
                             firstSearch = true
@@ -121,21 +143,63 @@ struct ShareView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty {
+                    if !authViewModel.users.isEmpty || !recentSearches.isEmpty {
                         ScrollView {
                             VStack {
-                                ForEach(authViewModel.users.indices, id: \.self) { index in
-                                    let user = authViewModel.users[index]
-                                    
-                                    Button {
-                                        selectedUser = user
-                                        if selectedUsers.contains(user.id ?? "") {
-                                            selectedUsers.remove(at: index)
-                                        } else {
-                                            selectedUsers.append(user.id ?? "")
+                                if !authViewModel.users.isEmpty {
+                                    ForEach(authViewModel.users.indices, id: \.self) { index in
+                                        let user = authViewModel.users[index]
+                                        
+                                        Button {
+                                            selectedUser = user
+                                            if selectedUsers.keys.contains(user.id ?? "") {
+                                                selectedUsers.removeValue(forKey: user.id ?? "")
+                                            } else {
+                                                selectedUsers[user.id ?? ""] = user.username
+                                            }
+                                        } label: {
+                                            SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }
-                                    } label: {
-                                        SongShareRowView(user: user, selectedUsers: $selectedUsers)
+                                    }
+                                } else if !recentSearches.isEmpty {
+                                    HStack {
+                                        ListHeaderView(title: "Recently Searched")
+                                        Spacer()
+                                        Button {
+                                            withAnimation(.bouncy(extraBounce: 0.1)) {
+                                                self.recentSearches = ""
+                                            }
+                                        } label: {
+                                            Text("Clear")
+                                                .padding(13.5)
+                                                .foregroundColor(Color.red)
+                                                .background(Material.regular)
+                                                .clipShape(Capsule())
+                                                .font(.body.weight(.semibold))
+                                        }
+                                    }
+                                    ForEach(recentSearches.components(separatedBy: ","), id: \.self) { search in
+                                        if !search.isEmpty {
+                                            Button {
+                                                searchText = search
+                                                authViewModel.fetchUsers(username: search)
+                                            } label: {
+                                                Text(search)
+                                                    .font(.body.weight(.semibold))
+                                                    .frame(maxWidth: .infinity)
+                                                    .padding()
+                                                    .background(Material.regular)
+                                                    .foregroundColor(.primary)
+                                                    .clipShape(Capsule())
+                                            }
+                                            .contextMenu {
+                                                Button(role: .destructive) {
+                                                    
+                                                } label: {
+                                                    Label("Remove", systemImage: "trash")
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -168,6 +232,9 @@ struct ShareView: View {
                     }
                 }(), spaceNavbar: true)
             }
+        }
+        .onDisappear {
+            authViewModel.users = []
         }
     }
 }
