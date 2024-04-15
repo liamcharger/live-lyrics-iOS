@@ -94,7 +94,7 @@ struct SongDetailView: View {
         return input
     }
     func isShared() -> Bool {
-        return song.id ?? "" == viewModel.currentUser?.id ?? ""
+        return song.uid ?? "" != viewModel.currentUser?.id ?? ""
     }
     
     var playButton: some View {
