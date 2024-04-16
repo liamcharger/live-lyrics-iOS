@@ -10,7 +10,7 @@ import TipKit
 struct LyricsApp: App {
     @Environment(\.scenePhase) var phase
     
-    @StateObject var viewModel = AuthViewModel()
+    @StateObject var viewModel = AuthViewModel.shared
     @StateObject var storeKitManager = StoreKitManager()
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate

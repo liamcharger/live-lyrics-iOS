@@ -20,6 +20,8 @@ class AuthViewModel: ObservableObject {
     private let service = UserService()
     private let songService = SongService()
     
+    static let shared = AuthViewModel()
+    
     init() {
         self.userSession = Auth.auth().currentUser
         self.fetchUser()

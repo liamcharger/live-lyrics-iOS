@@ -22,8 +22,6 @@ struct MainView: View {
     
     @FocusState var isSearching: Bool
     
-    @State var newFolder = ""
-    
     @State var selectedSong: Song?
     @State var draggedSong: Song?
     
@@ -45,8 +43,10 @@ struct MainView: View {
     @State var isEditingFolderSongs = false
     @State var isSongsCollapsed = false
     @State var isFoldersCollapsed = false
+    @State var isSharedSongsCollapsed = false
     @State var showSongSearch = false
     @State var showFolderSearch = false
+    @State var showSharedSongsSearch = false
     @State var isLoadingFolderSongs = false
     @State var displayFolderSongsSheet = false
     @State var openedFolder = false
@@ -54,6 +54,8 @@ struct MainView: View {
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
+    @State var sharedSongSearchText = ""
+    @State var newFolder = ""
     
     @State var notificationStatus: NotificationStatus?
     
@@ -74,8 +76,9 @@ struct MainView: View {
     }
     var searchableSongs: [Song] {
         let lowercasedQuery = songSearchText.lowercased()
+        var songs = mainViewModel.sharedSongs + mainViewModel.songs
         
-        return mainViewModel.songs.sorted(by: { (song1, song2) -> Bool in
+        return songs.sorted(by: { (song1, song2) -> Bool in
             switch sortSelection {
             case .noSelection:
                 return false
@@ -190,6 +193,7 @@ struct MainView: View {
         }
         
         self.mainViewModel.fetchSongs()
+        self.mainViewModel.fetchSharedSongs()
         self.mainViewModel.fetchFolders()
         self.mainViewModel.fetchNotificationStatus()
     }
@@ -256,7 +260,7 @@ struct MainView: View {
                         NavigationLink(destination: {
                             SongShareDetailView()
                         }) {
-                            ListRowView(isEditing: $isEditingSongs, title: "Share Requests", navArrow: "chevron.right", badge: "NEW")
+                            ListRowView(isEditing: $isEditingSongs, title: "Share Invites", navArrow: "chevron.right", badge: "NEW")
                         }
                     }
                     VStack {
@@ -353,17 +357,17 @@ struct MainView: View {
                                                             Label("Add Songs", systemImage: "plus")
                                                         }
                                                         Button {
-                                                            showEditSheet = true
-                                                            selectedFolder = folder
-                                                        } label: {
-                                                            Label("Edit", systemImage: "pencil")
-                                                        }
-                                                        Button {
                                                             selectedSong = nil
                                                             selectedFolder = folder
                                                             showShareSheet.toggle()
                                                         } label: {
                                                             Label("Share", systemImage: "square.and.arrow.up")
+                                                        }
+                                                        Button {
+                                                            showEditSheet = true
+                                                            selectedFolder = folder
+                                                        } label: {
+                                                            Label("Edit", systemImage: "pencil")
                                                         }
                                                         Button(role: .destructive) {
                                                             showDeleteSheet = true
@@ -588,7 +592,7 @@ struct MainView: View {
                             }
                         }
                         if !isSongsCollapsed {
-                            if mainViewModel.isLoadingSongs {
+                            if mainViewModel.isLoadingSongs || mainViewModel.isLoadingSharedSongs {
                                 LoadingView()
                             } else {
                                 ForEach(searchableSongs) { song in
@@ -729,11 +733,13 @@ struct MainView: View {
             } label: {
                 Label("Edit", systemImage: "pencil")
             }
-            Button {
-                selectedSong = song
-                showShareSheet.toggle()
-            } label: {
-                Label("Share", systemImage: "square.and.arrow.up")
+            if !songViewModel.isShared(song: song) {
+                Button {
+                    selectedSong = song
+                    showShareSheet.toggle()
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
             }
             Button {
                 selectedSong = song
@@ -763,19 +769,22 @@ struct MainView: View {
             } label: {
                 Label("Copy", systemImage: "doc")
             }
-            Button {
-                DispatchQueue.main.async {
-                    if showUnpinPinButton {
-                        songViewModel.unpinSong(song)
-                    } else {
-                        songViewModel.pinSong(song)
+            // TODO: allow pin for shared songs
+            if !songViewModel.isShared(song: song) {
+                Button {
+                    DispatchQueue.main.async {
+                        if showUnpinPinButton {
+                            songViewModel.unpinSong(song)
+                        } else {
+                            songViewModel.pinSong(song)
+                        }
                     }
-                }
-            } label: {
-                if showUnpinPinButton {
-                    Label("Unpin", systemImage: "pin.slash")
-                } else {
-                    Label("Pin", systemImage: "pin")
+                } label: {
+                    if showUnpinPinButton {
+                        Label("Unpin", systemImage: "pin.slash")
+                    } else {
+                        Label("Pin", systemImage: "pin")
+                    }
                 }
             }
             Button {
@@ -784,12 +793,20 @@ struct MainView: View {
             } label: {
                 Label("Tags", systemImage: "tag")
             }
-            Button(role: .destructive) {
-                selectedSong = song
-                showSongDeleteSheet.toggle()
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
+            Button(role: .destructive, action: {
+                if !songViewModel.isShared(song: song) {
+                    selectedSong = song
+                    showSongDeleteSheet.toggle()
+                } else {
+                    songViewModel.leaveSong(song: song)
+                }
+            }, label: {
+                if songViewModel.isShared(song: song) {
+                    Label("Leave", systemImage: "arrow.backward.square")
+                } else {
+                    Label("Delete", systemImage: "trash")
+                }
+            })
         }
     }
 }

@@ -16,6 +16,7 @@ class MainViewModel: ObservableObject {
     var remoteConfig: RemoteConfig!
     
     @Published var songs: [Song] = []
+    @Published var sharedSongs: [Song] = []
     @Published var folderSongs: [Song] = []
     @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
     @Published var folders: [Folder] = []
@@ -24,6 +25,7 @@ class MainViewModel: ObservableObject {
     @Published var isLoadingFolders = true
     @Published var isLoadingFolderSongs = true
     @Published var isLoadingSongs = true
+    @Published var isLoadingSharedSongs = true
     @Published var isLoadingRecentlyDeletedSongs = true
     @Published var isLoadingInvites = false
     
@@ -53,6 +55,14 @@ class MainViewModel: ObservableObject {
         service.removeRecentSongEventListener()
     }
     
+    func removeIncomingInviteEventListener() {
+        service.removeIncomingInviteEventListener()
+    }
+    
+    func removeOutgoingInviteEventListener() {
+        service.removeOutgoingInviteEventListener()
+    }
+    
     func fetchSystemStatus() {
         userService.fetchSystemDoc { systemDoc in
             self.systemDoc = systemDoc
@@ -77,6 +87,13 @@ class MainViewModel: ObservableObject {
         self.service.fetchSongs() { songs in
             self.songs = songs
             self.isLoadingSongs = false
+        }
+    }
+    
+    func fetchSharedSongs() {
+        self.service.fetchSharedSongs { songs in
+            self.sharedSongs = songs
+            self.isLoadingSharedSongs = false
         }
     }
     
@@ -148,10 +165,6 @@ class MainViewModel: ObservableObject {
     
     func updateLyrics(_ song: Song, lyrics: String) {
         self.service.updateLyrics(song: song, lyrics: lyrics)
-    }
-    
-    func updateLyrics(_ folder: Folder, _ song: Song, lyrics: String) {
-        self.service.updateLyrics(folder: folder, song: song, lyrics: lyrics)
     }
     
     func updateSongOrder() {

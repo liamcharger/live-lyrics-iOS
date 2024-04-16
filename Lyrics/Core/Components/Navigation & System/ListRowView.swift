@@ -19,15 +19,17 @@ struct ListRowView: View {
     let imageName: String?
     let icon: String?
     let badge: String?
+    let sharedBadge: Bool?
     let song: Song?
     
-    init(isEditing: Binding<Bool>, title: String, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, song: Song? = nil) {
+    init(isEditing: Binding<Bool>, title: String, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, sharedBadge: Bool? = nil, song: Song? = nil) {
         self._isEditing = isEditing
         self.title = title
         self.navArrow = navArrow
         self.imageName = imageName
         self.icon = icon
         self.badge = badge
+        self.sharedBadge = sharedBadge
         self.song = song
     }
     
@@ -41,14 +43,16 @@ struct ListRowView: View {
                     Text(title)
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
-                    if let song = song, let userId = viewModel.currentUser?.id, song.uid != userId {
-                        Text("Shared")
-                            .padding(6)
-                            .padding(.horizontal, 1.5)
-                            .font(.system(size: 13).weight(.medium))
-                            .background(Material.thin)
-                            .foregroundColor(.primary)
-                            .clipShape(Capsule())
+                    if sharedBadge ?? true {
+                        if let song = song, let userId = viewModel.currentUser?.id, song.uid != userId {
+                            Text("Shared")
+                                .padding(6)
+                                .padding(.horizontal, 1.5)
+                                .font(.system(size: 13).weight(.medium))
+                                .background(Material.thin)
+                                .foregroundColor(.primary)
+                                .clipShape(Capsule())
+                        }
                     }
                     if let badge = badge {
                         Text(badge)

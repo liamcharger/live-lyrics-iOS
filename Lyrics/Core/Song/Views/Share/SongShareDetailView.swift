@@ -24,7 +24,7 @@ struct SongShareDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: "Share Requests", navType: .ShareDetail, folder: nil, showBackButton: true, isEditing: .constant(false))
+            CustomNavBar(title: "Share Invites", navType: .ShareDetail, folder: nil, showBackButton: true, isEditing: .constant(false))
                 .padding()
             Divider()
             if NetworkManager.shared.getNetworkState() {
@@ -59,12 +59,11 @@ struct SongShareDetailView: View {
             }
         }
         .onAppear {
-            // Move to init...
-            // Debug:
-//            mainViewModel.outgoingShareRequests = [ShareRequest(timestamp: Date(), from: authViewModel.currentUser?.id ?? "", to: ["two", "two"], songId: "test", contentType: "Song")]
-//            mainViewModel.incomingShareRequests = [ShareRequest(timestamp: Date(), from: "random", to: ["two", authViewModel.currentUser?.id ?? ""], songId: "test", contentType: "Folder")]
-            
             mainViewModel.fetchInvites()
+        }
+        .onDisappear {
+            mainViewModel.removeIncomingInviteEventListener()
+            mainViewModel.removeOutgoingInviteEventListener()
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)

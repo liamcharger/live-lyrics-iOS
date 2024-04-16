@@ -63,9 +63,3 @@ struct NewFolderView: View {
         .navigationBarHidden(true)
     }
 }
-
-//struct NewFolderView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewFolderView()
-//    }
-//}

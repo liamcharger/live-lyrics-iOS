@@ -10,10 +10,9 @@ import SwiftUI
 struct RecentlyDeletedView: View {
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @EnvironmentObject var storeKitManager: StoreKitManager
-    
-    @StateObject var authViewModel = AuthViewModel()
     
     @State var text = ""
     
