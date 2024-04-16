@@ -37,7 +37,7 @@ struct SongEditView: View {
         self.key = stateKey
         self.artist = stateArtist
         self.duration = stateDuration
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.isDisplayed = false
         }
         songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist, duration: stateDuration) { success, errorMessage in

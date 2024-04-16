@@ -36,10 +36,10 @@ struct ShowWhatsNew: View {
                         withAnimation(Animation.bouncy(duration: 1.5)) {
                             animState = .none
                         }
+                        withAnimation {
+                            isLoading = true
+                        }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            withAnimation {
-                                isLoading = true
-                            }
                             withAnimation(Animation.bouncy(duration: 1.5)) {
                                 isDisplayed = false
                             }

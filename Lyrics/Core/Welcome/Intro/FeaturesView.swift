@@ -7,22 +7,16 @@
 
 import SwiftUI
 
-enum FeatureType {
-    case outlined
-    case filled
-    case none
-}
-
 struct FeaturesView: View {
     @Binding var animState: AnimState
     
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
-        FeaturesSection(title: "Tags", subtitle: "A new way to organize your songs.", imageName: "sparkles", type: .none),
-        FeaturesSection(title: "Autoscroll", subtitle: "Ensure smooth scrolling while you focus on performing.", imageName: "folder", type: .filled),
-        FeaturesSection(title: "Metronome", subtitle: "Keep your rhythm steady with our built-in metronome.", imageName: "folder", type: .filled),
-        FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle", type: .none)
+        FeaturesSection(title: "Tags", subtitle: "A new way to organize your songs.", imageName: "sparkles"),
+        FeaturesSection(title: "Autoscroll", subtitle: "Ensure smooth scrolling while you focus on performing.", imageName: "play"),
+        FeaturesSection(title: "Metronome", subtitle: "Keep your rhythm steady with our built-in metronome.", imageName: "123.rectangle"),
+        FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
     ]
     
     var body: some View {
@@ -35,7 +29,7 @@ struct FeaturesView: View {
             VStack(spacing: 0) {
                 TabView(selection: $selectedTab) {
                     ForEach(0..<features.count, id: \.self) { index in
-                        featureCard(features[index], type: features[index].type)
+                        featureCard(features[index])
                             .tag(index)
                     }
                 }
@@ -64,7 +58,7 @@ struct FeaturesView: View {
         }
     }
     
-    func featureCard(_ feature: FeaturesSection, type: FeatureType) -> some View {
+    func featureCard(_ feature: FeaturesSection) -> some View {
         VStack(spacing: 9) {
             Image(systemName: feature.imageName)
                 .resizable()
@@ -76,81 +70,16 @@ struct FeaturesView: View {
                 .font(.title)
                 .fontWeight(.bold)
             Text(feature.subtitle)
-                .font(.system(size: 11))
                 .foregroundColor(.gray)
         }
         .padding()
     }
 }
 
-struct FeaturesSection: View {
+struct FeaturesSection {
     let title: String
     let subtitle: String
     let imageName: String
-    let type: FeatureType
-    
-    var body: some View {
-        if type == .outlined {
-            VStack(alignment: .leading) {
-                Image(systemName: imageName)
-                    .font(.title.weight(.regular))
-                    .padding([.top, .leading, .trailing], 10)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title)
-                        .font(.body.weight(.bold))
-                    Text(subtitle)
-                        .font(.footnote)
-                }
-                .padding(12)
-            }
-            .padding(12)
-            .foregroundColor(.blue)
-            .cornerRadius(15)
-            .background {
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(.blue, lineWidth: 3.5)
-            }
-            .frame(minHeight: 400)
-        } else if type == .filled {
-            VStack(alignment: .leading) {
-                Image(systemName: imageName)
-                    .font(.title.weight(.regular))
-                    .padding([.top, .leading, .trailing], 10)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title)
-                        .font(.body.weight(.bold))
-                    Text(subtitle)
-                        .font(.footnote)
-                        .foregroundColor(Color(.white))
-                }
-                .padding(12)
-            }
-            .padding(12)
-            .background(.blue)
-            .foregroundColor(.white)
-            .cornerRadius(15)
-            .frame(minHeight: 400)
-        } else if type == .none {
-            VStack(alignment: .leading) {
-                Image(systemName: imageName)
-                    .font(.title.weight(.regular))
-                    .padding([.top, .leading, .trailing], 10)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title)
-                        .font(.body.weight(.bold))
-                    Text(subtitle)
-                        .font(.footnote)
-                        .foregroundColor(Color.gray)
-                }
-                .padding(12)
-            }
-            .padding(12)
-            .foregroundColor(.primary)
-            .background(Material.regular)
-            .cornerRadius(15)
-            .frame(minHeight: 400)
-        }
-    }
 }
 
 #Preview {
