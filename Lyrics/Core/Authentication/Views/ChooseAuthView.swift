@@ -120,8 +120,8 @@ struct ChooseAuthView: View {
                     }
                 }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

@@ -463,7 +463,7 @@ class SongService {
 			"order": 0
 		] as [String : Any]
 		
-		Firestore.firestore().collection("users").document(uid).collection("folders").document(id ?? "")
+		Firestore.firestore().collection("users").document(uid).collection("folders").document(id ?? UUID().uuidString)
 			.setData(folderData) { error in
 				if error != nil {
 					completion(error)
