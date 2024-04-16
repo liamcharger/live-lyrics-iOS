@@ -56,7 +56,7 @@ struct ShowWhatsNew: View {
                 FeaturesView(animState: $animState)
                     .scaleEffect(animState == .third ? 1.0 : 0.2)
                     .blur(radius: animState == .third ? 0 : 20)
-                Text(NSLocalizedString("welcome_to_lyrics", comment: "Welcome to Live Lyrics!"))
+                Text(NSLocalizedString("welcome_to", comment: "Welcome to") + " " + NSLocalizedString("live_lyrics", comment: "Live Lyrics."))
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .second ? 1.0 : 0.2)
                     .blur(radius: animState == .second ? 0 : 20)

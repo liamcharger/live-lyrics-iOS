@@ -102,9 +102,7 @@ struct CustomNavBar: View {
                             NewSongView(isDisplayed: $showSheet1, folder: nil)
                         }
                     }
-                case .RecentlyDeleted:
-                    EmptyView()
-                case .Auth:
+                case .RecentlyDeleted, .Auth, .ShareDetail:
                     EmptyView()
                 }
             }

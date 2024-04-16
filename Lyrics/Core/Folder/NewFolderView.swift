@@ -37,16 +37,13 @@ struct NewFolderView: View {
                 .padding()
             Spacer()
             Button(action: {
-                songViewModel.createFolder(title: title) { success in
-                    if success {
-                        isDisplayed = false
-                    } else {
-                        showError.toggle()
+                songViewModel.createFolder(title: title) { error in
+                    if let error = error {
+                        showError = true
+                        errorMessage = error.localizedDescription
                     }
-                } completionString: { errorString in
-                    errorMessage = errorString
+                    isDisplayed = false
                 }
-                
             }, label: {
                 HStack {
                     Spacer()
@@ -66,9 +63,3 @@ struct NewFolderView: View {
         .navigationBarHidden(true)
     }
 }
-
-//struct NewFolderView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewFolderView()
-//    }
-//}

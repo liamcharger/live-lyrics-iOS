@@ -13,6 +13,7 @@ struct SongDropViewDelegate: DropDelegate {
     @Binding var items: [Song]
     @Binding var draggedItem: Song?
     
+    @ObservedObject var authViewModel: AuthViewModel
     @ObservedObject var mainViewModel = MainViewModel.shared
     
     func dropUpdated(info: DropInfo) -> DropProposal? {
@@ -21,8 +22,10 @@ struct SongDropViewDelegate: DropDelegate {
     
     func performDrop(info: DropInfo) -> Bool {
         draggedItem = nil
-        self.mainViewModel.songs = items
-        self.mainViewModel.updateSongOrder()
+        if destinationItem.id ?? "" == authViewModel.currentUser?.id ?? "" {
+            self.mainViewModel.songs = items
+            self.mainViewModel.updateSongOrder()
+        }
         return true
     }
     

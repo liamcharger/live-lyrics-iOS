@@ -19,10 +19,13 @@ class MainViewModel: ObservableObject {
     @Published var folderSongs: [Song] = []
     @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
     @Published var folders: [Folder] = []
+    @Published var incomingShareRequests: [ShareRequest] = []
+    @Published var outgoingShareRequests: [ShareRequest] = []
     @Published var isLoadingFolders = true
     @Published var isLoadingFolderSongs = true
     @Published var isLoadingSongs = true
     @Published var isLoadingRecentlyDeletedSongs = true
+    @Published var isLoadingInvites = false
     
     @Published var systemDoc: SystemDoc?
     
@@ -48,6 +51,14 @@ class MainViewModel: ObservableObject {
     
     func removeRecentSongEventListener() {
         service.removeRecentSongEventListener()
+    }
+    
+    func removeIncomingInviteEventListener() {
+        service.removeIncomingInviteEventListener()
+    }
+    
+    func removeOutgoingInviteEventListener() {
+        service.removeOutgoingInviteEventListener()
     }
     
     func fetchSystemStatus() {
@@ -147,10 +158,6 @@ class MainViewModel: ObservableObject {
         self.service.updateLyrics(song: song, lyrics: lyrics)
     }
     
-    func updateLyrics(_ folder: Folder, _ song: Song, lyrics: String) {
-        self.service.updateLyrics(folder: folder, song: song, lyrics: lyrics)
-    }
-    
     func updateSongOrder() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
@@ -226,5 +233,28 @@ class MainViewModel: ObservableObject {
     
     func deleteFolder(_ folder: Folder) {
         service.deleteFolder(folder)
+    }
+    
+    func fetchInvites() {
+        self.isLoadingInvites = true
+        service.fetchIncomingInvites { incomingShareRequests in
+            self.incomingShareRequests = incomingShareRequests
+        }
+        service.fetchOutgoingInvites { outgoingShareRequests in
+            self.outgoingShareRequests = outgoingShareRequests
+        }
+        self.isLoadingInvites = false
+    }
+    
+    func declineInvite(request: ShareRequest, completion: @escaping() -> Void) {
+        service.declineInvite(request: request) {
+            completion()
+        }
+    }
+    
+    func acceptInvite(request: ShareRequest, completion: @escaping() -> Void) {
+        service.acceptInvite(request: request) {
+            completion()
+        }
     }
 }

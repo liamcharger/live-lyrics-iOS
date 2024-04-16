@@ -69,16 +69,16 @@ struct SongMoveView: View {
                                         self.errorMessage = "The song is already in the specified folder."
                                         showError = true
                                     } else {
-                                        songViewModel.moveSongsToFolder(folder: folder, songs: [song]) { success, errorMessage in
-                                            if success {
-                                                showProfileView = false
-                                            } else {
+                                        songViewModel.moveSongsToFolder(folder: folder, songs: [song]) { error in
+                                            if let error = error {
                                                 if errorMessage == "Failed to get document because the client is offline." {
                                                     self.errorMessage = "Please connect to the internet to perform this action."
                                                 } else {
                                                     self.errorMessage = errorMessage
                                                 }
                                                 showError = true
+                                            } else {
+                                                showProfileView = false
                                             }
                                         }
                                     }

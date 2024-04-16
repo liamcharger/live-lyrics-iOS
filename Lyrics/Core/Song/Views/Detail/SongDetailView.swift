@@ -8,6 +8,7 @@
 import SwiftUI
 import BottomSheet
 import SwiftUIIntrospect
+import FirebaseFirestore
 
 struct SongDetailView: View {
     @State var song: Song
@@ -29,16 +30,20 @@ struct SongDetailView: View {
     @State var errorMessage = ""
     @State var isChecked = ""
     @State var duration = ""
+    @State var currentEditorsTitle = ""
+    @State var currentEditorsSubtitle = ""
     @State var bpm = 120
     @State var bpb = 4
     @State var performanceMode = true
     @State var tags: [String] = []
     
     @State var songIds: [String]?
+    @State var fullUsernameString = [String]()
     
     @State var showEditView = false
     @State var showTagSheet = false
     @State var showMoveView = false
+    @State var showShareSheet = false
     @State var showSettingsView = false
     @State var wordCountBool = false
     @State var showDeleteSheet = false
@@ -54,6 +59,8 @@ struct SongDetailView: View {
     @State var showError = false
     @State var hasDeletedSong = false
     @State var showNotesStatusIcon = false
+    @State var appeared = false
+    @State var disappeared = false
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
@@ -180,9 +187,9 @@ struct SongDetailView: View {
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
         self._tags = State(initialValue: inputSong.tags ?? ["none"])
-        
+      
         self.notesViewModel = NotesViewModel(song: inputSong)
-        
+ 
         self._design = State(initialValue: getDesign(design: Int(inputSong.design ?? 0)))
         self._weight = State(initialValue: getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: getAlignment(alignment: Int(inputSong.alignment ?? 0)))
@@ -191,131 +198,133 @@ struct SongDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack {
-                HStack {
-                    Button(action: {presMode.wrappedValue.dismiss()}, label: {
-                        Image(systemName: "chevron.left")
-                            .padding(18)
-                            .font(.body.weight(.semibold))
-                            .background(Material.regular)
-                            .foregroundColor(.primary)
-                            .clipShape(Circle())
-                    })
-                    Spacer()
-                    if !isInputActive {
-                        if songs != nil {
-                            if #available(iOS 17, *) {
-                                playButton
-                                    .showPlayViewTip()
-                            } else {
-                                playButton
-                            }
-                            Button(action: {showNotesView.toggle()}, label: {
-                                FAText(iconName: "book", size: 18)
-                                    .modifier(NavBarButtonViewModifier())
-                                    .overlay {
-                                        if notesViewModel.notes != "" {
-                                            Circle()
-                                                .frame(width: 11, height: 11)
-                                                .foregroundColor(.blue)
-                                                .offset(x: 17, y: -18)
-                                        }
-                                    }
-                            })
-                            .sheet(isPresented: $showNotesView) {
-                                NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
-                                    .onChange(of: notesViewModel.notes) { notes in
-                                        notesViewModel.updateNotes(song, notes: notes)
-                                    }
-                            }
-                            menu
-                            settings
-                        } else {
-                            Button(action: {
-                                if let song = restoreSong {
-                                    recentlyDeletedViewModel.restoreSong(song: song)
-                                } else {
-                                    errorMessage = "There was an error restoring the song."
-                                    showError = true
-                                }
-                                presMode.wrappedValue.dismiss()
-                            }, label: {
-                                FAText(iconName: "rotate-left", size: 18)
-                                    .padding()
-                                    .font(.body.weight(.semibold))
-                                    .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                            })
-                            Button(action: {
-                                self.showDeleteSheet.toggle()
-                            }, label: {
-                                FAText(iconName: "trash-can", size: 18)
-                                    .padding()
-                                    .font(.body.weight(.semibold))
-                                    .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                            })
-                            .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
-                                Button("Delete", role: .destructive) {
-                                    print("Deleting song: \(restoreSong!.title)")
-                                    mainViewModel.deleteSong(song: restoreSong!)
-                                    presMode.wrappedValue.dismiss()
-                                }
-                                Button("Cancel", role: .cancel) { }
-                            } message: {
-                                Text("Are you sure you want to permanently delete \"\(restoreSong!.title)\"?")
-                            }
-                        }
-                    } else {
-                        Button(action: {isInputActive = false}, label: {
-                            Text("Done")
-                                .padding()
+                VStack(spacing: 12) {
+                    HStack {
+                        Button(action: {presMode.wrappedValue.dismiss()}, label: {
+                            Image(systemName: "chevron.left")
+                                .padding(18)
                                 .font(.body.weight(.semibold))
                                 .background(Material.regular)
                                 .foregroundColor(.primary)
-                                .clipShape(Capsule())
+                                .clipShape(Circle())
                         })
-                    }
-                }
-                .padding([.horizontal])
-                .padding(.top, 10)
-                HStack(alignment: .center, spacing: 10) {
-                    Text(title)
-                        .font(.system(size: 24, design: .rounded).weight(.bold))
-                        .lineLimit(1).truncationMode(.tail)
-                    if tags.count > 0 {
-                        HStack(spacing: 5) {
-                            ForEach(tags, id: \.self) { tag in
-                                Circle()
-                                    .frame(width: 12, height: 12)
-                                    .foregroundColor(songViewModel.getColorForTag(tag))
+                        Spacer()
+                        if !isInputActive {
+                            if songs != nil {
+                                if #available(iOS 17, *) {
+                                    playButton
+                                        .showPlayViewTip()
+                                } else {
+                                    playButton
+                                }
+                                Button(action: {showNotesView.toggle()}, label: {
+                                    FAText(iconName: "book", size: 18)
+                                        .modifier(NavBarButtonViewModifier())
+                                        .overlay {
+                                            if notesViewModel.notes != "" {
+                                                Circle()
+                                                    .frame(width: 11, height: 11)
+                                                    .foregroundColor(.blue)
+                                                    .offset(x: 17, y: -18)
+                                            }
+                                        }
+                                })
+                                .sheet(isPresented: $showNotesView) {
+                                    NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
+                                        .onChange(of: notesViewModel.notes) { notes in
+                                            notesViewModel.updateNotes(song, notes: notes)
+                                        }
+                                }
+                                menu
+                                settings
+                            } else {
+                                Button(action: {
+                                    if let song = restoreSong {
+                                        recentlyDeletedViewModel.restoreSong(song: song)
+                                    } else {
+                                        errorMessage = "There was an error restoring the song."
+                                        showError = true
+                                    }
+                                    presMode.wrappedValue.dismiss()
+                                }, label: {
+                                    FAText(iconName: "rotate-left", size: 18)
+                                        .padding()
+                                        .font(.body.weight(.semibold))
+                                        .background(Material.regular)
+                                        .foregroundColor(.primary)
+                                        .clipShape(Circle())
+                                })
+                                Button(action: {
+                                    self.showDeleteSheet.toggle()
+                                }, label: {
+                                    FAText(iconName: "trash-can", size: 18)
+                                        .padding()
+                                        .font(.body.weight(.semibold))
+                                        .background(Material.regular)
+                                        .foregroundColor(.primary)
+                                        .clipShape(Circle())
+                                })
+                                .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
+                                    Button("Delete", role: .destructive) {
+                                        print("Deleting song: \(restoreSong!.title)")
+                                        mainViewModel.deleteSong(song: restoreSong!)
+                                        presMode.wrappedValue.dismiss()
+                                    }
+                                    Button("Cancel", role: .cancel) { }
+                                } message: {
+                                    Text("Are you sure you want to permanently delete \"\(restoreSong!.title)\"?")
+                                }
                             }
+                        } else {
+                            Button(action: {isInputActive = false}, label: {
+                                Text("Done")
+                                    .padding()
+                                    .font(.body.weight(.semibold))
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Capsule())
+                            })
                         }
                     }
-                    Spacer()
-                    Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
+                    if !currentEditorsTitle.isEmpty && !currentEditorsSubtitle.isEmpty {
+                        VStack(alignment: .leading) {
+                            Text(currentEditorsTitle)
+                                .font(.body.weight(.semibold))
+                            Text(currentEditorsSubtitle)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Material.regular)
+                        .foregroundColor(.primary)
+                        .cornerRadius(20)
+                    }
+                    HStack(alignment: .center, spacing: 10) {
+                        Text(title)
+                            .font(.system(size: 24, design: .rounded).weight(.bold))
+                            .lineLimit(1).truncationMode(.tail)
+                        if tags.count > 0 {
+                            HStack(spacing: 5) {
+                                ForEach(tags, id: \.self) { tag in
+                                    Circle()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundColor(songViewModel.getColorForTag(tag))
+                                }
+                            }
+                        }
+                        Spacer()
+                        Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
+                    }
                 }
                 .padding(.top, 8)
-                .padding([.horizontal, .bottom])
+                .padding([.bottom, .horizontal])
             }
             Divider()
-//            ScrollView {
-                TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
-                    .multilineTextAlignment(alignment)
-                    .onChange(of: lyrics, perform: { newLyrics in
-                        mainViewModel.updateLyrics(song, lyrics: newLyrics)
-                    })
-                    .font(.system(size: CGFloat(value), weight: weight, design: design))
-                    .lineSpacing(lineSpacing)
-                    .focused($isInputActive)
-                    .padding(.leading, 11)
-//                    .frame(maxHeight: .infinity)
-//                    .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17)) { textEditor in
-//                        textEditor.isScrollEnabled = false
-//                        textEditor.scrollsToTop = false
-//                    }
-//            }
+            TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
+                .multilineTextAlignment(alignment)
+                .font(.system(size: CGFloat(value), weight: weight, design: design))
+                .lineSpacing(lineSpacing)
+                .focused($isInputActive)
+                .padding(.leading, 11)
             if songs != nil {
                 if wordCountBool {
                     Divider()
@@ -345,9 +354,6 @@ struct SongDetailView: View {
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            self.mainViewModel.removeSongEventListener()
-            self.mainViewModel.removeFolderSongEventListener()
-            self.mainViewModel.removeFolderEventListener()
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             songViewModel.fetchSong(song.id ?? "") { song in
                 self.title = song.title
@@ -373,7 +379,6 @@ struct SongDetailView: View {
                         lastUpdatedLyrics = lyrics
                     }
                 }
-                UIApplication.shared.isIdleTimerDisabled = true
             }
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -384,13 +389,11 @@ struct SongDetailView: View {
             Button("Delete", role: .destructive) {
                 print("Deleting song: \(title)")
                 songViewModel.moveSongToRecentlyDeleted(song)
-                mainViewModel.fetchSongs()
                 presMode.wrappedValue.dismiss()
             }
             if let folder = folder {
                 Button("Remove from Folder") {
                     songViewModel.moveSongToRecentlyDeleted(folder, song)
-                    mainViewModel.fetchSongs(folder)
                     presMode.wrappedValue.dismiss()
                 }
             }
@@ -403,6 +406,9 @@ struct SongDetailView: View {
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Success"), message: Text("The song was successfully added to your library."), dismissButton: .cancel(Text("Close"), action: {}))
+        }
+        .sheet(isPresented: $showShareSheet) {
+            ShareView(isDisplayed: $showShareSheet, song: song)
         }
         .sheet(isPresented: $showEditView) {
             SongEditView(song: song, isDisplayed: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
@@ -702,6 +708,11 @@ struct SongDetailView: View {
                 showEditView.toggle()
             }, label: {
                 Label("Edit", systemImage: "pencil")
+            })
+            Button(action: {
+                showShareSheet = true
+            }, label: {
+                Label("Share", systemImage: "square.and.arrow.up")
             })
             Button(action: {
                 showMoveView.toggle()

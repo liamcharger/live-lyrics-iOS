@@ -10,10 +10,9 @@ import SwiftUI
 struct TaggedSongsView: View {
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @EnvironmentObject var storeKitManager: StoreKitManager
-    
-    @StateObject var authViewModel = AuthViewModel()
     
     @State var isRedSongsCollapsed = false
     @State var isGreenSongsCollapsed = false
@@ -117,7 +116,7 @@ struct TaggedSongsView: View {
                                                 .moveDisabled(true)
                                         } else {
                                             NavigationLink(destination: SongDetailView(song: song, songs: songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: nil), label: {
-                                                ListRowView(isEditing: .constant(false), title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", icon: nil, subtitleForSong: song)
+                                                ListRowView(isEditing: .constant(false), title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                             })
                                         }
                                     }

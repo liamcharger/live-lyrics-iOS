@@ -1,0 +1,164 @@
+//
+//  SongShareDetailView.swift
+//  Lyrics
+//
+//  Created by Liam Willey on 4/2/24.
+//
+
+import SwiftUI
+
+enum ShareRequestType {
+    case outgoing
+    case incoming
+}
+
+struct SongShareDetailView: View {
+    @ObservedObject var mainViewModel = MainViewModel.shared
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
+    @State var isLoadingAction = false
+    @State var loadingId = ""
+    
+    let userService = UserService()
+    let songService = SongService()
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            CustomNavBar(title: "Share Invites", navType: .ShareDetail, folder: nil, showBackButton: true, isEditing: .constant(false))
+                .padding()
+            Divider()
+            if NetworkManager.shared.getNetworkState() {
+                if mainViewModel.isLoadingInvites {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty {
+                        FullscreenMessage(imageName: "circle.slash", title: "It doesn't look like you have any shared songs/folders being sent or received.", spaceNavbar: true)
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 16) {
+                                VStack {
+                                    ListHeaderView(title: "Outgoing")
+                                    ForEach(mainViewModel.outgoingShareRequests) { request in
+                                        rowView(request: request, type: .outgoing)
+                                    }
+                                }
+                                VStack {
+                                    ListHeaderView(title: "Incoming")
+                                    ForEach(mainViewModel.incomingShareRequests) { request in
+                                        rowView(request: request, type: .incoming)
+                                    }
+                                }
+                            }
+                            .padding()
+                        }
+                    }
+                }
+            } else {
+                FullscreenMessage(imageName: "wifi.slash", title: "Please connect to the internet to view your share requests.", spaceNavbar: true)
+            }
+        }
+        .onAppear {
+            mainViewModel.fetchInvites()
+        }
+        .onDisappear {
+            mainViewModel.removeIncomingInviteEventListener()
+            mainViewModel.removeOutgoingInviteEventListener()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
+    }
+        
+    func rowView(request: ShareRequest, type: ShareRequestType) -> some View {
+        return VStack {
+            HStack {
+                VStack(alignment: .leading, spacing: 7) {
+                    HStack(spacing: 5) {
+                        Text(request.contentName)
+                        .font(.title2.weight(.semibold))
+                        Text(request.contentType.uppercased())
+                            .padding(6)
+                            .padding(.horizontal, 2)
+                            .background(Material.thin)
+                            .font(.system(size: 11).weight(.medium))
+                            .clipShape(Capsule())
+                    }
+                    if type == .incoming {
+                        Text(request.fromUsername)
+                    }
+                }
+                Spacer()
+                if type == .outgoing {
+                    Text({
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "MM/dd/yyyy"
+                        
+                        return dateFormatter.string(from: request.timestamp)
+                    }())
+                } else {
+                    HStack(spacing: 6) {
+                        if !isLoadingAction && loadingId != request.id ?? "" {
+                            Button {
+                                self.loadingId = request.id ?? ""
+                                self.isLoadingAction = true
+                                mainViewModel.acceptInvite(request: request) {
+                                    self.loadingId = ""
+                                    self.isLoadingAction = false
+                                }
+                            } label: {
+                                Image(systemName: "checkmark")
+                                    .padding(12)
+                                    .font(.body.weight(.semibold))
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .clipShape(Circle())
+                            }
+                            Button {
+                                self.loadingId = request.id ?? ""
+                                self.isLoadingAction = true
+                                mainViewModel.declineInvite(request: request) {
+                                    self.loadingId = ""
+                                    self.isLoadingAction = false
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .padding(12)
+                                    .font(.body.weight(.semibold))
+                                    .background(Material.thin)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Circle())
+                            }
+                        } else {
+                            ProgressView()
+                        }
+                    }
+                }
+            }
+            if type == .outgoing {
+                VStack(alignment: .leading, spacing: 12) {
+                    Divider()
+                        .padding(.horizontal, -16)
+                    Text({
+                        var users = ""
+                        
+                        for to in request.toUsername {
+                            users += "\(users.isEmpty ? "" : ", ")\(to)"
+                        }
+                        
+                        return users.isEmpty ? "Loading..." : "To: " + users
+                    }())
+                    .foregroundColor(.gray)
+                }
+            }
+        }
+        .padding()
+        .background(Material.regular)
+        .foregroundColor(.primary)
+        .cornerRadius(20)
+    }
+}
+
+#Preview {
+    SongShareDetailView()
+        .environmentObject(AuthViewModel())
+}

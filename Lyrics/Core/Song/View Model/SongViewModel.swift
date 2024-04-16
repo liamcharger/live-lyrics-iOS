@@ -7,9 +7,11 @@
 
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 class SongViewModel: ObservableObject {
     @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     let service = SongService()
     static let shared = SongViewModel()
@@ -36,36 +38,19 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func addSongToMySongs(id: String, lyrics: String, title: String, artist: String?, timestamp: Date, key: String?, bpm: String?, completion: @escaping(Bool, String) -> Void) {
-        service.addSongToMySongs(id: id, lyrics: lyrics, title: title, artist: artist, timestamp: timestamp, key: key, bpm: bpm) { success, errorMessage in
-            if success {
-                completion(true, "Success!")
-            } else {
-                completion(false, errorMessage)
-            }
+    func moveSongsToFolder(folder: Folder, songs: [Song], completion: @escaping(Error?) -> Void) {
+        service.moveSongsToFolder(id: folder.id ?? "", songs: songs) { error in
+            completion(error)
         }
     }
     
-    func moveSongsToFolder(folder: Folder, songs: [Song], completion: @escaping(Bool, String) -> Void) {
-        service.moveSongsToFolder(toFolder: folder, songs: songs) { success, errorMessage in
-            if success {
-                completion(true, "")
-            } else {
-                completion(false, errorMessage)
-            }
-        }
-    }
-    
-    func createFolder(title: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        service.createFolder(title: title) { success in
-            if success {
-                self.mainViewModel.fetchFolders()
-                completionBool(true)
-            } else {
-                completionBool(false)
-            }
-        } completionString: { string in
-            completionString(string)
+    func createFolder(title: String, completion: @escaping(Error?) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let folder = Folder(uid: uid, timestamp: Date(), title: title, order: 0)
+        
+        service.createFolder(folder: folder) { error in
+            self.mainViewModel.fetchFolders()
+            completion(error)
         }
     }
     
@@ -160,7 +145,7 @@ class SongViewModel: ObservableObject {
     }
     
     func fetchSongPinStatus(_ song: Song, completion: @escaping(Bool) -> Void) {
-        service.fetchSong(withId: song.id ?? "") { song in
+        service.fetchSong(forUser: song.uid, withId: song.id ?? "") { song in
             if let song = song {
                 completion(song.pinned ?? false)
             }

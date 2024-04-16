@@ -12,7 +12,7 @@ struct ToolsView: View {
         VStack {
             ListHeaderView(title: "Tools")
             NavigationLink(destination: EmptyView()) {
-                ListRowView(isEditing: .constant(false), title: "Live Queue", navArrow: "chevron.right", imageName: nil, icon: nil, subtitleForSong: nil)
+                ListRowView(isEditing: .constant(false), title: "Live Queue", navArrow: "chevron.right")
             }
         }
     }

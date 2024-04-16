@@ -18,7 +18,20 @@ struct ListRowView: View {
     let navArrow: String?
     let imageName: String?
     let icon: String?
-    let subtitleForSong: Song?
+    let badge: String?
+    let sharedBadge: Bool?
+    let song: Song?
+    
+    init(isEditing: Binding<Bool>, title: String, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, sharedBadge: Bool? = nil, song: Song? = nil) {
+        self._isEditing = isEditing
+        self.title = title
+        self.navArrow = navArrow
+        self.imageName = imageName
+        self.icon = icon
+        self.badge = badge
+        self.sharedBadge = sharedBadge
+        self.song = song
+    }
     
     var body: some View {
         HStack {
@@ -30,7 +43,27 @@ struct ListRowView: View {
                     Text(title)
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
-                    if let tags = subtitleForSong?.tags {
+                    if sharedBadge ?? true {
+                        if let song = song, let userId = viewModel.currentUser?.id, song.uid != userId {
+                            Text("Shared")
+                                .padding(6)
+                                .padding(.horizontal, 1.5)
+                                .font(.system(size: 13).weight(.medium))
+                                .background(Material.thin)
+                                .foregroundColor(.primary)
+                                .clipShape(Capsule())
+                        }
+                    }
+                    if let badge = badge {
+                        Text(badge)
+                            .padding(6)
+                            .padding(.horizontal, 1.5)
+                            .font(.system(size: 13).weight(.medium))
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                    }
+                    if let tags = song?.tags {
                         HStack(spacing: 5) {
                             ForEach(tags, id: \.self) { tag in
                                 Circle()
@@ -40,7 +73,7 @@ struct ListRowView: View {
                         }
                     }
                 }
-                if let song = subtitleForSong, let user = viewModel.currentUser {
+                if let song = song, let user = viewModel.currentUser {
                     if user.showDataUnderSong != "None" {
                         switch user.showDataUnderSong {
                         case "Show Lyrics":
@@ -79,7 +112,7 @@ struct ListRowView: View {
         .background(Material.regular)
         .foregroundColor(.primary)
         .modifier(ListViewModifier(capsule: {
-            if let song = subtitleForSong {
+            if let song = song {
                 if let user = viewModel.currentUser {
                     if let showDataUnderSong = user.showDataUnderSong {
                         if showDataUnderSong == "None" {
@@ -124,5 +157,5 @@ struct ListViewModifier: ViewModifier {
 }
 
 #Preview {
-    ListRowView(isEditing: .constant(true), title: "Favorites", navArrow: nil, imageName: "pin.fill", icon: "folder", subtitleForSong: Song.song)
+    ListRowView(isEditing: .constant(true), title: "Favorites", navArrow: nil, imageName: "pin.fill", icon: "folder", song: Song.song)
 }
