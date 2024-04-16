@@ -82,7 +82,7 @@ struct ShareView: View {
                             .background(Color.blue)
                             .clipShape(Circle())
                     } else {
-                        Text("Invite" + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)))
+                        Text("Send" + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)))
                             .padding(12)
                             .background(Color.blue)
                             .foregroundColor(.white)
@@ -93,29 +93,6 @@ struct ShareView: View {
                 .opacity(disabled ? 0.5 : 1.0)
                 .disabled(disabled)
                 SheetCloseButton(isPresented: $isDisplayed)
-            }
-            .padding()
-            Divider()
-            HStack {
-                Text("Type:")
-                Spacer()
-                Menu {
-                    Button(action: {
-                        collaborate = true
-                    }, label: {
-                        Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
-                    })
-                    Button(action: {
-                        collaborate = false
-                    }, label: {
-                        Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
-                    })
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(collaborate ? "Collaborate" : "Send Copy")
-                        Image(systemName: "chevron.down")
-                    }
-                }
             }
             .padding()
             Divider()

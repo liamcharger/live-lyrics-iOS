@@ -98,8 +98,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func fetchSong(_ id: String, userColId: String? = nil, completion: @escaping(Song) -> Void) {
-        service.fetchSong(userColId: userColId, withId: id) { song in
+    func fetchSong(_ id: String, completion: @escaping(Song) -> Void) {
+        service.fetchSong(withId: id) { song in
             if let song = song {
                 completion(song)
             }
@@ -159,7 +159,7 @@ class SongViewModel: ObservableObject {
     }
     
     func fetchSongPinStatus(_ song: Song, completion: @escaping(Bool) -> Void) {
-        service.fetchSong(withId: song.id ?? "") { song in
+        service.fetchSong(forUser: song.uid, withId: song.id ?? "") { song in
             if let song = song {
                 completion(song.pinned ?? false)
             }
@@ -183,10 +183,6 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func leaveSong(song: Song) {
-        service.leaveCollabSong(song: song) { _ in }
-    }
-    
     func getColorForTag(_ tagColor: String) -> Color {
         switch tagColor {
         case "red":
@@ -206,9 +202,5 @@ class SongViewModel: ObservableObject {
         default:
             return .gray
         }
-    }
-    
-    func isShared(song: Song) -> Bool {
-        return song.uid ?? "" != authViewModel.currentUser?.id ?? ""
     }
 }

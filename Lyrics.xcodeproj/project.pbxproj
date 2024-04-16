@@ -20,8 +20,6 @@
 		E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */; };
 		E01EB4452B20CA3A009C48F2 /* remote_config_defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */; };
 		E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */; };
-		E02A75182BCB946000BFAF46 /* SharedSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A75172BCB946000BFAF46 /* SharedSong.swift */; };
-		E02A751A2BCB94B700BFAF46 /* SharedFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A75192BCB94B600BFAF46 /* SharedFolder.swift */; };
 		E02F21E52B21130600302646 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F21E42B21130600302646 /* AdBannerView.swift */; };
 		E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E03540F82BC05A3400273830 /* FirebaseAnalytics */; };
 		E03540FB2BC05A3400273830 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E03540FA2BC05A3400273830 /* FirebaseAuth */; };
@@ -157,8 +155,6 @@
 		E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = remote_config_defaults.plist; sourceTree = "<group>"; };
 		E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		E02A75172BCB946000BFAF46 /* SharedSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSong.swift; sourceTree = "<group>"; };
-		E02A75192BCB94B600BFAF46 /* SharedFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedFolder.swift; sourceTree = "<group>"; };
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
 		E041055E2A90029900215FB0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
@@ -456,9 +452,7 @@
 			children = (
 				E04247B22A02F6DF00CA48B3 /* User.swift */,
 				E0C492E42A0BDFC6002E9EA0 /* Folder.swift */,
-				E02A75192BCB94B600BFAF46 /* SharedFolder.swift */,
 				E04247812A02EFC500CA48B3 /* Song.swift */,
-				E02A75172BCB946000BFAF46 /* SharedSong.swift */,
 				E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */,
 				E06076B92A94C1DD00ECB31F /* SystemDoc.swift */,
 				E0D411BD2A9FF12300859E4E /* Notification.swift */,
@@ -1221,7 +1215,6 @@
 				E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */,
 				E0CA85382B081D5100188CD0 /* Modifers.swift in Sources */,
 				E0CA85372B081D5100188CD0 /* NavBarEnum.swift in Sources */,
-				E02A75182BCB946000BFAF46 /* SharedSong.swift in Sources */,
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
 				E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */,
@@ -1234,7 +1227,6 @@
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,
 				E04CB96B2BCB5FE100F2831B /* SongShareRowView.swift in Sources */,
 				E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */,
-				E02A751A2BCB94B700BFAF46 /* SharedFolder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

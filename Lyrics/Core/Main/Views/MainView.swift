@@ -76,9 +76,8 @@ struct MainView: View {
     }
     var searchableSongs: [Song] {
         let lowercasedQuery = songSearchText.lowercased()
-        var songs = mainViewModel.sharedSongs + mainViewModel.songs
         
-        return songs.sorted(by: { (song1, song2) -> Bool in
+        return mainViewModel.songs.sorted(by: { (song1, song2) -> Bool in
             switch sortSelection {
             case .noSelection:
                 return false
@@ -193,7 +192,6 @@ struct MainView: View {
         }
         
         self.mainViewModel.fetchSongs()
-        self.mainViewModel.fetchSharedSongs()
         self.mainViewModel.fetchFolders()
         self.mainViewModel.fetchNotificationStatus()
     }
@@ -592,7 +590,7 @@ struct MainView: View {
                             }
                         }
                         if !isSongsCollapsed {
-                            if mainViewModel.isLoadingSongs || mainViewModel.isLoadingSharedSongs {
+                            if mainViewModel.isLoadingSongs {
                                 LoadingView()
                             } else {
                                 ForEach(searchableSongs) { song in
@@ -733,13 +731,11 @@ struct MainView: View {
             } label: {
                 Label("Edit", systemImage: "pencil")
             }
-            if !songViewModel.isShared(song: song) {
-                Button {
-                    selectedSong = song
-                    showShareSheet.toggle()
-                } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
-                }
+            Button {
+                selectedSong = song
+                showShareSheet.toggle()
+            } label: {
+                Label("Share", systemImage: "square.and.arrow.up")
             }
             Button {
                 selectedSong = song
@@ -769,22 +765,19 @@ struct MainView: View {
             } label: {
                 Label("Copy", systemImage: "doc")
             }
-            // TODO: allow pin for shared songs
-            if !songViewModel.isShared(song: song) {
-                Button {
-                    DispatchQueue.main.async {
-                        if showUnpinPinButton {
-                            songViewModel.unpinSong(song)
-                        } else {
-                            songViewModel.pinSong(song)
-                        }
-                    }
-                } label: {
+            Button {
+                DispatchQueue.main.async {
                     if showUnpinPinButton {
-                        Label("Unpin", systemImage: "pin.slash")
+                        songViewModel.unpinSong(song)
                     } else {
-                        Label("Pin", systemImage: "pin")
+                        songViewModel.pinSong(song)
                     }
+                }
+            } label: {
+                if showUnpinPinButton {
+                    Label("Unpin", systemImage: "pin.slash")
+                } else {
+                    Label("Pin", systemImage: "pin")
                 }
             }
             Button {
@@ -794,18 +787,10 @@ struct MainView: View {
                 Label("Tags", systemImage: "tag")
             }
             Button(role: .destructive, action: {
-                if !songViewModel.isShared(song: song) {
-                    selectedSong = song
-                    showSongDeleteSheet.toggle()
-                } else {
-                    songViewModel.leaveSong(song: song)
-                }
+                selectedSong = song
+                showSongDeleteSheet.toggle()
             }, label: {
-                if songViewModel.isShared(song: song) {
-                    Label("Leave", systemImage: "arrow.backward.square")
-                } else {
-                    Label("Delete", systemImage: "trash")
-                }
+                Label("Delete", systemImage: "trash")
             })
         }
     }

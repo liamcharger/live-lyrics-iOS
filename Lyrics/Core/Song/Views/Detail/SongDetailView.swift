@@ -355,7 +355,7 @@ struct SongDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
-            songViewModel.fetchSong(song.id ?? "", userColId: song.uid) { song in
+            songViewModel.fetchSong(song.id ?? "") { song in
                 self.title = song.title
                 self.lyrics = song.lyrics
                 self.key = {
@@ -709,13 +709,11 @@ struct SongDetailView: View {
             }, label: {
                 Label("Edit", systemImage: "pencil")
             })
-            if !songViewModel.isShared(song: song) {
-                Button(action: {
-                    showShareSheet = true
-                }, label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
-                })
-            }
+            Button(action: {
+                showShareSheet = true
+            }, label: {
+                Label("Share", systemImage: "square.and.arrow.up")
+            })
             Button(action: {
                 showMoveView.toggle()
             }, label: {
@@ -741,17 +739,9 @@ struct SongDetailView: View {
                 Label("Tags", systemImage: "tag")
             }
             Button(role: .destructive, action: {
-                if !songViewModel.isShared(song: song) {
-                    showDeleteSheet.toggle()
-                } else {
-                    // TODO: Leave song, not delete it
-                }
+                showDeleteSheet.toggle()
             }, label: {
-                if songViewModel.isShared(song: song) {
-                    Label("Leave", systemImage: "arrow.backward.square")
-                } else {
-                    Label("Delete", systemImage: "trash")
-                }
+                Label("Delete", systemImage: "trash")
             })
         } label: {
             FAText(iconName: "ellipsis", size: 18)
