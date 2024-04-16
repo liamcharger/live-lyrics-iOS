@@ -22,6 +22,7 @@ struct SongDetailView: View {
     @State private var alignment: TextAlignment
     
     @State var lyrics = ""
+    @State var lastUpdatedLyrics = ""
     @State var key = ""
     @State var title = ""
     @State var artist = ""
@@ -92,6 +93,56 @@ struct SongDetailView: View {
         
         return input
     }
+    func getAlignment(alignment: Int) -> TextAlignment {
+        switch alignment {
+        case 0:
+            return .leading
+        case 1:
+            return .center
+        case 2:
+            return .trailing
+        default:
+            return .leading
+        }
+    }
+    func getDesign(design: Int) -> Font.Design {
+        switch design {
+        case 0:
+            return .default
+        case 1:
+            return .monospaced
+        case 2:
+            return .rounded
+        case 3:
+            return .serif
+        default:
+            return .default
+        }
+    }
+    func getWeight(weight: Int) -> Font.Weight {
+        switch weight {
+        case 0:
+            return .regular
+        case 1:
+            return .black
+        case 2:
+            return .bold
+        case 3:
+            return .heavy
+        case 4:
+            return .light
+        case 5:
+            return .medium
+        case 6:
+            return .regular
+        case 7:
+            return .semibold
+        case 8:
+            return .thin
+        default:
+            return .ultraLight
+        }
+    }
     
     var playButton: some View {
         Button(action: {showFullScreenView.toggle()}, label: {
@@ -107,76 +158,34 @@ struct SongDetailView: View {
         })
     }
     
-    init(song: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong?, wordCountStyle: String, folder: Folder?) {
+    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong?, wordCountStyle: String, folder: Folder?) {
         self.songs = songs
         self._isChecked = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
-        self._value = State(initialValue: song.size ?? 18)
-        self._lineSpacing = State(initialValue: song.lineSpacing ?? 1.0)
-        
-        switch Int(song.design ?? 0) {
-        case 0:
-            self._design = State(initialValue: .default)
-        case 1:
-            self._design = State(initialValue: .monospaced)
-        case 2:
-            self._design = State(initialValue: .rounded)
-        case 3:
-            self._design = State(initialValue: .serif)
-        default:
-            self._design = State(initialValue: .default)
-        }
-        
-        switch Int(song.weight ?? 0) {
-        case 0:
-            self._weight = State(initialValue: .regular)
-        case 1:
-            self._weight = State(initialValue: .black)
-        case 2:
-            self._weight = State(initialValue: .bold)
-        case 3:
-            self._weight = State(initialValue: .heavy)
-        case 4:
-            self._weight = State(initialValue: .light)
-        case 5:
-            self._weight = State(initialValue: .medium)
-        case 6:
-            self._weight = State(initialValue: .regular)
-        case 7:
-            self._weight = State(initialValue: .semibold)
-        case 8:
-            self._weight = State(initialValue: .thin)
-        default:
-            self._weight = State(initialValue: .ultraLight)
-        }
-        
-        switch Int(song.alignment ?? 0) {
-        case 0:
-            self._alignment = State(initialValue: .leading)
-        case 1:
-            self._alignment = State(initialValue: .leading)
-        case 2:
-            self._alignment = State(initialValue: .center)
-        case 3:
-            self._alignment = State(initialValue: .trailing)
-        default:
-            self._alignment = State(initialValue: .leading)
-        }
-        
+        self._value = State(initialValue: inputSong.size ?? 18)
+        self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
+        self._design = State(initialValue: .default)
+        self._weight = State(initialValue: .regular)
+        self._alignment = State(initialValue: .leading)
         self._folder = State(initialValue: folder)
-        self._song = State(initialValue: song)
-        self._lyrics = State(initialValue: song.lyrics)
-        self._title = State(initialValue: song.title)
-        self._currentIndex = State(initialValue: song.order ?? 0)
-        self._key = State(initialValue: song.key == "" ? "Not Set" : song.key ?? "Not Set")
-        self._artist = State(initialValue: song.artist == "" ? "Not Set" : song.artist ?? "Not Set")
-        self._duration = State(initialValue: song.duration ?? "")
-        self._bpm = State(initialValue: song.bpm ?? 120)
-        self._bpb = State(initialValue: song.bpb ?? 4)
-        self._performanceMode = State(initialValue: song.performanceMode ?? true)
-        self._tags = State(initialValue: song.tags ?? ["none"])
+        self._song = State(initialValue: inputSong)
+        self._lyrics = State(initialValue: inputSong.lyrics)
+        self._lastUpdatedLyrics = State(initialValue: inputSong.lyrics)
+        self._title = State(initialValue: inputSong.title)
+        self._currentIndex = State(initialValue: inputSong.order ?? 0)
+        self._key = State(initialValue: inputSong.key == "" ? "Not Set" : inputSong.key ?? "Not Set")
+        self._artist = State(initialValue: inputSong.artist == "" ? "Not Set" : inputSong.artist ?? "Not Set")
+        self._duration = State(initialValue: inputSong.duration ?? "")
+        self._bpm = State(initialValue: inputSong.bpm ?? 120)
+        self._bpb = State(initialValue: inputSong.bpb ?? 4)
+        self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
+        self._tags = State(initialValue: inputSong.tags ?? ["none"])
         
-        self.notesViewModel = NotesViewModel(song: song)
+        self.notesViewModel = NotesViewModel(song: inputSong)
+        
+        self._design = State(initialValue: getDesign(design: Int(inputSong.design ?? 0)))
+        self._weight = State(initialValue: getWeight(weight: Int(inputSong.weight ?? 0)))
+        self._alignment = State(initialValue: getAlignment(alignment: Int(inputSong.alignment ?? 0)))
     }
     
     var body: some View {
@@ -340,6 +349,32 @@ struct SongDetailView: View {
             self.mainViewModel.removeFolderSongEventListener()
             self.mainViewModel.removeFolderEventListener()
             wordCountBool = viewModel.currentUser?.wordCount ?? true
+            songViewModel.fetchSong(song.id ?? "") { song in
+                self.title = song.title
+                self.lyrics = song.lyrics
+                self.key = {
+                    if let key = song.key, !key.isEmpty {
+                        return key
+                    } else {
+                        return "Not Set"
+                    }
+                }()
+                self.artist = song.artist ?? ""
+                self.duration = song.duration ?? ""
+                self.tags = song.tags ?? []
+                self.design = getDesign(design: Int(song.design ?? 0))
+                self.weight = getWeight(weight: Int(song.weight ?? 0))
+                self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
+                self.value = song.size ?? 18
+                self.lineSpacing = song.lineSpacing ?? 1
+                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
+                    if lyrics != lastUpdatedLyrics {
+                        mainViewModel.updateLyrics(song, lyrics: lyrics)
+                        lastUpdatedLyrics = lyrics
+                    }
+                }
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
