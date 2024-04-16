@@ -82,7 +82,7 @@ struct ShareView: View {
                             .background(Color.blue)
                             .clipShape(Circle())
                     } else {
-                        Text("Send" + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)))
+                        Text("Send" /* + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)) */)
                             .padding(12)
                             .background(Color.blue)
                             .foregroundColor(.white)
@@ -128,11 +128,8 @@ struct ShareView: View {
                                         
                                         Button {
                                             selectedUser = user
-                                            if selectedUsers.keys.contains(user.id ?? "") {
-                                                selectedUsers.removeValue(forKey: user.id ?? "")
-                                            } else {
-                                                selectedUsers[user.id ?? ""] = user.username
-                                            }
+                                            selectedUsers.removeAll()
+                                            selectedUsers[user.id ?? ""] = user.username
                                         } label: {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }

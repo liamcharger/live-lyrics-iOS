@@ -851,7 +851,7 @@ class SongService {
 					}
 					
 					dispatch.notify(queue: .main) {
-						self.deleteRequest(request)
+						self.deleteRequest(request, uid: uid)
 						completion()
 					}
 				}
@@ -893,24 +893,22 @@ class SongService {
 							return
 						}
 					}
-					self.deleteRequest(request)
+					self.deleteRequest(request, uid: uid)
 				}
 			}
 		}
 	}
 	
-	func deleteRequest(_ request: ShareRequest) {
+	func deleteRequest(_ request: ShareRequest, uid: String) {
 		Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
 			if let error = error {
 				print("Error: \(error.localizedDescription)")
-				completion()
 				return
 			}
 		}
 		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id ?? "").delete { error in
 			if let error = error {
 				print("Error: \(error.localizedDescription)")
-				completion()
 				return
 			}
 		}

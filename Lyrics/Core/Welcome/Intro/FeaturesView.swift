@@ -77,6 +77,12 @@ struct FeaturesView: View {
     }
 }
 
+struct FeaturesSection {
+    var title: String
+    var subtitle: String
+    var imageName: String
+}
+
 #Preview {
     FeaturesView(animState: .constant(.first))
 }
