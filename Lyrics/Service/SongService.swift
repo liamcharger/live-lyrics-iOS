@@ -111,11 +111,11 @@ class SongService {
 			}
 	}
 	
-	func fetchSongs(_ folder: Folder, completion: @escaping ([Song]) -> Void) {
+	func fetchSongs(returnEmptySong: Bool? = nil, forUid: String? = nil, _ folder: Folder? = nil, folderId: String? = nil, completion: @escaping ([Song]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-		guard let folderId = folder.id else { return }
+		let folderId = folder?.id ?? (folderId ?? "")
 		
-		self.folderSongListener = Firestore.firestore().collection("users").document(uid).collection("folders").document(folderId).collection("songs")
+		self.folderSongListener = Firestore.firestore().collection("users").document(forUid ?? uid).collection("folders").document(folderId).collection("songs")
 			.order(by: "order")
 			.addSnapshotListener { snapshot, error in
 				guard let documents = snapshot?.documents else {
@@ -130,7 +130,7 @@ class SongService {
 				for document in documents {
 					group.enter()
 					let songId = document.documentID
-					self.fetchSong(forUser: uid, withId: songId) { song in
+					self.fetchSong(forUser: forUid ?? uid, withId: songId) { song in
 						if let song = song {
 							completedSongs.append(song)
 						}
@@ -140,7 +140,7 @@ class SongService {
 				
 				group.notify(queue: .main) {
 					if completedSongs.isEmpty {
-						completion([Song.song])
+						completion(returnEmptySong ?? true ? [Song.song] : [])
 					} else {
 						completion(completedSongs)
 					}
@@ -416,10 +416,10 @@ class SongService {
 		}
 	}
 	
-	func createSong(song: Song, completion: @escaping(Bool, String) -> Void) {
+	func createSong(song: Song, completion: @escaping(Error?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		let documentRef = Firestore.firestore().collection("users").document(uid).collection("songs").document()
+		let documentRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
 		var songData: [String: Any?] = [
 			"uid": uid,
 			"timestamp": Date(),
@@ -442,35 +442,18 @@ class SongService {
 			"tags": song.tags
 		]
 		
-		completion(true, "")
+		completion(nil)
 		documentRef.setData(songData) { error in
-			if let error = error {
-				print("Error creating song: \(error.localizedDescription)")
-				completion(false, error.localizedDescription)
+			if error != nil {
+				completion(error)
 				return
 			}
 			
-			completion(true, "Success!")
+			completion(nil)
 		}
 	}
 	
-	func addSongToMySongs(id: String, lyrics: String, title: String, artist: String?, timestamp: Date, key: String?, bpm: String?, completion: @escaping(Bool, String) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		let documentRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(id)
-		
-		documentRef.setData(["lyrics": lyrics, "timestamp": timestamp, "title": title, "uid": uid, "order": 0, "artist": artist]) { error in
-			if let error = error {
-				print("Error creating song: \(error.localizedDescription)")
-				completion(false, error.localizedDescription)
-				return
-			}
-			
-			completion(true, "Success!")
-		}
-	}
-	
-	func createFolder(folder: Folder, completion: @escaping(Error?) -> Void) {
+	func createFolder(folder: Folder, id: String? = nil, completion: @escaping(Error?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		let folderData = [
@@ -480,7 +463,7 @@ class SongService {
 			"order": 0
 		] as [String : Any]
 		
-		Firestore.firestore().collection("users").document(uid).collection("folders").document()
+		Firestore.firestore().collection("users").document(uid).collection("folders").document(id ?? "")
 			.setData(folderData) { error in
 				if error != nil {
 					completion(error)
@@ -660,20 +643,20 @@ class SongService {
 		}
 	}
 	
-	func moveSongsToFolder(toFolder: Folder, songs: [Song], completion: @escaping(Bool, String) -> Void) {
+	func moveSongsToFolder(id: String, songs: [Song], completion: @escaping(Error?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		let songsCollectionRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(toFolder.id ?? "").collection("songs")
+		let songsCollectionRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(id).collection("songs")
 		
 		for song in songs {
 			let songDocumentRef = songsCollectionRef.document(song.id ?? "")
 			
 			songDocumentRef.setData(["order": 0]) { error in
-				if let error = error {
-					completion(false, error.localizedDescription)
+				if error != nil {
+					completion(error)
 					return
 				}
-				completion(true, "")
+				completion(nil)
 			}
 		}
 	}
@@ -831,9 +814,48 @@ class SongService {
 		
 		let dispatch = DispatchGroup()
 		var song: Song?
+		var songs = [Song]()
 		
 		if request.contentType == "folder" {
-			
+			self.fetchFolder(forUser: request.from, withId: request.contentId) { folder in
+				if let folder = folder {
+					dispatch.enter()
+					self.createFolder(folder: folder, id: request.contentId) { error in
+						dispatch.leave()
+						if let error = error {
+							print("Error: \(error.localizedDescription)")
+							completion()
+							return
+						}
+					}
+					dispatch.enter()
+					self.fetchSongs(returnEmptySong: false, forUid: request.from, folder) { folderSongs in
+						for song in folderSongs {
+							self.createSong(song: song) { error in
+								if let error = error {
+									print(error.localizedDescription)
+									completion()
+									return
+								}
+								songs.append(song)
+							}
+						}
+						self.moveSongsToFolder(id: folder.id ?? "", songs: songs) { error in
+							if let error = error {
+								print(error.localizedDescription)
+								completion()
+								return
+							}
+						}
+						dispatch.leave()
+					}
+					
+					dispatch.notify(queue: .main) {
+						self.deleteRequest(request)
+						completion()
+					}
+				}
+			}
 		} else {
 			dispatch.enter()
 			self.fetchSong(forUser: request.from, withId: request.contentId) { fetchedSong in
@@ -841,7 +863,6 @@ class SongService {
 				dispatch.leave()
 				
 				if let song = song {
-					let batch = Firestore.firestore().batch()
 					let songData: [String: Any?] = [
 						"uid": uid,
 						"timestamp": Date(),
@@ -872,21 +893,25 @@ class SongService {
 							return
 						}
 					}
-					Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
-						if let error = error {
-							print("Error: \(error.localizedDescription)")
-							completion()
-							return
-						}
-					}
-					Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id ?? "").delete { error in
-						if let error = error {
-							print("Error: \(error.localizedDescription)")
-							completion()
-							return
-						}
-					}
+					self.deleteRequest(request)
 				}
+			}
+		}
+	}
+	
+	func deleteRequest(_ request: ShareRequest) {
+		Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
+			if let error = error {
+				print("Error: \(error.localizedDescription)")
+				completion()
+				return
+			}
+		}
+		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id ?? "").delete { error in
+			if let error = error {
+				print("Error: \(error.localizedDescription)")
+				completion()
+				return
 			}
 		}
 	}

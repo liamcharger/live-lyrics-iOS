@@ -38,23 +38,9 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func addSongToMySongs(id: String, lyrics: String, title: String, artist: String?, timestamp: Date, key: String?, bpm: String?, completion: @escaping(Bool, String) -> Void) {
-        service.addSongToMySongs(id: id, lyrics: lyrics, title: title, artist: artist, timestamp: timestamp, key: key, bpm: bpm) { success, errorMessage in
-            if success {
-                completion(true, "Success!")
-            } else {
-                completion(false, errorMessage)
-            }
-        }
-    }
-    
-    func moveSongsToFolder(folder: Folder, songs: [Song], completion: @escaping(Bool, String) -> Void) {
-        service.moveSongsToFolder(toFolder: folder, songs: songs) { success, errorMessage in
-            if success {
-                completion(true, "")
-            } else {
-                completion(false, errorMessage)
-            }
+    func moveSongsToFolder(folder: Folder, songs: [Song], completion: @escaping(Error?) -> Void) {
+        service.moveSongsToFolder(id: folder.id ?? "", songs: songs) { error in
+            completion(error)
         }
     }
     

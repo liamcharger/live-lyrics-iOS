@@ -59,12 +59,9 @@ struct AddSongsView: View {
         }
         
         dispatchGroup.notify(queue: .main) {
-            self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { success, errorMessage in
-                if success {
-                    presMode.wrappedValue.dismiss()
-                    self.isLoading = false
-                } else {
-                    if errorMessage == "Failed to get document because the client is offline." {
+            self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { error in
+                if let error = error {
+                    if error.localizedDescription == "Failed to get document because the client is offline." {
                         self.errorMessage = "Please connect to the internet to perform this action."
                         self.showError = true
                         self.isLoading = false
@@ -73,6 +70,9 @@ struct AddSongsView: View {
                         self.showError = true
                         self.isLoading = false
                     }
+                } else {
+                    presMode.wrappedValue.dismiss()
+                    self.isLoading = false
                 }
             }
         }

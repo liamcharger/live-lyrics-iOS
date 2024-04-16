@@ -17,9 +17,12 @@ struct SongShareRowView: View {
                 .font(.body.weight(.semibold))
             Spacer()
             if selectedUsers.keys.contains(user.id ?? "") {
-                Image(systemName: "checkmark.circle")
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.blue)
+                    .imageScale(.large)
             } else {
                 Image(systemName: "circle")
+                    .imageScale(.large)
             }
         }
         .padding()
