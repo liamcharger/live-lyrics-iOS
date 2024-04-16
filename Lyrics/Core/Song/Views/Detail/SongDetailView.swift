@@ -187,9 +187,9 @@ struct SongDetailView: View {
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
         self._tags = State(initialValue: inputSong.tags ?? ["none"])
-        
+      
         self.notesViewModel = NotesViewModel(song: inputSong)
-        
+ 
         self._design = State(initialValue: getDesign(design: Int(inputSong.design ?? 0)))
         self._weight = State(initialValue: getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: getAlignment(alignment: Int(inputSong.alignment ?? 0)))
@@ -379,8 +379,8 @@ struct SongDetailView: View {
                         lastUpdatedLyrics = lyrics
                     }
                 }
-                UIApplication.shared.isIdleTimerDisabled = true
             }
+            UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
