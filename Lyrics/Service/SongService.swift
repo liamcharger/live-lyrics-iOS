@@ -135,7 +135,7 @@ class SongService {
 							completedSongs.append(song)
 						}
 						group.leave()
-					}
+					} registrationCompletion: { _ in }
 				}
 				
 				group.notify(queue: .main) {
@@ -148,24 +148,28 @@ class SongService {
 			}
 	}
 	
-	func fetchSong(forUser: String? = nil, withId id: String, folder: Folder? = nil, completion: @escaping (Song?) -> Void) {
+	func fetchSong(forUser: String? = nil, withId id: String, folder: Folder? = nil, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).getDocument { snapshot, error in
+		let reg = Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).addSnapshotListener { snapshot, error in
 			if let error = error {
 				print("Error fetching song with ID \(id): \(error.localizedDescription)")
-				completion(nil)
+				songCompletion(nil)
+				registrationCompletion(nil)
 				return
 			}
 			
 			guard let snapshot = snapshot else { return }
 			guard let song = try? snapshot.data(as: Song.self) else {
 				print("Error parsing song: \(id)")
-				completion(nil)
+				songCompletion(nil)
+				registrationCompletion(nil)
 				return
 			}
-			completion(song)
+			
+			songCompletion(song)
 		}
+		registrationCompletion(reg)
 	}
 	
 	func fetchFolder(forUser: String? = nil, withId id: String, folder: Folder? = nil, completion: @escaping (Folder?) -> Void) {
@@ -785,27 +789,29 @@ class SongService {
 		}
 	}
 	
-	func declineInvite(request: ShareRequest, completion: @escaping() -> Void) {
+	func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		let batch = Firestore.firestore().batch()
+		let group = DispatchGroup()
 		
-		// TODO: Implement logic to check if it's the last user to join, and if so, delete the outgoing request from the sender's collection
-		
-		let incomingRequestRef = Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id ?? "")
-		let outgoingRequestRef = Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id ?? "")
-		batch.deleteDocument(incomingRequestRef)
-		batch.deleteDocument(outgoingRequestRef)
-		
-		batch.commit { error in
+		group.enter()
+		Firestore.firestore().collection("users").document(incomingReqColUid ?? uid).collection("incoming-share-requests").document(request.id ?? "").delete { error in
+			defer { group.leave() }
 			if let error = error {
-				print("Error committing batch operation: \(error.localizedDescription)")
-				return
+				print("Error deleting incoming share request: \(error.localizedDescription)")
 			}
-			// Send notification to user's device
-			//		if let fcmId = toUser.fcmId {
-			//			UserService().sendNotificationToFCM(deviceToken: fcmId, title: "Live Lyrics", body: "\(fromUser.username) has declined a shared \(request.contentType.lowercased()).")
-			//		}
+		}
+		
+		group.enter()
+		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id ?? "").delete { error in
+			defer { group.leave() }
+			if let error = error {
+				print("Error deleting outgoing share request: \(error.localizedDescription)")
+			}
+		}
+		
+		group.notify(queue: .main) {
+			completion()
 		}
 	}
 	
@@ -895,7 +901,7 @@ class SongService {
 					}
 					self.deleteRequest(request, uid: uid)
 				}
-			}
+			} registrationCompletion: { _ in }
 		}
 	}
 	

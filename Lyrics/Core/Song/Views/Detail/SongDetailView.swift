@@ -15,6 +15,8 @@ struct SongDetailView: View {
     @State var folder: Folder?
     @State var restoreSong: RecentlyDeletedSong?
     
+    @State var fetchListener: ListenerRegistration?
+    
     @State private var currentIndex = 0
     @State private var value: Int
     @State private var lineSpacing: Double
@@ -379,10 +381,13 @@ struct SongDetailView: View {
                         lastUpdatedLyrics = lyrics
                     }
                 }
+            } regCompletion: { reg in
+                self.fetchListener = reg
             }
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
+            fetchListener?.remove()
             UIApplication.shared.isIdleTimerDisabled = false
         }
         .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {

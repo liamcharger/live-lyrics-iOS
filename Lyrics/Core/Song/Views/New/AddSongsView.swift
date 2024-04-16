@@ -55,7 +55,7 @@ struct AddSongsView: View {
             self.songViewModel.fetchSong(songID) { song in
                 songs.append(song)
                 dispatchGroup.leave()
-            }
+            } regCompletion: { _ in }
         }
         
         dispatchGroup.notify(queue: .main) {

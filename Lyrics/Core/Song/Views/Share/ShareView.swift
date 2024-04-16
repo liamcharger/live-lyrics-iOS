@@ -7,13 +7,20 @@
 
 import SwiftUI
 
+struct UserToShare: Codable {
+    var id: String?
+    var username: String
+    var appVersion: String?
+}
+
 struct ShareView: View {
     @Environment(\.presentationMode) var presMode
     
     @EnvironmentObject var authViewModel: AuthViewModel
     
     @Binding var isDisplayed: Bool
-    @State var selectedUsers = [String: String]()
+    
+    @State var selectedUsers = [UserToShare]()
     @State var searchText = ""
     @State var collaborate = false
     @State var firstSearch = true
@@ -40,59 +47,95 @@ struct ShareView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Text("Share")
-                    .font(.title.weight(.bold))
-                Spacer()
-                Button {
-                   let timestamp = Date()
-                    guard let fromUser = authViewModel.currentUser else { return }
-                    let to = Array(selectedUsers.keys)
-                    let type = collaborate ? "collaborate" : "copy"
-                    let toUsernames = Array(selectedUsers.values)
-                    
-                    var request: ShareRequest?
-                    
-                    if let song = song {
-                        request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: to, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
-                    } else if let folder = folder {
-                        request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: to, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
-                    } else {
-                        print("Song and folder are nil")
-                    }
-                    
-                    if let request = request {
-                        self.isSendingRequest = true
-                        authViewModel.sendInviteToUser(request: request) { error in
-                            if let error = error {
-                                print(error.localizedDescription)
-                                return
-                            }
-                            self.isSendingRequest = false
-                            presMode.wrappedValue.dismiss()
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Share")
+                        .font(.title.weight(.bold))
+                    Spacer()
+                    Button {
+                        let timestamp = Date()
+                        guard let fromUser = authViewModel.currentUser else { return }
+                        let toUsernames = selectedUsers.map { $0.username }
+                        let type = collaborate ? "collaborate" : "copy"
+                        
+                        var request: ShareRequest?
+                        
+                        if let song = song {
+                            let toUserIds = selectedUsers.compactMap { $0.id }
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
+                        } else if let folder = folder {
+                            let toUserIds = selectedUsers.compactMap { $0.id }
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
+                        } else {
+                            print("Song and folder are nil")
                         }
-                    } else {
-                        print("Error: request is nil")
+                        
+                        if let request = request {
+                            self.isSendingRequest = true
+                            authViewModel.sendInviteToUser(request: request) { error in
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                    return
+                                }
+                                self.isSendingRequest = false
+                                presMode.wrappedValue.dismiss()
+                            }
+                        } else {
+                            print("Error: request is nil")
+                        }
+                    } label: {
+                        if isSendingRequest {
+                            ProgressView()
+                                .tint(.primary)
+                                .padding(12)
+                                .background(Color.blue)
+                                .clipShape(Circle())
+                        } else {
+                            Text("Send" /* + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)) */)
+                                .padding(12)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .font(.body.weight(.semibold))
+                                .clipShape(Capsule())
+                        }
                     }
-                } label: {
-                    if isSendingRequest {
-                        ProgressView()
-                            .tint(.primary)
-                            .padding(12)
-                            .background(Color.blue)
-                            .clipShape(Circle())
-                    } else {
-                        Text("Send" /* + (selectedUsers.isEmpty ? "" : " " + String(selectedUsers.count)) */)
-                            .padding(12)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .font(.body.weight(.semibold))
-                            .clipShape(Capsule())
+                    .opacity(disabled ? 0.5 : 1.0)
+                    .disabled(disabled)
+                    SheetCloseButton(isPresented: $isDisplayed)
+                }
+                if let userToShare = selectedUsers.first,
+                {
+                    if let appVersion = userToShare.appVersion, !appVersion.isEmpty {
+                        let versionComponents = appVersion.split(separator: ".").compactMap { Int($0) }
+                        let major = versionComponents[0]
+                        let minor = versionComponents[1]
+                        
+                        return major < 2 || (major == 2 && minor < 3)
+                    }
+                    
+                    return true
+                }() {
+                    HStack(spacing: 12) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.system(size: 23).weight(.semibold))
+                            .foregroundColor(.yellow)
+                        VStack(alignment: .leading) {
+                            Text("Make sure that ") +
+                            Text(userToShare.username)
+                                .font(.body.weight(.bold))
+                            + Text(" has version 2.3 or newer of the app.")
+                        }
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Material.regular)
+                    .foregroundColor(.primary)
+                    .cornerRadius(20)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.yellow, lineWidth: 2.5)
                     }
                 }
-                .opacity(disabled ? 0.5 : 1.0)
-                .disabled(disabled)
-                SheetCloseButton(isPresented: $isDisplayed)
             }
             .padding()
             Divider()
@@ -128,8 +171,14 @@ struct ShareView: View {
                                         
                                         Button {
                                             selectedUser = user
-                                            selectedUsers.removeAll()
-                                            selectedUsers[user.id ?? ""] = user.username
+                                            
+                                            if let userId = user.id {
+                                                if let existingIndex = selectedUsers.firstIndex(where: { $0.id == userId && $0.username == user.username }) {
+                                                    selectedUsers.remove(at: existingIndex)
+                                                } else {
+                                                    selectedUsers.append(UserToShare(id: userId, username: user.username, appVersion: user.currentVersion))
+                                                }
+                                            }
                                         } label: {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }

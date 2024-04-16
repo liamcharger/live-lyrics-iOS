@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 class SongViewModel: ObservableObject {
     @ObservedObject var mainViewModel = MainViewModel()
@@ -84,11 +85,13 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func fetchSong(_ id: String, completion: @escaping(Song) -> Void) {
+    func fetchSong(_ id: String, completion: @escaping(Song) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
         service.fetchSong(withId: id) { song in
             if let song = song {
                 completion(song)
             }
+        } registrationCompletion: { reg in
+            regCompletion(reg)
         }
     }
     
@@ -140,14 +143,6 @@ class SongViewModel: ObservableObject {
                 } else {
                     
                 }
-            }
-        }
-    }
-    
-    func fetchSongPinStatus(_ song: Song, completion: @escaping(Bool) -> Void) {
-        service.fetchSong(forUser: song.uid, withId: song.id ?? "") { song in
-            if let song = song {
-                completion(song.pinned ?? false)
             }
         }
     }

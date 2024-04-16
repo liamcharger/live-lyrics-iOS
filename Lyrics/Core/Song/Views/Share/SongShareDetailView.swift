@@ -16,8 +16,10 @@ struct SongShareDetailView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @EnvironmentObject var authViewModel: AuthViewModel
     
-    @State var isLoadingAction = false
-    @State var loadingId = ""
+    @State var isLoadingAccept = false
+    @State var isLoadingDecline = false
+    @State var loadingIdAccept = ""
+    @State var loadingIdDecline = ""
     
     let userService = UserService()
     let songService = SongService()
@@ -58,24 +60,17 @@ struct SongShareDetailView: View {
                 FullscreenMessage(imageName: "wifi.slash", title: "Please connect to the internet to view your share requests.", spaceNavbar: true)
             }
         }
-        .onAppear {
-            mainViewModel.fetchInvites()
-        }
-        .onDisappear {
-            mainViewModel.removeIncomingInviteEventListener()
-            mainViewModel.removeOutgoingInviteEventListener()
-        }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)
     }
-        
+    
     func rowView(request: ShareRequest, type: ShareRequestType) -> some View {
         return VStack {
             HStack {
                 VStack(alignment: .leading, spacing: 7) {
                     HStack(spacing: 5) {
                         Text(request.contentName)
-                        .font(.title2.weight(.semibold))
+                            .font(.title2.weight(.semibold))
                         Text(request.contentType.uppercased())
                             .padding(6)
                             .padding(.horizontal, 2)
@@ -89,21 +84,39 @@ struct SongShareDetailView: View {
                 }
                 Spacer()
                 if type == .outgoing {
-                    Text({
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "MM/dd/yyyy"
-                        
-                        return dateFormatter.string(from: request.timestamp)
-                    }())
+                    HStack(spacing: 8) {
+                        Text({
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "MM/dd/yyyy"
+                            
+                            return dateFormatter.string(from: request.timestamp)
+                        }())
+                        Button {
+                            self.loadingIdDecline = request.id ?? ""
+                            self.isLoadingDecline = true
+                            // Update when multiple users are supported
+                            mainViewModel.declineInvite(incomingReqColUid: request.to.first, request: request) {
+                                self.loadingIdDecline = ""
+                                self.isLoadingDecline = false
+                            }
+                        } label: {
+                            Image(systemName: "trash")
+                                .padding(8)
+                                .font(.system(size: 17).weight(.semibold))
+                                .background(Material.thin)
+                                .foregroundColor(.red)
+                                .clipShape(Circle())
+                        }
+                    }
                 } else {
                     HStack(spacing: 6) {
-                        if !isLoadingAction && loadingId != request.id ?? "" {
+                        if !isLoadingAccept && loadingIdAccept != request.id {
                             Button {
-                                self.loadingId = request.id ?? ""
-                                self.isLoadingAction = true
+                                self.loadingIdAccept = request.id ?? ""
+                                self.isLoadingAccept = true
                                 mainViewModel.acceptInvite(request: request) {
-                                    self.loadingId = ""
-                                    self.isLoadingAction = false
+                                    self.loadingIdAccept = ""
+                                    self.isLoadingAccept = false
                                 }
                             } label: {
                                 Image(systemName: "checkmark")
@@ -114,11 +127,11 @@ struct SongShareDetailView: View {
                                     .clipShape(Circle())
                             }
                             Button {
-                                self.loadingId = request.id ?? ""
-                                self.isLoadingAction = true
+                                self.loadingIdDecline = request.id ?? ""
+                                self.isLoadingDecline = true
                                 mainViewModel.declineInvite(request: request) {
-                                    self.loadingId = ""
-                                    self.isLoadingAction = false
+                                    self.loadingIdDecline = ""
+                                    self.isLoadingDecline = false
                                 }
                             } label: {
                                 Image(systemName: "xmark")
