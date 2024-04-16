@@ -28,7 +28,6 @@
 		E03541012BC05A3400273830 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E03541002BC05A3400273830 /* FirebaseMessaging */; };
 		E03541032BC05A3400273830 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = E03541022BC05A3400273830 /* FirebaseRemoteConfig */; };
 		E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */; };
-		E03541082BC05A4200273830 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E03541072BC05A4200273830 /* BottomSheet */; };
 		E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BC0922B5C232B004261AF /* ChooseAuthView.swift */; };
 		E041055F2A90029900215FB0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* HapticManager.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
@@ -64,6 +63,7 @@
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E079AE362A81928B006C4B55 /* NewPlayViewView.swift */; };
+		E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E08237002BCE35B7006ED2EA /* BottomSheet */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
 		E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */; };
 		E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */; };
@@ -268,10 +268,10 @@
 				E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */,
 				E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */,
 				E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */,
-				E03541082BC05A4200273830 /* BottomSheet in Frameworks */,
 				E03540FD2BC05A3400273830 /* FirebaseFirestore in Frameworks */,
 				E03540FB2BC05A3400273830 /* FirebaseAuth in Frameworks */,
 				E03540FF2BC05A3400273830 /* FirebaseFirestoreSwift in Frameworks */,
+				E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */,
 				E03541032BC05A3400273830 /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1005,8 +1005,8 @@
 				E03541002BC05A3400273830 /* FirebaseMessaging */,
 				E03541022BC05A3400273830 /* FirebaseRemoteConfig */,
 				E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */,
-				E03541072BC05A4200273830 /* BottomSheet */,
 				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
+				E08237002BCE35B7006ED2EA /* BottomSheet */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1083,8 +1083,8 @@
 			packageReferences = (
 				E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				E03541062BC05A4200273830 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
+				E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1645,7 +1645,7 @@
 				minimumVersion = 10.23.1;
 			};
 		};
-		E03541062BC05A4200273830 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+		E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/adamfootdev/BottomSheet";
 			requirement = {
@@ -1704,9 +1704,9 @@
 			package = E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfigSwift;
 		};
-		E03541072BC05A4200273830 /* BottomSheet */ = {
+		E08237002BCE35B7006ED2EA /* BottomSheet */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E03541062BC05A4200273830 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			package = E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */;
 			productName = BottomSheet;
 		};
 		E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */ = {

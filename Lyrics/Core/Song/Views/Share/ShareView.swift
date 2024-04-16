@@ -167,7 +167,11 @@ struct ShareView: View {
                                             }
                                             .contextMenu {
                                                 Button(role: .destructive) {
-                                                    
+                                                    if let index = recentSearches.components(separatedBy: ",").firstIndex(of: search) {
+                                                        var updatedSearches = recentSearches.components(separatedBy: ",")
+                                                        updatedSearches.remove(at: index)
+                                                        recentSearches = updatedSearches.joined(separator: ",")
+                                                    }
                                                 } label: {
                                                     Label("Remove", systemImage: "trash")
                                                 }
