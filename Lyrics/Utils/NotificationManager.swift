@@ -18,20 +18,17 @@ class NotificationManager: ObservableObject {
     static let shared = NotificationManager()
     
     func getCurrentAppVersion() -> String {
-        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
-        let version = (appVersion as! String)
-        return version
+        guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return ""
+        }
+        return appVersion
     }
     
-    func checkForUpdate(completion: @escaping(Bool) -> Void) {
+    func checkForUpdate(completion: @escaping (Bool) -> Void) {
         let version = getCurrentAppVersion()
         let savedVersion = UserDefaults.standard.string(forKey: "savedVersion")
         
-        if savedVersion == version {
-            completion(false)
-        } else {
-            completion(true)
-        }
+        completion(savedVersion != version)
     }
     
     func updateAppVersion() {

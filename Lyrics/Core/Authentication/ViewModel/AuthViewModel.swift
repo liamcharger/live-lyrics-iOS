@@ -31,9 +31,7 @@ class AuthViewModel: ObservableObject {
     func updateAppStatus() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        let savedVersion = UserDefaults.standard.string(forKey: "savedVersion")
-        
-        Firestore.firestore().collection("users").document(uid).updateData(["currentVersion" : savedVersion ?? ""]) { error in
+        Firestore.firestore().collection("users").document(uid).updateData(["currentVersion" : NotificationManager.shared.getCurrentAppVersion()]) { error in
             if let error = error {
                 print(error.localizedDescription)
             }

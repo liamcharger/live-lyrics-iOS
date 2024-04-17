@@ -43,7 +43,7 @@ struct ShowWhatsNew: View {
                             withAnimation(Animation.bouncy(duration: 1.5)) {
                                 isDisplayed = false
                             }
-                            NotificationManager().updateAppVersion()
+                            NotificationManager.shared.updateAppVersion()
                         }
                     } label: {
                         Text(NSLocalizedString("continue", comment: "Continue"))
