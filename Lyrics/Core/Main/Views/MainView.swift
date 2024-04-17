@@ -341,17 +341,17 @@ struct MainView: View {
                                                                 .lineLimit(1)
                                                                 .multilineTextAlignment(.leading)
                                                             Spacer()
-                                                            if isLoadingFolderSongs && mainViewModel.folderSongs.isEmpty {
-                                                                if selectedFolderForFolderUse?.id == folder.id {
+                                                            if selectedFolderForFolderUse?.id == folder.id {
+                                                                if isLoadingFolderSongs || mainViewModel.folderSongs.isEmpty {
                                                                     ProgressView()
                                                                 } else {
                                                                     Image(systemName: "chevron.right")
                                                                         .foregroundColor(.gray)
+                                                                        .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolderForFolderUse?.id == folder.id ? 90 : 0))
                                                                 }
                                                             } else {
                                                                 Image(systemName: "chevron.right")
                                                                     .foregroundColor(.gray)
-                                                                    .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolderForFolderUse?.id == folder.id ? 90 : 0))
                                                             }
                                                         }
                                                         .padding()

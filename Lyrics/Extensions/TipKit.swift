@@ -36,7 +36,7 @@ struct AutoscrollSpeedTip: Tip {
     }
     
     var message: Text? {
-        Text("To adjust the scroll speed, open the song's settings and update its duration field.")
+        Text("To adjust the scroll speed, update the song's duration field in its edit view.")
     }
     
     var asset: Image? {
