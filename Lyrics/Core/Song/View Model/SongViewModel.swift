@@ -20,7 +20,6 @@ class SongViewModel: ObservableObject {
     func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in
             if success {
-                self.mainViewModel.fetchSongs(folder)
                 completion(true, "Success!")
             } else {
                 completion(false, errorMessage)

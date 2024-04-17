@@ -17,29 +17,20 @@ struct NewSongView: View {
     @State var view2 = false
     @State var showError = false
     @State var showInfo = false
+    @State var canDismissProgrammatically = false
     
     @Binding var isDisplayed: Bool
     
     let folder: Folder?
     
     func createSong() {
-        if folder != nil {
-            songViewModel.createSong(folder: folder!, lyrics: lyrics, title: title) { success, errorMessage in
-                if success {
-                    view2 = false
-                } else {
-                    self.errorMessage = errorMessage
-                    showError = true
-                }
-            }
-        } else {
-            songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
-                if success {
-                    view2 = false
-                } else {
-                    self.errorMessage = errorMessage
-                    showError = true
-                }
+        songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
+            if success {
+                canDismissProgrammatically = true
+                view2 = false
+            } else {
+                self.errorMessage = errorMessage
+                showError = true
             }
         }
     }
@@ -72,7 +63,9 @@ struct NewSongView: View {
             }
             .onChange(of: view2) { newValue in
                 if !newValue {
-                    isDisplayed = false
+                    if canDismissProgrammatically {
+                        isDisplayed = false
+                    }
                 }
             }
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -114,7 +107,7 @@ struct NewSongView: View {
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
-        .alert("Your song doesn't have any lyrics. Create it anyway?", isPresented: $showInfo, actions: {
+        .alert("Your song doesn't have any lyrics. Continue anyway?", isPresented: $showInfo, actions: {
             Button(action: createSong, label: {Text(NSLocalizedString("continue", comment: "Continue"))})
             Button(role: .cancel, action: {}, label: {Text("Cancel")})
         })
