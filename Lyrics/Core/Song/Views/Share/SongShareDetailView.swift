@@ -26,7 +26,7 @@ struct SongShareDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: "Share Invites", navType: .ShareDetail, folder: nil, showBackButton: true, isEditing: .constant(false))
+            CustomNavBar(title: "Share Invites", navType: .shareDetail, showBackButton: true, isEditing: .constant(false))
                 .padding()
             Divider()
             if NetworkManager.shared.getNetworkState() {

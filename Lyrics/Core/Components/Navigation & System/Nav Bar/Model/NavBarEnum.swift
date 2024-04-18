@@ -8,9 +8,8 @@
 import Foundation
 
 enum NavBarEnum {
-    case HomeView
-    case DetailView
-    case RecentlyDeleted
-    case Auth
-    case ShareDetail
+    case home
+    case detail
+    case recentlyDeleted
+    case shareDetail
 }

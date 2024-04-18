@@ -44,6 +44,7 @@ struct SongDetailView: View {
     
     @State var showEditView = false
     @State var showTagSheet = false
+    @State var showTakesView = false
     @State var showMoveView = false
     @State var showShareSheet = false
     @State var showSettingsView = false
@@ -425,6 +426,9 @@ struct SongDetailView: View {
             let tags: [TagSelectionEnum] = tags.compactMap { TagSelectionEnum(rawValue: $0) }
             SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
+        .sheet(isPresented: $showTakesView) {
+            SongTakesView(isPresented: $showTakesView, song: song)
+        }
         .fullScreenCover(isPresented: $showFullScreenView) {
             PlayView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
                 if duration.isEmpty {
@@ -743,6 +747,11 @@ struct SongDetailView: View {
             } label: {
                 Label("Tags", systemImage: "tag")
             }
+            Button(action: {
+                showTakesView = true
+            }, label: {
+                Label("Takes", systemImage: "music.mic")
+            })
             Button(role: .destructive, action: {
                 showDeleteSheet.toggle()
             }, label: {
