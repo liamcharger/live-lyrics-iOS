@@ -14,6 +14,7 @@ struct SongDetailView: View {
     @State var song: Song
     @State var folder: Folder?
     @State var restoreSong: RecentlyDeletedSong?
+    @State var selectedVariation: SongVariation?
     
     @State var fetchListener: ListenerRegistration?
     
@@ -61,8 +62,7 @@ struct SongDetailView: View {
     @State var showError = false
     @State var hasDeletedSong = false
     @State var showNotesStatusIcon = false
-    @State var appeared = false
-    @State var disappeared = false
+    @State var showNewVariationView = false
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
@@ -75,6 +75,7 @@ struct SongDetailView: View {
     @FocusState var isInputActive: Bool
     
     var songs: [Song]?
+    var songVariations: [SongVariation] = []
     let pasteboard = UIPasteboard.general
     private var wordCount: Int {
         let words = lyrics.split { !$0.isLetter }
@@ -327,12 +328,11 @@ struct SongDetailView: View {
                 .lineSpacing(lineSpacing)
                 .focused($isInputActive)
                 .padding(.leading, 11)
-            if songs != nil {
-                if wordCountBool {
-                    Divider()
-                    HStack {
-                        Spacer()
-                        HStack {
+            Divider()
+            HStack {
+                if songs != nil {
+                    if wordCountBool {
+                        Group {
                             if isChecked == "Words" {
                                 Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
                             } else if isChecked == "Characters" {
@@ -345,12 +345,52 @@ struct SongDetailView: View {
                         }
                         .foregroundColor(.primary)
                         .font(.system(size: 16).weight(.semibold))
-                        Spacer()
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical)
+                }
+                Spacer()
+                if songVariations.isEmpty {
+                    Button {
+                        showNewVariationView = true
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus")
+                            Text("New Variation")
+                        }
+                    }
+                } else {
+                    Menu {
+                        ForEach(songVariations, id: \.id) { variation in
+                            Button {
+                                selectedVariation = variation
+                            } label: {
+                                Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                            }
+                        }
+                        Divider()
+                        Button {
+                            selectedVariation = nil
+                        } label: {
+                            Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                        }
+                        Button {
+                            showNewVariationView = true
+                        } label: {
+                            Label("Create New", systemImage: "plus")
+                        }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Text("Variations")
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                    }
+                }
+                if !wordCountBool {
+                    Spacer()
                 }
             }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 20)
+            .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()
         .navigationBarHidden(true)
@@ -420,6 +460,9 @@ struct SongDetailView: View {
         }
         .sheet(isPresented: $showMoveView) {
             SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
+        }
+        .sheet(isPresented: $showNewVariationView) {
+            NewSongVariationView(isDisplayed: $showNewVariationView)
         }
         .sheet(isPresented: $showTagSheet) {
             let tags: [TagSelectionEnum] = tags.compactMap { TagSelectionEnum(rawValue: $0) }

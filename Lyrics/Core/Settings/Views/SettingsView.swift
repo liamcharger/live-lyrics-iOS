@@ -127,7 +127,7 @@ struct SettingsView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 7) {
-                                Text("Show Under Song Title")
+                                Text("Song Subtitle")
                                 Spacer()
                                 Menu {
                                     Button(action: {selection = "Show Date"}) {

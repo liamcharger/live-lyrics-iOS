@@ -81,6 +81,8 @@
 		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
+		E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BC2BD220E500F92BE6 /* SongVariation.swift */; };
+		E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
@@ -214,6 +216,8 @@
 		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
+		E0B094BC2BD220E500F92BE6 /* SongVariation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariation.swift; sourceTree = "<group>"; };
+		E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongVariationView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
@@ -460,6 +464,7 @@
 				E0D411BD2A9FF12300859E4E /* Notification.swift */,
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
+				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -564,6 +569,7 @@
 			isa = PBXGroup;
 			children = (
 				E0CC33222A040BB700CC38C6 /* NewSongView.swift */,
+				E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */,
 				E01520E12A872EF4005C4F8C /* AddSongsView.swift */,
 			);
 			path = New;
@@ -1190,6 +1196,7 @@
 				E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */,
 				E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */,
 				E04FB1162A17D356002FEEA4 /* SettingsView.swift in Sources */,
+				E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */,
 				E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */,
 				E0CC33232A040BB700CC38C6 /* NewSongView.swift in Sources */,
 				E050D1592A03031B004CC45E /* MenuView.swift in Sources */,
@@ -1226,6 +1233,7 @@
 				E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */,
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,
 				E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */,
+				E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */,
 				E04247822A02EFC500CA48B3 /* Song.swift in Sources */,
 				E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */,
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,
