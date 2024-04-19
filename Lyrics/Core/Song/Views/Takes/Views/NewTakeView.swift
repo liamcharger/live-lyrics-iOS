@@ -18,7 +18,13 @@ struct NewTakeView: View {
     
     @State private var message = ""
     @State private var isRecording = false
+    
     @State private var audioRecorder: AVAudioRecorder!
+    @State private var elapsedTime: TimeInterval = 0
+    @State private var shadow: CGFloat = 0
+    @State private var timer: Timer?
+    
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     func startRecording() {
         do {
@@ -42,11 +48,15 @@ struct NewTakeView: View {
             isRecording = true
             
             takes.append(audioFilename)
+            
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                self.shadow = CGFloat.random(in: 0...40)
+                self.elapsedTime += 1
+            }
         } catch {
             print("Failed to record audio: \(error.localizedDescription)")
         }
     }
-    
     func stopRecording() {
         do {
             try audioSession.setActive(false)
@@ -56,6 +66,8 @@ struct NewTakeView: View {
         message = "Saved!"
         audioRecorder.stop()
         isRecording = false
+        shadow = 0
+        timer?.invalidate()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             isDisplayed = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -69,15 +81,10 @@ struct NewTakeView: View {
             SheetCloseButton(isPresented: $isDisplayed)
                 .frame(maxWidth: .infinity, alignment: .trailing)
             .padding()
-            VStack(spacing: 10) {
-                // Evenly space
-                Wave(strength: 10, frequency: 25)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.clear)
-                    .padding(.vertical)
-                Text("Record a new take")
+            VStack(spacing: 14) {
+                Spacer()
+                Text(songViewModel.timeFormatted(elapsedTime))
                     .font(.largeTitle.weight(.bold))
-                    .frame(maxWidth: .infinity, alignment: .center)
                 VStack(spacing: 2) {
                     Button(action: {
                         if isRecording {
@@ -92,18 +99,15 @@ struct NewTakeView: View {
                             .foregroundColor(.white)
                             .clipShape(Circle())
                             .padding()
+                            .animation(nil)
+                            .shadow(color: isRecording ? Color.red : Color.blue, radius: shadow).animation(.bouncy(duration: 1))
                     }
                     Text(message)
                         .font(.system(size: 18).weight(.semibold))
                         .foregroundColor(.gray)
                         .opacity(isRecording ? 1 : 0)
-                    // TODO: Add audio waveform
-                    Wave(strength: 10, frequency: 25)
-                        .stroke(Color.primary, lineWidth: 4.5)
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(.clear)
-                        .padding(.vertical)
                 }
+                Spacer()
             }
         }
     }

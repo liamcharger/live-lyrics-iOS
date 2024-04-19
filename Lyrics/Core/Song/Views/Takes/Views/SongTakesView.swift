@@ -11,15 +11,16 @@ import AVFoundation
 struct SongTakesView: View {
     @Binding var isPresented: Bool
     
-    @State private var takes: [URL] = []
-    @State private var selectedTake: URL?
-    @State private var recordedTake: URL?
+    @State private var takes: [Take] = []
+    @State private var selectedTake: Take?
+    @State private var recordedTake: Take?
     
-    @State private var showNewTakeSheet = false
     @State private var isPlaying = false
     @State private var showBorder = false
     
-    @State var avPlayer: AVPlayer?
+    @State private var audioPlayer: AVAudioPlayer?
+    
+    @ObservedObject var takesViewModel = TakesViewModel.shared
     
     let song: Song
     
@@ -30,15 +31,6 @@ struct SongTakesView: View {
                     Text("Takes")
                         .font(.system(size: 28, design: .rounded).weight(.bold))
                     Spacer()
-                    Button {
-                        showNewTakeSheet.toggle()
-                    } label: {
-                        FAText(iconName: "pen-to-square", size: 20)
-                            .modifier(NavBarRowViewModifier())
-                    }
-                    .sheet(isPresented: $showNewTakeSheet) {
-                        NewTakeView(isDisplayed: $showNewTakeSheet, takes: $takes, recordedTake: $recordedTake, song: song)
-                    }
                     SheetCloseButton(isPresented: $isPresented, padding: 16)
                 }
                 .padding()
@@ -48,9 +40,9 @@ struct SongTakesView: View {
                 } else {
                     ScrollView {
                         VStack {
-                            ForEach(takes.sorted(by: { url1, url2 in
-                                return takes.firstIndex(of: url1) ?? 0 > takes.firstIndex(of: url2) ?? 0
-                            }), id: \.self) { take in
+                            ForEach(takes.sorted(by: { take1, take2 in
+                                return takes.firstIndex(of: take1) ?? 0 > takes.firstIndex(of: take2) ?? 0
+                            }), id: \.id) { take in
                                 VStack(spacing: 0) {
                                     Button(action: {
                                         withAnimation(.bouncy(extraBounce: 0.1)) {
@@ -66,7 +58,7 @@ struct SongTakesView: View {
                                                 Text("Take \((self.takes.firstIndex(of: take) ?? 0) + 1)")
                                                     .font(.title2.weight(.semibold))
                                                     .foregroundColor(showBorder && recordedTake == take ? Color.blue : Color.primary)
-                                                Text("04/17/2024")
+                                                Text(take.date.formatted())
                                             }
                                             Spacer()
                                             Image(systemName: "chevron.right")
@@ -82,7 +74,7 @@ struct SongTakesView: View {
                                                 RoundedRectangle(cornerRadius: 20)
                                                     .stroke(Color.blue, lineWidth: 3.5)
                                                     .onAppear {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                                             withAnimation(.easeInOut) {
                                                                 showBorder = false
                                                             }
@@ -98,11 +90,11 @@ struct SongTakesView: View {
                                         .contextMenu {
                                             // TODO: Make available to older iOS versions
                                             if #available(iOS 16, *) {
-                                                ShareLink(item: take, subject: Text("\((takes.firstIndex(of: take) ?? 0) + 1)"))
+                                                ShareLink(item: take.url, subject: Text("\((takes.firstIndex(of: take) ?? 0) + 1)"))
                                             }
                                             Button(role: .destructive, action: {
                                                 do {
-                                                    try FileManager.default.removeItem(at: take)
+                                                    try FileManager.default.removeItem(at: take.url)
                                                     takes.removeAll(where: { $0 == take })
                                                 } catch {
                                                     print(error)
@@ -118,16 +110,20 @@ struct SongTakesView: View {
                                                 .padding(.horizontal, -16)
                                             HStack {
                                                 Button {
-                                                    self.avPlayer = AVPlayer(url: take)
-                                                    
-                                                    if let avPlayer = avPlayer {
-                                                        if !isPlaying {
-                                                            avPlayer.play()
-                                                            isPlaying = true
-                                                        } else {
-                                                            avPlayer.pause()
-                                                            isPlaying = false
+                                                    do {
+                                                        self.audioPlayer = try AVAudioPlayer(contentsOf: take.url)
+                                                        
+                                                        if let audioPlayer = audioPlayer {
+                                                            if !isPlaying {
+                                                                audioPlayer.play()
+                                                                isPlaying = true
+                                                            } else {
+                                                                audioPlayer.pause()
+                                                                isPlaying = false
+                                                            }
                                                         }
+                                                    } catch {
+                                                        print(error.localizedDescription)
                                                     }
                                                 } label: {
                                                     Image(systemName: isPlaying ? "pause" : "play")
@@ -136,7 +132,11 @@ struct SongTakesView: View {
                                                         .foregroundColor(.white)
                                                         .cornerRadius(6)
                                                 }
-                                                Spacer()
+                                                .onChange(of: audioPlayer?.isPlaying ?? false) { isPlaying in
+                                                    if !isPlaying {
+                                                        self.isPlaying = false
+                                                    }
+                                                }
                                             }
                                         }
                                         .padding([.horizontal, .bottom], 14)
@@ -151,21 +151,21 @@ struct SongTakesView: View {
                         .padding()
                     }
                 }
+                if !takes.isEmpty {
+                    Divider()
+                    Text("Takes are not synced across devices.")
+                        .foregroundColor(.gray)
+                        .padding()
+                }
             }
             .onAppear {
-                self.fetchRecordedTakes()
+                do {
+                    self.takes = try takesViewModel.loadRecordedTakes()
+                } catch {
+                    print("Failed to fetch recorded takes: \(error.localizedDescription)")
+                }
             }
         }
         .navigationViewStyle(.stack)
-    }
-    
-    func fetchRecordedTakes() {
-        let baseDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-        do {
-            let recordingURLs = try FileManager.default.contentsOfDirectory(at: baseDir, includingPropertiesForKeys: nil, options: [])
-            takes = recordingURLs.filter { $0.lastPathComponent.contains("\(song.id ?? "")") }
-        } catch {
-            print("Failed to fetch recorded takes: \(error.localizedDescription)")
-        }
     }
 }

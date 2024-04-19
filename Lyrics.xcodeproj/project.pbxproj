@@ -83,6 +83,9 @@
 		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
+		E0B094B52BD1A9A500F92BE6 /* TakesMiniView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094B42BD1A9A500F92BE6 /* TakesMiniView.swift */; };
+		E0B094B72BD1B61900F92BE6 /* Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094B62BD1B61900F92BE6 /* Take.swift */; };
+		E0B094BB2BD1B77700F92BE6 /* TakesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BA2BD1B77700F92BE6 /* TakesViewModel.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
@@ -218,6 +221,9 @@
 		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
+		E0B094B42BD1A9A500F92BE6 /* TakesMiniView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesMiniView.swift; sourceTree = "<group>"; };
+		E0B094B62BD1B61900F92BE6 /* Take.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Take.swift; sourceTree = "<group>"; };
+		E0B094BA2BD1B77700F92BE6 /* TakesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesViewModel.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
@@ -360,8 +366,8 @@
 		E02263022BD0774700C2412B /* Takes */ = {
 			isa = PBXGroup;
 			children = (
-				E02263032BD0775100C2412B /* SongTakesView.swift */,
-				E02263052BD0BDEA00C2412B /* NewTakeView.swift */,
+				E0B094B82BD1B76600F92BE6 /* View Model */,
+				E0B094B92BD1B76900F92BE6 /* Views */,
 			);
 			path = Takes;
 			sourceTree = "<group>";
@@ -473,6 +479,7 @@
 				E0D411BD2A9FF12300859E4E /* Notification.swift */,
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
+				E0B094B62BD1B61900F92BE6 /* Take.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -703,6 +710,24 @@
 				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
 			);
 			path = Intro;
+			sourceTree = "<group>";
+		};
+		E0B094B82BD1B76600F92BE6 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				E0B094BA2BD1B77700F92BE6 /* TakesViewModel.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
+		E0B094B92BD1B76900F92BE6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E0B094B42BD1A9A500F92BE6 /* TakesMiniView.swift */,
+				E02263032BD0775100C2412B /* SongTakesView.swift */,
+				E02263052BD0BDEA00C2412B /* NewTakeView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E0C168332B59BC9900A12C59 /* Intents */ = {
@@ -1162,6 +1187,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0B094B52BD1A9A500F92BE6 /* TakesMiniView.swift in Sources */,
 				E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */,
 				E02263062BD0BDEA00C2412B /* NewTakeView.swift in Sources */,
 				E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */,
@@ -1202,6 +1228,7 @@
 				E0F95C832A13C2E000C2D21C /* MailView.swift in Sources */,
 				E0CA85302B081D5100188CD0 /* AlertView.swift in Sources */,
 				E050D15E2A030368004CC45E /* Extensions.swift in Sources */,
+				E0B094B72BD1B61900F92BE6 /* Take.swift in Sources */,
 				E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */,
 				E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */,
 				E04FB1162A17D356002FEEA4 /* SettingsView.swift in Sources */,
@@ -1219,6 +1246,7 @@
 				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
+				E0B094BB2BD1B77700F92BE6 /* TakesViewModel.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,
 				E05226522A1BBCFC00ECF255 /* SongMoveView.swift in Sources */,
 				E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */,
@@ -1433,7 +1461,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Live Lyrics needs permission to access your microphone to record takes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1449,7 +1478,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chargertech.Lyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1482,7 +1511,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Live Lyrics needs permission to access your microphone to record takes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1498,7 +1528,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chargertech.Lyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

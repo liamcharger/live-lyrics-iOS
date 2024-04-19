@@ -62,8 +62,10 @@ struct SongDetailView: View {
     @State var showError = false
     @State var hasDeletedSong = false
     @State var showNotesStatusIcon = false
-    @State var appeared = false
-    @State var disappeared = false
+    @State var showTakesMiniView = false
+    @State var isRecording = false
+    
+    @State private var elapsedTime: TimeInterval = 0
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
@@ -328,6 +330,10 @@ struct SongDetailView: View {
                 .lineSpacing(lineSpacing)
                 .focused($isInputActive)
                 .padding(.leading, 11)
+            if showTakesMiniView {
+                Divider()
+                TakesMiniView(showTakesView: $showTakesView, isDisplayed: $showTakesMiniView, song: song)
+            }
             if songs != nil {
                 if wordCountBool {
                     Divider()
@@ -426,7 +432,7 @@ struct SongDetailView: View {
             let tags: [TagSelectionEnum] = tags.compactMap { TagSelectionEnum(rawValue: $0) }
             SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
-        .sheet(isPresented: $showTakesView) {
+        .popover(isPresented: $showTakesView) {
             SongTakesView(isPresented: $showTakesView, song: song)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
@@ -748,7 +754,7 @@ struct SongDetailView: View {
                 Label("Tags", systemImage: "tag")
             }
             Button(action: {
-                showTakesView = true
+                showTakesMiniView = true
             }, label: {
                 Label("Takes", systemImage: "music.mic")
             })
