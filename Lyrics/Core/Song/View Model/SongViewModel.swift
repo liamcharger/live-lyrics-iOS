@@ -14,8 +14,18 @@ class SongViewModel: ObservableObject {
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var authViewModel = AuthViewModel.shared
     
+    @Published var songVariations: [SongVariation] = []
+    @Published var isLoadingVariations = true
+    
     let service = SongService()
     static let shared = SongViewModel()
+    
+    func fetchSongVariations(song: Song) {
+        service.fetchSongVariations(song: song) { variations in
+            self.songVariations = variations
+            self.isLoadingVariations = false
+        }
+    }
     
     func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in
@@ -30,11 +40,16 @@ class SongViewModel: ObservableObject {
     func createSong(lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(lyrics: lyrics, title: title) { success, errorMessage in
             if success {
-                self.mainViewModel.fetchSongs()
                 completion(true, "Success!")
             } else {
                 completion(false, errorMessage)
             }
+        }
+    }
+    
+    func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?) -> Void) {
+        service.createSongVariation(song: song, lyrics: lyrics, title: title) { error in
+            completion(error)
         }
     }
     
@@ -49,7 +64,6 @@ class SongViewModel: ObservableObject {
         let folder = Folder(uid: uid, timestamp: Date(), title: title, order: 0)
         
         service.createFolder(folder: folder) { error in
-            self.mainViewModel.fetchFolders()
             completion(error)
         }
     }
@@ -161,6 +175,14 @@ class SongViewModel: ObservableObject {
                 return
             }
         }
+    }
+    
+    func deleteSongVariation(_ song: Song, variation: SongVariation) {
+        service.deleteVariation(song: song, variation: variation)
+    }
+    
+    func updateVariation(song: Song, variation: SongVariation, title: String) {
+        service.updateVariation(song: song, variation: variation, title: title)
     }
     
     func getColorForTag(_ tagColor: String) -> Color {

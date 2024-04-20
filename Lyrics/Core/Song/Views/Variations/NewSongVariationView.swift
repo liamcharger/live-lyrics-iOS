@@ -23,16 +23,19 @@ struct NewSongVariationView: View {
     
     @FocusState var isFocused: Bool
     
+    let song: Song
+    
     func createVariation() {
-//        songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
-//            if success {
-//                canDismissProgrammatically = true
-//                view2 = false
-//            } else {
-//                self.errorMessage = errorMessage
-//                showError = true
-//            }
-//        }
+        songViewModel.createSongVariation(song: song, lyrics: lyrics, title: title) { error in
+            if let error = error {
+                print(error.localizedDescription)
+                errorMessage = error.localizedDescription
+                showError = true
+            } else {
+                canDismissProgrammatically = true
+                view2 = false
+            }
+        }
     }
     
     var body: some View {
@@ -117,7 +120,7 @@ struct NewSongVariationView: View {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showInfo) {
-            Alert(title: Text("You need to add lyrics to a variation to create it.?"), dismissButton: .cancel() )
+            Alert(title: Text("You need to add lyrics to a variation to create it."), dismissButton: .cancel() )
         }
         .onAppear {
             isFocused = true

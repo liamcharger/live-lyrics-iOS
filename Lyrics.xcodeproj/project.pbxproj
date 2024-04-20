@@ -83,6 +83,7 @@
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
 		E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BC2BD220E500F92BE6 /* SongVariation.swift */; };
 		E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */; };
+		E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
@@ -218,6 +219,7 @@
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		E0B094BC2BD220E500F92BE6 /* SongVariation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariation.swift; sourceTree = "<group>"; };
 		E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongVariationView.swift; sourceTree = "<group>"; };
+		E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariationEditView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
@@ -569,7 +571,6 @@
 			isa = PBXGroup;
 			children = (
 				E0CC33222A040BB700CC38C6 /* NewSongView.swift */,
-				E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */,
 				E01520E12A872EF4005C4F8C /* AddSongsView.swift */,
 			);
 			path = New;
@@ -696,6 +697,15 @@
 				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
 			);
 			path = Intro;
+			sourceTree = "<group>";
+		};
+		E0B4CF1A2BD2F00C00F143E9 /* Variations */ = {
+			isa = PBXGroup;
+			children = (
+				E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */,
+				E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */,
+			);
+			path = Variations;
 			sourceTree = "<group>";
 		};
 		E0C168332B59BC9900A12C59 /* Intents */ = {
@@ -881,6 +891,7 @@
 		E0CC33252A040D4300CC38C6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E0B4CF1A2BD2F00C00F143E9 /* Variations */,
 				E0710A8E2A2A73F0004D62E8 /* Detail */,
 				E04CB9692BCB5FE100F2831B /* Share */,
 				E0D3AA8C2BBC6B3B005650F5 /* Tag */,
@@ -1169,6 +1180,7 @@
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
 				E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */,
+				E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */,
 				E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */,
 				E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */,
 				E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */,

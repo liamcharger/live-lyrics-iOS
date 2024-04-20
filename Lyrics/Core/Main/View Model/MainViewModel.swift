@@ -133,8 +133,8 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func updateLyrics(_ song: Song, lyrics: String) {
-        self.service.updateLyrics(song: song, lyrics: lyrics)
+    func updateLyrics(forVariation variation: SongVariation? = nil, _ song: Song, lyrics: String) {
+        self.service.updateLyrics(forVariation: variation, song: song, lyrics: lyrics)
     }
     
     func updateSongOrder() {
