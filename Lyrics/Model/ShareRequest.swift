@@ -19,4 +19,5 @@ struct ShareRequest: Codable, Identifiable {
     var type: String
     var toUsername: [String]
     var fromUsername: String
+    var songVariations: [String]?
 }

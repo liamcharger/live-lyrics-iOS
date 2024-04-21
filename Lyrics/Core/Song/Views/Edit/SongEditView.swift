@@ -85,11 +85,9 @@ struct SongEditView: View {
             }
             Divider()
             VStack(spacing: 16) {
-                if !songViewModel.songVariations.contains(where: { $0.title == "noVariations" }) {
-                    Text("These settings are not specific to song variations.")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
+                Text("These settings are not specific to song variations.")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.gray)
                 Button(action: update) {
                     Text(NSLocalizedString("save", comment: "Save"))
                         .frame(maxWidth: .infinity)

@@ -11,19 +11,18 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class SongViewModel: ObservableObject {
-    @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var authViewModel = AuthViewModel.shared
     
-    @Published var songVariations: [SongVariation] = []
     @Published var isLoadingVariations = false
     
     let service = SongService()
     static let shared = SongViewModel()
     
-    func fetchSongVariations(song: Song) {
+    func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
+        service.removeSongVariationListener()
         self.isLoadingVariations = true
         service.fetchSongVariations(song: song) { variations in
-            self.songVariations = variations
+            completion(variations)
             self.isLoadingVariations = false
         }
     }
@@ -48,9 +47,9 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?) -> Void) {
-        service.createSongVariation(song: song, lyrics: lyrics, title: title) { error in
-            completion(error)
+    func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?, String) -> Void) {
+        service.createSongVariation(song: song, lyrics: lyrics, title: title) { error, createdId in
+            completion(error, createdId)
         }
     }
     
@@ -140,11 +139,7 @@ class SongViewModel: ObservableObject {
     func moveSongToRecentlyDeleted(_ song: Song) {
         DispatchQueue.main.async {
             self.service.moveSongToRecentlyDeleted(song: song) { success, errorMessage in
-                if success {
-                    self.mainViewModel.fetchSongs()
-                } else {
-                    
-                }
+                
             }
         }
     }
@@ -152,11 +147,7 @@ class SongViewModel: ObservableObject {
     func moveSongToRecentlyDeleted(_ folder: Folder, _ song: Song) {
         DispatchQueue.main.async {
             self.service.moveSongToRecentlyDeleted(song: song, from: folder) { success, errorMessage in
-                if success {
-                    self.mainViewModel.fetchSongs(folder)
-                } else {
-                    
-                }
+                
             }
         }
     }

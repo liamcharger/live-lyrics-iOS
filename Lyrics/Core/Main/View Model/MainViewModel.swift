@@ -61,6 +61,10 @@ class MainViewModel: ObservableObject {
         service.removeOutgoingInviteEventListener()
     }
     
+    func removeSongVariationListener() {
+        service.removeSongVariationListener()
+    }
+    
     func fetchSystemStatus() {
         userService.fetchSystemDoc { systemDoc in
             self.systemDoc = systemDoc

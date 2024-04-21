@@ -20,20 +20,22 @@ struct NewSongVariationView: View {
     @State var canDismissProgrammatically = false
     
     @Binding var isDisplayed: Bool
+    @Binding var createdId: String
     
     @FocusState var isFocused: Bool
     
     let song: Song
     
     func createVariation() {
-        songViewModel.createSongVariation(song: song, lyrics: lyrics, title: title) { error in
+        songViewModel.createSongVariation(song: song, lyrics: lyrics, title: title) { error, createdId in
             if let error = error {
                 print(error.localizedDescription)
-                errorMessage = error.localizedDescription
-                showError = true
+                self.errorMessage = error.localizedDescription
+                self.showError = true
             } else {
-                canDismissProgrammatically = true
-                view2 = false
+                self.createdId = createdId
+                self.canDismissProgrammatically = true
+                self.view2 = false
             }
         }
     }
