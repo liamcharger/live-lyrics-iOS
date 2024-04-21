@@ -358,7 +358,7 @@ struct SongDetailView: View {
                     }
                     Spacer()
                     Group {
-                        if songViewModel.isLoadingVariations {
+                        if songVariations.isEmpty {
                             ProgressView()
                         } else {
                             if songVariations.contains(where: { $0.title == "noVariations" }) {
@@ -413,11 +413,6 @@ struct SongDetailView: View {
                             }
                         }
                     }
-                    .onAppear {
-                        songViewModel.fetchSongVariations(song: song) { variations in
-                            self.songVariations = variations
-                        }
-                    }
                     if !wordCountBool {
                         Spacer()
                     }
@@ -432,6 +427,9 @@ struct SongDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
+            songViewModel.fetchSongVariations(song: song) { variations in
+                self.songVariations = variations
+            }
             songViewModel.fetchSong(song.id ?? "") { song in
                 self.title = song.title
                 if selectedVariation == nil || !isInputActive {

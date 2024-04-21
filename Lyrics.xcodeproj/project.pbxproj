@@ -63,8 +63,8 @@
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E079AE362A81928B006C4B55 /* NewPlayViewView.swift */; };
-		E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E08237002BCE35B7006ED2EA /* BottomSheet */; };
 		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
+		E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E0867CF02BD5989B005605CD /* BottomSheet */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
 		E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */; };
 		E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */; };
@@ -281,7 +281,7 @@
 				E03540FD2BC05A3400273830 /* FirebaseFirestore in Frameworks */,
 				E03540FB2BC05A3400273830 /* FirebaseAuth in Frameworks */,
 				E03540FF2BC05A3400273830 /* FirebaseFirestoreSwift in Frameworks */,
-				E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */,
+				E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */,
 				E03541032BC05A3400273830 /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1029,7 +1029,7 @@
 				E03541022BC05A3400273830 /* FirebaseRemoteConfig */,
 				E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */,
 				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
-				E08237002BCE35B7006ED2EA /* BottomSheet */,
+				E0867CF02BD5989B005605CD /* BottomSheet */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1107,7 +1107,7 @@
 				E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
-				E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1673,7 +1673,7 @@
 				minimumVersion = 10.23.1;
 			};
 		};
-		E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+		E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/adamfootdev/BottomSheet";
 			requirement = {
@@ -1732,9 +1732,9 @@
 			package = E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfigSwift;
 		};
-		E08237002BCE35B7006ED2EA /* BottomSheet */ = {
+		E0867CF02BD5989B005605CD /* BottomSheet */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			package = E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */;
 			productName = BottomSheet;
 		};
 		E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */ = {
