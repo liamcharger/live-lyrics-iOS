@@ -415,7 +415,6 @@ struct SongDetailView: View {
                     }
                     .onAppear {
                         songViewModel.fetchSongVariations(song: song) { variations in
-                            print("Detail variations: ", variations)
                             self.songVariations = variations
                         }
                     }
@@ -433,7 +432,6 @@ struct SongDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
-            print("Variations", songVariations)
             songViewModel.fetchSong(song.id ?? "") { song in
                 self.title = song.title
                 if selectedVariation == nil || !isInputActive {
@@ -510,9 +508,9 @@ struct SongDetailView: View {
             SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
         }
         .sheet(isPresented: $showNewVariationView, onDismiss: {
-            if let variation = songVariations[songVariations.firstIndex(where: { $0.id == createdVariationId })] {
-                self.selectedVariation = variation
-                self.lyrics = variation.title
+            if let index = songVariations.firstIndex(where: { $0.id == createdVariationId }) {
+                self.selectedVariation = songVariations[index]
+                self.lyrics = songVariations[index].lyrics
             }
         }) {
             NewSongVariationView(isDisplayed: $showNewVariationView, createdId: $createdVariationId, song: song)
@@ -585,7 +583,7 @@ struct SongDetailView: View {
                 } else {
                     return $duration
                 }
-            }(), bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs!, dismiss: $showFullScreenView)
+            }(), bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [], dismiss: $showFullScreenView)
         }
         .onChange(of: hasDeletedSong, perform: { value in
             if value == true {
