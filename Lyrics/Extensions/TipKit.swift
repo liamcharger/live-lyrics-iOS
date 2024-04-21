@@ -57,7 +57,7 @@ struct VariationsTip: Tip {
     }
     
     var message: Text? {
-        Text("Create variations of your songs for different renditions, with specific versions for different people or instruments.")
+        Text("Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.")
     }
     
     var asset: Image? {
