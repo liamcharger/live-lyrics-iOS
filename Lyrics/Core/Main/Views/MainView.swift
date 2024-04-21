@@ -260,7 +260,7 @@ struct MainView: View {
                                 SongShareDetailView()
                             }) {
                                 ZStack {
-                                    ListRowView(isEditing: $isEditingSongs, title: "Share Invites", navArrow: "chevron.right", badge: "NEW")
+                                    ListRowView(isEditing: $isEditingSongs, title: "Share Invites", navArrow: "chevron.right")
                                     HStack {
                                         Spacer()
                                         if !mainViewModel.incomingShareRequests.isEmpty {
