@@ -401,7 +401,7 @@ struct SongDetailView: View {
                                         Label("New", systemImage: "square.and.pencil")
                                     }
                                 } label: {
-                                    HStack(spacing: 6) {
+                                    HStack(spacing: 5) {
                                         if let variation = selectedVariation {
                                             Text(variation.title)
                                         } else {

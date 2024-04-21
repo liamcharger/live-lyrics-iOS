@@ -160,7 +160,7 @@ struct ShareView: View {
                             }
                         }
                     } label: {
-                        HStack(spacing: 4) {
+                        HStack(spacing: 5) {
                             Text({
                                 if selectedVariations.isEmpty { 
                                     return "None"
