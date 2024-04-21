@@ -13,6 +13,7 @@ class SongService {
 	var songListener: ListenerRegistration?
 	var folderSongListener: ListenerRegistration?
 	var folderListener: ListenerRegistration?
+	var variationListener: ListenerRegistration?
 	var recentSongListener: ListenerRegistration?
 	var incomingInvitesListener: ListenerRegistration?
 	var outgoingInvitesListener: ListenerRegistration?
@@ -39,6 +40,10 @@ class SongService {
 
 	func removeOutgoingInviteEventListener() {
 		outgoingInvitesListener?.remove()
+	}
+
+	func removeSongVariationListener() {
+		variationListener?.remove()
 	}
 	
 	func fetchSongs(completion: @escaping ([Song]) -> Void) {
@@ -211,6 +216,24 @@ class SongService {
 			}
 	}
 	
+	func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		self.variationListener = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").collection("variations")
+			.addSnapshotListener { snapshot, error in
+				guard let documents = snapshot?.documents else {
+					return
+				}
+				let variations = documents.compactMap({ try? $0.data(as: SongVariation.self) })
+				
+				if variations.isEmpty {
+					completion([SongVariation.variation])
+				} else {
+					completion(variations)
+				}
+			}
+	}
+	
 	func updateAutoscrollBool(songId: String, autoscrollEnabled: Bool, completion: @escaping(Bool) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
@@ -300,13 +323,24 @@ class SongService {
 			}
 	}
 	
-	func updateLyrics(song: Song, lyrics: String) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "")
-			.updateData(["lyrics": lyrics]) { error in
-				if let error = error {
-					print(error.localizedDescription)
+	func updateLyrics(forVariation: SongVariation? = nil, song: Song, lyrics: String) {
+		if let variation = forVariation {
+			print("Updating variation")
+			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").collection("variations").document(variation.id ?? "")
+				.updateData(["lyrics": lyrics]) { error in
+					if let error = error {
+						print(error.localizedDescription)
+					}
 				}
-			}
+		} else {
+			print("Updating default")
+			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "")
+				.updateData(["lyrics": lyrics]) { error in
+					if let error = error {
+						print(error.localizedDescription)
+					}
+				}
+		}
 	}
 	
 	func updateNotes(song: Song, notes: String) {
@@ -420,6 +454,23 @@ class SongService {
 		}
 	}
 	
+	func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?, String) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		let id = UUID().uuidString
+		
+		let documentRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").collection("variations").document(id)
+		
+		documentRef.setData(["title": title, "lyrics": lyrics, "songUid": uid, "songId": song.id ?? "", ]) { error in
+			if let error = error {
+				print("Error creating song variation: \(error.localizedDescription)")
+				completion(error, "")
+				return
+			}
+			
+			completion(nil, id)
+		}
+	}
+	
 	func createSong(song: Song, completion: @escaping(Error?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
@@ -480,6 +531,22 @@ class SongService {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "").collection("songs").document(song.id ?? "").delete { error in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+		}
+	}
+	
+	func deleteVariation(song: Song, variation: SongVariation) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").collection("variations").document(variation.id ?? "").delete { error in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+		}
+	}
+	
+	func updateVariation(song: Song, variation: SongVariation, title: String) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").collection("variations").document(variation.id ?? "").updateData(["title": title]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -703,7 +770,6 @@ class SongService {
 	}
 	
 	func sendInviteToUser(request: ShareRequest, completion: @escaping(Error?) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let id = UUID().uuidString
 		let dispatch = DispatchGroup()
 		
@@ -716,7 +782,8 @@ class SongService {
 			"contentName": request.contentName,
 			"type": request.type,
 			"toUsername": request.toUsername,
-			"fromUsername": request.fromUsername
+			"fromUsername": request.fromUsername,
+			"songVariations": request.songVariations
 		]
 		
 		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(id).setData(requestData) { error in
@@ -892,11 +959,15 @@ class SongService {
 						"tags": song.tags
 					]
 					
-					Firestore.firestore().collection("users").document(uid).collection("songs").document(request.id ?? "").setData(songData) { error in
-						if let error = error {
-							print("Error: \(error.localizedDescription)")
-							completion()
-							return
+					Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).setData(songData)
+					Firestore.firestore().collection("users").document(request.from).collection("songs").document(request.contentId).collection("variations").getDocuments { snapshot, error in
+						guard let documents = snapshot?.documents else { return }
+						let variations = documents.compactMap({ try? $0.data(as: SongVariation.self )})
+						
+						for variation in variations {
+							if let variations = request.songVariations, variations.contains(where: { $0 == variation.id ?? ""}) {
+								Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title])
+							}
 						}
 					}
 					self.deleteRequest(request, uid: uid)

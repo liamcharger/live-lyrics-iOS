@@ -17,10 +17,14 @@ struct ShareView: View {
     @Environment(\.presentationMode) var presMode
     
     @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel.shared
     
     @Binding var isDisplayed: Bool
     
     @State var selectedUsers = [UserToShare]()
+    @State var selectedVariations = [SongVariation]()
+    @State var songVariations = [SongVariation]()
     @State var searchText = ""
     @State var collaborate = false
     @State var firstSearch = true
@@ -62,7 +66,7 @@ struct ShareView: View {
                         
                         if let song = song {
                             let toUserIds = selectedUsers.compactMap { $0.id }
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }))
                         } else if let folder = folder {
                             let toUserIds = selectedUsers.compactMap { $0.id }
                             request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
@@ -139,6 +143,42 @@ struct ShareView: View {
             }
             .padding()
             Divider()
+            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) {
+                HStack {
+                    Text("Including variation\(selectedVariations.count > 1 ? "s" : ""):")
+                    Spacer()
+                    Menu {
+                        ForEach(songVariations, id: \.id) { variation in
+                            Button {
+                                if selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) {
+                                    self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
+                                } else {
+                                    self.selectedVariations.append(variation)
+                                }
+                            } label: {
+                                Label(variation.title, systemImage: selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) ? "checkmark" : "")
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text({
+                                if selectedVariations.isEmpty { 
+                                    return "None"
+                                } else {
+                                    if selectedVariations.count == 1 {
+                                        return selectedVariations.first?.title ?? ""
+                                    } else {
+                                        return "Multiple"
+                                    }
+                                }
+                            }())
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                    }
+                }
+                .padding()
+                Divider()
+            }
             if networkManager.getNetworkState() {
                 CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search by username...")
                     .textInputAutocapitalization(.never)
@@ -259,8 +299,15 @@ struct ShareView: View {
                 }(), spaceNavbar: true)
             }
         }
-        .onDisappear {
+        .onAppear {
             authViewModel.users = []
+            if let song = song {
+                songViewModel.fetchSongVariations(song: song) { variations in
+                    print("ShareView variations: ", variations)
+                    self.songVariations = variations
+                    self.selectedVariations = variations
+                }
+            }
         }
     }
 }

@@ -64,6 +64,7 @@
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E079AE362A81928B006C4B55 /* NewPlayViewView.swift */; };
 		E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E08237002BCE35B7006ED2EA /* BottomSheet */; };
+		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
 		E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */; };
 		E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */; };
@@ -81,6 +82,9 @@
 		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
+		E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BC2BD220E500F92BE6 /* SongVariation.swift */; };
+		E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */; };
+		E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
@@ -197,6 +201,7 @@
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
 		E079AE362A81928B006C4B55 /* NewPlayViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlayViewView.swift; sourceTree = "<group>"; };
+		E0867CED2BD57812005605CD /* SongDetailMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailMenuView.swift; sourceTree = "<group>"; };
 		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
 		E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Solid-900.otf"; sourceTree = "<group>"; };
 		E0986BEB2B2B512300CE938B /* Font Awesome 6 Pro-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Regular-400.otf"; sourceTree = "<group>"; };
@@ -214,6 +219,9 @@
 		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
+		E0B094BC2BD220E500F92BE6 /* SongVariation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariation.swift; sourceTree = "<group>"; };
+		E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongVariationView.swift; sourceTree = "<group>"; };
+		E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariationEditView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
@@ -460,6 +468,7 @@
 				E0D411BD2A9FF12300859E4E /* Notification.swift */,
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
+				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -652,6 +661,7 @@
 				E004F4252A69C2D40089B6DF /* PlayView.swift */,
 				E042477E2A02EF8F00CA48B3 /* SongDetailView.swift */,
 				E079AE362A81928B006C4B55 /* NewPlayViewView.swift */,
+				E0867CED2BD57812005605CD /* SongDetailMenuView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -690,6 +700,15 @@
 				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
 			);
 			path = Intro;
+			sourceTree = "<group>";
+		};
+		E0B4CF1A2BD2F00C00F143E9 /* Variations */ = {
+			isa = PBXGroup;
+			children = (
+				E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */,
+				E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */,
+			);
+			path = Variations;
 			sourceTree = "<group>";
 		};
 		E0C168332B59BC9900A12C59 /* Intents */ = {
@@ -875,6 +894,7 @@
 		E0CC33252A040D4300CC38C6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E0B4CF1A2BD2F00C00F143E9 /* Variations */,
 				E0710A8E2A2A73F0004D62E8 /* Detail */,
 				E04CB9692BCB5FE100F2831B /* Share */,
 				E0D3AA8C2BBC6B3B005650F5 /* Tag */,
@@ -1163,6 +1183,7 @@
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
 				E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */,
+				E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */,
 				E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */,
 				E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */,
 				E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */,
@@ -1173,6 +1194,7 @@
 				E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */,
 				E0C139EA2BCA30B300317A7B /* FolderSongDropViewDelegate.swift in Sources */,
 				E0CA853A2B081D5100188CD0 /* CustomTextField.swift in Sources */,
+				E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */,
 				E04CB96A2BCB5FE100F2831B /* SongShareDetailView.swift in Sources */,
 				E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */,
 				E0CA85342B081D5100188CD0 /* SheetCloseButton.swift in Sources */,
@@ -1190,6 +1212,7 @@
 				E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */,
 				E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */,
 				E04FB1162A17D356002FEEA4 /* SettingsView.swift in Sources */,
+				E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */,
 				E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */,
 				E0CC33232A040BB700CC38C6 /* NewSongView.swift in Sources */,
 				E050D1592A03031B004CC45E /* MenuView.swift in Sources */,
@@ -1226,6 +1249,7 @@
 				E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */,
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,
 				E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */,
+				E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */,
 				E04247822A02EFC500CA48B3 /* Song.swift in Sources */,
 				E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */,
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,
@@ -1417,7 +1441,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1433,7 +1457,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chargertech.Lyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1466,7 +1490,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1482,7 +1506,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chargertech.Lyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

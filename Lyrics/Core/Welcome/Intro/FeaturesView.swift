@@ -13,10 +13,7 @@ struct FeaturesView: View {
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
-        FeaturesSection(title: "Tags", subtitle: "A new way to organize your songs.", imageName: "sparkles"),
-        FeaturesSection(title: "Autoscroll", subtitle: "Ensure smooth scrolling while you focus on performing.", imageName: "play"),
-        FeaturesSection(title: "Metronome", subtitle: "Keep your rhythm steady with our built-in metronome.", imageName: "123.rectangle"),
-        FeaturesSection(title: "Sharing", subtitle: "Effortlessly share songs with band members.", imageName: "square.and.arrow.up"),
+        FeaturesSection(title: "Song Variations", subtitle: "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.", imageName: "sparkles"),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
     ]
     
