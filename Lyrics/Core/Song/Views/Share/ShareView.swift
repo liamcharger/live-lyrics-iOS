@@ -17,6 +17,7 @@ struct ShareView: View {
     @Environment(\.presentationMode) var presMode
     
     @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     @Binding var isDisplayed: Bool
     
@@ -27,6 +28,7 @@ struct ShareView: View {
     @State var isSendingRequest = false
     
     @State var selectedUser: User?
+    @State var selectedVariation: SongVariation?
     
     @AppStorage("ShareView.recentSearches") var recentSearches = ""
     
@@ -139,6 +141,34 @@ struct ShareView: View {
             }
             .padding()
             Divider()
+            if !songViewModel.isLoadingVariations && !songViewModel.songVariations.contains(where: { $0.title == "noVariations" }) {
+                HStack {
+                    Text("Variation:")
+                    Spacer()
+                    Menu {
+                        Button {
+                            selectedVariation = nil
+                        } label: {
+                            Label("Default", systemImage: selectedVariation == nil ? "checkmark": "")
+                        }
+                        Divider()
+                        ForEach(songViewModel.songVariations, id: \.id) { variation in
+                            Button {
+                                selectedVariation = variation
+                            } label: {
+                                Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(selectedVariation?.title ?? "Default")
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                    }
+                }
+                .padding()
+                Divider()
+            }
             if networkManager.getNetworkState() {
                 CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search by username...")
                     .textInputAutocapitalization(.never)
@@ -259,8 +289,11 @@ struct ShareView: View {
                 }(), spaceNavbar: true)
             }
         }
-        .onDisappear {
+        .onAppear {
             authViewModel.users = []
+            if let song = song, songViewModel.songVariations.isEmpty {
+                songViewModel.fetchSongVariations(song: song)
+            }
         }
     }
 }

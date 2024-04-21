@@ -85,7 +85,7 @@ struct SongEditView: View {
             }
             Divider()
             VStack(spacing: 16) {
-                if songViewModel.songVariations.isEmpty {
+                if !songViewModel.songVariations.contains(where: { $0.title == "noVariations" }) {
                     Text("These settings are not specific to song variations.")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.gray)

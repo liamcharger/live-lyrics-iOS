@@ -15,12 +15,13 @@ class SongViewModel: ObservableObject {
     @ObservedObject var authViewModel = AuthViewModel.shared
     
     @Published var songVariations: [SongVariation] = []
-    @Published var isLoadingVariations = true
+    @Published var isLoadingVariations = false
     
     let service = SongService()
     static let shared = SongViewModel()
     
     func fetchSongVariations(song: Song) {
+        self.isLoadingVariations = true
         service.fetchSongVariations(song: song) { variations in
             self.songVariations = variations
             self.isLoadingVariations = false
