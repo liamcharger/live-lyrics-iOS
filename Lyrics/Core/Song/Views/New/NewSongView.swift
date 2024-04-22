@@ -21,6 +21,9 @@ struct NewSongView: View {
     
     @Binding var isDisplayed: Bool
     
+    @FocusState var isTitleFocused: Bool
+    @FocusState var isLyricsFocused: Bool
+    
     let folder: Folder?
     
     func createSong() {
@@ -44,11 +47,17 @@ struct NewSongView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)
             }
-            .padding(.top)
+            .padding()
+            Divider()
             Spacer()
             CustomTextField(text: $title, placeholder: "Title")
+                .focused($isTitleFocused)
+                .padding()
             Spacer()
-            Button(action: {view2.toggle()}, label: {
+            Divider()
+            Button(action: {
+                view2.toggle()
+            }, label: {
                 HStack {
                     Spacer()
                     Text(NSLocalizedString("continue", comment: "Continue"))
@@ -56,6 +65,7 @@ struct NewSongView: View {
                 }
                 .modifier(NavButtonViewModifier())
             })
+            .padding()
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .sheet(isPresented: $view2) {
@@ -71,7 +81,9 @@ struct NewSongView: View {
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
         }
-        .padding()
+        .onAppear {
+            isTitleFocused = true
+        }
     }
     
     var nextView: some View {
@@ -87,21 +99,18 @@ struct NewSongView: View {
             Divider()
             TextEditor(text: $lyrics)
                 .padding(.horizontal)
+                .focused($isLyricsFocused)
             Divider()
-            Button(action: {
+            Button {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {
                     createSong()
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            })
+            } label: {
+                Text(NSLocalizedString("continue", comment: "Continue"))
+                    .modifier(NavButtonViewModifier())
+            }
             .padding()
         }
         .alert(isPresented: $showError) {
@@ -111,5 +120,8 @@ struct NewSongView: View {
             Button(action: createSong, label: {Text(NSLocalizedString("continue", comment: "Continue"))})
             Button(role: .cancel, action: {}, label: {Text("Cancel")})
         })
+        .onAppear {
+            isLyricsFocused = true
+        }
     }
 }

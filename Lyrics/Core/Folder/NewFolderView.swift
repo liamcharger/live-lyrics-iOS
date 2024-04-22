@@ -20,6 +20,8 @@ struct NewFolderView: View {
     
     @Binding var isDisplayed: Bool
     
+    @FocusState var isFocused: Bool
+    
     var body: some View {
         VStack {
             HStack {
@@ -31,11 +33,13 @@ struct NewFolderView: View {
                 SheetCloseButton(isPresented: $isDisplayed)
             }
             .padding()
-            .padding(.top)
+            Divider()
             Spacer()
             CustomTextField(text: $title, placeholder: "Title")
                 .padding()
+                .focused($isFocused)
             Spacer()
+            Divider()
             Button(action: {
                 songViewModel.createFolder(title: title) { error in
                     if let error = error {
@@ -61,5 +65,8 @@ struct NewFolderView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)
+        .onAppear {
+            isFocused = true
+        }
     }
 }
