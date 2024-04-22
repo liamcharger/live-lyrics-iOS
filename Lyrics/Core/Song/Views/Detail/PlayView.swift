@@ -48,7 +48,6 @@ struct PlayView: View {
     @State var isScrollingProgrammatically = true
     @State var isPressed = false
     @State var isRecording = false
-    @State var showTakesView = false
     
     @State var proxy: ScrollViewProxy?
     
@@ -540,10 +539,7 @@ struct PlayView: View {
                         }
                         .padding(12)
                     case "takes":
-                        TakesMiniView(showTakesView: $showTakesView, isDisplayed: $dismiss, song: song)
-                            .popover(isPresented: $showTakesView) {
-                                SongTakesView(isPresented: $showTakesView, song: song)
-                            }
+                        TakesMiniView(isDisplayed: $dismiss, song: song)
                     default:
                         EmptyView()
                     }

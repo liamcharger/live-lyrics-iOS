@@ -69,7 +69,6 @@ struct SongDetailView: View {
     @State var showNewVariationView = false
     @State var showVariationsManagementSheet = false
     @State var showSongVariationEditView = false
-    @State var showTakesView = false
     @State var showTakesMiniView = false
     @State var isRecording = false
     
@@ -341,7 +340,7 @@ struct SongDetailView: View {
             VStack(spacing: 0) {
                 if showTakesMiniView {
                     Divider()
-                    TakesMiniView(showTakesView: $showTakesView, isDisplayed: $showTakesMiniView, song: song)
+                    TakesMiniView(isDisplayed: $showTakesMiniView, song: song)
                 }
                 Divider()
                 VStack(spacing: 14) {
@@ -599,9 +598,6 @@ struct SongDetailView: View {
                 presMode.wrappedValue.dismiss()
             }
         })
-        .popover(isPresented: $showTakesView) {
-            SongTakesView(isPresented: $showTakesView, song: song)
-        }
     }
     
     var settings: some View {
@@ -641,7 +637,7 @@ struct SongDetailView: View {
                 Label("Tags", systemImage: "tag")
             }
             Button(action: {
-                showTakesMiniView = true
+                showTakesMiniView.toggle()
             }, label: {
                 Label("Takes", systemImage: "music.mic")
             })

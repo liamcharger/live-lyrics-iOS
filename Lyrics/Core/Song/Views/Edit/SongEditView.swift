@@ -28,6 +28,8 @@ struct SongEditView: View {
     @State var showError = false
     @State var showNotesView = false
     
+    @FocusState var isFocused: Bool
+    
     var isEmpty: Bool {
         title.trimmingCharacters(in: .whitespaces).isEmpty
     }
@@ -77,6 +79,7 @@ struct SongEditView: View {
             ScrollView {
                 VStack {
                     CustomTextField(text: $stateTitle, placeholder: "Title")
+                        .focused($isFocused)
                     CustomTextField(text: $stateKey, placeholder: "Key")
                     CustomTextField(text: $stateArtist, placeholder: "Artist")
                     CustomTextField(text: $stateDuration, placeholder: "Duration")
@@ -100,6 +103,9 @@ struct SongEditView: View {
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+        }
+        .onAppear {
+            isFocused = true
         }
     }
 }

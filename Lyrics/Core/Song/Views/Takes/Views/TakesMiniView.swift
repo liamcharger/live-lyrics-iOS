@@ -7,13 +7,16 @@
 
 import SwiftUI
 import AVFoundation
+import BottomSheet
 
 struct TakesMiniView: View {
-    @Binding var showTakesView: Bool
     @Binding var isDisplayed: Bool
     
     @State private var showBorder = false
     @State private var hasMicPermission = false
+    @State private var showTakesView = false
+    
+    @State private var borderColor = Color.red
     
     let song: Song
     
@@ -35,11 +38,7 @@ struct TakesMiniView: View {
                     Spacer()
                     Button {
                         if takesViewModel.isRecording {
-                            self.takesViewModel.stopRecording {
-                                withAnimation(.easeInOut) {
-                                    showBorder = true
-                                }
-                            }
+                            self.takesViewModel.stopRecording {}
                         } else {
                             self.takesViewModel.startRecording(song: song)
                         }
@@ -56,25 +55,34 @@ struct TakesMiniView: View {
                         showTakesView = true
                     } label: {
                         Image(systemName: "chevron.up")
-                            .padding(17)
+                            .padding(18)
                             .offset(y: -1)
                             .font(.system(size: 18).weight(.medium))
-                            .foregroundColor(showBorder ? .blue : .white)
+                            .foregroundColor(showBorder ? borderColor : .white)
                             .background(Material.regular)
                             .clipShape(Circle())
                             .overlay {
                                 if showBorder {
                                     Circle()
-                                        .stroke(Color.blue, lineWidth: 3)
-                                        .onAppear {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                                withAnimation(.easeInOut) {
-                                                    showBorder = false
-                                                }
-                                            }
-                                        }
+                                        .stroke(borderColor, lineWidth: 2.5)
                                 }
                             }
+                    }
+                    .onChange(of: takesViewModel.isRecording) { isRecording in
+                        withAnimation(.easeInOut) {
+                            showBorder = isRecording
+                            borderColor = isRecording ? .red : .blue
+                        }
+                        if !isRecording {
+                            withAnimation(.easeInOut) {
+                                borderColor = .blue
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                withAnimation(.easeInOut) {
+                                    showBorder = false
+                                }
+                            }
+                        }
                     }
                     Button {
                         isDisplayed = false
@@ -109,9 +117,12 @@ struct TakesMiniView: View {
                 hasMicPermission = response
             }
         }
+        .bottomSheet(isPresented: $showTakesView, detents: [.medium(), .large()]) {
+            SongTakesView(isPresented: $showTakesView, song: song)
+        }
     }
 }
 
 #Preview {
-    TakesMiniView(showTakesView: .constant(false), isDisplayed: .constant(true), song: Song.song)
+    TakesMiniView(isDisplayed: .constant(true), song: Song.song)
 }

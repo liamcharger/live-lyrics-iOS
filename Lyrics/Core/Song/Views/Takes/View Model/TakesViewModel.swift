@@ -14,16 +14,13 @@ class TakesViewModel: ObservableObject {
     
     @Published var isRecording = false
     @Published var recordedTakes: [Take] = []
+    @Published var recordedTake: Take?
     @Published var elapsedTime: TimeInterval = 0
     @Published var audioRecorder: AVAudioRecorder!
     private var timer: Timer?
     
     init() {
-        do {
-            self.recordedTakes = try loadRecordedTakes()
-        } catch {
-            print(error.localizedDescription)
-        }
+        loadRecordedTakes()
     }
     
     func startRecording(song: Song) {
@@ -63,7 +60,20 @@ class TakesViewModel: ObservableObject {
         audioRecorder.stop()
         isRecording = false
         timer?.invalidate()
+        elapsedTime = 0
         completion()
+    }
+    func saveAllRecordedTakes() {
+        do {
+            let baseDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+            let fileURL = baseDir.appendingPathComponent("recordedTakes.json")
+            
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(recordedTakes)
+            try data.write(to: fileURL)
+        } catch {
+            print("Failed to save all recorded takes: \(error.localizedDescription)")
+        }
     }
     func saveRecordedTake(url: URL) {
         let recordedTake = Take(url: url, date: Date())
@@ -72,8 +82,9 @@ class TakesViewModel: ObservableObject {
             let baseDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
             let fileURL = baseDir.appendingPathComponent("recordedTakes.json")
             
-            var recordedTakes = try loadRecordedTakes()
-            recordedTakes.append(recordedTake)
+            self.loadRecordedTakes()
+            self.recordedTakes.append(recordedTake)
+            self.recordedTake = recordedTake
             
             let encoder = JSONEncoder()
             let data = try encoder.encode(recordedTakes)
@@ -82,15 +93,48 @@ class TakesViewModel: ObservableObject {
             print("Failed to save recorded take: \(error.localizedDescription)")
         }
     }
-    func loadRecordedTakes() throws -> [Take] {
+    func loadRecordedTakes() {
         let baseDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
         let fileURL = baseDir.appendingPathComponent("recordedTakes.json")
         
-        guard let data = try? Data(contentsOf: fileURL) else {
-            return []
-        }
+        guard let data = try? Data(contentsOf: fileURL) else { return }
         
         let decoder = JSONDecoder()
-        return try decoder.decode([Take].self, from: data)
+        do {
+            self.recordedTakes = try decoder.decode([Take].self, from: data)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func deleteTake(_ take: Take) {
+        do {
+            try FileManager.default.removeItem(at: take.url)
+        } catch {
+            print("Failed to delete recorded take: \(error.localizedDescription)")
+        }
+        
+        recordedTakes.removeAll(where: { $0.url == take.url })
+        saveAllRecordedTakes()
+    }
+    func updateTake(_ take: Take?, title: String) {
+        if let take = take {
+            let updatedTake = Take(url: take.url, date: take.date, title: title)
+            
+            loadRecordedTakes()
+            
+            if let index = recordedTakes.firstIndex(where: { $0.url == take.url }) {
+                recordedTakes[index] = updatedTake
+            } else {
+                print("Take not found, cannot update.")
+            }
+            
+            saveAllRecordedTakes()
+        } else {
+            print("Take is nil")
+        }
+    }
+    func deleteAllTakes() {
+        recordedTakes.removeAll()
+        saveAllRecordedTakes()
     }
 }
