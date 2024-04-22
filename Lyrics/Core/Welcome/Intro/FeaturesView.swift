@@ -13,6 +13,7 @@ struct FeaturesView: View {
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
+        FeaturesSection(title: "Takes", subtitle: "Record takes of your songs.", imageName: "music.mic"),
         FeaturesSection(title: "Song Variations", subtitle: "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.", imageName: "sparkles"),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
     ]

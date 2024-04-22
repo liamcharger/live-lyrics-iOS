@@ -60,7 +60,7 @@ struct TaggedSongsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: "Tagged", navType: .Auth, folder: nil, showBackButton: true, isEditing: .constant(false))
+            CustomNavBar(title: "Tagged", navType: .none, showBackButton: false, isEditing: .constant(false))
                 .padding()
             Divider()
             ScrollView {

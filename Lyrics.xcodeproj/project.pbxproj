@@ -76,6 +76,11 @@
 		E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */; };
 		E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */; };
 		E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */; };
+		E09F77BC2BD6B8A100C20D69 /* TakesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77BB2BD6B8A100C20D69 /* TakesViewModel.swift */; };
+		E09F77BF2BD6B8C900C20D69 /* NewTakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77BE2BD6B8C900C20D69 /* NewTakeView.swift */; };
+		E09F77C12BD6B8EA00C20D69 /* SongTakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77C02BD6B8EA00C20D69 /* SongTakesView.swift */; };
+		E09F77C32BD6B91500C20D69 /* TakesMiniView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77C22BD6B91500C20D69 /* TakesMiniView.swift */; };
+		E09F77C52BD6B98500C20D69 /* Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77C42BD6B98500C20D69 /* Take.swift */; };
 		E0A567E62AE8BE13007313FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0A567E82AE8BE13007313FC /* Localizable.strings */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
 		E0A8F5062BD06887009275A2 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A8F5052BD06887009275A2 /* Version.swift */; };
@@ -213,6 +218,11 @@
 		E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Regular-400.otf"; sourceTree = "<group>"; };
 		E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Thin-100.otf"; sourceTree = "<group>"; };
 		E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Solid-900.otf"; sourceTree = "<group>"; };
+		E09F77BB2BD6B8A100C20D69 /* TakesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesViewModel.swift; sourceTree = "<group>"; };
+		E09F77BE2BD6B8C900C20D69 /* NewTakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTakeView.swift; sourceTree = "<group>"; };
+		E09F77C02BD6B8EA00C20D69 /* SongTakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTakesView.swift; sourceTree = "<group>"; };
+		E09F77C22BD6B91500C20D69 /* TakesMiniView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesMiniView.swift; sourceTree = "<group>"; };
+		E09F77C42BD6B98500C20D69 /* Take.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Take.swift; sourceTree = "<group>"; };
 		E0A567E72AE8BE13007313FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		E0A8F5052BD06887009275A2 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
@@ -469,6 +479,7 @@
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
 				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
+				E09F77C42BD6B98500C20D69 /* Take.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -693,6 +704,33 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		E09F77B92BD6B88D00C20D69 /* Takes */ = {
+			isa = PBXGroup;
+			children = (
+				E09F77BD2BD6B8B500C20D69 /* Views */,
+				E09F77BA2BD6B89700C20D69 /* View Model */,
+			);
+			path = Takes;
+			sourceTree = "<group>";
+		};
+		E09F77BA2BD6B89700C20D69 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				E09F77BB2BD6B8A100C20D69 /* TakesViewModel.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
+		E09F77BD2BD6B8B500C20D69 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E09F77BE2BD6B8C900C20D69 /* NewTakeView.swift */,
+				E09F77C02BD6B8EA00C20D69 /* SongTakesView.swift */,
+				E09F77C22BD6B91500C20D69 /* TakesMiniView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E0B02B9D2AF5A374002E10D4 /* Intro */ = {
 			isa = PBXGroup;
 			children = (
@@ -894,6 +932,7 @@
 		E0CC33252A040D4300CC38C6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E09F77B92BD6B88D00C20D69 /* Takes */,
 				E0B4CF1A2BD2F00C00F143E9 /* Variations */,
 				E0710A8E2A2A73F0004D62E8 /* Detail */,
 				E04CB9692BCB5FE100F2831B /* Share */,
@@ -1171,6 +1210,7 @@
 				E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */,
 				E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */,
 				E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */,
+				E09F77C32BD6B91500C20D69 /* TakesMiniView.swift in Sources */,
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
 				E004F4262A69C2D40089B6DF /* PlayView.swift in Sources */,
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
@@ -1196,6 +1236,8 @@
 				E0CA853A2B081D5100188CD0 /* CustomTextField.swift in Sources */,
 				E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */,
 				E04CB96A2BCB5FE100F2831B /* SongShareDetailView.swift in Sources */,
+				E09F77C12BD6B8EA00C20D69 /* SongTakesView.swift in Sources */,
+				E09F77C52BD6B98500C20D69 /* Take.swift in Sources */,
 				E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */,
 				E0CA85342B081D5100188CD0 /* SheetCloseButton.swift in Sources */,
 				E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */,
@@ -1227,6 +1269,7 @@
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,
+				E09F77BC2BD6B8A100C20D69 /* TakesViewModel.swift in Sources */,
 				E05226522A1BBCFC00ECF255 /* SongMoveView.swift in Sources */,
 				E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */,
 				E02F21E52B21130600302646 /* AdBannerView.swift in Sources */,
@@ -1252,6 +1295,7 @@
 				E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */,
 				E04247822A02EFC500CA48B3 /* Song.swift in Sources */,
 				E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */,
+				E09F77BF2BD6B8C900C20D69 /* NewTakeView.swift in Sources */,
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,
 				E04CB96B2BCB5FE100F2831B /* SongShareRowView.swift in Sources */,
 				E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */,
@@ -1442,6 +1486,7 @@
 				INFOPLIST_FILE = Lyrics/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "LIve Lyrics needs access to your mic to record takes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1491,6 +1536,7 @@
 				INFOPLIST_FILE = Lyrics/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Live Lyrics";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "LIve Lyrics needs access to your mic to record takes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

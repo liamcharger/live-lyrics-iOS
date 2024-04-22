@@ -219,7 +219,7 @@ struct MainView: View {
     var content: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: "Home", navType: .HomeView, folder: nil, showBackButton: false, isEditing: .constant(false))
+                CustomNavBar(title: "Home", navType: .home, showBackButton: false, isEditing: .constant(false))
                     .environmentObject(storeKitManager)
                     .padding(.top)
             }

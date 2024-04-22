@@ -146,7 +146,6 @@ struct Wave: Shape {
         
         let width = Double(rect.width)
         let height = Double(rect.height)
-        let midWidth = width / 2
         let midHeight = height / 2
         
         let wavelength = width / frequency
@@ -163,6 +162,22 @@ struct Wave: Shape {
             path.addLine(to: CGPoint(x: x, y: y))
         }
         
+        return Path(path.cgPath)
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners) )
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
     }
 }

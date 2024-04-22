@@ -14,7 +14,7 @@ struct CustomNavBar: View {
     @EnvironmentObject var storeKitManager: StoreKitManager
     
     let title: String
-    let navType: NavBarEnum
+    let navType: NavBarEnum?
     let folder: Folder?
     let showBackButton: Bool
     
@@ -26,6 +26,14 @@ struct CustomNavBar: View {
     
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
+    
+    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool, isEditing: Binding<Bool>, folder: Folder? = nil) {
+        self.title = title
+        self.navType = navType
+        self.showBackButton = showBackButton
+        self._isEditing = isEditing
+        self.folder = folder
+    }
     
     var body: some View {
         HStack(spacing: 12) {
@@ -47,7 +55,7 @@ struct CustomNavBar: View {
             Spacer()
             HStack(spacing: 8) {
                 switch navType {
-                case .HomeView:
+                case .home:
                     Button {
                         showNewFolder.toggle()
                     } label: {
@@ -76,7 +84,7 @@ struct CustomNavBar: View {
                         MenuView(showMenu: $showSheet3)
                             .environmentObject(storeKitManager)
                     }
-                case .DetailView:
+                case .detail:
                     Button {
                         withAnimation(.bouncy(extraBounce: 0.1)) {
                             isEditing.toggle()
@@ -102,7 +110,9 @@ struct CustomNavBar: View {
                             NewSongView(isDisplayed: $showSheet1, folder: nil)
                         }
                     }
-                case .RecentlyDeleted, .Auth, .ShareDetail:
+                case .recentlyDeleted, .shareDetail:
+                    EmptyView()
+                default:
                     EmptyView()
                 }
             }
@@ -111,5 +121,5 @@ struct CustomNavBar: View {
 }
 
 #Preview {
-    CustomNavBar(title: "Home", navType: .HomeView, folder: nil, showBackButton: true, isEditing: .constant(true))
+    CustomNavBar(title: "Home", navType: .home, showBackButton: true, isEditing: .constant(true))
 }
