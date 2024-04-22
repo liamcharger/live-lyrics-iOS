@@ -9,11 +9,13 @@ import SwiftUI
 import BottomSheet
 import SwiftUIIntrospect
 import FirebaseFirestore
+import TipKit
 
 struct SongDetailView: View {
     @State var song: Song
     @State var folder: Folder?
     @State var restoreSong: RecentlyDeletedSong?
+    @State var selectedVariation: SongVariation?
     
     @State var fetchListener: ListenerRegistration?
     
@@ -34,6 +36,7 @@ struct SongDetailView: View {
     @State var duration = ""
     @State var currentEditorsTitle = ""
     @State var currentEditorsSubtitle = ""
+    @State var createdVariationId = ""
     @State var bpm = 120
     @State var bpb = 4
     @State var performanceMode = true
@@ -41,6 +44,8 @@ struct SongDetailView: View {
     
     @State var songIds: [String]?
     @State var fullUsernameString = [String]()
+    
+    @State var songVariations = [SongVariation]()
     
     @State var showEditView = false
     @State var showTagSheet = false
@@ -62,6 +67,10 @@ struct SongDetailView: View {
     @State var showError = false
     @State var hasDeletedSong = false
     @State var showNotesStatusIcon = false
+    @State var showNewVariationView = false
+    @State var showVariationsManagementSheet = false
+    @State var showSongVariationEditView = false
+  
     @State var showTakesMiniView = false
     @State var isRecording = false
     
@@ -240,7 +249,7 @@ struct SongDetailView: View {
                                             notesViewModel.updateNotes(song, notes: notes)
                                         }
                                 }
-                                menu
+                                SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
                                 settings
                             } else {
                                 Button(action: {
@@ -334,39 +343,108 @@ struct SongDetailView: View {
                 Divider()
                 TakesMiniView(showTakesView: $showTakesView, isDisplayed: $showTakesMiniView, song: song)
             }
-            if songs != nil {
-                if wordCountBool {
-                    Divider()
-                    HStack {
-                        Spacer()
-                        HStack {
-                            if isChecked == "Words" {
-                                Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
-                            } else if isChecked == "Characters" {
-                                Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
-                            } else if isChecked == "Spaces" {
-                                Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
-                            } else if isChecked == "Paragraphs" {
-                                Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
+            Divider()
+            VStack(spacing: 14) {
+                if #available(iOS 17, *) {
+                    TipView(VariationsTip())
+                }
+                HStack {
+                    if songs != nil {
+                        if wordCountBool {
+                            Group {
+                                if isChecked == "Words" {
+                                    Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
+                                } else if isChecked == "Characters" {
+                                    Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
+                                } else if isChecked == "Spaces" {
+                                    Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
+                                } else if isChecked == "Paragraphs" {
+                                    Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
+                                }
+                            }
+                            .foregroundColor(.primary)
+                            .font(.system(size: 16).weight(.semibold))
+                        }
+                    }
+                    Spacer()
+                    Group {
+                        if songVariations.isEmpty {
+                            ProgressView()
+                        } else {
+                            if songVariations.contains(where: { $0.title == "noVariations" }) {
+                                Button {
+                                    showNewVariationView = true
+                                } label: {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "plus")
+                                        Text("New Variation")
+                                    }
+                                }
+                            } else {
+                                Menu {
+                                    Button {
+                                        self.lyrics = song.lyrics
+                                        self.selectedVariation = nil
+                                    } label: {
+                                        Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                    }
+                                    Divider()
+                                    ForEach(songVariations, id: \.id) { variation in
+                                        Button {
+                                            self.selectedVariation = variation
+                                            self.lyrics = variation.lyrics
+                                        } label: {
+                                            Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                                        }
+                                    }
+                                    Divider()
+                                    if songVariations.count > 0 {
+                                        Button {
+                                            showVariationsManagementSheet = true
+                                        } label: {
+                                            Label("Manage", systemImage: "gear")
+                                        }
+                                    }
+                                    Button {
+                                        showNewVariationView = true
+                                    } label: {
+                                        Label("New", systemImage: "square.and.pencil")
+                                    }
+                                } label: {
+                                    HStack(spacing: 5) {
+                                        if let variation = selectedVariation {
+                                            Text(variation.title)
+                                        } else {
+                                            Text("Default")
+                                        }
+                                        Image(systemName: "chevron.up.chevron.down")
+                                    }
+                                }
                             }
                         }
-                        .foregroundColor(.primary)
-                        .font(.system(size: 16).weight(.semibold))
+                    }
+                    if !wordCountBool {
                         Spacer()
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical)
                 }
             }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 20)
+            .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
+            songViewModel.fetchSongVariations(song: song) { variations in
+                self.songVariations = variations
+            }
             songViewModel.fetchSong(song.id ?? "") { song in
                 self.title = song.title
-                self.lyrics = song.lyrics
+                if selectedVariation == nil || !isInputActive {
+                    self.lyrics = song.lyrics
+                }
                 self.key = {
                     if let key = song.key, !key.isEmpty {
                         return key
@@ -384,7 +462,7 @@ struct SongDetailView: View {
                 self.lineSpacing = song.lineSpacing ?? 1
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
                     if lyrics != lastUpdatedLyrics {
-                        mainViewModel.updateLyrics(song, lyrics: lyrics)
+                        mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
                         lastUpdatedLyrics = lyrics
                     }
                 }
@@ -397,21 +475,30 @@ struct SongDetailView: View {
             fetchListener?.remove()
             UIApplication.shared.isIdleTimerDisabled = false
         }
-        .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
-            Button("Delete", role: .destructive) {
-                print("Deleting song: \(title)")
-                songViewModel.moveSongToRecentlyDeleted(song)
-                presMode.wrappedValue.dismiss()
-            }
-            if let folder = folder {
-                Button("Remove from Folder") {
-                    songViewModel.moveSongToRecentlyDeleted(folder, song)
-                    presMode.wrappedValue.dismiss()
+        .confirmationDialog(selectedVariation == nil ? "Delete Song" : "Delete Variation", isPresented: $showDeleteSheet) {
+            if let selectedVariation = selectedVariation {
+                Button("Delete", role: .destructive) {
+                    self.songViewModel.deleteSongVariation(song, variation: selectedVariation)
+                    self.lyrics = song.lyrics
+                    self.selectedVariation = nil
+                }
+            } else {
+                Button("Delete", role: .destructive) {
+                    self.songViewModel.moveSongToRecentlyDeleted(song)
+                    self.presMode.wrappedValue.dismiss()
+                }
+                if let folder = folder {
+                    Button("Remove from Folder") {
+                        self.songViewModel.moveSongToRecentlyDeleted(folder, song)
+                        self.presMode.wrappedValue.dismiss()
+                    }
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) {
+                self.selectedVariation = nil
+            }
         } message: {
-            Text("Are you sure you want to delete \"\(title)\"?")
+            Text("Are you sure you want to delete \(selectedVariation == nil ? "'" + title + "'": "the variation '" + (selectedVariation?.title ?? ""))'?")
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
@@ -428,12 +515,77 @@ struct SongDetailView: View {
         .sheet(isPresented: $showMoveView) {
             SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
         }
+        .sheet(isPresented: $showNewVariationView, onDismiss: {
+            if let index = songVariations.firstIndex(where: { $0.id == createdVariationId }) {
+                self.selectedVariation = songVariations[index]
+                self.lyrics = songVariations[index].lyrics
+            }
+        }) {
+            NewSongVariationView(isDisplayed: $showNewVariationView, createdId: $createdVariationId, song: song)
+        }
         .sheet(isPresented: $showTagSheet) {
             let tags: [TagSelectionEnum] = tags.compactMap { TagSelectionEnum(rawValue: $0) }
             SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
         .popover(isPresented: $showTakesView) {
             SongTakesView(isPresented: $showTakesView, song: song)
+        }
+        .sheet(isPresented: $showVariationsManagementSheet) {
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Variations")
+                        .font(.title.weight(.bold))
+                    Spacer()
+                    SheetCloseButton(isPresented: $showVariationsManagementSheet)
+                }
+                .padding()
+                Divider()
+                ScrollView {
+                    VStack {
+                        ForEach(songVariations, id: \.id) { variation in
+                            if variation.title == "noVariation" {
+                                LoadingView()
+                            } else {
+                                HStack(spacing: 6) {
+                                    Text(variation.title)
+                                    Spacer()
+                                    Button {
+                                        selectedVariation = variation
+                                        showSongVariationEditView = true
+                                    } label: {
+                                        Image(systemName: "pencil")
+                                            .padding(12)
+                                            .font(.body.weight(.semibold))
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .clipShape(Circle())
+                                    }
+                                    .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
+                                        if let variation = selectedVariation {
+                                            SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                                        }
+                                    }
+                                    Button {
+                                        selectedVariation = variation
+                                        showDeleteSheet = true
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .padding(12)
+                                            .font(.body.weight(.semibold))
+                                            .background(Color.red)
+                                            .foregroundColor(.primary)
+                                            .clipShape(Circle())
+                                    }
+                                }
+                                .padding(12)
+                                .background(Material.regular)
+                                .cornerRadius(18)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            }
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
             PlayView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
@@ -442,7 +594,7 @@ struct SongDetailView: View {
                 } else {
                     return $duration
                 }
-            }(), bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs!, dismiss: $showFullScreenView, hasDeletedSong: $hasDeletedSong)
+            }(), bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [], dismiss: $showFullScreenView)
         }
         .onChange(of: hasDeletedSong, perform: { value in
             if value == true {
@@ -451,272 +603,6 @@ struct SongDetailView: View {
         })
     }
     
-    var menu: some View {
-        Menu {
-            Menu {
-                Button(action: {
-                    value = 18
-                    songViewModel.updateTextProperties(song, size: 18)
-                }, label: {
-                    Text("Default")
-                })
-                Divider()
-                Button(action: {
-                    value = 12
-                    songViewModel.updateTextProperties(song, size: 12)
-                }, label: {
-                    Text("12")
-                })
-                Button(action: {
-                    value = 14
-                    songViewModel.updateTextProperties(song, size: 14)
-                }, label: {
-                    Text("14")
-                })
-                Button(action: {
-                    value = 16
-                    songViewModel.updateTextProperties(song, size: 16)
-                }, label: {
-                    Text("16")
-                })
-                Button(action: {
-                    value = 18
-                    songViewModel.updateTextProperties(song, size: 18)
-                }, label: {
-                    Text("18")
-                })
-                Button(action: {
-                    value = 20
-                    songViewModel.updateTextProperties(song, size: 20)
-                }, label: {
-                    Text("20")
-                })
-                Button(action: {
-                    value = 24
-                    songViewModel.updateTextProperties(song, size: 24)
-                }, label: {
-                    Text("24")
-                })
-                Button(action: {
-                    value = 28
-                    songViewModel.updateTextProperties(song, size: 28)
-                }, label: {
-                    Text("28")
-                })
-                Button(action: {
-                    value = 30
-                    songViewModel.updateTextProperties(song, size: 30)
-                }, label: {
-                    Text("30")
-                })
-            } label: {
-                Text("Font Size")
-            }
-            Menu {
-                Button(action: {
-                    design = .default
-                    songViewModel.updateTextProperties(song, design: 0)
-                }, label: {
-                    Text("Default")
-                })
-                Divider()
-                Button(action: {
-                    design = .default
-                    songViewModel.updateTextProperties(song, design: 0)}, label: {
-                        Text("Regular")
-                    })
-                Button(action: {
-                    design = .monospaced
-                    songViewModel.updateTextProperties(song, design: 1)
-                }, label: {
-                    Text("Monospaced")
-                })
-                Button(action: {
-                    design = .rounded
-                    songViewModel.updateTextProperties(song, design: 2)
-                }, label: {
-                    Text("Rounded")
-                })
-                Button(action: {
-                    design = .serif
-                    songViewModel.updateTextProperties(song, design: 3)
-                }, label: {
-                    Text("Serif")
-                })
-            } label: {
-                Text("Font Style")
-            }
-            Menu {
-                Button(action: {
-                    weight = .regular
-                    songViewModel.updateTextProperties(song, weight: 0)
-                }, label: {
-                    Text("Default")
-                })
-                Divider()
-                Button(action: {
-                    weight = .black
-                    songViewModel.updateTextProperties(song, weight: 1)
-                }, label: {
-                    Text("Black")
-                })
-                Button(action: {
-                    songViewModel.updateTextProperties(song, weight: 2)
-                    weight = .bold
-                }, label: {
-                    Text("Bold")
-                })
-                Button(action: {
-                    weight = .heavy
-                    songViewModel.updateTextProperties(song, weight: 3)
-                }, label: {
-                    Text("Heavy")
-                })
-                Button(action: {
-                    weight = .light
-                    songViewModel.updateTextProperties(song, weight: 4)
-                }, label: {
-                    Text("Light")
-                })
-                Button(action: {
-                    weight = .medium
-                    songViewModel.updateTextProperties(song, weight: 5)
-                }, label: {
-                    Text("Medium")
-                })
-                Button(action: {
-                    weight = .regular
-                    songViewModel.updateTextProperties(song, weight: 6)
-                }, label: {
-                    Text("Regular")
-                })
-                Button(action: {
-                    weight = .semibold
-                    songViewModel.updateTextProperties(song, weight: 7)
-                }, label: {
-                    Text("Semibold")
-                })
-                Button(action: {
-                    weight = .thin
-                    songViewModel.updateTextProperties(song, weight: 8)
-                }, label: {
-                    Text("Thin")
-                })
-                Button(action: {
-                    weight = .ultraLight
-                    songViewModel.updateTextProperties(song, weight: 0)
-                }, label: {
-                    Text("Ultra Light")
-                })
-            } label: {
-                Text("Font Weight")
-            }
-            Menu {
-                Button(action: {
-                    lineSpacing = 1
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("Default")
-                })
-                Divider()
-                Button(action: {
-                    lineSpacing = 1
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("0.0")
-                })
-                Button(action: {
-                    lineSpacing = 5
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("0.5")
-                })
-                Button(action: {
-                    lineSpacing = 10
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("1.0")
-                })
-                Button(action: {
-                    lineSpacing = 15
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("1.5")
-                })
-                Button(action: {
-                    lineSpacing = 20
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("2.0")
-                })
-                Button(action: {
-                    lineSpacing = 25
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("2.5")
-                })
-                Button(action: {
-                    lineSpacing = 30
-                    songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                }, label: {
-                    Text("3.0")
-                })
-            } label: {
-                Text("Line Spacing")
-            }
-            Menu {
-                Button(action: {
-                    alignment = .leading
-                    songViewModel.updateTextProperties(song, alignment: 0)
-                }, label: {
-                    Text("Default")
-                })
-                Divider()
-                Button(action: {
-                    alignment = .leading
-                    songViewModel.updateTextProperties(song, alignment: 0)
-                }, label: {
-                    Text("Left")
-                })
-                Button(action: {
-                    alignment = .center
-                    songViewModel.updateTextProperties(song, alignment: 1)
-                }, label: {
-                    Text("Center")
-                })
-                Button(action: {
-                    alignment = .trailing
-                    songViewModel.updateTextProperties(song, alignment: 2)
-                }, label: {
-                    Text("Right")
-                })
-            } label: {
-                Text("Alignment")
-            }
-            Divider()
-            Button {
-                value = 18
-                songViewModel.updateTextProperties(song, size: 18)
-                
-                design = .default
-                songViewModel.updateTextProperties(song, design: 0)
-                
-                weight = .regular
-                songViewModel.updateTextProperties(song, weight: 0)
-                
-                lineSpacing = 1
-                songViewModel.updateTextProperties(song, lineSpacing: lineSpacing)
-                
-                alignment = .leading
-                songViewModel.updateTextProperties(song, alignment: 0)
-            } label: {
-                Text("Restore to Defaults")
-            }
-        } label: {
-            Image(systemName: "textformat.size")
-                .modifier(NavBarButtonViewModifier())
-        }
-    }
     var settings: some View {
         Menu {
             Button(action: {

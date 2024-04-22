@@ -65,7 +65,8 @@
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E079AE372A81928B006C4B55 /* NewPlayViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E079AE362A81928B006C4B55 /* NewPlayViewView.swift */; };
-		E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E08237002BCE35B7006ED2EA /* BottomSheet */; };
+		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
+		E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E0867CF02BD5989B005605CD /* BottomSheet */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
 		E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */; };
 		E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */; };
@@ -86,6 +87,9 @@
 		E0B094B52BD1A9A500F92BE6 /* TakesMiniView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094B42BD1A9A500F92BE6 /* TakesMiniView.swift */; };
 		E0B094B72BD1B61900F92BE6 /* Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094B62BD1B61900F92BE6 /* Take.swift */; };
 		E0B094BB2BD1B77700F92BE6 /* TakesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BA2BD1B77700F92BE6 /* TakesViewModel.swift */; };
+		E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BC2BD220E500F92BE6 /* SongVariation.swift */; };
+		E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */; };
+		E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */; };
 		E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */; };
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
@@ -204,6 +208,7 @@
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
 		E079AE362A81928B006C4B55 /* NewPlayViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlayViewView.swift; sourceTree = "<group>"; };
+		E0867CED2BD57812005605CD /* SongDetailMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailMenuView.swift; sourceTree = "<group>"; };
 		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
 		E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Solid-900.otf"; sourceTree = "<group>"; };
 		E0986BEB2B2B512300CE938B /* Font Awesome 6 Pro-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Regular-400.otf"; sourceTree = "<group>"; };
@@ -224,6 +229,9 @@
 		E0B094B42BD1A9A500F92BE6 /* TakesMiniView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesMiniView.swift; sourceTree = "<group>"; };
 		E0B094B62BD1B61900F92BE6 /* Take.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Take.swift; sourceTree = "<group>"; };
 		E0B094BA2BD1B77700F92BE6 /* TakesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesViewModel.swift; sourceTree = "<group>"; };
+		E0B094BC2BD220E500F92BE6 /* SongVariation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariation.swift; sourceTree = "<group>"; };
+		E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSongVariationView.swift; sourceTree = "<group>"; };
+		E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariationEditView.swift; sourceTree = "<group>"; };
 		E0B695532A141E7700FAAD5A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		E0C078272B4463FB00F91287 /* SortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortView.swift; sourceTree = "<group>"; };
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
@@ -283,7 +291,7 @@
 				E03540FD2BC05A3400273830 /* FirebaseFirestore in Frameworks */,
 				E03540FB2BC05A3400273830 /* FirebaseAuth in Frameworks */,
 				E03540FF2BC05A3400273830 /* FirebaseFirestoreSwift in Frameworks */,
-				E08237012BCE35B7006ED2EA /* BottomSheet in Frameworks */,
+				E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */,
 				E03541032BC05A3400273830 /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -480,6 +488,7 @@
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
 				E0B094B62BD1B61900F92BE6 /* Take.swift */,
+				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -672,6 +681,7 @@
 				E004F4252A69C2D40089B6DF /* PlayView.swift */,
 				E042477E2A02EF8F00CA48B3 /* SongDetailView.swift */,
 				E079AE362A81928B006C4B55 /* NewPlayViewView.swift */,
+				E0867CED2BD57812005605CD /* SongDetailMenuView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -728,6 +738,13 @@
 				E02263052BD0BDEA00C2412B /* NewTakeView.swift */,
 			);
 			path = Views;
+		E0B4CF1A2BD2F00C00F143E9 /* Variations */ = {
+			isa = PBXGroup;
+			children = (
+				E0B094BE2BD2252700F92BE6 /* NewSongVariationView.swift */,
+				E0B4CF1B2BD2F01D00F143E9 /* SongVariationEditView.swift */,
+			);
+			path = Variations;
 			sourceTree = "<group>";
 		};
 		E0C168332B59BC9900A12C59 /* Intents */ = {
@@ -914,6 +931,7 @@
 			isa = PBXGroup;
 			children = (
 				E02263022BD0774700C2412B /* Takes */,
+				E0B4CF1A2BD2F00C00F143E9 /* Variations */,
 				E0710A8E2A2A73F0004D62E8 /* Detail */,
 				E04CB9692BCB5FE100F2831B /* Share */,
 				E0D3AA8C2BBC6B3B005650F5 /* Tag */,
@@ -1048,7 +1066,7 @@
 				E03541022BC05A3400273830 /* FirebaseRemoteConfig */,
 				E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */,
 				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
-				E08237002BCE35B7006ED2EA /* BottomSheet */,
+				E0867CF02BD5989B005605CD /* BottomSheet */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1126,7 +1144,7 @@
 				E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
-				E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1204,6 +1222,7 @@
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
 				E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */,
+				E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */,
 				E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */,
 				E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */,
 				E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */,
@@ -1214,6 +1233,7 @@
 				E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */,
 				E0C139EA2BCA30B300317A7B /* FolderSongDropViewDelegate.swift in Sources */,
 				E0CA853A2B081D5100188CD0 /* CustomTextField.swift in Sources */,
+				E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */,
 				E04CB96A2BCB5FE100F2831B /* SongShareDetailView.swift in Sources */,
 				E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */,
 				E0CA85342B081D5100188CD0 /* SheetCloseButton.swift in Sources */,
@@ -1232,6 +1252,7 @@
 				E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */,
 				E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */,
 				E04FB1162A17D356002FEEA4 /* SettingsView.swift in Sources */,
+				E0B094BF2BD2252700F92BE6 /* NewSongVariationView.swift in Sources */,
 				E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */,
 				E0CC33232A040BB700CC38C6 /* NewSongView.swift in Sources */,
 				E050D1592A03031B004CC45E /* MenuView.swift in Sources */,
@@ -1270,6 +1291,7 @@
 				E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */,
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,
 				E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */,
+				E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */,
 				E04247822A02EFC500CA48B3 /* Song.swift in Sources */,
 				E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */,
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,
@@ -1695,7 +1717,7 @@
 				minimumVersion = 10.23.1;
 			};
 		};
-		E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+		E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/adamfootdev/BottomSheet";
 			requirement = {
@@ -1754,9 +1776,9 @@
 			package = E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfigSwift;
 		};
-		E08237002BCE35B7006ED2EA /* BottomSheet */ = {
+		E0867CF02BD5989B005605CD /* BottomSheet */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E08236FF2BCE35B7006ED2EA /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			package = E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */;
 			productName = BottomSheet;
 		};
 		E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */ = {

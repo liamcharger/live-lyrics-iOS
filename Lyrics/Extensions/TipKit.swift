@@ -51,6 +51,27 @@ struct AutoscrollSpeedTip: Tip {
 }
 
 @available(iOS 17, *)
+struct VariationsTip: Tip {
+    var title: Text {
+        Text("Introducing Variations")
+    }
+    
+    var message: Text? {
+        Text("Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.")
+    }
+    
+    var asset: Image? {
+        Image(systemName: "rectangle.stack")
+    }
+    
+    var options: [TipOption] {
+        return [
+            Tips.MaxDisplayCount(1)
+        ]
+    }
+}
+
+@available(iOS 17, *)
 struct NotesViewTip: Tip {
     var title: Text {
         Text("Tip")

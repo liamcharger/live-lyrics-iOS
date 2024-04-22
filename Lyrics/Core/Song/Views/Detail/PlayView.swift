@@ -18,7 +18,6 @@ enum BeatStyle {
 
 struct PlayView: View {
     @Binding var dismiss: Bool
-    @Binding var hasDeletedSong: Bool
     @Binding var bpm: Int
     @Binding var bpb: Int
     @Binding var performanceMode: Bool
@@ -308,7 +307,7 @@ struct PlayView: View {
         }
     }
     
-    init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>, hasDeletedSong: Binding<Bool>) {
+    init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
         self.songs = songs
         self._key = State(initialValue: key)
         self._currentIndex = State(initialValue: song.order ?? 0)
@@ -325,7 +324,6 @@ struct PlayView: View {
         self._song = State(initialValue: song)
         self._lyrics = State(initialValue: lyrics)
         self._dismiss = dismiss
-        self._hasDeletedSong = hasDeletedSong
     }
     
     var body: some View {

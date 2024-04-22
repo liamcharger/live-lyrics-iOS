@@ -55,6 +55,10 @@ extension Folder {
     static let folder = Folder(uid: "", timestamp: Date(), title: "noFolders", order: 0)
 }
 
+extension SongVariation {
+    static let variation = SongVariation(title: "noVariations", lyrics: "", songUid: "", songId: "")
+}
+
 extension UINavigationController {
     override open func viewDidLoad() {
         super.viewDidLoad()

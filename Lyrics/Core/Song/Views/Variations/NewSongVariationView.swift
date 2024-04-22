@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NewSongView: View {
+struct NewSongVariationView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
     @State var title = ""
@@ -20,20 +20,22 @@ struct NewSongView: View {
     @State var canDismissProgrammatically = false
     
     @Binding var isDisplayed: Bool
+    @Binding var createdId: String
     
-    @FocusState var isTitleFocused: Bool
-    @FocusState var isLyricsFocused: Bool
+    @FocusState var isFocused: Bool
     
-    let folder: Folder?
+    let song: Song
     
-    func createSong() {
-        songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
-            if success {
-                canDismissProgrammatically = true
-                view2 = false
+    func createVariation() {
+        songViewModel.createSongVariation(song: song, lyrics: lyrics, title: title) { error, createdId in
+            if let error = error {
+                print(error.localizedDescription)
+                self.errorMessage = error.localizedDescription
+                self.showError = true
             } else {
-                self.errorMessage = errorMessage
-                showError = true
+                self.createdId = createdId
+                self.canDismissProgrammatically = true
+                self.view2 = false
             }
         }
     }
@@ -41,23 +43,22 @@ struct NewSongView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Enter a name for your song.")
+                Text("Enter a name for your new variation.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)
             }
-            .padding()
-            Divider()
+            .padding(.top)
             Spacer()
-            CustomTextField(text: $title, placeholder: "Title")
-                .focused($isTitleFocused)
-                .padding()
+            TextField("Title", text: $title)
+                .padding(14)
+                .background(Material.regular)
+                .clipShape(Capsule())
+                .cornerRadius(10)
+                .focused($isFocused)
             Spacer()
-            Divider()
-            Button(action: {
-                view2.toggle()
-            }, label: {
+            Button(action: {view2.toggle()}, label: {
                 HStack {
                     Spacer()
                     Text(NSLocalizedString("continue", comment: "Continue"))
@@ -65,7 +66,6 @@ struct NewSongView: View {
                 }
                 .modifier(NavButtonViewModifier())
             })
-            .padding()
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .sheet(isPresented: $view2) {
@@ -81,15 +81,16 @@ struct NewSongView: View {
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
         }
+        .padding()
         .onAppear {
-            isTitleFocused = true
+            isFocused = true
         }
     }
     
     var nextView: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Enter the lyrics for your song.")
+                Text("Enter the lyrics for the variation.")
                     .font(.title.weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
@@ -99,29 +100,32 @@ struct NewSongView: View {
             Divider()
             TextEditor(text: $lyrics)
                 .padding(.horizontal)
-                .focused($isLyricsFocused)
+                .focused($isFocused)
             Divider()
-            Button {
+            Button(action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {
-                    createSong()
+                    createVariation()
                 }
-            } label: {
-                Text(NSLocalizedString("continue", comment: "Continue"))
-                    .modifier(NavButtonViewModifier())
-            }
+            }, label: {
+                HStack {
+                    Spacer()
+                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Spacer()
+                }
+                .modifier(NavButtonViewModifier())
+            })
             .padding()
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
-        .alert("Your song doesn't have any lyrics. Continue anyway?", isPresented: $showInfo, actions: {
-            Button(action: createSong, label: {Text(NSLocalizedString("continue", comment: "Continue"))})
-            Button(role: .cancel, action: {}, label: {Text("Cancel")})
-        })
+        .alert(isPresented: $showInfo) {
+            Alert(title: Text("You need to add lyrics to a variation to create it."), dismissButton: .cancel() )
+        }
         .onAppear {
-            isLyricsFocused = true
+            isFocused = true
         }
     }
 }

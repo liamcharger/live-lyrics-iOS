@@ -8,19 +8,15 @@
 import SwiftUI
 
 struct ResetPasswordView: View {
-    // State vars
     @State var showError = false
     @State var showSuccess = false
     
     @State var errorMessage = ""
     
-    // Binding vars
     @Binding var text: String
     
-    // Focus state vars
     @FocusState var focused: Bool
     
-    // Environment vars
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.presentationMode) var presMode
     
@@ -43,17 +39,16 @@ struct ResetPasswordView: View {
                         .clipShape(Circle())
                 }
             }
-            .padding(.top)
             .padding()
+            Divider()
             Spacer()
             CustomTextField(text: $text, placeholder: "Email")
                 .autocorrectionDisabled()
-            #if os(iOS)
                 .autocapitalization(.none)
-            #endif
                 .focused($focused)
                 .padding()
             Spacer()
+            Divider()
             Button(action: {
                 viewModel.resetPassword(email: text) { success, string  in
                     if success {
@@ -84,8 +79,6 @@ struct ResetPasswordView: View {
     }
 }
 
-struct ResetPasswordView_Previews: PreviewProvider {
-    static var previews: some View {
-        ResetPasswordView(text: .constant(""))
-    }
+#Preview {
+    ResetPasswordView(text: .constant(""))
 }

@@ -84,13 +84,18 @@ struct SongEditView: View {
                 .padding()
             }
             Divider()
-            Button(action: update) {
-                Text(NSLocalizedString("save", comment: "Save"))
-                    .frame(maxWidth: .infinity)
-                    .modifier(NavButtonViewModifier())
+            VStack(spacing: 16) {
+                Text("These settings are not specific to song variations.")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.gray)
+                Button(action: update) {
+                    Text(NSLocalizedString("save", comment: "Save"))
+                        .frame(maxWidth: .infinity)
+                        .modifier(NavButtonViewModifier())
+                }
+                .opacity(isEmpty ? 0.5 : 1.0)
+                .disabled(isEmpty)
             }
-            .opacity(isEmpty ? 0.5 : 1.0)
-            .disabled(isEmpty)
             .padding()
         }
         .alert(isPresented: $showError) {
