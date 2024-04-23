@@ -484,7 +484,12 @@ struct SongDetailView: View {
                 }
             } else {
                 Button("Delete", role: .destructive) {
-                    self.songViewModel.moveSongToRecentlyDeleted(song)
+                    if restoreSong != nil {
+                        TakesViewModel.shared.deleteAllTakes(forSong: song)
+                        self.recentlyDeletedViewModel.deleteSong(song)
+                    } else {
+                        self.songViewModel.moveSongToRecentlyDeleted(song)
+                    }
                     self.presMode.wrappedValue.dismiss()
                 }
                 if let folder = folder {

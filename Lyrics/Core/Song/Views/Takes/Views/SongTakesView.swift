@@ -7,27 +7,24 @@
 
 import SwiftUI
 import AVFoundation
+import BottomSheet
 
 struct SongTakesView: View {
     @Binding var isPresented: Bool
     
-    @State private var selectedTake: Take?
     @State private var takeToEdit: Take?
     @State private var recordedTake: Take?
     
-    @State private var isPlaying = false
     @State private var showBorder = false
     @State private var showTakeEditView = false
-    
-    @State private var title = ""
-    
-    @State private var audioPlayer: AVAudioPlayer?
+    @State private var showTakeDetailView = false
+    @State private var showDeleteConfirmation = false
     
     @ObservedObject var takesViewModel = TakesViewModel.shared
     
     @FocusState var isFocused: Bool
     
-    let song: Song
+    var song: Song
     
     var body: some View {
         NavigationView {
@@ -49,13 +46,7 @@ struct SongTakesView: View {
                                 ForEach(takesViewModel.recordedTakes.reversed(), id: \.id) { take in
                                     VStack(spacing: 0) {
                                         Button(action: {
-                                            withAnimation(.bouncy(extraBounce: 0.1)) {
-                                                if selectedTake == take {
-                                                    selectedTake = nil
-                                                } else {
-                                                    selectedTake = take
-                                                }
-                                            }
+                                            self.showTakeDetailView = true
                                         }) {
                                             HStack {
                                                 VStack(alignment: .leading, spacing: 6) {
@@ -66,13 +57,12 @@ struct SongTakesView: View {
                                                 }
                                                 Spacer()
                                                 Image(systemName: "chevron.right")
-                                                    .rotationEffect(selectedTake == take ? Angle(degrees: 90) : Angle(degrees: 0))
                                             }
                                             .padding()
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .background(Material.regular)
                                             .foregroundColor(.gray)
-                                            .cornerRadius(20, corners: selectedTake == take ? [.topLeft, .topRight] : [.allCorners])
+                                            .cornerRadius(20)
                                             .overlay {
                                                 if showBorder && recordedTake == take {
                                                     RoundedRectangle(cornerRadius: 20)
@@ -98,88 +88,31 @@ struct SongTakesView: View {
                                                     Label("Edit", systemImage: "pencil")
                                                 }
                                                 Button(role: .destructive, action: {
-                                                    takesViewModel.deleteTake(take)
+                                                    showDeleteConfirmation = true
                                                 }) {
                                                     Label("Delete", systemImage: "trash")
                                                 }
                                             }
                                         }
-                                        if selectedTake == take {
-                                            VStack(spacing: 14) {
-                                                Divider()
-                                                    .padding(.horizontal, -16)
-                                                HStack {
-                                                    Button {
-                                                        do {
-                                                            self.audioPlayer = try AVAudioPlayer(contentsOf: take.url)
-                                                            
-                                                            if let audioPlayer = audioPlayer {
-                                                                if !isPlaying {
-                                                                    audioPlayer.play()
-                                                                    isPlaying = true
-                                                                } else {
-                                                                    audioPlayer.pause()
-                                                                    isPlaying = false
-                                                                }
-                                                            }
-                                                        } catch {
-                                                            print(error.localizedDescription)
-                                                        }
-                                                    } label: {
-                                                        Image(systemName: isPlaying ? "pause" : "play")
-                                                            .padding(10)
-                                                            .background(isPlaying ? Color.red : Color.blue)
-                                                            .foregroundColor(.white)
-                                                            .cornerRadius(6)
-                                                    }
-                                                    .onChange(of: audioPlayer?.isPlaying ?? false) { isPlaying in
-                                                        if !isPlaying {
-                                                            self.isPlaying = false
-                                                        }
-                                                    }
-                                                }
+                                        .bottomSheet(isPresented: $showTakeDetailView, detents: [.medium()]) {
+                                            TakeDetailView(isPresented: $showTakeDetailView, take: take, song: song)
+                                        }
+                                        .confirmationDialog("Delete Take", isPresented: $showDeleteConfirmation) {
+                                            Button("Delete", role: .destructive) {
+                                                takesViewModel.deleteTake(take, song: song)
                                             }
-                                            .padding([.horizontal, .bottom], 14)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .background(Material.regular)
-                                            .foregroundColor(.gray)
-                                            .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
+                                            Button("Cancel", role: .cancel) {}
+                                        } message: {
+                                            Text("Are you sure you want to delete '\(take.title ?? "Take \((takesViewModel.recordedTakes.firstIndex(of: take) ?? 0) + 1)")'?")
                                         }
                                     }
                                 }
                             }
                             .padding()
                             .sheet(isPresented: $showTakeEditView) {
-                                VStack(spacing: 0) {
-                                    HStack(alignment: .center, spacing: 10) {
-                                        Text("Edit Take")
-                                            .font(.title.weight(.bold))
-                                        Spacer()
-                                        SheetCloseButton(isPresented: $showTakeEditView)
-                                    }
-                                    .padding()
-                                    Divider()
-                                    ScrollView {
-                                        CustomTextField(text: $title, placeholder: "Title")
-                                            .focused($isFocused)
-                                            .padding()
-                                    }
-                                    Divider()
-                                    Button(action: {
-                                        takesViewModel.updateTake(takeToEdit, title: title)
-                                        showTakeEditView = false
-                                    }) {
-                                        Text(NSLocalizedString("save", comment: "Save"))
-                                            .frame(maxWidth: .infinity)
-                                            .modifier(NavButtonViewModifier())
-                                    }
-                                    .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1.0)
-                                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-                                    .padding()
-                                }
-                                .onAppear {
-                                    isFocused = true
-                                }
+                                let take = Take(url: takeToEdit?.url ?? URL(string: "")!, date: takeToEdit?.date ?? Date(), songId: takeToEdit?.songId ?? "", title: takeToEdit?.title ?? "")
+                                
+                                TakeEditView(isDisplayed: $showTakeEditView, titleToUpdate: .constant(""), song: song, take: take)
                             }
                         }
                     }
@@ -197,7 +130,7 @@ struct SongTakesView: View {
                         ZStack {
                             AnimatedCircleView()
                             Button {
-                                takesViewModel.stopRecording {
+                                takesViewModel.stopRecording(song: song) {
                                     withAnimation {
                                         showBorder = true
                                         recordedTake = takesViewModel.recordedTake
@@ -217,7 +150,7 @@ struct SongTakesView: View {
                 }
             }
             .onAppear {
-                takesViewModel.loadRecordedTakes()
+                takesViewModel.loadRecordedTakes(forSong: song)
             }
         }
         .navigationViewStyle(.stack)
@@ -225,12 +158,17 @@ struct SongTakesView: View {
 }
 
 struct AnimatedCircleView: View {
+    let color: Color
     @State private var blur: CGFloat = 15
     
     let animationTimer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     
+    init(color: Color? = nil) {
+        self.color = color ?? .red
+    }
+    
     var body: some View {
-        Color.red
+        color
             .frame(width: 75, height: 75)
             .clipShape(Circle())
             .blur(radius: blur)

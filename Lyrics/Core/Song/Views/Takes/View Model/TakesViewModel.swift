@@ -19,10 +19,6 @@ class TakesViewModel: ObservableObject {
     @Published var audioRecorder: AVAudioRecorder!
     private var timer: Timer?
     
-    init() {
-        loadRecordedTakes()
-    }
-    
     func startRecording(song: Song) {
         do {
             try audioSession.setCategory(.playAndRecord, mode: .default, options: [.duckOthers])
@@ -50,13 +46,13 @@ class TakesViewModel: ObservableObject {
             print("Failed to record audio: \(error.localizedDescription)")
         }
     }
-    func stopRecording(completion: @escaping() -> Void) {
+    func stopRecording(song: Song, completion: @escaping() -> Void) {
         do {
             try audioSession.setActive(false)
         } catch {
             print(error)
         }
-        saveRecordedTake(url: audioRecorder.url)
+        saveRecordedTake(url: audioRecorder.url, song: song)
         audioRecorder.stop()
         isRecording = false
         timer?.invalidate()
@@ -75,14 +71,14 @@ class TakesViewModel: ObservableObject {
             print("Failed to save all recorded takes: \(error.localizedDescription)")
         }
     }
-    func saveRecordedTake(url: URL) {
-        let recordedTake = Take(url: url, date: Date())
+    func saveRecordedTake(url: URL, song: Song) {
+        let recordedTake = Take(url: url, date: Date(), songId: song.id ?? "", title: nil)
         
         do {
             let baseDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
             let fileURL = baseDir.appendingPathComponent("recordedTakes.json")
             
-            self.loadRecordedTakes()
+            loadRecordedTakes(forSong: song)
             self.recordedTakes.append(recordedTake)
             self.recordedTake = recordedTake
             
@@ -93,20 +89,24 @@ class TakesViewModel: ObservableObject {
             print("Failed to save recorded take: \(error.localizedDescription)")
         }
     }
-    func loadRecordedTakes() {
+    func loadRecordedTakes(forSong song: Song) {
         let baseDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
         let fileURL = baseDir.appendingPathComponent("recordedTakes.json")
         
-        guard let data = try? Data(contentsOf: fileURL) else { return }
+        guard let data = try? Data(contentsOf: fileURL) else {
+            self.recordedTakes = []
+            return
+        }
         
         let decoder = JSONDecoder()
         do {
-            self.recordedTakes = try decoder.decode([Take].self, from: data)
+            let allTakes = try decoder.decode([Take].self, from: data)
+            self.recordedTakes = allTakes.filter { $0.songId == song.id }
         } catch {
             print(error.localizedDescription)
         }
     }
-    func deleteTake(_ take: Take) {
+    func deleteTake(_ take: Take, song: Song) {
         do {
             try FileManager.default.removeItem(at: take.url)
         } catch {
@@ -116,11 +116,11 @@ class TakesViewModel: ObservableObject {
         recordedTakes.removeAll(where: { $0.url == take.url })
         saveAllRecordedTakes()
     }
-    func updateTake(_ take: Take?, title: String) {
+    func updateTake(_ take: Take?, song: Song, title: String) {
         if let take = take {
-            let updatedTake = Take(url: take.url, date: take.date, title: title)
+            let updatedTake = Take(url: take.url, date: take.date, songId: song.id ?? "", title: title)
             
-            loadRecordedTakes()
+            loadRecordedTakes(forSong: song)
             
             if let index = recordedTakes.firstIndex(where: { $0.url == take.url }) {
                 recordedTakes[index] = updatedTake
@@ -133,7 +133,8 @@ class TakesViewModel: ObservableObject {
             print("Take is nil")
         }
     }
-    func deleteAllTakes() {
+    func deleteAllTakes(forSong song: Song) {
+        loadRecordedTakes(forSong: song)
         recordedTakes.removeAll()
         saveAllRecordedTakes()
     }

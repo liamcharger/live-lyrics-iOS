@@ -120,9 +120,10 @@ struct RecentlyDeletedView: View {
                 .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
-                            print("Deleting song: \(selectedSong.title)")
+                            let songData = Song(id: selectedSong.id ?? "", uid: selectedSong.uid, timestamp: selectedSong.timestamp, title: selectedSong.title, lyrics: selectedSong.lyrics, order: selectedSong.order)
+                            
                             recentlyDeletedViewModel.deleteSong(song: selectedSong)
-                            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
+                            TakesViewModel.shared.deleteAllTakes(forSong: songData)
                         }
                         Button("Cancel", role: .cancel) { }
                     }

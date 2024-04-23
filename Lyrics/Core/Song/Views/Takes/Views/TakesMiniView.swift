@@ -38,7 +38,7 @@ struct TakesMiniView: View {
                     Spacer()
                     Button {
                         if takesViewModel.isRecording {
-                            self.takesViewModel.stopRecording {}
+                            self.takesViewModel.stopRecording(song: song) {}
                         } else {
                             self.takesViewModel.startRecording(song: song)
                         }
@@ -58,29 +58,27 @@ struct TakesMiniView: View {
                             .padding(18)
                             .offset(y: -1)
                             .font(.system(size: 18).weight(.medium))
-                            .foregroundColor(showBorder ? borderColor : .white)
+                            .foregroundColor(showBorder ? .blue : .white)
                             .background(Material.regular)
                             .clipShape(Circle())
                             .overlay {
                                 if showBorder {
                                     Circle()
-                                        .stroke(borderColor, lineWidth: 2.5)
+                                        .stroke(.blue, lineWidth: 2.5)
+                                        .onAppear {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                                                withAnimation(.easeInOut) {
+                                                    showBorder = false
+                                                }
+                                            }
+                                        }
                                 }
                             }
                     }
                     .onChange(of: takesViewModel.isRecording) { isRecording in
-                        withAnimation(.easeInOut) {
-                            showBorder = isRecording
-                            borderColor = isRecording ? .red : .blue
-                        }
                         if !isRecording {
                             withAnimation(.easeInOut) {
-                                borderColor = .blue
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                withAnimation(.easeInOut) {
-                                    showBorder = false
-                                }
+                                showBorder = true
                             }
                         }
                     }

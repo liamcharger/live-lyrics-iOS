@@ -11,6 +11,7 @@ struct Take: Identifiable, Codable, Equatable {
     var id = UUID()
     var url: URL
     var date: Date
+    let songId: String
     var title: String?
     
     static func == (lhs: Take, rhs: Take) -> Bool {

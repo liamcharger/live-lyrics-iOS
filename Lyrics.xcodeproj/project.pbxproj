@@ -81,6 +81,8 @@
 		E09F77C12BD6B8EA00C20D69 /* SongTakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77C02BD6B8EA00C20D69 /* SongTakesView.swift */; };
 		E09F77C32BD6B91500C20D69 /* TakesMiniView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77C22BD6B91500C20D69 /* TakesMiniView.swift */; };
 		E09F77C52BD6B98500C20D69 /* Take.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77C42BD6B98500C20D69 /* Take.swift */; };
+		E09F77CB2BD70AD900C20D69 /* TakeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77CA2BD70AD900C20D69 /* TakeDetailView.swift */; };
+		E09F77CD2BD7235500C20D69 /* TakeEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09F77CC2BD7235500C20D69 /* TakeEditView.swift */; };
 		E0A567E62AE8BE13007313FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0A567E82AE8BE13007313FC /* Localizable.strings */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
 		E0A8F5062BD06887009275A2 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A8F5052BD06887009275A2 /* Version.swift */; };
@@ -223,6 +225,8 @@
 		E09F77C02BD6B8EA00C20D69 /* SongTakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTakesView.swift; sourceTree = "<group>"; };
 		E09F77C22BD6B91500C20D69 /* TakesMiniView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesMiniView.swift; sourceTree = "<group>"; };
 		E09F77C42BD6B98500C20D69 /* Take.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Take.swift; sourceTree = "<group>"; };
+		E09F77CA2BD70AD900C20D69 /* TakeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeDetailView.swift; sourceTree = "<group>"; };
+		E09F77CC2BD7235500C20D69 /* TakeEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakeEditView.swift; sourceTree = "<group>"; };
 		E0A567E72AE8BE13007313FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		E0A8F5052BD06887009275A2 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
@@ -727,6 +731,8 @@
 				E09F77BE2BD6B8C900C20D69 /* NewTakeView.swift */,
 				E09F77C02BD6B8EA00C20D69 /* SongTakesView.swift */,
 				E09F77C22BD6B91500C20D69 /* TakesMiniView.swift */,
+				E09F77CA2BD70AD900C20D69 /* TakeDetailView.swift */,
+				E09F77CC2BD7235500C20D69 /* TakeEditView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1212,6 +1218,7 @@
 				E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */,
 				E09F77C32BD6B91500C20D69 /* TakesMiniView.swift in Sources */,
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
+				E09F77CD2BD7235500C20D69 /* TakeEditView.swift in Sources */,
 				E004F4262A69C2D40089B6DF /* PlayView.swift in Sources */,
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
 				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
@@ -1219,6 +1226,7 @@
 				E04247B32A02F6DF00CA48B3 /* User.swift in Sources */,
 				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
+				E09F77CB2BD70AD900C20D69 /* TakeDetailView.swift in Sources */,
 				E0CC33212A04064500CC38C6 /* SongService.swift in Sources */,
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
