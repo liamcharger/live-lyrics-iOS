@@ -277,6 +277,17 @@ class SongService {
 			}
 	}
 	
+	func updateTimestamps(song: Song, timestamps: [String]) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+			.updateData(["timestamps": timestamps]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+	}
+	
 	func updateWordCountPreferences(preference: String, completion: @escaping(String, Bool) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		

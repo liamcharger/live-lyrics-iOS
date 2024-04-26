@@ -136,6 +136,10 @@ class SongViewModel: ObservableObject {
         service.updatePerformanceMode(song: song, performanceMode: performanceMode)
     }
     
+    func updateTimestamps(for song: Song, with timestamps: [String]) {
+        service.updateTimestamps(song: song, timestamps: timestamps)
+    }
+    
     func moveSongToRecentlyDeleted(_ song: Song) {
         DispatchQueue.main.async {
             self.service.moveSongToRecentlyDeleted(song: song) { success, errorMessage in
