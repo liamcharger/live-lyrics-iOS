@@ -85,6 +85,29 @@ struct UserService {
             }
     }
     
+    func fetchUsers(withUids uids: [String], completion: @escaping([User]) -> Void) {
+        let group = DispatchGroup()
+        var users = [User]()
+        
+        for uid in uids {
+            group.enter()
+            Firestore.firestore().collection("users")
+                .document(uid)
+                .addSnapshotListener { snapshot, error in
+                    guard let snapshot = snapshot else { return }
+                    guard let user = try? snapshot.data(as: User.self) else { return }
+                    
+                    users.append(user)
+                    
+                    group.leave()
+                }
+        }
+        
+        group.notify(queue: .main) {
+            completion(users)
+        }
+    }
+    
     func fetchUsers(withUsername username: String, completion: @escaping([User]) -> Void) {
         Firestore.firestore().collection("users").whereField("username", isEqualTo: username).getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else { return }

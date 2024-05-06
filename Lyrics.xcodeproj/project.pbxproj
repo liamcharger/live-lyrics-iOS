@@ -55,6 +55,9 @@
 		E050D15E2A030368004CC45E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E050D15D2A030368004CC45E /* Extensions.swift */; };
 		E052264D2A1BB1CF00ECF255 /* FolderEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E052264C2A1BB1CF00ECF255 /* FolderEditView.swift */; };
 		E05226522A1BBCFC00ECF255 /* SongMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05226512A1BBCFC00ECF255 /* SongMoveView.swift */; };
+		E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A792BCED9CB000292FA /* SharedSong.swift */; };
+		E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A7A2BCED9CB000292FA /* SharedFolder.swift */; };
+		E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A7D2BCF2351000292FA /* FolderSong.swift */; };
 		E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B72A94BB5200ECB31F /* NotificationManager.swift */; };
 		E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B92A94C1DD00ECB31F /* SystemDoc.swift */; };
 		E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */; };
@@ -192,6 +195,9 @@
 		E050D15D2A030368004CC45E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E052264C2A1BB1CF00ECF255 /* FolderEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderEditView.swift; sourceTree = "<group>"; };
 		E05226512A1BBCFC00ECF255 /* SongMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMoveView.swift; sourceTree = "<group>"; };
+		E05B9A792BCED9CB000292FA /* SharedSong.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedSong.swift; sourceTree = "<group>"; };
+		E05B9A7A2BCED9CB000292FA /* SharedFolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedFolder.swift; sourceTree = "<group>"; };
+		E05B9A7D2BCF2351000292FA /* FolderSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSong.swift; sourceTree = "<group>"; };
 		E05F2E7B2A55CFFD005E819C /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		E06076B72A94BB5200ECB31F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E06076B92A94C1DD00ECB31F /* SystemDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDoc.swift; sourceTree = "<group>"; };
@@ -460,6 +466,8 @@
 		E04247802A02EFAE00CA48B3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E05B9A7A2BCED9CB000292FA /* SharedFolder.swift */,
+				E05B9A792BCED9CB000292FA /* SharedSong.swift */,
 				E04247B22A02F6DF00CA48B3 /* User.swift */,
 				E0C492E42A0BDFC6002E9EA0 /* Folder.swift */,
 				E04247812A02EFC500CA48B3 /* Song.swift */,
@@ -469,6 +477,7 @@
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
 				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
+                E05B9A7D2BCF2351000292FA /* FolderSong.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1176,6 +1185,7 @@
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
 				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,
+				E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */,
 				E04247B32A02F6DF00CA48B3 /* User.swift in Sources */,
 				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
@@ -1198,6 +1208,7 @@
 				E04CB96A2BCB5FE100F2831B /* SongShareDetailView.swift in Sources */,
 				E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */,
 				E0CA85342B081D5100188CD0 /* SheetCloseButton.swift in Sources */,
+				E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */,
 				E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */,
 				E041055F2A90029900215FB0 /* HapticManager.swift in Sources */,
 				E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */,
@@ -1222,7 +1233,8 @@
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
-				E0C1D39F2BC07CB3004DD828 /* TaggedSongsView.swift in Sources */,
+				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,
+                E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */,
 				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,

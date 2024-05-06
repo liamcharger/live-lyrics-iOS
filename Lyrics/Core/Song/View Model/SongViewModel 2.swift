@@ -11,25 +11,16 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class SongViewModel: ObservableObject {
+    @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var authViewModel = AuthViewModel.shared
-    
-    @Published var isLoadingVariations = false
     
     let service = SongService()
     static let shared = SongViewModel()
     
-    func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
-        service.removeSongVariationListener()
-        self.isLoadingVariations = true
-        service.fetchSongVariations(song: song) { variations in
-            completion(variations)
-            self.isLoadingVariations = false
-        }
-    }
-    
     func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in
             if success {
+                self.mainViewModel.fetchSongs(folder)
                 completion(true, "Success!")
             } else {
                 completion(false, errorMessage)
@@ -40,16 +31,11 @@ class SongViewModel: ObservableObject {
     func createSong(lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(lyrics: lyrics, title: title) { success, errorMessage in
             if success {
+                self.mainViewModel.fetchSongs()
                 completion(true, "Success!")
             } else {
                 completion(false, errorMessage)
             }
-        }
-    }
-    
-    func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?, String) -> Void) {
-        service.createSongVariation(song: song, lyrics: lyrics, title: title) { error, createdId in
-            completion(error, createdId)
         }
     }
     
@@ -64,6 +50,7 @@ class SongViewModel: ObservableObject {
         let folder = Folder(uid: uid, timestamp: Date(), title: title, order: 0)
         
         service.createFolder(folder: folder) { error in
+            self.mainViewModel.fetchFolders()
             completion(error)
         }
     }
@@ -139,7 +126,11 @@ class SongViewModel: ObservableObject {
     func moveSongToRecentlyDeleted(_ song: Song) {
         DispatchQueue.main.async {
             self.service.moveSongToRecentlyDeleted(song: song) { success, errorMessage in
-                
+                if success {
+                    self.mainViewModel.fetchSongs()
+                } else {
+                    
+                }
             }
         }
     }
@@ -147,7 +138,11 @@ class SongViewModel: ObservableObject {
     func moveSongToRecentlyDeleted(_ folder: Folder, _ song: Song) {
         DispatchQueue.main.async {
             self.service.moveSongToRecentlyDeleted(song: song, from: folder) { success, errorMessage in
-                
+                if success {
+                    self.mainViewModel.fetchSongs(folder)
+                } else {
+                    
+                }
             }
         }
     }
@@ -167,14 +162,6 @@ class SongViewModel: ObservableObject {
                 return
             }
         }
-    }
-    
-    func deleteSongVariation(_ song: Song, variation: SongVariation) {
-        service.deleteVariation(song: song, variation: variation)
-    }
-    
-    func updateVariation(song: Song, variation: SongVariation, title: String) {
-        service.updateVariation(song: song, variation: variation, title: title)
     }
     
     func leaveSong(song: Song) {

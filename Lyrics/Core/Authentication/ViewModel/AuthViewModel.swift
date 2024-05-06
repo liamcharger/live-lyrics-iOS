@@ -136,6 +136,12 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    func fetchUsers(uids: [String], completion: @escaping([User]) -> Void) {
+        service.fetchUsers(withUids: uids) { users in
+            completion(users)
+        }
+    }
+    
     func signOut() {
         self.userSession = nil
         try? Auth.auth().signOut()

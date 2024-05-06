@@ -179,6 +179,29 @@ struct ShareView: View {
                 .padding()
                 Divider()
             }
+            HStack {
+                Text("Type:")
+                Spacer()
+                Menu {
+                    Button(action: {
+                        collaborate = true
+                    }, label: {
+                        Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
+                    })
+                    Button(action: {
+                        collaborate = false
+                    }, label: {
+                        Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
+                    })
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(collaborate ? "Collaborate" : "Send Copy")
+                        Image(systemName: "chevron.down")
+                    }
+                }
+            }
+            .padding()
+            Divider()
             if networkManager.getNetworkState() {
                 CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search by username...")
                     .textInputAutocapitalization(.never)

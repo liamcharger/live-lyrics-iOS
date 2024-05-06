@@ -17,6 +17,7 @@ class MainViewModel: ObservableObject {
     
     @Published var songs: [Song] = []
     @Published var folderSongs: [Song] = []
+    @Published var sharedSongs: [Song] = []
     @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
     @Published var folders: [Folder] = []
     @Published var incomingShareRequests: [ShareRequest] = []
@@ -25,7 +26,8 @@ class MainViewModel: ObservableObject {
     @Published var isLoadingFolderSongs = true
     @Published var isLoadingSongs = true
     @Published var isLoadingRecentlyDeletedSongs = true
-    @Published var isLoadingInvites = false
+    @Published var isLoadingInvites = true
+    @Published var isLoadingSharedSongs = true
     
     @Published var systemDoc: SystemDoc?
     
@@ -92,6 +94,13 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    func fetchSharedSongs() {
+        self.service.fetchSharedSongs() { songs in
+            self.sharedSongs = songs
+            self.isLoadingSharedSongs = false
+        }
+    }
+    
     func fetchRecentlyDeletedSongs() {
         self.service.fetchRecentlyDeletedSongs { songs in
             self.recentlyDeletedSongs = songs
@@ -106,23 +115,44 @@ class MainViewModel: ObservableObject {
         remoteConfig.configSettings = settings
         remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
         
-        remoteConfig.fetch { [weak self] _, error in
-            if let error = error {
-                print("Error fetching remote config: \(error.localizedDescription)")
+        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
+            guard let configUpdate, error == nil else {
+                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
                 return
             }
             
-            self?.remoteConfig.activate { _, _ in }
+            print("Updated keys: \(configUpdate.updatedKeys)")
             
-            guard let remoteVersionString = self?.remoteConfig.configValue(forKey: "currentVersion").stringValue,
-                  let currentVersionString = self?.notificationManager.getCurrentAppVersion() else {
-                print("Error: Unable to retrieve version strings")
-                return
-            }
-            
-            if let remoteVersion = Version(remoteVersionString), let currentVersion = Version(currentVersionString) {
-                if remoteVersion > currentVersion {
-                    self?.notificationStatus = .updateAvailable
+            self.remoteConfig.activate { changed, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                DispatchQueue.main.async {
+                    guard let remoteVersionString = self.remoteConfig.configValue(forKey: "currentVersion").stringValue else {
+                        return
+                    }
+                    
+                    let remoteVersionComponents = remoteVersionString.split(separator: ".")
+                    
+                    let currentVersionString = self.notificationManager.getCurrentAppVersion()
+                    let currentVersionComponents = currentVersionString.split(separator: ".")
+                    
+                    for (remoteComponent, currentComponent) in zip(remoteVersionComponents, currentVersionComponents) {
+                        guard let remoteNumber = Int(remoteComponent), let currentNumber = Int(currentComponent) else {
+                            return
+                        }
+                        
+                        if remoteNumber < currentNumber {
+                            self.notificationStatus = .updateAvailable
+                            return
+                        } else if remoteNumber > currentNumber {
+                            return
+                        }
+                    }
+                    
+                    if remoteVersionComponents.count < currentVersionComponents.count {
+                        self.notificationStatus = .updateAvailable
+                    }
                 }
             }
         }
