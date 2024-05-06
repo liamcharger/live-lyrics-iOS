@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
@@ -29,9 +30,11 @@ struct SongEditView: View {
     @State var showNotesView = false
     
     var isEmpty: Bool {
-        title.trimmingCharacters(in: .whitespaces).isEmpty
+        let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty
+        let isDurationInvalid = !stateDuration.isEmpty && isInvalidFormat(stateDuration)
+        
+        return isTitleEmpty || isDurationInvalid
     }
-    
     func update() {
         self.title = stateTitle
         self.key = stateKey
@@ -48,6 +51,10 @@ struct SongEditView: View {
                 self.errorMessage = errorMessage
             }
         }
+    }
+    func isInvalidFormat(_ duration: String) -> Bool {
+        let pattern = "^\\d+:\\d+\\d+$"
+        return !duration.isEmpty && !(duration.range(of: pattern, options: .regularExpression) != nil)
     }
     
     init(song: Song, isDisplayed: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>, duration: Binding<String>) {
@@ -75,11 +82,20 @@ struct SongEditView: View {
             .padding()
             Divider()
             ScrollView {
-                VStack {
+                VStack(alignment: .leading) {
                     CustomTextField(text: $stateTitle, placeholder: "Title")
                     CustomTextField(text: $stateKey, placeholder: "Key")
                     CustomTextField(text: $stateArtist, placeholder: "Artist")
                     CustomTextField(text: $stateDuration, placeholder: "Duration")
+                    if isInvalidFormat(stateDuration) {
+                        Group {
+                            Text("The duration is not formatted correctly. Correct formatting, e.g., ") +
+                            Text("2:33").font(.body.weight(.bold)) +
+                            Text(".")
+                        }
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 8)
+                    }
                 }
                 .padding()
             }
