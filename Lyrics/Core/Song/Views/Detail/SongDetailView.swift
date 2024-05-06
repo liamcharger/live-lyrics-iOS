@@ -48,6 +48,7 @@ struct SongDetailView: View {
     @State var fullUsernameString = [String]()
     @State var initials = [String]()
     @State var joinedUsersStrings = [String]()
+    @State var lastFetchedJoined: Date?
     
     @State var joinedUsers = [User]()
     
@@ -317,40 +318,40 @@ struct SongDetailView: View {
                         Spacer()
                         Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
                     }
-                    .padding((!joinedUsers.isEmpty && joinedUsers.count > 1) ? [] : [.bottom])
-                    if joinedUsers.count > 1 {
+                    .padding(joinedUsers.count > 0 ? [] : [.bottom])
+                    if joinedUsers.count > 0 {
                         VStack(spacing: 0) {
                             Divider()
                                 .padding(.horizontal, -16)
                             ScrollView(.horizontal) {
                                 HStack(spacing: 6) {
-                                    ForEach(joinedUsers, id: \.id) { user in
-                                        if user.id ?? "" != viewModel.currentUser?.id ?? "" {
-                                            Button {
-                                                selectedUser = user
-                                                showUserPopover = true
-                                            } label: {
-                                                Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
-                                                    .padding(12)
-                                                    .font(.system(size: 16).weight(.medium))
-                                                    .background(Material.regular)
-                                                    .clipShape(Circle())
-                                                //                                                    .overlay {
-                                                //                                                        if let user = selectedUser, currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
-                                                //                                                            FAText(iconName: "pen", size: 11)
-                                                //                                                                .foregroundColor(.white)
-                                                //                                                                .background {
-                                                //                                                                    Circle()
-                                                //                                                                        .foregroundColor(.blue)
-                                                //                                                                        .frame(width: 22, height: 22)
-                                                //                                                                }
-                                                //                                                                .offset(x: 15, y: -13)
-                                                //                                                                .shadow(radius: 3)
-                                                //                                                        }
-                                                //                                                    }
-                                            }
-                                            .modifier(UserPopover(isPresented: $showUserPopover, user: user))
+                                    ForEach(joinedUsers) { user in
+                                        Button {
+                                            selectedUser = user
+                                            showUserPopover = true
+                                        } label: {
+                                            Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
+                                                .padding(12)
+                                                .font(.system(size: 16).weight(.medium))
+                                                .background(Material.regular)
+                                                .clipShape(Circle())
+                                            /*
+                                             .overlay {
+                                             if let user = selectedUser, currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
+                                             FAText(iconName: "pen", size: 11)
+                                             .foregroundColor(.white)
+                                             .background {
+                                             Circle()
+                                             .foregroundColor(.blue)
+                                             .frame(width: 22, height: 22)
+                                             }
+                                             .offset(x: 15, y: -13)
+                                             .shadow(radius: 3)
+                                             }
+                                             }
+                                             */
                                         }
+                                        .modifier(UserPopover(isPresented: $showUserPopover, user: user))
                                     }
                                 }
                                 .padding(12)
@@ -487,6 +488,16 @@ struct SongDetailView: View {
                 self.value = song.size ?? 18
                 self.lineSpacing = song.lineSpacing ?? 1
                 self.joinedUsersStrings = song.joinedUsers ?? []
+                if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
+                    let uid = viewModel.currentUser?.id ?? ""
+                    if uid != song.uid {
+                        joinedUsersStrings.insert(song.uid, at: 0)
+                    }
+                    viewModel.fetchUsers(uids: joinedUsersStrings) { users in
+                        self.lastFetchedJoined = Date()
+                        self.joinedUsers = users
+                    }
+                }
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
                     if lyrics != lastUpdatedLyrics {
                         mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
@@ -495,12 +506,6 @@ struct SongDetailView: View {
                 }
             } regCompletion: { reg in
                 self.fetchListener = reg
-            }
-            if !joinedUsersStrings.contains(viewModel.currentUser?.id ?? "") {
-                joinedUsersStrings.append(viewModel.currentUser?.id ?? "")
-            }
-            viewModel.fetchUsers(uids: joinedUsersStrings) { users in
-                self.joinedUsers = users
             }
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -635,6 +640,14 @@ struct SongDetailView: View {
     
     var settings: some View {
         Menu {
+#if DEBUG
+            Button {
+                self.pasteboard.string = song.id ?? ""
+            } label: {
+                Label("Copy Song ID", systemImage: "doc.on.doc")
+            }
+            Divider()
+#endif
             Button {
                 showEditView.toggle()
             } label: {
