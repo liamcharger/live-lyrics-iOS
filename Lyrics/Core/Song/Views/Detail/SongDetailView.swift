@@ -493,6 +493,10 @@ struct SongDetailView: View {
                     if uid != song.uid {
                         joinedUsersStrings.insert(song.uid, at: 0)
                     }
+                    if joinedUsersStrings.contains(uid) {
+                        let index = joinedUsersStrings.firstIndex(where: { $0 == uid })
+                        joinedUsersStrings.remove(at: index)
+                    }
                     viewModel.fetchUsers(uids: joinedUsersStrings) { users in
                         self.lastFetchedJoined = Date()
                         self.joinedUsers = users
