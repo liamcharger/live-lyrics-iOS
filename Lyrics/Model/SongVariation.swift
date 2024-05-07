@@ -14,4 +14,6 @@ struct SongVariation: Identifiable, Codable {
     var lyrics: String
     var songUid: String
     var songId: String
+    
+    static let defaultId = "d45234543e542354f453254a45435u54325432543l54214354t643254325432"
 }

@@ -96,7 +96,8 @@ class SongService {
 				for sharedSong in sharedSongs {
 					group.enter()
 					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId) { song in
-						if let song = song {
+						if var song = song {
+							song.variations = sharedSong.variations
 							completedSongs.append(song)
 						}
 						group.leave()
@@ -1005,7 +1006,8 @@ class SongService {
 					let sharedSong: [String: Any] = [
 						"from": request.from,
 						"songId": request.contentId,
-						"order": 0
+						"order": 0,
+						"variations": request.songVariations
 					]
 					
 					dispatch.enter()

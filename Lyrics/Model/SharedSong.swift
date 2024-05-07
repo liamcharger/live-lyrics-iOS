@@ -14,4 +14,5 @@ struct SharedSong: Identifiable, Codable, Equatable {
     let from: String
     let songId: String
     var order: Int
+    var variations: [String]?
 }

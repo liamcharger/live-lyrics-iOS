@@ -29,6 +29,7 @@ struct ShareView: View {
     @State var collaborate = false
     @State var firstSearch = true
     @State var isSendingRequest = false
+    @State var readOnly = false
     
     @State var selectedUser: User?
     
@@ -38,6 +39,7 @@ struct ShareView: View {
     let folder: Folder?
     let networkManager = NetworkManager.shared
     let userService = UserService()
+    let defaultVariationId = SongVariation.defaultId
     
     var disabled: Bool {
         selectedUsers.isEmpty || !networkManager.getNetworkState() || isSendingRequest
@@ -73,7 +75,6 @@ struct ShareView: View {
                         } else {
                             print("Song and folder are nil")
                         }
-                        
                         if let request = request {
                             self.isSendingRequest = true
                             authViewModel.sendInviteToUser(request: request) { error in
@@ -127,7 +128,7 @@ struct ShareView: View {
                             Text("Make sure that ") +
                             Text(userToShare.username)
                                 .font(.body.weight(.bold))
-                            + Text(" has version 2.3 or newer of the app.")
+                            + Text(" has version \(collaborate ? "2.4" : "2.3") or newer of the app.")
                         }
                     }
                     .padding()
@@ -148,10 +149,24 @@ struct ShareView: View {
                     Text("Including variation\(selectedVariations.count > 1 ? "s" : ""):")
                     Spacer()
                     Menu {
+                        Button {
+                            if selectedVariations.contains(where: { $0.id ?? "" == defaultVariationId}) {
+                                if selectedVariations.count >= 2 {
+                                    self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == defaultVariationId})!)
+                                }
+                            } else {
+                                self.selectedVariations.append(SongVariation(title: defaultVariationId, lyrics: "", songUid: "", songId: ""))
+                            }
+                        } label: {
+                            Label("Default", systemImage: selectedVariations.contains(where: { $0.id ?? "" == defaultVariationId}) ? "checkmark" : "")
+                        }
+                        Divider()
                         ForEach(songVariations, id: \.id) { variation in
                             Button {
                                 if selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) {
-                                    self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
+                                    if selectedVariations.count >= 2 {
+                                        self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
+                                    }
                                 } else {
                                     self.selectedVariations.append(variation)
                                 }
@@ -163,10 +178,16 @@ struct ShareView: View {
                         HStack(spacing: 5) {
                             Text({
                                 if selectedVariations.isEmpty { 
-                                    return "None"
+                                    return "Default"
                                 } else {
                                     if selectedVariations.count == 1 {
-                                        return selectedVariations.first?.title ?? ""
+                                        let title = selectedVariations.first?.title ?? ""
+                                        
+                                        if title == defaultVariationId {
+                                            return "Default"
+                                        } else {
+                                            return title
+                                        }
                                     } else {
                                         return "Multiple"
                                     }
@@ -179,24 +200,33 @@ struct ShareView: View {
                 .padding()
                 Divider()
             }
-            HStack {
-                Text("Type:")
-                Spacer()
-                Menu {
-                    Button(action: {
-                        collaborate = true
-                    }, label: {
-                        Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
-                    })
-                    Button(action: {
-                        collaborate = false
-                    }, label: {
-                        Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
-                    })
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(collaborate ? "Collaborate" : "Send Copy")
-                        Image(systemName: "chevron.down")
+            VStack {
+                HStack {
+                    Text("Type:")
+                    Spacer()
+                    Menu {
+                        Button(action: {
+                            collaborate = true
+                        }, label: {
+                            Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
+                        })
+                        Button(action: {
+                            collaborate = false
+                        }, label: {
+                            Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
+                        })
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text(collaborate ? "Collaborate" : "Send Copy")
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                    }
+                }
+                if collaborate {
+                    HStack {
+                        Text("Read Only:")
+                        Spacer()
+                        Toggle("", isOn: $readOnly).labelsHidden()
                     }
                 }
             }
@@ -326,9 +356,10 @@ struct ShareView: View {
             authViewModel.users = []
             if let song = song {
                 songViewModel.fetchSongVariations(song: song) { variations in
-                    print("ShareView variations: ", variations)
                     self.songVariations = variations
-                    self.selectedVariations = variations
+                    var selectedVariations = variations
+                    selectedVariations.append(SongVariation(id: "default", title: "Default", lyrics: "", songUid: "", songId: ""))
+                    self.selectedVariations = selectedVariations
                 }
             }
         }
