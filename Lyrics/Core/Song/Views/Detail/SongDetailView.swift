@@ -366,7 +366,7 @@ struct SongDetailView: View {
                 .padding(.horizontal)
             }
             Divider()
-            TextEditor(text: (song.readOnly ?? false) == true || songs == nil ? .constant(lyrics) : $lyrics)
+            TextEditor(text: (song.readOnly ?? false) == false || songs == nil ? .constant(lyrics) : $lyrics)
                 .multilineTextAlignment(alignment)
                 .font(.system(size: CGFloat(value), weight: weight, design: design))
                 .lineSpacing(lineSpacing)
@@ -474,7 +474,7 @@ struct SongDetailView: View {
             songViewModel.fetchSongVariations(song: song) { variations in
                 if let variationIds = song.variations, !variations.isEmpty {
                     var hasDefaultIncluded = false
-                    var fullVariations = variations.filter { variation in
+                    let fullVariations = variations.filter { variation in
                         if variation.title == SongVariation.defaultId {
                             hasDefaultIncluded = true
                         }
@@ -617,7 +617,7 @@ struct SongDetailView: View {
             }
             Divider()
 #endif
-            if song.readOnly ?? false {
+            if !(song.readOnly ?? false) {
                 Button {
                     showEditView.toggle()
                 } label: {
@@ -650,7 +650,7 @@ struct SongDetailView: View {
             } label: {
                 Label("Copy", systemImage: "doc")
             }
-            if song.readOnly ?? false {
+            if !(song.readOnly ?? false) {
                 Button {
                     showTagSheet = true
                 } label: {
@@ -680,6 +680,7 @@ struct SongDetailView: View {
 
 struct UserPopover: ViewModifier {
     @Binding var isPresented: Bool
+    
     let user: User?
     
     func popoverContent(style: Int) -> some View {
@@ -688,7 +689,13 @@ struct UserPopover: ViewModifier {
                 switch style {
                 case 0:
                     VStack(alignment: .trailing) {
-                        SheetCloseButton(isPresented: $isPresented)
+                        Button(action: {isPresented = false}) {
+                            Image(systemName: "xmark")
+                                .imageScale(.medium)
+                                .padding(3)
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.gray)
+                        }
                         VStack(spacing: 12) {
                             Spacer()
                             Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })

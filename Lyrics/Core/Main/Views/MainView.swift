@@ -376,7 +376,7 @@ struct MainView: View {
                                                             } label: {
                                                                 Label("Share", systemImage: "square.and.arrow.up")
                                                             }
-                                                            if folder.readOnly ?? false {
+                                                            if !(folder.readOnly ?? false) {
                                                                 Button {
                                                                     showEditSheet = true
                                                                     selectedFolder = folder
@@ -436,7 +436,7 @@ struct MainView: View {
                                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
                                                                         ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
-                                                                                if song.readOnly ?? false {
+                                                                                if !(song.readOnly ?? false) {
                                                                                     Button {
                                                                                         selectedSong = song
                                                                                         songViewModel.fetchSong(selectedSong?.id ?? "") { song in
@@ -479,7 +479,7 @@ struct MainView: View {
                                                                                 } label: {
                                                                                     Label("Copy", systemImage: "doc")
                                                                                 }
-                                                                                if folder.readOnly ?? false {
+                                                                                if !(song.readOnly ?? false) {
                                                                                     Button {
                                                                                         selectedFolder = folder
                                                                                         selectedSong = song
@@ -752,7 +752,7 @@ struct MainView: View {
     
     func songContextMenu(song: Song) -> some View {
         return VStack {
-            if song.readOnly ?? false {
+            if !(song.readOnly ?? false) {
                 Button {
                     selectedSong = song
                     showSongEditSheet.toggle()
@@ -796,7 +796,7 @@ struct MainView: View {
             } label: {
                 Label("Copy", systemImage: "doc")
             }
-            // TODO: allow pin for shared songs
+            // TODO: allow pin for shared songs using SharedSong object
             if !songViewModel.isShared(song: song) {
                 Button {
                     DispatchQueue.main.async {
@@ -814,11 +814,13 @@ struct MainView: View {
                     }
                 }
             }
-            Button {
-                selectedSong = song
-                showTagSheet = true
-            } label: {
-                Label("Tags", systemImage: "tag")
+            if !(song.readOnly ?? false) {
+                Button {
+                    selectedSong = song
+                    showTagSheet = true
+                } label: {
+                    Label("Tags", systemImage: "tag")
+                }
             }
             Button(role: .destructive, action: {
                 if !songViewModel.isShared(song: song) {
