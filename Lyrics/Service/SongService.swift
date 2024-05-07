@@ -98,6 +98,7 @@ class SongService {
 					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId) { song in
 						if var song = song {
 							song.variations = sharedSong.variations
+							song.readOnly = sharedSong.readOnly
 							completedSongs.append(song)
 						}
 						group.leave()
@@ -297,7 +298,7 @@ class SongService {
 				let variations = documents.compactMap({ try? $0.data(as: SongVariation.self) })
 				
 				if variations.isEmpty {
-					completion([SongVariation.variation])
+					completion([])
 				} else {
 					completion(variations)
 				}
@@ -853,7 +854,8 @@ class SongService {
 			"type": request.type,
 			"toUsername": request.toUsername,
 			"fromUsername": request.fromUsername,
-			"songVariations": request.songVariations
+			"songVariations": request.songVariations,
+			"readOnly": request.readOnly
 		]
 		
 		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(id).setData(requestData) { error in
@@ -1003,11 +1005,12 @@ class SongService {
 				}
 				
 				if request.type == "collaborate" {
-					let sharedSong: [String: Any] = [
+					let sharedSong: [String: Any?] = [
 						"from": request.from,
 						"songId": request.contentId,
 						"order": 0,
-						"variations": request.songVariations
+						"variations": request.songVariations,
+						"readOnly": request.readOnly
 					]
 					
 					dispatch.enter()

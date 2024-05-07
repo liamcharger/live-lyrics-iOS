@@ -41,7 +41,7 @@ struct NewSongVariationView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Enter a name for your new variation.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -49,7 +49,8 @@ struct NewSongVariationView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)
             }
-            .padding(.top)
+            .padding()
+            Divider()
             Spacer()
             TextField("Title", text: $title)
                 .padding(14)
@@ -58,6 +59,7 @@ struct NewSongVariationView: View {
                 .cornerRadius(10)
                 .focused($isFocused)
             Spacer()
+            Divider()
             Button(action: {view2.toggle()}, label: {
                 HStack {
                     Spacer()

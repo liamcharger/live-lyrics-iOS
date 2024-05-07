@@ -68,10 +68,10 @@ struct ShareView: View {
                         
                         if let song = song {
                             let toUserIds = selectedUsers.compactMap { $0.id }
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }))
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly)
                         } else if let folder = folder {
                             let toUserIds = selectedUsers.compactMap { $0.id }
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly)
                         } else {
                             print("Song and folder are nil")
                         }
@@ -200,7 +200,7 @@ struct ShareView: View {
                 .padding()
                 Divider()
             }
-            VStack {
+            VStack(spacing: 12) {
                 HStack {
                     Text("Type:")
                     Spacer()

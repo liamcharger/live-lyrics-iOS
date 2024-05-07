@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SongVariationManageView: View {
+    @ObservedObject var songViewModel = SongViewModel.shared
+    
     let song: Song
     
     @Binding var isDisplayed: Bool
@@ -28,56 +30,60 @@ struct SongVariationManageView: View {
             }
             .padding()
             Divider()
-            ScrollView {
-                VStack {
-                    ForEach(songVariations, id: \.id) { variation in
-                        if variation.title == "noVariation" {
+            if !songViewModel.isLoadingVariations && songVariations.isEmpty {
+                FullscreenMessage(imageName: "circle.slash", title: "It doesn't look like you have any variations for this song.", spaceNavbar: true)
+            } else {
+                ScrollView {
+                    VStack {
+                        if songViewModel.isLoadingVariations {
                             LoadingView()
                         } else {
-                            HStack(spacing: 6) {
-                                Text(variation.title)
-                                Spacer()
-                                Button {
-                                    selectedVariation = variation
-                                    showSongVariationEditView = true
-                                } label: {
-                                    Image(systemName: "pencil")
-                                        .padding(12)
-                                        .font(.body.weight(.semibold))
-                                        .background(Color.blue)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
-                                }
-                                .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
-                                    if let variation = selectedVariation {
-                                        SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                            ForEach(songVariations, id: \.id) { variation in
+                                HStack(spacing: 6) {
+                                    Text(variation.title)
+                                    Spacer()
+                                    Button {
+                                        selectedVariation = variation
+                                        showSongVariationEditView = true
+                                    } label: {
+                                        Image(systemName: "pencil")
+                                            .padding(12)
+                                            .font(.body.weight(.semibold))
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .clipShape(Circle())
+                                    }
+                                    .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
+                                        if let variation = selectedVariation {
+                                            SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                                        }
+                                    }
+                                    Button {
+                                        selectedVariation = variation
+                                        showDeleteSheet = true
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .padding(12)
+                                            .font(.body.weight(.semibold))
+                                            .background(Color.red)
+                                            .foregroundColor(.primary)
+                                            .clipShape(Circle())
                                     }
                                 }
-                                Button {
-                                    selectedVariation = variation
-                                    showDeleteSheet = true
-                                } label: {
-                                    Image(systemName: "trash")
-                                        .padding(12)
-                                        .font(.body.weight(.semibold))
-                                        .background(Color.red)
-                                        .foregroundColor(.primary)
-                                        .clipShape(Circle())
-                                }
+                                .padding(12)
+                                .background(Material.regular)
+                                .cornerRadius(18)
                             }
-                            .padding(12)
-                            .background(Material.regular)
-                            .cornerRadius(18)
                         }
                     }
+                    .padding()
                 }
-                .padding()
             }
         }
         .confirmationDialog("Delete Variation", isPresented: $showDeleteSheet) {
             Button("Delete", role: .destructive) {
                 if let selectedVariation = selectedVariation {
-                    SongViewModel.shared.deleteSongVariation(song, variation: selectedVariation)
+                    self.songViewModel.deleteSongVariation(song, variation: selectedVariation)
                     self.lyrics = song.lyrics
                     self.selectedVariation = nil
                 }

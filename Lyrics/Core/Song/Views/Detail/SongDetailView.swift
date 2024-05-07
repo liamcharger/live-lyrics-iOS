@@ -366,7 +366,7 @@ struct SongDetailView: View {
                 .padding(.horizontal)
             }
             Divider()
-            TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
+            TextEditor(text: (song.readOnly ?? false) == true || songs == nil ? .constant(lyrics) : $lyrics)
                 .multilineTextAlignment(alignment)
                 .font(.system(size: CGFloat(value), weight: weight, design: design))
                 .lineSpacing(lineSpacing)
@@ -401,10 +401,10 @@ struct SongDetailView: View {
                     if getShowVariationCondition() {
                         Spacer()
                         Group {
-                            if songVariations.isEmpty {
+                            if songViewModel.isLoadingVariations {
                                 ProgressView()
                             } else {
-                                if songVariations.contains(where: { $0.title == "noVariations" }) {
+                                if songVariations.isEmpty {
                                     Button {
                                         showNewVariationView = true
                                     } label: {
@@ -617,10 +617,12 @@ struct SongDetailView: View {
             }
             Divider()
 #endif
-            Button {
-                showEditView.toggle()
-            } label: {
-                Label("Edit", systemImage: "pencil")
+            if song.readOnly ?? false {
+                Button {
+                    showEditView.toggle()
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
             }
             if !songViewModel.isShared(song: song) {
                 Button {
@@ -648,10 +650,12 @@ struct SongDetailView: View {
             } label: {
                 Label("Copy", systemImage: "doc")
             }
-            Button {
-                showTagSheet = true
-            } label: {
-                Label("Tags", systemImage: "tag")
+            if song.readOnly ?? false {
+                Button {
+                    showTagSheet = true
+                } label: {
+                    Label("Tags", systemImage: "tag")
+                }
             }
             Button(role: .destructive, action: {
                 if !songViewModel.isShared(song: song) {

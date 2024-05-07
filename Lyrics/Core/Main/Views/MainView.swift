@@ -376,11 +376,13 @@ struct MainView: View {
                                                             } label: {
                                                                 Label("Share", systemImage: "square.and.arrow.up")
                                                             }
-                                                            Button {
-                                                                showEditSheet = true
-                                                                selectedFolder = folder
-                                                            } label: {
-                                                                Label("Edit", systemImage: "pencil")
+                                                            if folder.readOnly ?? false {
+                                                                Button {
+                                                                    showEditSheet = true
+                                                                    selectedFolder = folder
+                                                                } label: {
+                                                                    Label("Edit", systemImage: "pencil")
+                                                                }
                                                             }
                                                             Button(role: .destructive) {
                                                                 showDeleteSheet = true
@@ -434,14 +436,16 @@ struct MainView: View {
                                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
                                                                         ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
-                                                                                Button {
-                                                                                    selectedSong = song
-                                                                                    songViewModel.fetchSong(selectedSong?.id ?? "") { song in
+                                                                                if song.readOnly ?? false {
+                                                                                    Button {
                                                                                         selectedSong = song
-                                                                                    } regCompletion: { _ in }
-                                                                                    showSongEditSheet.toggle()
-                                                                                } label: {
-                                                                                    Label("Edit", systemImage: "pencil")
+                                                                                        songViewModel.fetchSong(selectedSong?.id ?? "") { song in
+                                                                                            selectedSong = song
+                                                                                        } regCompletion: { _ in }
+                                                                                        showSongEditSheet.toggle()
+                                                                                    } label: {
+                                                                                        Label("Edit", systemImage: "pencil")
+                                                                                    }
                                                                                 }
                                                                                 if !songViewModel.isShared(song: song) {
                                                                                     Button {
@@ -475,12 +479,14 @@ struct MainView: View {
                                                                                 } label: {
                                                                                     Label("Copy", systemImage: "doc")
                                                                                 }
-                                                                                Button {
-                                                                                    selectedFolder = folder
-                                                                                    selectedSong = song
-                                                                                    showTagSheet = true
-                                                                                } label: {
-                                                                                    Label("Tags", systemImage: "tag")
+                                                                                if folder.readOnly ?? false {
+                                                                                    Button {
+                                                                                        selectedFolder = folder
+                                                                                        selectedSong = song
+                                                                                        showTagSheet = true
+                                                                                    } label: {
+                                                                                        Label("Tags", systemImage: "tag")
+                                                                                    }
                                                                                 }
                                                                                 if !songViewModel.isShared(song: song) {
                                                                                     Button {
@@ -746,11 +752,13 @@ struct MainView: View {
     
     func songContextMenu(song: Song) -> some View {
         return VStack {
-            Button {
-                selectedSong = song
-                showSongEditSheet.toggle()
-            } label: {
-                Label("Edit", systemImage: "pencil")
+            if song.readOnly ?? false {
+                Button {
+                    selectedSong = song
+                    showSongEditSheet.toggle()
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
             }
             if !songViewModel.isShared(song: song) {
                 Button {
