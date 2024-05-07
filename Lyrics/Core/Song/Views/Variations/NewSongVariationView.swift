@@ -58,6 +58,7 @@ struct NewSongVariationView: View {
                 .clipShape(Capsule())
                 .cornerRadius(10)
                 .focused($isFocused)
+                .padding()
             Spacer()
             Divider()
             Button(action: {view2.toggle()}, label: {
@@ -68,8 +69,6 @@ struct NewSongVariationView: View {
                 }
                 .modifier(NavButtonViewModifier())
             })
-            .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-            .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .sheet(isPresented: $view2) {
                 nextView
             }
@@ -82,8 +81,8 @@ struct NewSongVariationView: View {
             }
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+            .padding()
         }
-        .padding()
         .onAppear {
             isFocused = true
         }

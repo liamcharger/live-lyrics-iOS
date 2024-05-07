@@ -166,7 +166,11 @@ struct SongDetailView: View {
         }
     }
     func getShowVariationCondition() -> Bool {
-        !songVariations.isEmpty || song.uid == viewModel.currentUser?.id ?? ""
+        if song.uid == viewModel.currentUser?.id ?? "" {
+            return true
+        }
+        
+        return !(songVariations.count <= 1)
     }
     
     var playButton: some View {
@@ -337,21 +341,19 @@ struct SongDetailView: View {
                                                 .font(.system(size: 16).weight(.medium))
                                                 .background(Material.regular)
                                                 .clipShape(Circle())
-                                            /*
-                                             .overlay {
-                                             if let user = selectedUser, currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
-                                             FAText(iconName: "pen", size: 11)
-                                             .foregroundColor(.white)
-                                             .background {
-                                             Circle()
-                                             .foregroundColor(.blue)
-                                             .frame(width: 22, height: 22)
-                                             }
-                                             .offset(x: 15, y: -13)
-                                             .shadow(radius: 3)
-                                             }
-                                             }
-                                             */
+                                                .overlay {
+                                                    if song.uid == user.id ?? "" {
+                                                        FAText(iconName: "crown", size: 11)
+                                                            .foregroundColor(.white)
+                                                            .background {
+                                                                Circle()
+                                                                    .foregroundColor(Color.accentColor)
+                                                                    .frame(width: 22, height: 22)
+                                                            }
+                                                            .offset(x: 15, y: -13)
+                                                            .shadow(radius: 3)
+                                                    }
+                                                }
                                         }
                                         .modifier(UserPopover(isPresented: $showUserPopover, user: user))
                                     }
@@ -366,7 +368,7 @@ struct SongDetailView: View {
                 .padding(.horizontal)
             }
             Divider()
-            TextEditor(text: (song.readOnly ?? false) == false || songs == nil ? .constant(lyrics) : $lyrics)
+            TextEditor(text: (song.readOnly ?? false) == true || songs == nil ? .constant(lyrics) : $lyrics)
                 .multilineTextAlignment(alignment)
                 .font(.system(size: CGFloat(value), weight: weight, design: design))
                 .lineSpacing(lineSpacing)
@@ -415,33 +417,44 @@ struct SongDetailView: View {
                                     }
                                 } else {
                                     Menu {
-                                        Button {
-                                            self.lyrics = song.lyrics
-                                            self.selectedVariation = nil
-                                        } label: {
-                                            Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                        let `default` = Group {
+                                            Button {
+                                                self.lyrics = song.lyrics
+                                                self.selectedVariation = nil
+                                            } label: {
+                                                Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                            }
+                                            Divider()
                                         }
-                                        Divider()
+                                        if song.uid == viewModel.currentUser?.id ?? "" {
+                                            `default`
+                                        } else if song.uid != viewModel.currentUser?.id ?? "" && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                            `default`
+                                        }
                                         ForEach(songVariations, id: \.id) { variation in
-                                            Button {
-                                                self.selectedVariation = variation
-                                                self.lyrics = variation.lyrics
-                                            } label: {
-                                                Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                                            if variation.title != SongVariation.defaultId {
+                                                Button {
+                                                    self.selectedVariation = variation
+                                                    self.lyrics = variation.lyrics
+                                                } label: {
+                                                    Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                                                }
                                             }
                                         }
-                                        Divider()
-                                        if songVariations.count > 0 {
-                                            Button {
-                                                showVariationsManagementSheet = true
-                                            } label: {
-                                                Label("Manage", systemImage: "gear")
+                                        if song.uid == viewModel.currentUser?.id ?? "" {
+                                            Divider()
+                                            if songVariations.count > 0 {
+                                                Button {
+                                                    showVariationsManagementSheet = true
+                                                } label: {
+                                                    Label("Manage", systemImage: "gear")
+                                                }
                                             }
-                                        }
-                                        Button {
-                                            showNewVariationView = true
-                                        } label: {
-                                            Label("New", systemImage: "square.and.pencil")
+                                            Button {
+                                                showNewVariationView = true
+                                            } label: {
+                                                Label("New", systemImage: "square.and.pencil")
+                                            }
                                         }
                                     } label: {
                                         HStack(spacing: 5) {
@@ -473,17 +486,23 @@ struct SongDetailView: View {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             songViewModel.fetchSongVariations(song: song) { variations in
                 if let variationIds = song.variations, !variations.isEmpty {
-                    var hasDefaultIncluded = false
-                    let fullVariations = variations.filter { variation in
-                        if variation.title == SongVariation.defaultId {
-                            hasDefaultIncluded = true
+                    var firstVariation: SongVariation?
+                    
+                    var fullVariations = [SongVariation]()
+                    if variationIds.contains(where: { $0 == SongVariation.defaultId }) {
+                        fullVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
+                    }
+                    
+                    let filteredVariations = variations.filter { variation in
+                        if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
+                            firstVariation = variation
                         }
                         return variationIds.contains(variation.id ?? "")
                     }
                     
-                    if !hasDefaultIncluded {
-                        self.lyrics = fullVariations.first?.lyrics ?? ""
-                    }
+                    fullVariations.append(contentsOf: filteredVariations)
+                    
+                    self.lyrics = firstVariation?.lyrics ?? song.lyrics
                     self.songVariations = fullVariations
                 } else {
                     self.songVariations = variations
@@ -491,8 +510,10 @@ struct SongDetailView: View {
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id ?? "") { song in
                 self.title = song.title
-                if selectedVariation == nil || !isInputActive {
-                    self.lyrics = song.lyrics
+                if songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                    if selectedVariation == nil || !isInputActive {
+                        self.lyrics = song.lyrics
+                    }
                 }
                 self.key = {
                     if let key = song.key, !key.isEmpty {

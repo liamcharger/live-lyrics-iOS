@@ -840,10 +840,14 @@ class SongService {
 		}
 	}
 	
-	func sendInviteToUser(request: ShareRequest, completion: @escaping(Error?) -> Void) {
+	func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
 		let id = UUID().uuidString
 		let dispatch = DispatchGroup()
 		
+		var songVariations = [String]()
+		var variations = request.songVariations ?? []
+		songVariations = variations + (includeDefault ? [SongVariation.defaultId] : [])
+
 		let requestData: [String: Any?] = [
 			"timestamp": request.timestamp,
 			"from": request.from,
@@ -854,7 +858,7 @@ class SongService {
 			"type": request.type,
 			"toUsername": request.toUsername,
 			"fromUsername": request.fromUsername,
-			"songVariations": request.songVariations,
+			"songVariations": songVariations,
 			"readOnly": request.readOnly
 		]
 		

@@ -77,7 +77,7 @@ struct ShareView: View {
                         }
                         if let request = request {
                             self.isSendingRequest = true
-                            authViewModel.sendInviteToUser(request: request) { error in
+                            authViewModel.sendInviteToUser(request: request, includeDefault: selectedVariations.contains(where: { $0.title == defaultVariationId})) { error in
                                 if let error = error {
                                     print(error.localizedDescription)
                                     return
@@ -150,15 +150,15 @@ struct ShareView: View {
                     Spacer()
                     Menu {
                         Button {
-                            if selectedVariations.contains(where: { $0.id ?? "" == defaultVariationId}) {
+                            if selectedVariations.contains(where: { $0.title == defaultVariationId}) {
                                 if selectedVariations.count >= 2 {
-                                    self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == defaultVariationId})!)
+                                    self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.title == defaultVariationId})!)
                                 }
                             } else {
                                 self.selectedVariations.append(SongVariation(title: defaultVariationId, lyrics: "", songUid: "", songId: ""))
                             }
                         } label: {
-                            Label("Default", systemImage: selectedVariations.contains(where: { $0.id ?? "" == defaultVariationId}) ? "checkmark" : "")
+                            Label("Default", systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
                         }
                         Divider()
                         ForEach(songVariations, id: \.id) { variation in
@@ -200,7 +200,7 @@ struct ShareView: View {
                 .padding()
                 Divider()
             }
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 HStack {
                     Text("Type:")
                     Spacer()
@@ -358,7 +358,7 @@ struct ShareView: View {
                 songViewModel.fetchSongVariations(song: song) { variations in
                     self.songVariations = variations
                     var selectedVariations = variations
-                    selectedVariations.append(SongVariation(id: "default", title: "Default", lyrics: "", songUid: "", songId: ""))
+                    selectedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
                     self.selectedVariations = selectedVariations
                 }
             }

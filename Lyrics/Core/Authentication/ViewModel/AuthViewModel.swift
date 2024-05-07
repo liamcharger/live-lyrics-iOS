@@ -193,8 +193,8 @@ class AuthViewModel: ObservableObject {
         service.updateFCMId(user, id: id)
     }
     
-    func sendInviteToUser(request: ShareRequest, completion: @escaping(Error?) -> Void) {
-        songService.sendInviteToUser(request: request) { error in
+    func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
+        songService.sendInviteToUser(request: request, includeDefault: includeDefault) { error in
             completion(error)
         }
     }
