@@ -328,9 +328,9 @@ struct ShareView: View {
                         FullscreenMessage(imageName: firstSearch ? "magnifyingglass" : "person.slash", title: {
                             if firstSearch {
                                 if let song = song {
-                                    return "Search for a user by their username to share '\(song.title)'."
+                                    return "Search for a user by their username to share \"\(song.title)\"."
                                 } else if let folder = folder {
-                                    return "Search for a user by their username to share '\(folder.title)'."
+                                    return "Search for a user by their username to share \"\(folder.title)\"."
                                 } else {
                                     return "Search for a user by their username to share."
                                 }
@@ -343,9 +343,9 @@ struct ShareView: View {
             } else {
                 FullscreenMessage(imageName: "wifi.slash", title: {
                     if let song = song {
-                        return "Please connect to the internet to share '\(song.title)'."
+                        return "Please connect to the internet to share \"\(song.title)\"."
                     } else if let folder = folder {
-                        return "Please connect to the internet to share '\(folder.title)'."
+                        return "Please connect to the internet to share \"\(folder.title)\"."
                     } else {
                         return "Please connect to the internet to share."
                     }

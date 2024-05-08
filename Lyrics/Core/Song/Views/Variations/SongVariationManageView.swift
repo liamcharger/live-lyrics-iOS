@@ -92,7 +92,7 @@ struct SongVariationManageView: View {
                 self.selectedVariation = nil
             }
         } message: {
-            Text("Are you sure you want to delete the variation '" + (selectedVariation?.title ?? "") + "'?")
+            Text("Are you sure you want to delete the variation \"" + (selectedVariation?.title ?? "") + "\"?")
         }
     }
 }

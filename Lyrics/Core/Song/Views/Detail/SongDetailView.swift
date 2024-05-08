@@ -355,7 +355,7 @@ struct SongDetailView: View {
                                                     }
                                                 }
                                         }
-                                        .modifier(UserPopover(isPresented: $showUserPopover, user: user))
+                                        .modifier(UserPopover(isPresented: $showUserPopover, user: user, song: song))
                                     }
                                 }
                                 .padding(12)
@@ -486,8 +486,6 @@ struct SongDetailView: View {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             songViewModel.fetchSongVariations(song: song) { variations in
                 if let variationIds = song.variations, !variations.isEmpty {
-                    var firstVariation: SongVariation?
-                    
                     var fullVariations = [SongVariation]()
                     if variationIds.contains(where: { $0 == SongVariation.defaultId }) {
                         fullVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
@@ -495,14 +493,19 @@ struct SongDetailView: View {
                     
                     let filteredVariations = variations.filter { variation in
                         if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
-                            firstVariation = variation
+                            if !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
+                                selectedVariation = variation
+                            }
                         }
+                        // Needed when Default variation is not available
+//                        if let selectedVariation = selectedVariation {
+//                            self.lyrics = selectedVariation.lyrics
+//                        }
                         return variationIds.contains(variation.id ?? "")
                     }
                     
                     fullVariations.append(contentsOf: filteredVariations)
                     
-                    self.lyrics = firstVariation?.lyrics ?? song.lyrics
                     self.songVariations = fullVariations
                 } else {
                     self.songVariations = variations
@@ -510,8 +513,8 @@ struct SongDetailView: View {
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id ?? "") { song in
                 self.title = song.title
-                if songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
-                    if selectedVariation == nil || !isInputActive {
+                if !isInputActive {
+                    if selectedVariation == nil {
                         self.lyrics = song.lyrics
                     }
                 }
@@ -546,14 +549,14 @@ struct SongDetailView: View {
                         self.joinedUsers = users
                     }
                 }
-                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { timer in
-                    if lyrics != lastUpdatedLyrics {
-                        mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
-                        lastUpdatedLyrics = lyrics
-                    }
-                }
             } regCompletion: { reg in
                 self.fetchListener = reg
+            }
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                if lyrics != lastUpdatedLyrics {
+                    mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
+                    lastUpdatedLyrics = lyrics
+                }
             }
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -576,7 +579,7 @@ struct SongDetailView: View {
                 self.selectedVariation = nil
             }
         } message: {
-            Text("Are you sure you want to delete \(selectedVariation == nil ? "'" + title + "'": "the variation '" + (selectedVariation?.title ?? ""))'?")
+            Text("Are you sure you want to delete \(selectedVariation == nil ? "\"" + title + "'": "the variation \"" + (selectedVariation?.title ?? ""))\"?")
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
@@ -702,7 +705,27 @@ struct SongDetailView: View {
 struct UserPopover: ViewModifier {
     @Binding var isPresented: Bool
     
+    @State var showRemoveSheet = false
+    
     let user: User?
+    let song: Song
+    
+    func kickButton() -> some View {
+        return Button {
+            showRemoveSheet = true
+        } label: {
+            HStack(spacing: 7) {
+                Text("Remove")
+                FAText(iconName: "square-arrow-right", size: 18)
+            }
+            .foregroundColor(.red)
+            .padding(10)
+            .padding(.horizontal, 8)
+            .background(Material.regular)
+            .clipShape(Capsule())
+        }
+        .frame(maxWidth: .infinity)
+    }
     
     func popoverContent(style: Int) -> some View {
         return VStack(spacing: 0) {
@@ -730,6 +753,7 @@ struct UserPopover: ViewModifier {
                                 Text(user.fullname)
                                     .foregroundColor(.gray)
                             }
+                            kickButton()
                             Spacer()
                             /* if currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
                              HStack(spacing: 12) {
@@ -774,6 +798,7 @@ struct UserPopover: ViewModifier {
                                     .font(.system(size: 18))
                                     .foregroundColor(.gray)
                             }
+                            kickButton()
                             Spacer()
                             /* if currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
                              HStack(spacing: 12) {
@@ -800,6 +825,16 @@ struct UserPopover: ViewModifier {
             }
         }
         .padding()
+        .confirmationDialog("Remove Collaborator?", isPresented: $showRemoveSheet) {
+            Button("Remove", role: .destructive) {
+                SongViewModel.shared.leaveSong(song: song)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            if let user = user {
+                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this song? They will immediately lose access.")
+            }
+        }
     }
     
     func body(content: Content) -> some View {

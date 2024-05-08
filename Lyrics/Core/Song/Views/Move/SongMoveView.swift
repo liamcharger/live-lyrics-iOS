@@ -34,7 +34,7 @@ struct SongMoveView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
-                Text("Move '\(songTitle)'")
+                Text("Move \"\(songTitle)\"")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {showNewFolderView = true}) {

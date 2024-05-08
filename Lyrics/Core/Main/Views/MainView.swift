@@ -527,7 +527,7 @@ struct MainView: View {
                                                                                 }
                                                                             } message: {
                                                                                 if let selectedSong = selectedSong {
-                                                                                    Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") '\(selectedSong.title)'?")
+                                                                                    Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                                                                                 }
                                                                             }
                                                                     }
@@ -713,7 +713,7 @@ struct MainView: View {
                         }
                     } message: {
                         if let selectedFolder = selectedFolder {
-                            Text("Are you sure you want to permanently delete '\(selectedFolder.title)'? WARNING: This action cannot be undone!")
+                            Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"? WARNING: This action cannot be undone!")
                         }
                     }
                     .sheet(isPresented: $showSongMoveSheet) {
