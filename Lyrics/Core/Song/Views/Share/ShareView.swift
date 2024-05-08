@@ -144,7 +144,39 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) {
+            VStack(spacing: 16) {
+                HStack {
+                    Text("Type:")
+                    Spacer()
+                    Menu {
+                        Button(action: {
+                            collaborate = true
+                        }, label: {
+                            Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
+                        })
+                        Button(action: {
+                            collaborate = false
+                        }, label: {
+                            Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
+                        })
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text(collaborate ? "Collaborate" : "Send Copy")
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                    }
+                }
+                if collaborate {
+                    HStack {
+                        Text("Read Only:")
+                        Spacer()
+                        Toggle("", isOn: $readOnly).labelsHidden()
+                    }
+                }
+            }
+            .padding()
+            Divider()
+            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate {
                 HStack {
                     Text("Including variation\(selectedVariations.count > 1 ? "s" : ""):")
                     Spacer()
@@ -198,39 +230,7 @@ struct ShareView: View {
                     }
                 }
                 .padding()
-                Divider()
             }
-            VStack(spacing: 16) {
-                HStack {
-                    Text("Type:")
-                    Spacer()
-                    Menu {
-                        Button(action: {
-                            collaborate = true
-                        }, label: {
-                            Label("Collaborate", systemImage: collaborate ? "checkmark"  : "")
-                        })
-                        Button(action: {
-                            collaborate = false
-                        }, label: {
-                            Label("Send Copy", systemImage: !collaborate ? "checkmark"  : "")
-                        })
-                    } label: {
-                        HStack(spacing: 5) {
-                            Text(collaborate ? "Collaborate" : "Send Copy")
-                            Image(systemName: "chevron.up.chevron.down")
-                        }
-                    }
-                }
-                if collaborate {
-                    HStack {
-                        Text("Read Only:")
-                        Spacer()
-                        Toggle("", isOn: $readOnly).labelsHidden()
-                    }
-                }
-            }
-            .padding()
             Divider()
             if networkManager.getNetworkState() {
                 CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search by username...")
