@@ -202,44 +202,45 @@ class SongService {
 	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, folder: Folder? = nil, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).getDocument { snapshot, error in
-			if let error = error {
-				print("Error fetching song with ID \(id): \(error.localizedDescription)")
-				songCompletion(nil)
-				registrationCompletion(nil)
-				return
-			}
-			
-			guard let snapshot = snapshot, snapshot.exists else {
-				print("Song with ID \(id) does not exist")
-				songCompletion(nil)
-				registrationCompletion(nil)
-				return
-			}
-			
-			guard let song = try? snapshot.data(as: Song.self) else {
-				print("Error parsing song: \(id)")
-				songCompletion(nil)
-				registrationCompletion(nil)
-				return
-			}
-			
-			songCompletion(song)
-		}
-		
 		if !(listen ?? true) {
+			Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).getDocument { snapshot, error in
+				if let error = error {
+					print("Error fetching song with ID \(id): \(error.localizedDescription)")
+					songCompletion(nil)
+					registrationCompletion(nil)
+					return
+				}
+				
+				guard let snapshot = snapshot, snapshot.exists else {
+					print("Song with ID \(id) does not exist")
+					songCompletion(nil)
+					registrationCompletion(nil)
+					return
+				}
+				
+				guard let song = try? snapshot.data(as: Song.self) else {
+					print("Error parsing song: \(id)")
+					songCompletion(nil)
+					registrationCompletion(nil)
+					return
+				}
+				
+				songCompletion(song)
+			}
 			registrationCompletion(nil)
 		} else {
 			let listenerReg = Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).addSnapshotListener { snapshot, error in
 				if let error = error {
 					print("Error listening to song with ID \(id): \(error.localizedDescription)")
 					registrationCompletion(nil)
+					songCompletion(nil)
 					return
 				}
 				guard let snapshot = snapshot else { return }
 				guard let song = try? snapshot.data(as: Song.self) else {
 					print("Error parsing song: \(id)")
 					registrationCompletion(nil)
+					songCompletion(nil)
 					return
 				}
 				songCompletion(song)
@@ -297,11 +298,7 @@ class SongService {
 				}
 				let variations = documents.compactMap({ try? $0.data(as: SongVariation.self) })
 				
-				if variations.isEmpty {
-					completion([])
-				} else {
-					completion(variations)
-				}
+				completion(variations)
 			}
 	}
 	
@@ -1214,15 +1211,15 @@ class SongService {
 		}
 	}
 	
-	func leaveCollabSong(song: Song, completion: @escaping() -> Void) {
+	func leaveCollabSong(forUid: String? = nil, song: Song, completion: @escaping() -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 
-		Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "").delete { error in
+		Firestore.firestore().collection("users").document(forUid ?? uid).collection("shared-songs").document(song.id ?? "").delete { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
 		}
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["joinedUsers": FieldValue.arrayRemove([uid])]) { error in
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["joinedUsers": FieldValue.arrayRemove([forUid ?? uid])]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}

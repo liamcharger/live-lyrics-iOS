@@ -177,8 +177,8 @@ class SongViewModel: ObservableObject {
         service.updateVariation(song: song, variation: variation, title: title)
     }
     
-    func leaveSong(song: Song) {
-        service.leaveCollabSong(song: song) {}
+    func leaveSong(forUid: String? = nil, song: Song) {
+        service.leaveCollabSong(forUid: forUid, song: song) {}
     }
     
     func getColorForTag(_ tagColor: String) -> Color {

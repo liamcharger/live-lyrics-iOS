@@ -355,7 +355,7 @@ struct SongDetailView: View {
                                                     }
                                                 }
                                         }
-                                        .modifier(UserPopover(isPresented: $showUserPopover, user: user, song: song))
+                                        .modifier(UserPopover(isPresented: $showUserPopover, joinedUsers: $joinedUsers, selectedUser: $selectedUser, user: user, song: song))
                                     }
                                 }
                                 .padding(12)
@@ -493,14 +493,17 @@ struct SongDetailView: View {
                     
                     let filteredVariations = variations.filter { variation in
                         if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
-                            if !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
+                            if selectedVariation == nil && !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
                                 selectedVariation = variation
                             }
                         }
-                        // Needed when Default variation is not available
-//                        if let selectedVariation = selectedVariation {
-//                            self.lyrics = selectedVariation.lyrics
-//                        }
+                        if let selectedVariation = selectedVariation, selectedVariation.id ?? "" == variation.id ?? "" && !isInputActive {
+                            self.lyrics = variation.lyrics
+                        } else {
+                            if !isInputActive {
+                                self.lyrics = song.lyrics
+                            }
+                        }
                         return variationIds.contains(variation.id ?? "")
                     }
                     
@@ -534,19 +537,23 @@ struct SongDetailView: View {
                 self.value = song.size ?? 18
                 self.lineSpacing = song.lineSpacing ?? 1
                 self.joinedUsersStrings = song.joinedUsers ?? []
-                if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
-                    let uid = viewModel.currentUser?.id ?? ""
-                    if uid != song.uid {
-                        joinedUsersStrings.insert(song.uid, at: 0)
-                    }
-                    if joinedUsersStrings.contains(uid) {
-                        if let index = joinedUsersStrings.firstIndex(where: { $0 == uid }) {
-                            joinedUsersStrings.remove(at: index)
+                if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
+                    presMode.wrappedValue.dismiss()
+                } else {
+                    if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
+                        let uid = viewModel.currentUser?.id ?? ""
+                        if uid != song.uid {
+                            joinedUsersStrings.insert(song.uid, at: 0)
                         }
-                    }
-                    viewModel.fetchUsers(uids: joinedUsersStrings) { users in
-                        self.lastFetchedJoined = Date()
-                        self.joinedUsers = users
+                        if joinedUsersStrings.contains(uid) {
+                            if let index = joinedUsersStrings.firstIndex(where: { $0 == uid }) {
+                                joinedUsersStrings.remove(at: index)
+                            }
+                        }
+                        viewModel.fetchUsers(uids: joinedUsersStrings) { users in
+                            self.lastFetchedJoined = Date()
+                            self.joinedUsers = users
+                        }
                     }
                 }
             } regCompletion: { reg in
@@ -704,27 +711,35 @@ struct SongDetailView: View {
 
 struct UserPopover: ViewModifier {
     @Binding var isPresented: Bool
+    @Binding var joinedUsers: [User]
+    @Binding var selectedUser: User?
     
     @State var showRemoveSheet = false
+    
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     let user: User?
     let song: Song
     
     func kickButton() -> some View {
-        return Button {
-            showRemoveSheet = true
-        } label: {
-            HStack(spacing: 7) {
-                Text("Remove")
-                FAText(iconName: "square-arrow-right", size: 18)
+        return Group {
+            if song.uid == authViewModel.currentUser?.id ?? "" {
+                Button {
+                    showRemoveSheet = true
+                } label: {
+                    HStack(spacing: 7) {
+                        Text("Remove")
+                        FAText(iconName: "square-arrow-right", size: 18)
+                    }
+                    .foregroundColor(.red)
+                    .padding(10)
+                    .padding(.horizontal, 8)
+                    .background(Material.regular)
+                    .clipShape(Capsule())
+                }
+                .frame(maxWidth: .infinity)
             }
-            .foregroundColor(.red)
-            .padding(10)
-            .padding(.horizontal, 8)
-            .background(Material.regular)
-            .clipShape(Capsule())
         }
-        .frame(maxWidth: .infinity)
     }
     
     func popoverContent(style: Int) -> some View {
@@ -827,7 +842,11 @@ struct UserPopover: ViewModifier {
         .padding()
         .confirmationDialog("Remove Collaborator?", isPresented: $showRemoveSheet) {
             Button("Remove", role: .destructive) {
-                SongViewModel.shared.leaveSong(song: song)
+                SongViewModel.shared.leaveSong(forUid: user?.id ?? "", song: song)
+                if let index = joinedUsers.firstIndex(where: { $0.id ?? "" == user?.id ?? "" }) {
+                    joinedUsers.remove(at: index)
+                }
+                selectedUser = nil
             }
             Button("Cancel", role: .cancel) {}
         } message: {
