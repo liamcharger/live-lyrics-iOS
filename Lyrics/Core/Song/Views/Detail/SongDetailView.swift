@@ -500,6 +500,7 @@ struct SongDetailView: View {
                     return Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
                 }
             }
+            return Alert(title: Text("Error"), message: Text("An unknown error has occured."), dismissButton: .cancel())
         })
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
