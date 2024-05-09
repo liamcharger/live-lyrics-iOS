@@ -328,8 +328,6 @@ class SongService {
 	}
 	
 	func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
 		self.variationListener = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").collection("variations")
 			.addSnapshotListener { snapshot, error in
 				guard let documents = snapshot?.documents else {
@@ -1182,7 +1180,7 @@ class SongService {
 			dispatch.leave()
 			for song in songs {
 				dispatch.enter()
-				Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["joinedUsers": FieldValue.arrayUnion([uid])]) { error in
+				Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["joinedUsers": FieldValue.arrayRemove([uid])]) { error in
 					dispatch.leave()
 					if let error = error {
 						print("Error: \(error.localizedDescription)")

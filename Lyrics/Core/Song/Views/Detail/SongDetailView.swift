@@ -73,14 +73,15 @@ struct SongDetailView: View {
     @State var showKickedAlert = false
     @State var showSongRepititionAlert = false
     @State var showPlayViewInfo = false
-    @State var showError = false
     @State var showNotesStatusIcon = false
     @State var showNewVariationView = false
     @State var showVariationsManagementSheet = false
     @State var showUserPopover = false
     @State var showJoinedUsers = true
     
-    @ObservedObject var mainViewModel = MainViewModel()
+    @State private var activeAlert: ActiveAlert?
+    
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
@@ -175,6 +176,9 @@ struct SongDetailView: View {
         
         return !(songVariations.count <= 1)
     }
+    enum ActiveAlert {
+        case kickedOut, error
+    }
     
     var playButton: some View {
         Button(action: {showFullScreenView.toggle()}, label: {
@@ -268,7 +272,8 @@ struct SongDetailView: View {
                                         recentlyDeletedViewModel.restoreSong(song: song)
                                     } else {
                                         errorMessage = "There was an error restoring the song."
-                                        showError = true
+                                        showAlert = true
+                                        activeAlert = .error
                                     }
                                     presMode.wrappedValue.dismiss()
                                 }, label: {
@@ -484,6 +489,18 @@ struct SongDetailView: View {
         .navigationBarBackButtonHidden()
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        .alert(isPresented: $showAlert, content: {
+            if let activeAlert = activeAlert {
+                switch activeAlert {
+                case .kickedOut:
+                    return Alert(title: Text("You no longer have access to this song."), dismissButton: .cancel(Text("OK"), action: {
+                        presMode.wrappedValue.dismiss()
+                    }))
+                case .error:
+                    return Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
+                }
+            }
+        })
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             songViewModel.fetchSongVariations(song: song) { variations in
@@ -540,10 +557,8 @@ struct SongDetailView: View {
                 self.lineSpacing = song.lineSpacing ?? 1
                 self.joinedUsersStrings = song.joinedUsers ?? []
                 if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                        showKickedAlert = true
-                        presMode.wrappedValue.dismiss()
-                    }
+                    showAlert = true
+                    activeAlert = .kickedOut
                 } else {
                     if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
                         let uid = viewModel.currentUser?.id ?? ""
@@ -604,18 +619,11 @@ struct SongDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Are you sure you want to leave \"\(title)\"? You will lose access immeadiately.")
-        }
-        .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
-        }
-        .alert(isPresented: $showKickedAlert) {
-            Alert(title: Text("You have been removed as a collaborater by the song owner."), dismissButton: .cancel(Text("OK"), action: {
-                presMode.wrappedValue.dismiss()
-            }))
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Success"), message: Text("The song was successfully added to your library."), dismissButton: .cancel(Text("Close"), action: {}))
+            if mainViewModel.selectedFolder != nil && mainViewModel.folderSongs.contains(where: { $0.id ?? "" == song.id ?? "" }) {
+                Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately. WARNING: leaving this song will also leave its parent folder.")
+            } else {
+                Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately.")
+            }
         }
         .sheet(isPresented: $showShareSheet) {
             ShareView(isDisplayed: $showShareSheet, song: song)
@@ -677,10 +685,17 @@ struct SongDetailView: View {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
             }
-            Button {
+            let move = Button {
                 showMoveView.toggle()
             } label: {
                 Label("Move", systemImage: "folder")
+            }
+            if let selectedFolder = mainViewModel.selectedFolder {
+                if selectedFolder.uid ?? "" == viewModel.currentUser?.id ?? "" {
+                    move
+                }
+            } else {
+                move
             }
             Menu {
                 Button {

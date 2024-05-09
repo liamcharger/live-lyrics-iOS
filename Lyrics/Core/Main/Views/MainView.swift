@@ -27,6 +27,7 @@ struct MainView: View {
     
     @State var draggedFolder: Folder?
     
+    @State var hasFirestoreStartedListening = false
     @State var showMenu = false
     @State var showDeleteSheet = false
     @State var showAddSongSheet = false
@@ -169,6 +170,7 @@ struct MainView: View {
         self.openedFolder = true
         self.selectedFolderForFolderUse = folder
         self.mainViewModel.folderSongs = []
+        self.mainViewModel.selectedFolder = folder
         self.mainViewModel.fetchSongs(folder)
         self.isLoadingFolderSongs = true
         
@@ -182,6 +184,7 @@ struct MainView: View {
         withAnimation(.bouncy) {
             self.openedFolder = false
             self.selectedFolderForFolderUse = nil
+            self.mainViewModel.selectedFolder = nil
             self.isLoadingFolderSongs = false
         }
     }
@@ -199,12 +202,15 @@ struct MainView: View {
                             mainViewModel.notificationStatus = .network
                         }
                         
-                        self.mainViewModel.fetchSongs()
-                        self.mainViewModel.fetchFolders()
-                        self.mainViewModel.fetchSharedSongs()
-                        self.mainViewModel.fetchSharedFolders()
-                        self.mainViewModel.fetchInvites()
-                        self.mainViewModel.fetchNotificationStatus()
+                        if !hasFirestoreStartedListening {
+                            self.mainViewModel.fetchSongs()
+                            self.mainViewModel.fetchFolders()
+                            self.mainViewModel.fetchSharedSongs()
+                            self.mainViewModel.fetchSharedFolders()
+                            self.mainViewModel.fetchInvites()
+                            self.mainViewModel.fetchNotificationStatus()
+                            self.hasFirestoreStartedListening = true
+                        }
                     }
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
