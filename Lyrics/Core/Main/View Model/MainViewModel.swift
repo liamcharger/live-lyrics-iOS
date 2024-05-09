@@ -18,16 +18,19 @@ class MainViewModel: ObservableObject {
     @Published var songs: [Song] = []
     @Published var folderSongs: [Song] = []
     @Published var sharedSongs: [Song] = []
+    @Published var sharedFolders: [Folder] = []
     @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
     @Published var folders: [Folder] = []
     @Published var incomingShareRequests: [ShareRequest] = []
     @Published var outgoingShareRequests: [ShareRequest] = []
+    @Published var selectedFolder: Folder?
     @Published var isLoadingFolders = true
     @Published var isLoadingFolderSongs = true
     @Published var isLoadingSongs = true
     @Published var isLoadingRecentlyDeletedSongs = true
     @Published var isLoadingInvites = true
     @Published var isLoadingSharedSongs = true
+    @Published var isLoadingSharedFolders = true
     
     @Published var systemDoc: SystemDoc?
     
@@ -81,6 +84,7 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchSongs(_ folder: Folder) {
+        self.isLoadingFolderSongs = true
         self.service.fetchSongs(folder) { songs in
             self.folderSongs = songs
             self.isLoadingFolderSongs = false
@@ -88,16 +92,27 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchSongs() {
-        self.service.fetchSongs() { songs in
+        self.isLoadingSongs = true
+        self.service.fetchSongs { songs in
             self.songs = songs
             self.isLoadingSongs = false
         }
     }
     
     func fetchSharedSongs() {
-        self.service.fetchSharedSongs() { songs in
+        self.isLoadingSharedSongs = true
+        self.service.fetchSharedSongs { songs in
             self.sharedSongs = songs
             self.isLoadingSharedSongs = false
+        }
+    }
+    
+    func fetchSharedFolders() {
+        self.isLoadingSharedFolders = false
+        self.service.fetchSharedFolders { folders in
+            print(folders)
+            self.sharedFolders = folders
+            self.isLoadingSharedFolders = false
         }
     }
     
@@ -269,5 +284,9 @@ class MainViewModel: ObservableObject {
         service.acceptInvite(request: request) {
             completion()
         }
+    }
+    
+    func leaveCollabFolder(forUid: String? = nil, folder: Folder) {
+        service.leaveCollabFolder(forUid: forUid, folder: folder) {}
     }
 }

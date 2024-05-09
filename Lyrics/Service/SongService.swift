@@ -71,7 +71,7 @@ class SongService {
 			}
 	}
 	
-	func fetchSharedSongs(_ folder: Folder? = nil, completion: @escaping([Song]) -> Void) {
+	func fetchSharedSongs(completion: @escaping([Song]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("shared-songs")
@@ -98,6 +98,8 @@ class SongService {
 					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId) { song in
 						if var song = song {
 							song.variations = sharedSong.variations
+							song.tags = sharedSong.tags
+							song.pinned = sharedSong.pinned
 							song.readOnly = sharedSong.readOnly
 							completedSongs.append(song)
 						}
@@ -107,6 +109,55 @@ class SongService {
 				
 				group.notify(queue: .main) {
 					completion(completedSongs)
+				}
+			}
+	}
+	
+	func fetchSharedFolders(completion: @escaping([Folder]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("shared-folders")
+			.addSnapshotListener { snapshot, error in
+				if let error = error {
+					print("Error fetching shared folders: \(error.localizedDescription)")
+					completion([])
+				}
+				
+				guard let documents = snapshot?.documents else {
+					print("No shared folder documents found")
+					completion([])
+					return
+				}
+				
+				var completedFolders = [Folder]()
+				let group = DispatchGroup()
+				
+				let sharedFolders = documents.compactMap({ try? $0.data(as: SharedFolder.self) })
+				
+				for sharedFolder in sharedFolders {
+					group.enter()
+					Firestore.firestore().collection("users").document(sharedFolder.from).collection("folders").document(sharedFolder.folderId).getDocument { snapshot, error in
+						if let error = error {
+							print(error.localizedDescription)
+						}
+						guard let snapshot = snapshot, snapshot.exists else {
+							print("Folder does not exist")
+							return
+						}
+						
+						guard let folder = try? snapshot.data(as: Folder.self) else {
+							print("Error parsing folder")
+							return
+						}
+						
+						completedFolders.append(folder)
+						group.leave()
+					}
+				}
+				
+				group.notify(queue: .main) {
+					print(completedFolders)
+					completion(completedFolders)
 				}
 			}
 	}
@@ -159,7 +210,7 @@ class SongService {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let folderId = folder?.id ?? (folderId ?? "")
 		
-		self.folderSongListener = Firestore.firestore().collection("users").document(forUid ?? uid).collection("folders").document(folderId).collection("songs")
+		self.folderSongListener = Firestore.firestore().collection("users").document(folder?.uid ?? "").collection("folders").document(folderId).collection("songs")
 			.order(by: "order")
 			.addSnapshotListener { snapshot, error in
 				if let error = error {
@@ -181,7 +232,7 @@ class SongService {
 				for folderSong in folderSongs {
 					group.enter()
 					
-					self.fetchSong(listen: false, forUser: folderSong.uid ?? uid, withId: folderSong.id ?? "") { song in
+					self.fetchSong(listen: false, forUser: folder?.uid ?? uid, withId: folderSong.id ?? "") { song in
 						if let song = song {
 							completedSongs.append(song)
 						}
@@ -802,38 +853,32 @@ class SongService {
 	
 	func pinSong(_ song: Song) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").updateData(["pinned": true])
+		
+		if uid != song.uid {
+			Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "").updateData(["pinned": true])
+		} else {
+			Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").updateData(["pinned": true])
+		}
 	}
 	
 	func unpinSong(_ song: Song) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").updateData(["pinned": false])
+		
+		if uid != song.uid {
+			Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "").updateData(["pinned": false])
+		} else {
+			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["pinned": false])
+		}
 	}
 	
 	func updateTagsForSong(_ song: Song, tags: [TagSelectionEnum], completion: @escaping((Error?) -> Void)) {
 		guard let uid = Auth.auth().currentUser?.uid, let songId = song.id else { return }
 		
-		let songRef = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(songId)
-		
-		songRef.updateData(["tags": tags.map { $0.rawValue }], completion: completion)
-	}
-	
-	func fetchPinStatus(song: Song, completion: @escaping(Bool) -> Void) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").addSnapshotListener { snapshot, error in
-			if let error = error {
-				print(error.localizedDescription)
-				return
-			}
-			
-			guard let snapshot = snapshot, let song = try? snapshot.data(as: Song.self) else {
-				return
-			}
-			
-			if song.pinned ?? false {
-				completion(true)
-			} else {
-				completion(false)
-			}
+		let filteredTags = tags.map { $0.rawValue }
+		if uid != song.uid {
+			Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(songId).updateData(["tags": filteredTags], completion: completion)
+		} else {
+			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(songId).updateData(["tags": filteredTags], completion: completion)
 		}
 	}
 	
@@ -842,7 +887,7 @@ class SongService {
 		let dispatch = DispatchGroup()
 		
 		var songVariations = [String]()
-		var variations = request.songVariations ?? []
+		let variations = request.songVariations ?? []
 		songVariations = variations + (includeDefault ? [SongVariation.defaultId] : [])
 
 		let requestData: [String: Any?] = [
@@ -934,11 +979,9 @@ class SongService {
 		
 		let group = DispatchGroup()
 		
-		// TODO: Check if user is the last to join, and only delete the doc if true
 		group.enter()
 		deleteRequest(request, uid: incomingReqColUid ?? uid)
 		group.leave()
-		
 		group.notify(queue: .main) {
 			completion()
 		}
@@ -952,10 +995,42 @@ class SongService {
 		
 		if request.contentType == "folder" {
 			self.fetchFolder(forUser: request.from, withId: request.contentId) { folder in
-				if request.type == "collaborate" {
-					// TODO: Implement folder collab
-				} else {
-					if let folder = folder {
+				if let folder = folder {
+					if request.type == "collaborate" {
+						let sharedFolder: [String: Any] = [
+							"from": request.from,
+							"folderId": request.contentId,
+							"order": 0,
+							"readOnly": request.readOnly ?? false
+						]
+						
+						dispatch.enter()
+						Firestore.firestore().collection("users").document(uid).collection("shared-folders").document(folder.id ?? "").setData(sharedFolder) { error in
+							dispatch.leave()
+							if let error = error {
+								print("Error: \(error.localizedDescription)")
+							}
+						}
+						
+						dispatch.enter()
+						self.fetchSongs(forUid: request.from, folder) { songs in
+							dispatch.leave()
+							for song in songs {
+								dispatch.enter()
+								Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["joinedUsers": FieldValue.arrayUnion([uid])]) { error in
+									dispatch.leave()
+									if let error = error {
+										print("Error: \(error.localizedDescription)")
+									}
+								}
+							}
+						}
+						
+						dispatch.notify(queue: .main) {
+							self.deleteRequest(request, uid: uid)
+							completion()
+						}
+					} else {
 						dispatch.enter()
 						self.createFolder(folder: folder, id: request.contentId) { error in
 							dispatch.leave()
@@ -1051,10 +1126,8 @@ class SongService {
 						"artist": song.artist,
 						"bpm": song.bpm,
 						"bpb": song.bpb,
-						"pinned": song.pinned,
 						"performanceMode": song.performanceMode,
-						"duration": song.duration,
-						"tags": song.tags
+						"duration": song.duration
 					]
 					
 					Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).setData(songData)
@@ -1066,129 +1139,6 @@ class SongService {
 							if let variations = request.songVariations, variations.contains(where: { $0 == variation.id ?? ""}) {
 								Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title])
 							}
-						}
-					}
-				}
-			} registrationCompletion: { _ in }
-		}
-	}
-	
-	func acceptInviteDebug(request: ShareRequest, completion: @escaping () -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		let dispatch = DispatchGroup()
-		var songs = [Song]()
-		
-		if request.contentType == "folder" {
-			self.fetchFolder(forUser: request.from, withId: request.contentId) { folder in
-				if request.type == "collaborate" {
-					// TODO: Implement folder collab
-				} else {
-					if let folder = folder {
-						dispatch.enter()
-						self.createFolder(folder: folder, id: request.contentId) { error in
-							dispatch.leave()
-							if let error = error {
-								print("Error: \(error.localizedDescription)")
-								completion()
-								return
-							}
-						}
-						dispatch.enter()
-						self.fetchSongs(returnEmptySong: false, forUid: request.from, folder) { folderSongs in
-							for song in folderSongs {
-								self.createSong(song: song) { error in
-									if let error = error {
-										print(error.localizedDescription)
-										completion()
-										return
-									}
-									songs.append(song)
-								}
-							}
-							self.moveSongsToFolder(id: folder.id ?? "", songs: songs) { error in
-								if let error = error {
-									print(error.localizedDescription)
-									completion()
-									return
-								}
-							}
-							dispatch.leave()
-						}
-						
-						dispatch.notify(queue: .main) {
-							self.deleteRequest(request, uid: uid)
-							completion()
-						}
-					}
-				}
-			}
-		} else {
-			dispatch.enter()
-			self.fetchSong(listen: false, forUser: request.from, withId: request.contentId) { fetchedSong in
-				dispatch.leave()
-				let dispatch = DispatchGroup()
-				
-				guard let song = fetchedSong else {
-					print("Error: Failed to fetch the song")
-					return
-				}
-				
-				if request.type == "collaborate" {
-					let sharedSong: [String: Any] = [
-						"from": request.from,
-						"songId": request.contentId,
-						"order": 0
-					]
-					
-					dispatch.enter()
-					Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "").setData(sharedSong) { error in
-						dispatch.leave()
-						if let error = error {
-							print("Error: \(error.localizedDescription)")
-						}
-					}
-					dispatch.enter()
-					Firestore.firestore().collection("users").document(request.from).collection("songs").document(request.contentId).updateData(["joinedUsers": FieldValue.arrayUnion([uid])]) { error in
-						dispatch.leave()
-						if let error = error {
-							print("Error: \(error.localizedDescription)")
-						}
-					}
-					
-					dispatch.notify(queue: .main) {
-						self.deleteRequest(request, uid: uid)
-						completion()
-					}
-				} else {
-					let songData: [String: Any?] = [
-						"uid": uid,
-						"timestamp": Date(),
-						"deletedTimestamp": Date(),
-						"title": song.title,
-						"lyrics": song.lyrics,
-						"order": song.order,
-						"size": song.size,
-						"key": song.key,
-						"notes": song.notes,
-						"weight": song.weight,
-						"alignment": song.alignment,
-						"design": song.design,
-						"lineSpacing": song.lineSpacing,
-						"artist": song.artist,
-						"bpm": song.bpm,
-						"bpb": song.bpb,
-						"pinned": song.pinned,
-						"performanceMode": song.performanceMode,
-						"duration": song.duration,
-						"tags": song.tags
-					]
-					
-					Firestore.firestore().collection("users").document(uid).collection("songs").document(request.id ?? "").setData(songData) { error in
-						if let error = error {
-							print("Error: \(error.localizedDescription)")
-						} else {
-							self.deleteRequest(request, uid: uid)
 						}
 					}
 				}
@@ -1225,5 +1175,36 @@ class SongService {
 			}
 		}
 		completion()
+	}
+	
+	func leaveCollabFolder(forUid: String? = nil, folder: Folder, completion: @escaping() -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		let dispatch = DispatchGroup()
+		
+		dispatch.enter()
+		Firestore.firestore().collection("users").document(forUid ?? uid).collection("shared-folders").document(folder.id ?? "").delete { error in
+			dispatch.leave()
+			if let error = error {
+				print(error.localizedDescription)
+			}
+		}
+		
+		dispatch.enter()
+		self.fetchSongs(forUid: folder.uid ?? "", folder) { songs in
+			dispatch.leave()
+			for song in songs {
+				dispatch.enter()
+				Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").updateData(["joinedUsers": FieldValue.arrayUnion([uid])]) { error in
+					dispatch.leave()
+					if let error = error {
+						print("Error: \(error.localizedDescription)")
+					}
+				}
+			}
+		}
+		
+		dispatch.notify(queue: .main) {
+			completion()
+		}
 	}
 }

@@ -176,11 +176,16 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate {
+            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil {
                 HStack {
                     Text("Including variation\(selectedVariations.count > 1 ? "s" : ""):")
                     Spacer()
                     Menu {
+                        Button {
+                            self.selectedVariations.removeAll()
+                        } label: {
+                            Label("All", systemImage: selectedVariations.isEmpty ? "checkmark" : "")
+                        }
                         Button {
                             if selectedVariations.contains(where: { $0.title == defaultVariationId}) {
                                 if selectedVariations.count >= 2 {
@@ -210,7 +215,7 @@ struct ShareView: View {
                         HStack(spacing: 5) {
                             Text({
                                 if selectedVariations.isEmpty { 
-                                    return "Default"
+                                    return "All"
                                 } else {
                                     if selectedVariations.count == 1 {
                                         let title = selectedVariations.first?.title ?? ""
@@ -357,9 +362,6 @@ struct ShareView: View {
             if let song = song {
                 songViewModel.fetchSongVariations(song: song) { variations in
                     self.songVariations = variations
-                    var selectedVariations = variations
-                    selectedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
-                    self.selectedVariations = selectedVariations
                 }
             }
         }

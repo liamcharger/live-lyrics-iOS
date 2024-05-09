@@ -58,25 +58,25 @@ struct MainView: View {
     @State var newFolder = ""
     
     @State var notificationStatus: NotificationStatus?
-    
-    @State var selectedFolder: Folder?
+    // Property allows folder to check if it should be displaying its songs or not. selectedFolder is used for external views, such as SongMoveView, SongEditView, etc..
     @State var selectedFolderForFolderUse: Folder?
     
     @State var sortSelection: SortSelectionEnum = .noSelection
     
     var searchableFolders: [Folder] {
+        let folders = mainViewModel.sharedFolders + mainViewModel.folders
         if folderSearchText.isEmpty {
-            return mainViewModel.folders
+            return folders
         } else {
             let lowercasedQuery = folderSearchText.lowercased()
-            return mainViewModel.folders.filter ({
+            return folders.filter ({
                 $0.title.lowercased().contains(lowercasedQuery)
             })
         }
     }
     var searchableSongs: [Song] {
         let lowercasedQuery = songSearchText.lowercased()
-        var songs = mainViewModel.sharedSongs + mainViewModel.songs
+        let songs = mainViewModel.sharedSongs + mainViewModel.songs
         
         return songs.sorted(by: { (song1, song2) -> Bool in
             switch sortSelection {
@@ -185,6 +185,9 @@ struct MainView: View {
             self.isLoadingFolderSongs = false
         }
     }
+    func uid() -> String {
+        return authViewModel.currentUser?.id ?? ""
+    }
     
     init() {
         if !networkManager.getNetworkState() {
@@ -195,6 +198,7 @@ struct MainView: View {
         self.mainViewModel.fetchSongs()
         self.mainViewModel.fetchFolders()
         self.mainViewModel.fetchSharedSongs()
+        self.mainViewModel.fetchSharedFolders()
         self.mainViewModel.fetchInvites()
         self.mainViewModel.fetchNotificationStatus()
     }
@@ -313,7 +317,7 @@ struct MainView: View {
                                         .padding(.bottom)
                                 }
                             }
-                            if mainViewModel.isLoadingFolders {
+                            if mainViewModel.isLoadingFolders || mainViewModel.isLoadingSharedFolders {
                                 LoadingView()
                             } else {
                                 if !isFoldersCollapsed {
@@ -339,9 +343,20 @@ struct MainView: View {
                                                     } label: {
                                                         HStack {
                                                             FAText(iconName: "folder-closed", size: 18)
-                                                            Text(folder.title)
-                                                                .lineLimit(1)
-                                                                .multilineTextAlignment(.leading)
+                                                            HStack(spacing: 7) {
+                                                                Text(folder.title)
+                                                                    .lineLimit(1)
+                                                                    .multilineTextAlignment(.leading)
+                                                                if folder.uid != uid() {
+                                                                    Text("Shared")
+                                                                        .padding(6)
+                                                                        .padding(.horizontal, 1.5)
+                                                                        .font(.system(size: 13).weight(.medium))
+                                                                        .background(Material.thin)
+                                                                        .foregroundColor(.primary)
+                                                                        .clipShape(Capsule())
+                                                                }
+                                                            }
                                                             Spacer()
                                                             if selectedFolderForFolderUse?.id == folder.id {
                                                                 if isLoadingFolderSongs || mainViewModel.folderSongs.isEmpty {
@@ -362,33 +377,39 @@ struct MainView: View {
                                                         .clipShape(Capsule())
                                                         .contentShape(.contextMenuPreview, Capsule())
                                                         .contextMenu {
-                                                            Button {
-                                                                mainViewModel.fetchSongs(folder)
-                                                                selectedFolder = folder
-                                                                showAddSongSheet = true
-                                                            } label: {
-                                                                Label("Add Songs", systemImage: "plus")
-                                                            }
-                                                            Button {
-                                                                selectedSong = nil
-                                                                selectedFolder = folder
-                                                                showShareSheet.toggle()
-                                                            } label: {
-                                                                Label("Share", systemImage: "square.and.arrow.up")
+                                                            if folder.uid ?? "" == uid() {
+                                                                Button {
+                                                                    mainViewModel.fetchSongs(folder)
+                                                                    mainViewModel.selectedFolder = folder
+                                                                    showAddSongSheet = true
+                                                                } label: {
+                                                                    Label("Add Songs", systemImage: "plus")
+                                                                }
+                                                                Button {
+                                                                    selectedSong = nil
+                                                                    mainViewModel.selectedFolder = folder
+                                                                    showShareSheet.toggle()
+                                                                } label: {
+                                                                    Label("Share", systemImage: "square.and.arrow.up")
+                                                                }
                                                             }
                                                             if !(folder.readOnly ?? false) {
                                                                 Button {
                                                                     showEditSheet = true
-                                                                    selectedFolder = folder
+                                                                    mainViewModel.selectedFolder = folder
                                                                 } label: {
                                                                     Label("Edit", systemImage: "pencil")
                                                                 }
                                                             }
                                                             Button(role: .destructive) {
                                                                 showDeleteSheet = true
-                                                                selectedFolder = folder
+                                                                mainViewModel.selectedFolder = folder
                                                             } label: {
-                                                                Label("Delete", systemImage: "trash")
+                                                                if folder.id ?? "" != uid() {
+                                                                    Label("Leave", systemImage: "arrow.backward.square")
+                                                                } else {
+                                                                    Label("Delete", systemImage: "trash")
+                                                                }
                                                             }
                                                         }
                                                         .onDrag {
@@ -408,13 +429,13 @@ struct MainView: View {
                                                     if isEditingFolders {
                                                         Button {
                                                             showEditSheet = true
-                                                            selectedFolder = folder
+                                                            mainViewModel.selectedFolder = folder
                                                         } label: {
                                                             ListIconButtonView(imageName: "pencil", color: .blue)
                                                         }
                                                         Button {
                                                             showDeleteSheet = true
-                                                            selectedFolder = folder
+                                                            mainViewModel.selectedFolder = folder
                                                         } label: {
                                                             ListIconButtonView(imageName: "trash", color: .red)
                                                         }
@@ -455,11 +476,13 @@ struct MainView: View {
                                                                                         Label("Share", systemImage: "square.and.arrow.up")
                                                                                     }
                                                                                 }
-                                                                                Button {
-                                                                                    selectedSong = song
-                                                                                    showSongMoveSheet.toggle()
-                                                                                } label: {
-                                                                                    Label("Move", systemImage: "folder")
+                                                                                if !songViewModel.isShared(song: song) && folder.uid ?? "" == uid() {
+                                                                                    Button {
+                                                                                        selectedSong = song
+                                                                                        showSongMoveSheet.toggle()
+                                                                                    } label: {
+                                                                                        Label("Move", systemImage: "folder")
+                                                                                    }
                                                                                 }
                                                                                 Menu {
                                                                                     Button {
@@ -477,57 +500,68 @@ struct MainView: View {
                                                                                         Label("Copy Lyrics", systemImage: "doc.plaintext")
                                                                                     }
                                                                                 } label: {
-                                                                                    Label("Copy", systemImage: "doc")
+                                                                                    Label("Copy", systemImage: "doc.on.doc")
                                                                                 }
                                                                                 if !(song.readOnly ?? false) {
                                                                                     Button {
-                                                                                        selectedFolder = folder
+                                                                                        mainViewModel.selectedFolder = folder
                                                                                         selectedSong = song
                                                                                         showTagSheet = true
                                                                                     } label: {
                                                                                         Label("Tags", systemImage: "tag")
                                                                                     }
                                                                                 }
-                                                                                if !songViewModel.isShared(song: song) {
-                                                                                    Button {
-                                                                                        if song.pinned ?? false {
-                                                                                            songViewModel.unpinSong(song)
-                                                                                        } else {
-                                                                                            songViewModel.pinSong(song)
-                                                                                        }
-                                                                                        mainViewModel.fetchSongs(folder)
-                                                                                    } label: {
-                                                                                        if song.pinned ?? false {
-                                                                                            Label("Unpin", systemImage: "pin.slash")
-                                                                                        } else {
-                                                                                            Label("Pin", systemImage: "pin")
-                                                                                        }
+                                                                                Button {
+                                                                                    if song.pinned ?? false {
+                                                                                        songViewModel.unpinSong(song)
+                                                                                    } else {
+                                                                                        songViewModel.pinSong(song)
+                                                                                    }
+                                                                                    mainViewModel.fetchSongs(folder)
+                                                                                } label: {
+                                                                                    if song.pinned ?? false {
+                                                                                        Label("Unpin", systemImage: "pin.slash")
+                                                                                    } else {
+                                                                                        Label("Pin", systemImage: "pin")
                                                                                     }
                                                                                 }
                                                                                 Button(role: .destructive) {
                                                                                     selectedSong = song
+                                                                                    mainViewModel.selectedFolder = folder
                                                                                     showFolderSongDeleteSheet.toggle()
                                                                                 } label: {
-                                                                                    Label("Remove", systemImage: "trash")
+                                                                                    if songViewModel.isShared(song: song) {
+                                                                                        Label("Leave", systemImage: "arrow.backward.square")
+                                                                                    } else {
+                                                                                        Label("Remove", systemImage: "trash")
+                                                                                    }
                                                                                 }
                                                                             }
-                                                                            .confirmationDialog("Delete Song", isPresented: $showFolderSongDeleteSheet) {
+                                                                            .confirmationDialog(songViewModel.isShared(song: selectedSong ?? Song.song) ? "Leave Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
                                                                                 if let selectedSong = selectedSong {
                                                                                     Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
                                                                                         if songViewModel.isShared(song: selectedSong) {
-                                                                                            songViewModel.leaveSong(song: selectedSong)
+                                                                                            if let selectedFolder = mainViewModel.selectedFolder {
+                                                                                                mainViewModel.leaveCollabFolder(folder: selectedFolder)
+                                                                                            } else {
+                                                                                                songViewModel.leaveSong(song: selectedSong)
+                                                                                            }
                                                                                         } else {
                                                                                             songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                                                                         }
                                                                                     }
-                                                                                    Button("Remove from Folder") {
-                                                                                        mainViewModel.deleteSong(folder, selectedSong)
+                                                                                    if !songViewModel.isShared(song: selectedSong) {
+                                                                                        Button("Remove from Folder") {
+                                                                                            mainViewModel.deleteSong(folder, selectedSong)
+                                                                                        }
                                                                                     }
                                                                                     Button("Cancel", role: .cancel) {}
                                                                                 }
                                                                             } message: {
                                                                                 if let selectedSong = selectedSong {
-                                                                                    Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
+                                                                                    let isShared = songViewModel.isShared(song: selectedSong)
+                                                                                    
+                                                                                    Text("Are you sure you want to \(isShared ? "leave" : "delete") \"\(selectedSong.title)\"?") + Text((mainViewModel.selectedFolder != nil && isShared) ? " WARNING: this song's parent folder will also be left." : "")
                                                                                 }
                                                                             }
                                                                     }
@@ -662,8 +696,7 @@ struct MainView: View {
                                             }
                                             .onDrag {
                                                 sortViewModel.loadFromUserDefaults { sortSelection in
-                                                    // TODO: Come up with a way to give user ability to move collaborative songs
-                                                    if sortSelection == .noSelection && song.uid == authViewModel.currentUser?.id ?? "" {
+                                                    if sortSelection == .noSelection && song.uid == uid() {
                                                         self.draggedSong = song
                                                     }
                                                 }
@@ -687,33 +720,41 @@ struct MainView: View {
                     }
                     .padding()
                     .sheet(isPresented: $showEditSheet) {
-                        if let selectedFolder = selectedFolder {
+                        if let selectedFolder = mainViewModel.selectedFolder {
                             FolderEditView(folder: selectedFolder, isDisplayed: $showEditSheet, title: .constant(selectedFolder.title))
                         }
                     }
                     .sheet(isPresented: $showShareSheet) {
                         if let song = selectedSong {
                             ShareView(isDisplayed: $showShareSheet, song: song)
-                        }  else if let folder = selectedFolder {
+                        }  else if let folder = mainViewModel.selectedFolder {
                             ShareView(isDisplayed: $showShareSheet, folder: folder)
                         }
                     }
-                    .sheet(isPresented: $showAddSongSheet, onDismiss: {mainViewModel.fetchSongs(selectedFolder!)}) {
-                        if let selectedFolder = selectedFolder {
+                    .sheet(isPresented: $showAddSongSheet, onDismiss: {mainViewModel.fetchSongs(mainViewModel.selectedFolder!)}) {
+                        if let selectedFolder = mainViewModel.selectedFolder {
                             AddSongsView(folder: selectedFolder)
                         }
                     }
-                    .confirmationDialog("Delete Folder", isPresented: $showDeleteSheet) {
-                        if let selectedFolder = selectedFolder {
-                            Button("Delete", role: .destructive) {
-                                mainViewModel.deleteFolder(selectedFolder)
+                    .confirmationDialog(mainViewModel.selectedFolder?.uid ?? "" == uid() ? "Delete Folder" : "Leave Folder", isPresented: $showDeleteSheet) {
+                        if let selectedFolder = mainViewModel.selectedFolder {
+                            Button(selectedFolder.uid ?? "" == uid() ? "Delete" : "Leave", role: .destructive) {
+                                if selectedFolder.uid ?? "" == uid() {
+                                    mainViewModel.deleteFolder(selectedFolder)
+                                } else {
+                                    mainViewModel.leaveCollabFolder(folder: selectedFolder)
+                                }
                                 mainViewModel.fetchFolders()
                             }
                             Button("Cancel", role: .cancel) { }
                         }
                     } message: {
-                        if let selectedFolder = selectedFolder {
-                            Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"? WARNING: This action cannot be undone!")
+                        if let selectedFolder = mainViewModel.selectedFolder {
+                            if selectedFolder.uid ?? "" == uid() {
+                                Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"? WARNING: This action cannot be undone!")
+                            } else {
+                                Text("Are you sure you want to leave the shared folder \"\(selectedFolder.title)\"?")
+                            }
                         }
                     }
                     .sheet(isPresented: $showSongMoveSheet) {
@@ -794,24 +835,21 @@ struct MainView: View {
                     Label("Copy Lyrics", systemImage: "doc.plaintext")
                 }
             } label: {
-                Label("Copy", systemImage: "doc")
+                Label("Copy", systemImage: "doc.on.doc")
             }
-            // TODO: allow pin for shared songs using SharedSong object
-            if !songViewModel.isShared(song: song) {
-                Button {
-                    DispatchQueue.main.async {
-                        if song.pinned ?? false {
-                            songViewModel.unpinSong(song)
-                        } else {
-                            songViewModel.pinSong(song)
-                        }
-                    }
-                } label: {
+            Button {
+                DispatchQueue.main.async {
                     if song.pinned ?? false {
-                        Label("Unpin", systemImage: "pin.slash")
+                        songViewModel.unpinSong(song)
                     } else {
-                        Label("Pin", systemImage: "pin")
+                        songViewModel.pinSong(song)
                     }
+                }
+            } label: {
+                if song.pinned ?? false {
+                    Label("Unpin", systemImage: "pin.slash")
+                } else {
+                    Label("Pin", systemImage: "pin")
                 }
             }
             if !(song.readOnly ?? false) {
@@ -823,11 +861,11 @@ struct MainView: View {
                 }
             }
             Button(role: .destructive, action: {
+                selectedSong = song
                 if !songViewModel.isShared(song: song) {
-                    selectedSong = song
                     showSongDeleteSheet.toggle()
                 } else {
-                    songViewModel.leaveSong(song: song)
+                    showDeleteSheet.toggle()
                 }
             }, label: {
                 if songViewModel.isShared(song: song) {

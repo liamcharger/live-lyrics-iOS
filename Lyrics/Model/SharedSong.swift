@@ -16,4 +16,6 @@ struct SharedSong: Identifiable, Codable, Equatable {
     var order: Int
     var variations: [String]?
     var readOnly: Bool?
+    var tags: [String]?
+    var pinned: Bool?
 }

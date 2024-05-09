@@ -61,6 +61,8 @@ struct SongDetailView: View {
     @State var showSettingsView = false
     @State var wordCountBool = true
     @State var showDeleteSheet = false
+    @State var showRestoreSongDeleteSheet = false
+    @State var showLeaveSheet = false
     @State var showThesaurusView = false
     @State var showAutoScrollView = false
     @State var showNotesView = false
@@ -277,7 +279,7 @@ struct SongDetailView: View {
                                         .clipShape(Circle())
                                 })
                                 Button(action: {
-                                    self.showDeleteSheet.toggle()
+                                    self.showRestoreSongDeleteSheet = true
                                 }, label: {
                                     FAText(iconName: "trash-can", size: 18)
                                         .padding()
@@ -286,9 +288,8 @@ struct SongDetailView: View {
                                         .foregroundColor(.primary)
                                         .clipShape(Circle())
                                 })
-                                .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
+                                .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
                                     Button("Delete", role: .destructive) {
-                                        print("Deleting song: \(restoreSong!.title)")
                                         mainViewModel.deleteSong(song: restoreSong!)
                                         presMode.wrappedValue.dismiss()
                                     }
@@ -586,7 +587,20 @@ struct SongDetailView: View {
                 self.selectedVariation = nil
             }
         } message: {
-            Text("Are you sure you want to delete \(selectedVariation == nil ? "\"" + title + "'": "the variation \"" + (selectedVariation?.title ?? ""))\"?")
+            Text("Are you sure you want to delete \(selectedVariation == nil ? "\"" + title : "the variation \"" + (selectedVariation?.title ?? ""))\"?")
+        }
+        .confirmationDialog("Leave Song", isPresented: $showLeaveSheet) {
+            Button("Leave", role: .destructive) {
+                // Check if song is part of a shared folder
+                if let folder = mainViewModel.selectedFolder, mainViewModel.folderSongs.contains(where: { $0.id ?? "" == song.id ?? "" }) {
+                    mainViewModel.leaveCollabFolder(folder: folder)
+                } else {
+                    self.songViewModel.leaveSong(song: song)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to leave \"\(title)\"? You will lose access immeadiately.")
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
@@ -640,14 +654,6 @@ struct SongDetailView: View {
     
     var settings: some View {
         Menu {
-#if DEBUG
-            Button {
-                self.pasteboard.string = song.id ?? ""
-            } label: {
-                Label("Copy Song ID", systemImage: "doc.on.doc")
-            }
-            Divider()
-#endif
             if !(song.readOnly ?? false) {
                 Button {
                     showEditView.toggle()
@@ -678,8 +684,15 @@ struct SongDetailView: View {
                 } label: {
                     Label("Copy Lyrics", systemImage: "doc.plaintext")
                 }
+                #if DEBUG
+                Button {
+                    self.pasteboard.string = song.id ?? ""
+                } label: {
+                    Label("Copy Song ID", systemImage: "doc.on.doc")
+                }
+                #endif
             } label: {
-                Label("Copy", systemImage: "doc")
+                Label("Copy", systemImage: "doc.on.doc")
             }
             if !(song.readOnly ?? false) {
                 Button {
@@ -690,10 +703,9 @@ struct SongDetailView: View {
             }
             Button(role: .destructive, action: {
                 if !songViewModel.isShared(song: song) {
-                    showDeleteSheet.toggle()
+                    showDeleteSheet = true
                 } else {
-                    songViewModel.leaveSong(song: song)
-                    presMode.wrappedValue.dismiss()
+                    showLeaveSheet = true
                 }
             }, label: {
                 if songViewModel.isShared(song: song) {
