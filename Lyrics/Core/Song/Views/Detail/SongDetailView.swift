@@ -169,12 +169,20 @@ struct SongDetailView: View {
             return .ultraLight
         }
     }
+    func readOnly() -> Bool {
+        return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
+    }
     func getShowVariationCondition() -> Bool {
-        if song.uid == viewModel.currentUser?.id ?? "" {
+        if readOnly() {
+            return false
+        }
+        
+        let isOwnerOrNoVariations = song.uid == viewModel.currentUser?.id ?? "" || song.variations?.isEmpty ?? true
+        if isOwnerOrNoVariations {
             return true
         }
         
-        return !(songVariations.count <= 1)
+        return songVariations.count > 1
     }
     enum ActiveAlert {
         case kickedOut, error
@@ -375,7 +383,7 @@ struct SongDetailView: View {
                 .padding(.horizontal)
             }
             Divider()
-            TextEditor(text: (song.readOnly ?? false) == true || songs == nil ? .constant(lyrics) : $lyrics)
+            TextEditor(text: readOnly() || songs == nil ? .constant(lyrics) : $lyrics)
                 .multilineTextAlignment(alignment)
                 .font(.system(size: CGFloat(value), weight: weight, design: design))
                 .lineSpacing(lineSpacing)
@@ -433,10 +441,14 @@ struct SongDetailView: View {
                                             }
                                             Divider()
                                         }
-                                        if song.uid == viewModel.currentUser?.id ?? "" {
+                                        if (song.variations ?? []).isEmpty {
                                             `default`
-                                        } else if song.uid != viewModel.currentUser?.id ?? "" && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
-                                            `default`
+                                        } else {
+                                            if song.uid == viewModel.currentUser?.id ?? "" {
+                                                `default`
+                                            } else if song.uid != viewModel.currentUser?.id ?? "" && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                                `default`
+                                            }
                                         }
                                         ForEach(songVariations, id: \.id) { variation in
                                             if variation.title != SongVariation.defaultId {
@@ -448,19 +460,21 @@ struct SongDetailView: View {
                                                 }
                                             }
                                         }
-                                        if song.uid == viewModel.currentUser?.id ?? "" {
-                                            Divider()
-                                            if songVariations.count > 0 {
-                                                Button {
-                                                    showVariationsManagementSheet = true
-                                                } label: {
-                                                    Label("Manage", systemImage: "gear")
+                                        if !readOnly() {
+                                            if song.uid == viewModel.currentUser?.id ?? "" || (song.variations ?? []).isEmpty {
+                                                Divider()
+                                                if songVariations.count > 0 {
+                                                    Button {
+                                                        showVariationsManagementSheet = true
+                                                    } label: {
+                                                        Label("Manage", systemImage: "gear")
+                                                    }
                                                 }
-                                            }
-                                            Button {
-                                                showNewVariationView = true
-                                            } label: {
-                                                Label("New", systemImage: "square.and.pencil")
+                                                Button {
+                                                    showNewVariationView = true
+                                                } label: {
+                                                    Label("New", systemImage: "square.and.pencil")
+                                                }
                                             }
                                         }
                                     } label: {
@@ -672,7 +686,7 @@ struct SongDetailView: View {
     
     var settings: some View {
         Menu {
-            if !(song.readOnly ?? false) {
+            if !readOnly() {
                 Button {
                     showEditView.toggle()
                 } label: {

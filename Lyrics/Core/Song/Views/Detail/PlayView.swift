@@ -244,14 +244,14 @@ struct PlayView: View {
             switch style {
             case .medium:
                 if metronomeStyle.contains("Vibrations") {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    hapticByStyle(.medium)
                 }
                 if metronomeStyle.contains("Audio") {
                     clickAudioPlayer?.play()
                 }
             case .heavy:
                 if metronomeStyle.contains("Vibrations") {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    hapticByStyle(.heavy)
                 }
                 if metronomeStyle.contains("Audio") {
                     accentAudioPlayer?.play()
