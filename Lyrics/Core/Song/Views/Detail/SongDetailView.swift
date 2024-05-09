@@ -70,6 +70,7 @@ struct SongDetailView: View {
     @State var showSongDataView = false
     @State var showInfo = false
     @State var showAlert = false
+    @State var showKickedAlert = false
     @State var showSongRepititionAlert = false
     @State var showPlayViewInfo = false
     @State var showError = false
@@ -539,7 +540,10 @@ struct SongDetailView: View {
                 self.lineSpacing = song.lineSpacing ?? 1
                 self.joinedUsersStrings = song.joinedUsers ?? []
                 if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
-                    presMode.wrappedValue.dismiss()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                        showKickedAlert = true
+                        presMode.wrappedValue.dismiss()
+                    }
                 } else {
                     if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
                         let uid = viewModel.currentUser?.id ?? ""
@@ -604,6 +608,11 @@ struct SongDetailView: View {
         }
         .alert(isPresented: $showError) {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+        }
+        .alert(isPresented: $showKickedAlert) {
+            Alert(title: Text("You have been removed as a collaborater by the song owner."), dismissButton: .cancel(Text("OK"), action: {
+                presMode.wrappedValue.dismiss()
+            }))
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Success"), message: Text("The song was successfully added to your library."), dismissButton: .cancel(Text("Close"), action: {}))

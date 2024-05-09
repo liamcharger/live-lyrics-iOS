@@ -22,6 +22,8 @@ struct FolderEditView: View {
     
     @State var showError = false
     
+    @FocusState var isFocused: Bool
+    
     var isEmpty: Bool {
         text.trimmingCharacters(in: .whitespaces).isEmpty
     }
@@ -34,7 +36,7 @@ struct FolderEditView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 Text("Edit Folder")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -42,10 +44,13 @@ struct FolderEditView: View {
                 SheetCloseButton(isPresented: $isDisplayed)
             }
             .padding()
+            Divider()
             Spacer()
             CustomTextField(text: $text, placeholder: "Title")
+                .focused($isFocused)
                 .padding(.horizontal)
             Spacer()
+            Divider()
             Button {
                 songViewModel.updateTitle(folder, title: text) { success, errorMessage in
                     if success {
@@ -69,6 +74,7 @@ struct FolderEditView: View {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
         .onAppear {
+            isFocused = true
             text = title
         }
     }
