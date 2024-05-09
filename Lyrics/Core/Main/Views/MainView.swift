@@ -189,24 +189,23 @@ struct MainView: View {
         return authViewModel.currentUser?.id ?? ""
     }
     
-    init() {
-        if !networkManager.getNetworkState() {
-            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
-            mainViewModel.notificationStatus = .network
-        }
-        
-        self.mainViewModel.fetchSongs()
-        self.mainViewModel.fetchFolders()
-        self.mainViewModel.fetchSharedSongs()
-        self.mainViewModel.fetchSharedFolders()
-        self.mainViewModel.fetchInvites()
-        self.mainViewModel.fetchNotificationStatus()
-    }
-    
     var body: some View {
         NavigationView {
             content
                 .onAppear {
+                    DispatchQueue.main.async {
+                        if !networkManager.getNetworkState() {
+                            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
+                            mainViewModel.notificationStatus = .network
+                        }
+                        
+                        self.mainViewModel.fetchSongs()
+                        self.mainViewModel.fetchFolders()
+                        self.mainViewModel.fetchSharedSongs()
+                        self.mainViewModel.fetchSharedFolders()
+                        self.mainViewModel.fetchInvites()
+                        self.mainViewModel.fetchNotificationStatus()
+                    }
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
                     }

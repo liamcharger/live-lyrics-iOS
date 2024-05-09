@@ -91,20 +91,19 @@ class SongService {
 				var completedSongs = [Song]()
 				let group = DispatchGroup()
 				
-				let sharedSongs = documents.compactMap({ try? $0.data(as: SharedSong.self) })
-				
-				for sharedSong in sharedSongs {
+				for document in documents {
+					guard let sharedSong = try? document.data(as: SharedSong.self) else {
+						continue
+					}
 					group.enter()
-					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId) { song in
-						if var song = song {
-							song.variations = sharedSong.variations
-							song.tags = sharedSong.tags
-							song.pinned = sharedSong.pinned
-							song.readOnly = sharedSong.readOnly
-							completedSongs.append(song)
+					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId, songCompletion: { song in
+						if let song = song {
+							DispatchQueue.main.async {
+								completedSongs.append(song)
+							}
 						}
 						group.leave()
-					} registrationCompletion: { _ in }
+					}, registrationCompletion: { _ in })
 				}
 				
 				group.notify(queue: .main) {
@@ -112,6 +111,7 @@ class SongService {
 				}
 			}
 	}
+
 	
 	func fetchSharedFolders(completion: @escaping([Folder]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -253,52 +253,40 @@ class SongService {
 	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, folder: Folder? = nil, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		if !(listen ?? true) {
-			Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).getDocument { snapshot, error in
-				if let error = error {
-					print("Error fetching song with ID \(id): \(error.localizedDescription)")
-					songCompletion(nil)
-					registrationCompletion(nil)
-					return
-				}
-				
-				guard let snapshot = snapshot, snapshot.exists else {
-					print("Song with ID \(id) does not exist")
-					songCompletion(nil)
-					registrationCompletion(nil)
-					return
-				}
-				
-				guard let song = try? snapshot.data(as: Song.self) else {
-					print("Error parsing song: \(id)")
-					songCompletion(nil)
-					registrationCompletion(nil)
-					return
-				}
-				
-				songCompletion(song)
+		let documentReference = Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id)
+		
+		documentReference.getDocument { snapshot, error in
+			if let error = error {
+				print("Error fetching song with ID \(id): \(error.localizedDescription)")
+				songCompletion(nil)
+				registrationCompletion(nil)
+				return
 			}
-			registrationCompletion(nil)
-		} else {
-			let listenerReg = Firestore.firestore().collection("users").document(forUser ?? uid).collection("songs").document(id).addSnapshotListener { snapshot, error in
-				if let error = error {
-					print("Error listening to song with ID \(id): \(error.localizedDescription)")
-					registrationCompletion(nil)
-					songCompletion(nil)
-					return
-				}
-				guard let snapshot = snapshot else { return }
-				guard let song = try? snapshot.data(as: Song.self) else {
-					print("Error parsing song: \(id)")
-					registrationCompletion(nil)
-					songCompletion(nil)
-					return
-				}
-				songCompletion(song)
+			
+			guard let snapshot = snapshot, snapshot.exists, let song = try? snapshot.data(as: Song.self) else {
+				print("Error parsing song or song does not exist: \(id)")
+				songCompletion(nil)
+				registrationCompletion(nil)
+				return
 			}
-			registrationCompletion(listenerReg)
+			
+			songCompletion(song)
+			
+			if listen ?? true {
+				let listenerReg = documentReference.addSnapshotListener { snapshot, error in
+					guard let snapshot = snapshot, let song = try? snapshot.data(as: Song.self) else {
+						print("Error listening to or parsing song: \(id)")
+						return
+					}
+					songCompletion(song)
+				}
+				registrationCompletion(listenerReg)
+			} else {
+				registrationCompletion(nil)
+			}
 		}
 	}
+
 
 	func fetchFolder(forUser: String? = nil, withId id: String, folder: Folder? = nil, completion: @escaping (Folder?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }

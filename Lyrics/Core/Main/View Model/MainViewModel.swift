@@ -86,40 +86,76 @@ class MainViewModel: ObservableObject {
     func fetchSongs(_ folder: Folder) {
         self.isLoadingFolderSongs = true
         self.service.fetchSongs(folder) { songs in
-            self.folderSongs = songs
-            self.isLoadingFolderSongs = false
+            DispatchQueue.main.async {
+                self.folderSongs = songs
+                self.isLoadingFolderSongs = false
+            }
         }
     }
     
     func fetchSongs() {
-        self.isLoadingSongs = true
-        self.service.fetchSongs { songs in
-            self.songs = songs
-            self.isLoadingSongs = false
+        self.service.fetchSongs() { songs in
+            DispatchQueue.main.async {
+                print("fetched songs")
+                self.songs = songs
+                self.isLoadingSongs = false
+            }
+        }
+    }
+    
+    func fetchRecentlyDeletedSongs() {
+        self.service.fetchRecentlyDeletedSongs { songs in
+            DispatchQueue.main.async {
+                print("fetched recently deleted songs")
+                self.recentlyDeletedSongs = songs
+                self.isLoadingRecentlyDeletedSongs = false
+            }
+        }
+    }
+    
+    func fetchFolders() {
+        self.service.fetchFolders { folders in
+            DispatchQueue.main.async {
+                print("fetched folders")
+                self.folders = folders
+                self.isLoadingFolders = false
+            }
+        }
+    }
+    
+    func fetchInvites() {
+        self.isLoadingInvites = true
+        service.fetchIncomingInvites { incomingShareRequests in
+            DispatchQueue.main.async {
+                self.incomingShareRequests = incomingShareRequests
+            }
+        }
+        service.fetchOutgoingInvites { outgoingShareRequests in
+            DispatchQueue.main.async {
+                self.outgoingShareRequests = outgoingShareRequests
+                self.isLoadingInvites = false
+            }
         }
     }
     
     func fetchSharedSongs() {
         self.isLoadingSharedSongs = true
         self.service.fetchSharedSongs { songs in
-            self.sharedSongs = songs
-            self.isLoadingSharedSongs = false
+            DispatchQueue.main.async {
+                self.sharedSongs = songs
+                self.isLoadingSharedSongs = false
+            }
         }
     }
     
     func fetchSharedFolders() {
         self.isLoadingSharedFolders = false
         self.service.fetchSharedFolders { folders in
-            print(folders)
-            self.sharedFolders = folders
-            self.isLoadingSharedFolders = false
-        }
-    }
-    
-    func fetchRecentlyDeletedSongs() {
-        self.service.fetchRecentlyDeletedSongs { songs in
-            self.recentlyDeletedSongs = songs
-            self.isLoadingRecentlyDeletedSongs = false
+            DispatchQueue.main.async {
+                print(folders)
+                self.sharedFolders = folders
+                self.isLoadingSharedFolders = false
+            }
         }
     }
     
@@ -169,15 +205,6 @@ class MainViewModel: ObservableObject {
                         self.notificationStatus = .updateAvailable
                     }
                 }
-            }
-        }
-    }
-    
-    func fetchFolders() {
-        DispatchQueue.main.async {
-            self.service.fetchFolders { folders in
-                self.folders = folders
-                self.isLoadingFolders = false
             }
         }
     }
@@ -261,17 +288,6 @@ class MainViewModel: ObservableObject {
     
     func deleteFolder(_ folder: Folder) {
         service.deleteFolder(folder)
-    }
-    
-    func fetchInvites() {
-        self.isLoadingInvites = true
-        service.fetchIncomingInvites { incomingShareRequests in
-            self.incomingShareRequests = incomingShareRequests
-        }
-        service.fetchOutgoingInvites { outgoingShareRequests in
-            self.outgoingShareRequests = outgoingShareRequests
-        }
-        self.isLoadingInvites = false
     }
     
     func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, completion: @escaping() -> Void) {
