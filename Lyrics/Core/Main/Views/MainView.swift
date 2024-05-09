@@ -451,7 +451,13 @@ struct MainView: View {
                                                         if mainViewModel.folderSongs.isEmpty {
                                                             LoadingView()
                                                         } else {
-                                                            ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { song in
+                                                            ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { uneditedSong in
+                                                                let song = {
+                                                                    var song = uneditedSong
+                                                                    song.readOnly = folder.readOnly
+                                                                    return song
+                                                                }()
+                                                                
                                                                 if song.title == "noSongs" {
                                                                     Text("No Songs")
                                                                         .foregroundColor(Color.gray)
@@ -516,18 +522,20 @@ struct MainView: View {
                                                                                         Label("Tags", systemImage: "tag")
                                                                                     }
                                                                                 }
-                                                                                Button {
-                                                                                    if song.pinned ?? false {
-                                                                                        songViewModel.unpinSong(song)
-                                                                                    } else {
-                                                                                        songViewModel.pinSong(song)
-                                                                                    }
-                                                                                    mainViewModel.fetchSongs(folder)
-                                                                                } label: {
-                                                                                    if song.pinned ?? false {
-                                                                                        Label("Unpin", systemImage: "pin.slash")
-                                                                                    } else {
-                                                                                        Label("Pin", systemImage: "pin")
+                                                                                if folder.uid ?? "" == uid() {
+                                                                                    Button {
+                                                                                        if song.pinned ?? false {
+                                                                                            songViewModel.unpinSong(song)
+                                                                                        } else {
+                                                                                            songViewModel.pinSong(song)
+                                                                                        }
+                                                                                        mainViewModel.fetchSongs(folder)
+                                                                                    } label: {
+                                                                                        if song.pinned ?? false {
+                                                                                            Label("Unpin", systemImage: "pin.slash")
+                                                                                        } else {
+                                                                                            Label("Pin", systemImage: "pin")
+                                                                                        }
                                                                                     }
                                                                                 }
                                                                                 Button(role: .destructive) {

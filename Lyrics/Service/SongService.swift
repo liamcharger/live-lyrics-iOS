@@ -145,11 +145,12 @@ class SongService {
 							return
 						}
 						
-						guard let folder = try? snapshot.data(as: Folder.self) else {
+						guard var folder = try? snapshot.data(as: Folder.self) else {
 							print("Error parsing folder")
 							return
 						}
 						
+						folder.readOnly = sharedFolder.readOnly
 						completedFolders.append(folder)
 						group.leave()
 					}

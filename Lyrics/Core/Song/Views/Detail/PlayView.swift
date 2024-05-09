@@ -53,7 +53,7 @@ struct PlayView: View {
     @State var clickAudioPlayer: AVAudioPlayer?
     @State var accentAudioPlayer: AVAudioPlayer?
     
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
@@ -304,6 +304,9 @@ struct PlayView: View {
             }
         }
     }
+    func readOnly() -> Bool {
+        return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
+    }
     
     init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
         self.songs = songs
@@ -436,6 +439,7 @@ struct PlayView: View {
                                 .onChange(of: bpm) { bpm in
                                     songViewModel.updateBpm(for: song, with: bpm)
                                 }
+                                .disabled(readOnly())
                                 Menu {
                                     Button {
                                         bpb = 1
@@ -488,6 +492,7 @@ struct PlayView: View {
                                 .onChange(of: bpb) { bpb in
                                     songViewModel.updateBpm(for: song, with: bpb)
                                 }
+                                .disabled(readOnly())
                                 Spacer()
                                 if isPulsing {
                                     Circle()
@@ -569,23 +574,25 @@ struct PlayView: View {
                             .background(isScrolling ? .red : .blue)
                             .clipShape(Capsule())
                         }
-                        Menu {
-                            Button {
-                                performanceMode.toggle()
+                        if !readOnly() {
+                            Menu {
+                                Button {
+                                    performanceMode.toggle()
+                                } label: {
+                                    Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                                }
                             } label: {
-                                Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                                FAText(iconName: "gear", size: 20)
+                                    .imageScale(.medium)
+                                    .padding()
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .background(Material.regular)
+                                    .clipShape(Circle())
                             }
-                        } label: {
-                            FAText(iconName: "gear", size: 20)
-                                .imageScale(.medium)
-                                .padding()
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .background(Material.regular)
-                                .clipShape(Circle())
-                        }
-                        .onChange(of: performanceMode) { performanceMode in
-                            songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                            .onChange(of: performanceMode) { performanceMode in
+                                songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                            }
                         }
                     }
                     

@@ -272,7 +272,9 @@ struct SongDetailView: View {
                                             notesViewModel.updateNotes(song, notes: notes)
                                         }
                                 }
-                                SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                if !readOnly() {
+                                    SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                }
                                 settings
                             } else {
                                 Button(action: {
