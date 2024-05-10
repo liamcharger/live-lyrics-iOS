@@ -128,7 +128,7 @@ struct ShareView: View {
                             Text("Make sure that ") +
                             Text(userToShare.username)
                                 .font(.body.weight(.bold))
-                            + Text(" has version \(collaborate ? "2.4" : "2.3") or newer of the app.")
+                            + Text(" has version \(collaborate ? "2.4" : "2.3") or newer of the app to receive this request.")
                         }
                     }
                     .padding()
@@ -178,7 +178,7 @@ struct ShareView: View {
             Divider()
             if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil {
                 HStack {
-                    Text("Including variation\(selectedVariations.count > 1 ? "s" : ""):")
+                    Text("Including variation\(selectedVariations.count > 1 || selectedVariations.isEmpty ? "s" : ""):")
                     Spacer()
                     Menu {
                         Button {
