@@ -574,7 +574,7 @@ struct MainView: View {
                                                                                 if let selectedSong = selectedSong {
                                                                                     let isShared = songViewModel.isShared(song: selectedSong)
                                                                                     
-                                                                                    Text("Are you sure you want to \(isShared ? "leave" : "delete") \"\(selectedSong.title)\"?") + Text((mainViewModel.selectedFolder != nil && isShared) ? " WARNING: this song's parent folder will also be left." : "")
+                                                                                    Text("Are you sure you want to \(isShared ? "leave" : "delete") \"\(selectedSong.title)\"?") + Text((mainViewModel.selectedFolder != nil && isShared) ? NSLocalizedString("songs_parent_will_be_left", comment: "") : "")
                                                                                 }
                                                                             }
                                                                     }

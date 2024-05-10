@@ -637,7 +637,7 @@ struct SongDetailView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             if mainViewModel.selectedFolder != nil && mainViewModel.folderSongs.contains(where: { $0.id ?? "" == song.id ?? "" }) {
-                Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately. WARNING: leaving this song will also leave its parent folder.")
+                Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately. " + NSLocalizedString("songs_parent_will_be_left", comment: ""))
             } else {
                 Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately.")
             }

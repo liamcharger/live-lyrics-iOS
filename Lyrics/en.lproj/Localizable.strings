@@ -38,3 +38,5 @@
 
 "play_view_description" = "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance.";
 "notes_tip" = "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances.";
+
+"songs_parent_will_be_left" = "WARNING: leaving this song will also leave its parent folder!";

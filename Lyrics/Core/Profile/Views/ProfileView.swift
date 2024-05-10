@@ -184,7 +184,7 @@ struct ProfileView: View {
                     showDeleteConfirmation = false
                 }
             } message: {
-                Text("Are you sure you want to delete this user account? WARNING: THIS ACTION CANNOT BE UNDONE!")
+                Text("Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!")
             }
         }
         .alert(isPresented: $showError) {
