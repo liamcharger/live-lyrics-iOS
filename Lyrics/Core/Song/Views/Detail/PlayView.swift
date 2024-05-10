@@ -169,8 +169,6 @@ struct PlayView: View {
     func startTimer() {
         stopTimer()
         
-        loadSounds()
-        
         isPlayingMetronome = true
         beatCounter = 0
         
@@ -626,6 +624,7 @@ struct PlayView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            loadSounds()
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
