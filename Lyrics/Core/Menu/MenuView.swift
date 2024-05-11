@@ -108,10 +108,7 @@ struct MenuView: View {
                     }
                 }
                 Spacer()
-                if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 70)
-                        .padding(.bottom, 6)
-                }
+                AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
                 Button(action: {
                     showWebView.toggle()
                 }, label: {

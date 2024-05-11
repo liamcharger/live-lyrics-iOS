@@ -59,10 +59,7 @@ struct RecentlyDeletedView: View {
             Divider()
             ScrollView {
                 VStack {
-                    if storeKitManager.purchasedProducts.isEmpty {
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 70)
-                            .padding(.bottom, 10)
-                    }
+                    AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                     if !recentlyDeletedViewModel.isLoadingSongs {
                         Text("Deleted songs are stored for thirty days before being permanently removed.")
                             .foregroundColor(Color.gray)

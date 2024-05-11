@@ -239,10 +239,7 @@ struct MainView: View {
             Divider()
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
-                    if storeKitManager.purchasedProducts.isEmpty {
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 70)
-                            .padding([.leading, .top, .trailing])
-                    }
+                    AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 80, paddingTop: 16, paddingLeft: 16, paddingBottom: 0, paddingRight: 16)
                     VStack(spacing: 22) {
                         if let notificationStatus = mainViewModel.notificationStatus {
                             if !isSearching {

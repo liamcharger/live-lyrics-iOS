@@ -232,7 +232,6 @@
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0C168342B59BCBF00A12C59 /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		E0C168362B59BCEA00A12C59 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
-		E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaggedSongsView.swift; sourceTree = "<group>"; };
 		E0C492E42A0BDFC6002E9EA0 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeletedViewModel.swift; sourceTree = "<group>"; };
 		E0CA85142B081D5100188CD0 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
@@ -321,49 +320,17 @@
 			isa = PBXGroup;
 			children = (
 				E01EB44C2B211292009C48F2 /* Ads */,
-				E01EB44A2B21127D009C48F2 /* Helper Views */,
 			);
 			path = Ads;
-			sourceTree = "<group>";
-		};
-		E01EB44A2B21127D009C48F2 /* Helper Views */ = {
-			isa = PBXGroup;
-			children = (
-				E01EB44E2B21129C009C48F2 /* Banner */,
-			);
-			path = "Helper Views";
-			sourceTree = "<group>";
-		};
-		E01EB44B2B211285009C48F2 /* Banner */ = {
-			isa = PBXGroup;
-			children = (
-				E0FD46252B1F7DBD00699587 /* BannerAd.swift */,
-			);
-			path = Banner;
 			sourceTree = "<group>";
 		};
 		E01EB44C2B211292009C48F2 /* Ads */ = {
 			isa = PBXGroup;
 			children = (
-				E01EB44D2B211295009C48F2 /* Native */,
-				E01EB44B2B211285009C48F2 /* Banner */,
+				E02F21E42B21130600302646 /* AdBannerView.swift */,
+				E0FD46252B1F7DBD00699587 /* BannerAd.swift */,
 			);
 			path = Ads;
-			sourceTree = "<group>";
-		};
-		E01EB44D2B211295009C48F2 /* Native */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Native;
-			sourceTree = "<group>";
-		};
-		E01EB44E2B21129C009C48F2 /* Banner */ = {
-			isa = PBXGroup;
-			children = (
-				E02F21E42B21130600302646 /* AdBannerView.swift */,
-			);
-			path = Banner;
 			sourceTree = "<group>";
 		};
 		E04247412A02EF4E00CA48B3 = {
@@ -877,7 +844,6 @@
 			children = (
 				E045BE212AF991FD00FC3EF1 /* Components */,
 				E0CC33182A03FF8F00CC38C6 /* MainView.swift */,
-				E0C1D39E2BC07CB3004DD828 /* TaggedSongsView.swift */,
 				E0CA78BA2BC5A375004CEA73 /* RecentlyDeleted */,
 			);
 			path = Views;
