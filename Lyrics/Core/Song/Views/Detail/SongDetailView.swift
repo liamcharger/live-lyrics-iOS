@@ -79,6 +79,8 @@ struct SongDetailView: View {
     @State var showUserPopover = false
     @State var showJoinedUsers = true
     
+    @State var updatedLyricsTimer: Timer?
+    
     @State private var activeAlert: ActiveAlert?
     
     @ObservedObject var mainViewModel = MainViewModel.shared
@@ -184,6 +186,32 @@ struct SongDetailView: View {
         
         return songVariations.count > 1
     }
+    func fetchUsers() {
+        if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
+            let uid = viewModel.currentUser?.id ?? ""
+            if uid != song.uid {
+                joinedUsersStrings.insert(song.uid, at: 0)
+            }
+            if joinedUsersStrings.contains(uid) {
+                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid }) {
+                    joinedUsersStrings.remove(at: index)
+                }
+            }
+            viewModel.fetchUsers(uids: joinedUsersStrings) { users in
+                self.lastFetchedJoined = Date()
+                self.joinedUsers = users
+            }
+        }
+    }
+    func checkForUpdatedLyrics() {
+        self.updatedLyricsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            if lyrics != lastUpdatedLyrics {
+                mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
+                lastUpdatedLyrics = lyrics
+            }
+        }
+    }
+    
     enum ActiveAlert {
         case kickedOut, error
     }
@@ -577,34 +605,17 @@ struct SongDetailView: View {
                     showAlert = true
                     activeAlert = .kickedOut
                 } else {
-                    if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
-                        let uid = viewModel.currentUser?.id ?? ""
-                        if uid != song.uid {
-                            joinedUsersStrings.insert(song.uid, at: 0)
-                        }
-                        if joinedUsersStrings.contains(uid) {
-                            if let index = joinedUsersStrings.firstIndex(where: { $0 == uid }) {
-                                joinedUsersStrings.remove(at: index)
-                            }
-                        }
-                        viewModel.fetchUsers(uids: joinedUsersStrings) { users in
-                            self.lastFetchedJoined = Date()
-                            self.joinedUsers = users
-                        }
-                    }
+                    fetchUsers()
                 }
             } regCompletion: { reg in
                 self.fetchListener = reg
             }
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-                if lyrics != lastUpdatedLyrics {
-                    mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
-                    lastUpdatedLyrics = lyrics
-                }
-            }
+            checkForUpdatedLyrics()
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
+            updatedLyricsTimer?.invalidate()
+            updatedLyricsTimer = nil
             fetchListener?.remove()
             UIApplication.shared.isIdleTimerDisabled = false
         }
