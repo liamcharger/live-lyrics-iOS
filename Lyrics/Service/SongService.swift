@@ -102,6 +102,7 @@ class SongService {
 							song.readOnly = sharedSong.readOnly
 							song.pinned = sharedSong.pinned
 							song.tags = sharedSong.tags
+							song.performanceMode = sharedSong.performanceMode
 							completedSongs.append(song)
 						}
 						group.leave()
@@ -377,12 +378,19 @@ class SongService {
 	func updatePerformanceMode(song: Song, performanceMode: Bool) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-			.updateData(["performanceMode": performanceMode]) { error in
-				if let error = error {
-					print(error.localizedDescription)
-				}
+		var ref: DocumentReference
+		
+		if uid != song.uid {
+			ref = Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "")
+		} else {
+			ref = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "")
+		}
+		
+		ref.updateData(["performanceMode": performanceMode]) { error in
+			if let error = error {
+				print(error.localizedDescription)
 			}
+		}
 	}
 	
 	func updateWordCountPreferences(preference: String, completion: @escaping(String, Bool) -> Void) {
