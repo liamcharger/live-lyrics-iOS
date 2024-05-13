@@ -704,23 +704,23 @@ struct MainView: View {
                                                     }
                                                 }
                                             }
-                                            .onDrag {
-                                                sortViewModel.loadFromUserDefaults { sortSelection in
-                                                    if sortSelection == .noSelection && song.uid == uid() {
-                                                        self.draggedSong = song
-                                                    }
-                                                }
-                                                return NSItemProvider()
-                                            }
-                                            .onDrop(
-                                                of: [.text],
-                                                delegate: SongDropViewDelegate(
-                                                    destinationItem: song,
-                                                    items: $mainViewModel.songs,
-                                                    draggedItem: $draggedSong,
-                                                    authViewModel: authViewModel
-                                                )
-                                            )
+//                                            .onDrag {
+//                                                sortViewModel.loadFromUserDefaults { sortSelection in
+//                                                    if sortSelection == .noSelection {
+//                                                        self.draggedSong = song
+//                                                    }
+//                                                }
+//                                                return NSItemProvider()
+//                                            }
+//                                            .onDrop(
+//                                                of: [.text],
+//                                                delegate: SongDropViewDelegate(
+//                                                    destinationItem: song,
+//                                                    items: $mainViewModel.songs,
+//                                                    draggedItem: $draggedSong,
+//                                                    authViewModel: authViewModel
+//                                                )
+//                                            )
                                         }
                                     }
                                 }

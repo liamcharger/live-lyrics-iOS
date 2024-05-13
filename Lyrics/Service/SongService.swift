@@ -97,10 +97,12 @@ class SongService {
 					}
 					group.enter()
 					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId, songCompletion: { song in
-						if let song = song {
-							DispatchQueue.main.async {
-								completedSongs.append(song)
-							}
+						if var song = song {
+							song.variations = sharedSong.variations
+							song.readOnly = sharedSong.readOnly
+							song.pinned = sharedSong.pinned
+							song.tags = sharedSong.tags
+							completedSongs.append(song)
 						}
 						group.leave()
 					}, registrationCompletion: { _ in })

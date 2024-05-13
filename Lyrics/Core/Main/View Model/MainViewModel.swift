@@ -213,33 +213,36 @@ class MainViewModel: ObservableObject {
         self.service.updateLyrics(forVariation: variation, song: song, lyrics: lyrics)
     }
     
-    func updateSongOrder() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        let batch = Firestore.firestore().batch()
-        for(index, song) in songs.enumerated() {
-            let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-            batch.updateData(["order": index], forDocument: songRef)
-        }
-        batch.commit() { error in
-            if let error = error {
-                print("Error updating order in Firestore: \(error.localizedDescription)")
-            } else {
-                print("Order updated in Firestore")
-            }
-        }
-    }
+//    func updateSongOrder() {
+//        guard let uid = Auth.auth().currentUser?.uid else { return }
+//        
+//        let batch = Firestore.firestore().batch()
+//        for(index, song) in songs.enumerated() {
+//            if song.uid != uid {
+//                let songRef = Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "")
+//                batch.updateData(["order": index], forDocument: songRef)
+//            } else {
+//                let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+//                batch.updateData(["order": index], forDocument: songRef)
+//            }
+//        }
+//        batch.commit() { error in
+//            if let error = error {
+//                print("Error updating order in Firestore: \(error.localizedDescription)")
+//            } else {
+//                print("Order updated in Firestore")
+//            }
+//        }
+//    }
     
     func updateSongOrder(folder: Folder) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        let batch = Firestore.firestore().batch()
+       let batch = Firestore.firestore().batch()
         for(order, song) in folderSongs.enumerated() {
             guard let songId = song.id else { continue }
             
             let songRef = Firestore.firestore()
                 .collection("users")
-                .document(uid)
+                .document(folder.uid ?? "")
                 .collection("folders")
                 .document(folder.id ?? "")
                 .collection("songs")

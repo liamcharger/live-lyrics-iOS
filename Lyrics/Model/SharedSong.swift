@@ -13,7 +13,7 @@ struct SharedSong: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let from: String
     let songId: String
-    var order: Int
+    var order: Int?
     var variations: [String]?
     var readOnly: Bool?
     var tags: [String]?

@@ -58,7 +58,7 @@ struct SortRowView: View {
                 Group {
                     switch sortItem {
                     case .noSelection:
-                        Text("Custom")
+                        Text("None")
                     case .artist:
                         Text("Artist")
                     case .key:
