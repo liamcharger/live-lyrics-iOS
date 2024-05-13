@@ -112,8 +112,7 @@ struct RecentlyDeletedView: View {
                         LoadingView()
                     }
                 }
-                .padding(.top)
-                .padding(.horizontal)
+                .padding()
                 .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
