@@ -175,15 +175,9 @@ struct SongDetailView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     func getShowVariationCondition() -> Bool {
-        if readOnly() {
-            return false
-        }
-        
-        let isOwnerOrNoVariations = song.uid == viewModel.currentUser?.id ?? "" || song.variations?.isEmpty ?? true
-        if isOwnerOrNoVariations {
+        if (song.variations ?? []).isEmpty {
             return true
         }
-        
         return songVariations.count > 1
     }
     func fetchUsers() {
@@ -551,24 +545,29 @@ struct SongDetailView: View {
             songViewModel.fetchSongVariations(song: song) { variations in
                 if let variationIds = song.variations, !variations.isEmpty {
                     var fullVariations = [SongVariation]()
-                    if variationIds.contains(where: { $0 == SongVariation.defaultId }) {
+                    if variationIds.contains(where: { $0 == SongVariation.defaultId }) || (song.variations ?? []).isEmpty {
                         fullVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
                     }
                     
                     let filteredVariations = variations.filter { variation in
-                        if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
-                            if selectedVariation == nil && !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
-                                selectedVariation = variation
-                            }
-                        }
-                        if let selectedVariation = selectedVariation, selectedVariation.id ?? "" == variation.id ?? "" && !isInputActive {
-                            self.lyrics = variation.lyrics
+                        if variationIds.isEmpty {
+                            return true
                         } else {
-                            if !isInputActive {
-                                self.lyrics = song.lyrics
+                            if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
+                                if !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
+                                    selectedVariation = variation
+                                }
                             }
+                            if let selectedVariation = selectedVariation, selectedVariation.id ?? "" == variation.id ?? "" && !isInputActive {
+                                self.lyrics = variation.lyrics
+                            } else {
+                                if !isInputActive {
+                                    self.lyrics = song.lyrics
+                                }
+                            }
+                            
+                            return variationIds.contains(variation.id ?? "")
                         }
-                        return variationIds.contains(variation.id ?? "")
                     }
                     
                     fullVariations.append(contentsOf: filteredVariations)
