@@ -590,7 +590,7 @@ class SongService {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let id = UUID().uuidString
 		
-		let documentRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "").collection("variations").document(id)
+		let documentRef = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id ?? "").collection("variations").document(id)
 		
 		documentRef.setData(["title": title, "lyrics": lyrics, "songUid": uid, "songId": song.id ?? "", ]) { error in
 			if let error = error {
