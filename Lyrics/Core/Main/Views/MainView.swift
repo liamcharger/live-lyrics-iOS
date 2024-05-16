@@ -403,7 +403,7 @@ struct MainView: View {
                                                                 showDeleteSheet = true
                                                                 mainViewModel.selectedFolder = folder
                                                             } label: {
-                                                                if folder.id ?? "" != uid() {
+                                                                if folder.uid ?? "" != uid() {
                                                                     Label("Leave", systemImage: "arrow.backward.square")
                                                                 } else {
                                                                     Label("Delete", systemImage: "trash")
