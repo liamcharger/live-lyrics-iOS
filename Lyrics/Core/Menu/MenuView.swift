@@ -58,7 +58,7 @@ struct MenuView: View {
                     .onTapGesture {
                         #if DEBUG
                         if let id = user.id {
-                            UIPasteboard().string = id
+                            UIPasteboard.general.string = id
                         }
                         #endif
                     }
