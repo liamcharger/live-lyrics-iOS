@@ -55,6 +55,13 @@ struct MenuView: View {
                         Text("@\(user.username)")
                             .foregroundColor(Color.gray)
                     }
+                    .onTapGesture {
+                        #if DEBUG
+                        if let id = user.id {
+                            UIPasteboard().string = id
+                        }
+                        #endif
+                    }
                     .padding([.top, .bottom, .trailing])
                     Spacer()
                     Button(action: {showProfileView.toggle()}) {
