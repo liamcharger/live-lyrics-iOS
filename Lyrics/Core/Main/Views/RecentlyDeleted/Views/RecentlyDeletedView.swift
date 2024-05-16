@@ -52,7 +52,7 @@ struct RecentlyDeletedView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: "Recently Deleted", navType: .RecentlyDeleted, folder: nil, showBackButton: true, isEditing: $isEditing)
+                CustomNavBar(title: "Recently Deleted", navType: .recentlyDeleted, showBackButton: true)
                 CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: "Search")
             }
             .padding()

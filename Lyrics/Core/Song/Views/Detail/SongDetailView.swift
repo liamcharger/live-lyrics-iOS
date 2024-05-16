@@ -297,7 +297,7 @@ struct SongDetailView: View {
                                 .sheet(isPresented: $showNotesView) {
                                     NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
                                         .onChange(of: notesViewModel.notes) { notes in
-                                            notesViewModel.updateNotes(song, notes: notes)
+                                            notesViewModel.updateNotes(song: song, notes: notes)
                                         }
                                 }
                                 if !readOnly() {

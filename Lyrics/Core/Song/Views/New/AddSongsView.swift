@@ -43,37 +43,30 @@ struct AddSongsView: View {
         
         var songs: [Song] = []
         
-        let dispatchGroup = DispatchGroup()
-        
         for(songID, isSelected) in selectedSongs {
             guard isSelected else {
                 continue
             }
             
-            dispatchGroup.enter()
-            
             self.songViewModel.fetchSong(songID) { song in
                 songs.append(song)
-                dispatchGroup.leave()
             } regCompletion: { _ in }
         }
         
-        dispatchGroup.notify(queue: .main) {
-            self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { error in
-                if let error = error {
-                    if error.localizedDescription == "Failed to get document because the client is offline." {
-                        self.errorMessage = "Please connect to the internet to perform this action."
-                        self.showError = true
-                        self.isLoading = false
-                    } else {
-                        self.errorMessage = errorMessage
-                        self.showError = true
-                        self.isLoading = false
-                    }
+        self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { error in
+            if let error = error {
+                if error.localizedDescription == "Failed to get document because the client is offline." {
+                    self.errorMessage = "Please connect to the internet to perform this action."
+                    self.showError = true
+                    self.isLoading = false
                 } else {
-                    presMode.wrappedValue.dismiss()
+                    self.errorMessage = errorMessage
+                    self.showError = true
                     self.isLoading = false
                 }
+            } else {
+                presMode.wrappedValue.dismiss()
+                self.isLoading = false
             }
         }
     }

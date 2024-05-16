@@ -16,4 +16,5 @@ struct Folder: Identifiable, Codable, Equatable {
     var title: String
     var order: Int
     var readOnly: Bool?
+    var notes: String?
 }
