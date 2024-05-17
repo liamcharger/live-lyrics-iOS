@@ -242,9 +242,9 @@ class MainViewModel: ObservableObject {
             
             let songRef = Firestore.firestore()
                 .collection("users")
-                .document(folder.uid ?? "")
+                .document(folder.uid!)
                 .collection("folders")
-                .document(folder.id ?? "")
+                .document(folder.id!)
                 .collection("songs")
                 .document(songId)
             
@@ -265,7 +265,7 @@ class MainViewModel: ObservableObject {
         
         let batch = Firestore.firestore().batch()
         for(index, folder) in folders.enumerated() {
-            let folderRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id ?? "")
+            let folderRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id!)
             batch.updateData(["order": index], forDocument: folderRef)
         }
         batch.commit() { error in

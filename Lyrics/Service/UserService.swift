@@ -48,8 +48,8 @@ struct UserService {
                     // Handle password update error
                     return
                 }
-                // Password update successful
-                Firestore.firestore().collection("users").document(user?.uid ?? "")
+                
+                Firestore.firestore().collection("users").document(user!.uid)
                     .updateData(["password": password]) {
                         error in
                         if let error = error {
@@ -64,7 +64,7 @@ struct UserService {
     }
     
     func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, showsExplicitSongs: Bool, enableAutoscroll: Bool, metronomeStyle: [String], completion: @escaping(Bool, String) -> Void) {
-        Firestore.firestore().collection("users").document(user.id ?? "")
+        Firestore.firestore().collection("users").document(user.id!)
             .updateData(["wordCount": wordCount, "showDataUnderSong": data, "wordCountStyle": wordCountStyle, "showsExplicitSongs": showsExplicitSongs, "enableAutoscroll": enableAutoscroll, "metronomeStyle": metronomeStyle]) {
                 error in
                 if let error = error {
@@ -117,7 +117,7 @@ struct UserService {
     }
     
     func updateFCMId(_ user: User, id: String) {
-        Firestore.firestore().collection("users").document(user.id ?? "")
+        Firestore.firestore().collection("users").document(user.id!)
             .updateData(["fcmId": id]) {
                 error in
                 if let error = error {

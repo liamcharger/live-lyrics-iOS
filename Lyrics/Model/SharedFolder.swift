@@ -13,6 +13,6 @@ struct SharedFolder: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let from: String
     let folderId: String
-    var order: Int
+    var order: Int?
     var readOnly: Bool?
 }
