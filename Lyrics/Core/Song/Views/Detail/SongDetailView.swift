@@ -599,7 +599,11 @@ struct SongDetailView: View {
                 self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
                 self.value = song.size ?? 18
                 self.lineSpacing = song.lineSpacing ?? 1
-                self.joinedUsersStrings = song.joinedUsers ?? []
+                if let folder = mainViewModel.selectedFolder {
+                    self.joinedUsersStrings = folder.joinedUsers ?? []
+                } else {
+                    self.joinedUsersStrings = song.joinedUsers ?? []
+                }
                 if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
                     showAlert = true
                     activeAlert = .kickedOut
