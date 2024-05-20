@@ -96,7 +96,6 @@ class MainViewModel: ObservableObject {
     func fetchSongs() {
         self.service.fetchSongs() { songs in
             DispatchQueue.main.async {
-                print("fetched songs")
                 self.songs = songs
                 self.isLoadingSongs = false
             }
@@ -106,7 +105,6 @@ class MainViewModel: ObservableObject {
     func fetchRecentlyDeletedSongs() {
         self.service.fetchRecentlyDeletedSongs { songs in
             DispatchQueue.main.async {
-                print("fetched recently deleted songs")
                 self.recentlyDeletedSongs = songs
                 self.isLoadingRecentlyDeletedSongs = false
             }
@@ -116,7 +114,6 @@ class MainViewModel: ObservableObject {
     func fetchFolders() {
         self.service.fetchFolders { folders in
             DispatchQueue.main.async {
-                print("fetched folders")
                 self.folders = folders
                 self.isLoadingFolders = false
             }
@@ -152,7 +149,6 @@ class MainViewModel: ObservableObject {
         self.isLoadingSharedFolders = false
         self.service.fetchSharedFolders { folders in
             DispatchQueue.main.async {
-                print(folders)
                 self.sharedFolders = folders
                 self.isLoadingSharedFolders = false
             }

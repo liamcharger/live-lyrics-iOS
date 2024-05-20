@@ -842,8 +842,8 @@
 		E0CC331A2A0405C100CC38C6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E045BE212AF991FD00FC3EF1 /* Components */,
 				E0CC33182A03FF8F00CC38C6 /* MainView.swift */,
+				E045BE212AF991FD00FC3EF1 /* Components */,
 				E0CA78BA2BC5A375004CEA73 /* RecentlyDeleted */,
 			);
 			path = Views;

@@ -50,7 +50,7 @@ struct SongDetailView: View {
     @State var joinedUsersStrings = [String]()
     @State var lastFetchedJoined: Date?
     
-    @State var joinedUsers = [User]()
+    @State var joinedUsers: [User]?
     
     @State var songVariations = [SongVariation]()
     
@@ -224,8 +224,9 @@ struct SongDetailView: View {
         })
     }
     
-    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong?, wordCountStyle: String, folder: Folder?) {
+    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, wordCountStyle: String, folder: Folder? = nil, joinedUsers: [User]? = nil) {
         self.songs = songs
+        self._joinedUsers = State(initialValue: joinedUsers)
         self._isChecked = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
         self._value = State(initialValue: inputSong.size ?? 18)
@@ -363,8 +364,8 @@ struct SongDetailView: View {
                         Spacer()
                         Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
                     }
-                    .padding((joinedUsers.count > 0 && showJoinedUsers) ? [] : [.bottom])
-                    if joinedUsers.count > 0 && showJoinedUsers {
+                    .padding((((joinedUsers?.count ?? 0) > 0) && showJoinedUsers) ? [] : [.bottom])
+                    if let joinedUsers = joinedUsers, joinedUsers.count > 0 && showJoinedUsers {
                         VStack(spacing: 0) {
                             Divider()
                                 .padding(.horizontal, -16)
@@ -394,7 +395,7 @@ struct SongDetailView: View {
                                                     }
                                                 }
                                         }
-                                        .modifier(UserPopover(isPresented: $showUserPopover, joinedUsers: $joinedUsers, selectedUser: $selectedUser, user: user, song: song))
+                                        .modifier(UserPopover(isPresented: $showUserPopover, joinedUsers: $joinedUsers, selectedUser: $selectedUser, user: user, song: song, folder: nil))
                                     }
                                 }
                                 .padding(12)
@@ -599,16 +600,18 @@ struct SongDetailView: View {
                 self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
                 self.value = song.size ?? 18
                 self.lineSpacing = song.lineSpacing ?? 1
-                if let folder = mainViewModel.selectedFolder {
-                    self.joinedUsersStrings = folder.joinedUsers ?? []
-                } else {
-                    self.joinedUsersStrings = song.joinedUsers ?? []
-                }
-                if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
-                    showAlert = true
-                    activeAlert = .kickedOut
-                } else {
-                    fetchUsers()
+                if joinedUsers == nil {
+                    if let folder = mainViewModel.selectedFolder {
+                        self.joinedUsersStrings = folder.joinedUsers ?? []
+                    } else {
+                        self.joinedUsersStrings = song.joinedUsers ?? []
+                    }
+                    if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
+                        showAlert = true
+                        activeAlert = .kickedOut
+                    } else {
+                        fetchUsers()
+                    }
                 }
             } regCompletion: { reg in
                 self.fetchListener = reg
@@ -778,7 +781,7 @@ struct SongDetailView: View {
 
 struct UserPopover: ViewModifier {
     @Binding var isPresented: Bool
-    @Binding var joinedUsers: [User]
+    @Binding var joinedUsers: [User]?
     @Binding var selectedUser: User?
     
     @State var showRemoveSheet = false
@@ -786,11 +789,20 @@ struct UserPopover: ViewModifier {
     @ObservedObject var authViewModel = AuthViewModel.shared
     
     let user: User?
-    let song: Song
+    let song: Song?
+    let folder: Folder?
     
+    func songOrFolderUid() -> String {
+        if let song = song {
+            return song.uid
+        } else if let folder = folder {
+            return folder.uid ?? ""
+        }
+        return ""
+    }
     func kickButton() -> some View {
         return Group {
-            if song.uid == authViewModel.currentUser?.id ?? "" {
+            if songOrFolderUid() == authViewModel.currentUser?.id ?? "" {
                 Button {
                     showRemoveSheet = true
                 } label: {
@@ -908,17 +920,30 @@ struct UserPopover: ViewModifier {
         }
         .padding()
         .confirmationDialog("Remove Collaborator?", isPresented: $showRemoveSheet) {
-            Button("Remove", role: .destructive) {
-                SongViewModel.shared.leaveSong(forUid: user?.id ?? "", song: song)
-                if let index = joinedUsers.firstIndex(where: { $0.id ?? "" == user?.id ?? "" }) {
-                    joinedUsers.remove(at: index)
-                }
-                selectedUser = nil
-            }
-            Button("Cancel", role: .cancel) {}
+            confirmationBody
         } message: {
             if let user = user {
-                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this song? They will immediately lose access.")
+                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this \(song == nil ? "song" : "folder")? They will immediately lose access.")
+            }
+        }
+    }
+    
+    var confirmationBody: some View {
+        Group {
+            Button("Remove", role: .destructive) {
+                if let song = song {
+                    SongViewModel.shared.leaveSong(forUid: user?.id!, song: song)
+                } else if let folder = folder {
+                    MainViewModel.shared.leaveCollabFolder(forUid: user?.id!, folder: folder)
+                }
+                if let joinedUsers = joinedUsers, let userId = user?.id, let index = joinedUsers.firstIndex(where: { $0.id == userId }) {
+                    self.joinedUsers?.remove(at: index)
+                }
+                selectedUser = nil
+                isPresented = false
+            }
+            Button("Cancel", role: .cancel) {
+                isPresented = false
             }
         }
     }

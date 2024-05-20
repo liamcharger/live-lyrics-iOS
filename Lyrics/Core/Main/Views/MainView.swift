@@ -23,9 +23,14 @@ struct MainView: View {
     @FocusState var isSearching: Bool
     
     @State var selectedSong: Song?
+    @State var selectedUser: User?
     @State var draggedSong: Song?
-    
     @State var draggedFolder: Folder?
+    @State var notificationStatus: NotificationStatus?
+    // Property allows folder to check if it should be displaying its songs or not. selectedFolder is used for external views, such as SongMoveView, SongEditView, etc..
+    @State var selectedFolderForFolderUse: Folder?
+    
+    @State var joinedUsers: [User]?
     
     @State var hasFirestoreStartedListening = false
     @State var showMenu = false
@@ -52,15 +57,13 @@ struct MainView: View {
     @State var displayFolderSongsSheet = false
     @State var openedFolder = false
     @State var showSortSheet = false
+    @State var isJoinedUsersLoading = false
+    @State var showUserPopover = false
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
     @State var sharedSongSearchText = ""
     @State var newFolder = ""
-    
-    @State var notificationStatus: NotificationStatus?
-    // Property allows folder to check if it should be displaying its songs or not. selectedFolder is used for external views, such as SongMoveView, SongEditView, etc..
-    @State var selectedFolderForFolderUse: Folder?
     
     @State var sortSelection: SortSelectionEnum = .noSelection
     
@@ -173,6 +176,9 @@ struct MainView: View {
         self.mainViewModel.selectedFolder = folder
         self.mainViewModel.fetchSongs(folder)
         self.isLoadingFolderSongs = true
+        self.fetchJoinedUsers(folder: folder) { users in
+            self.joinedUsers = users
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             withAnimation(.bouncy) {
@@ -190,6 +196,32 @@ struct MainView: View {
     }
     func uid() -> String {
         return authViewModel.currentUser?.id ?? ""
+    }
+    func fetchJoinedUsers(folder: Folder, completion: @escaping([User]) -> Void) {
+        var joinedUsersStrings = folder.joinedUsers ?? []
+        var users = [User]()
+        let group = DispatchGroup()
+        
+        if uid() != folder.uid ?? "" {
+            joinedUsersStrings.insert(folder.uid ?? "", at: 0)
+        }
+        if joinedUsersStrings.contains(uid()) {
+            if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
+                joinedUsersStrings.remove(at: index)
+            }
+        }
+        
+        group.enter()
+        authViewModel.fetchUsers(uids: joinedUsersStrings) { fetchedUsers in
+            users = fetchedUsers
+            group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            print(users)
+            completion(users)
+            self.isJoinedUsersLoading = false
+        }
     }
     
     var body: some View {
@@ -444,6 +476,55 @@ struct MainView: View {
                                                         if mainViewModel.folderSongs.isEmpty {
                                                             LoadingView()
                                                         } else {
+                                                            if !((joinedUsers ?? []).isEmpty) {
+                                                                VStack(alignment: .leading, spacing: 3) {
+                                                                    Text("SHARED WITH")
+                                                                        .font(.caption.weight(.semibold))
+                                                                    if !isJoinedUsersLoading {
+                                                                        ScrollView(.horizontal) {
+                                                                            HStack(spacing: 6) {
+                                                                                ForEach(self.joinedUsers ?? []) { user in
+                                                                                    Button {
+                                                                                        selectedUser = user
+                                                                                        showUserPopover = true
+                                                                                    } label: {
+                                                                                        Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
+                                                                                            .padding(12)
+                                                                                            .font(.system(size: 16).weight(.medium))
+                                                                                            .background(Material.regular)
+                                                                                            .clipShape(Circle())
+                                                                                            .overlay {
+                                                                                                if folder.uid ?? "" == user.id! {
+                                                                                                    FAText(iconName: "crown", size: 11)
+                                                                                                        .foregroundColor(.white)
+                                                                                                        .background {
+                                                                                                            Circle()
+                                                                                                                .foregroundColor(Color.accentColor)
+                                                                                                                .frame(width: 22, height: 22)
+                                                                                                        }
+                                                                                                        .offset(x: 15, y: -13)
+                                                                                                        .shadow(radius: 3)
+                                                                                                }
+                                                                                            }
+                                                                                    }
+                                                                                    .modifier(UserPopover(isPresented: $showUserPopover, joinedUsers: $joinedUsers, selectedUser: $selectedUser, user: user, song: nil, folder: folder))
+                                                                                }
+                                                                            }
+                                                                            .padding(12)
+                                                                            .padding(.leading)
+                                                                        }
+                                                                        .padding(.horizontal, -32)
+                                                                    } else {
+                                                                        HStack(spacing: 7) {
+                                                                            ProgressView()
+                                                                            Text(NSLocalizedString("loading", comment: ""))
+                                                                                .foregroundColor(.gray)
+                                                                        }
+                                                                        .padding([.horizontal, .bottom], 12)
+                                                                    }
+                                                                }
+                                                                .padding(.top, 12)
+                                                            }
                                                             ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { uneditedSong in
                                                                 let song = {
                                                                     var song = uneditedSong
@@ -458,7 +539,7 @@ struct MainView: View {
                                                                         .deleteDisabled(true)
                                                                         .moveDisabled(true)
                                                                 } else {
-                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
+                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers)) {
                                                                         ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
                                                                                 if !(song.readOnly ?? false) {
@@ -567,7 +648,7 @@ struct MainView: View {
                                                                                 if let selectedSong = selectedSong {
                                                                                     let isShared = songViewModel.isShared(song: selectedSong)
                                                                                     
-                                                                                    Text("Are you sure you want to \(isShared ? "leave" : "delete") \"\(selectedSong.title)\"?") + Text((mainViewModel.selectedFolder != nil && isShared) ? NSLocalizedString("songs_parent_will_be_left", comment: "") : "")
+                                                                                    Text("Are you sure you want to \(isShared ? "leave" : "delete") \"\(selectedSong.title)\"?") + Text((mainViewModel.selectedFolder != nil && isShared) ? (" " + NSLocalizedString("songs_parent_will_be_left", comment: "")) : "")
                                                                                 }
                                                                             }
                                                                     }
@@ -671,7 +752,7 @@ struct MainView: View {
                                             HStack {
                                                 VStack(alignment: .leading, spacing: 6) {
                                                     HStack {
-                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, restoreSong: nil, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: nil)) {
+                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
                                                             ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                 .contextMenu {
                                                                     songContextMenu(song: song)

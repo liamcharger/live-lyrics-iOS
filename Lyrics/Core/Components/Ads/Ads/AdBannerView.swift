@@ -11,8 +11,6 @@ struct AdBannerView: View {
     @EnvironmentObject var storeKitManager: StoreKitManager
     @EnvironmentObject var authViewModel: AuthViewModel
     
-    @AppStorage("hasPurchasedRemoveAds") var hasPurchasedRemoveAds: Bool = false
-    
     let unitId: String
     let height: CGFloat
     
@@ -22,7 +20,7 @@ struct AdBannerView: View {
     var paddingRight: CGFloat
     
     var body: some View {
-        if !hasPurchasedRemoveAds {
+        if storeKitManager.purchasedProducts.isEmpty {
             ZStack {
                 HStack(spacing: 7) {
                     ProgressView()

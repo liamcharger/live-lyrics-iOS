@@ -93,7 +93,7 @@ struct UserService {
             group.enter()
             Firestore.firestore().collection("users")
                 .document(uid)
-                .addSnapshotListener { snapshot, error in
+                .getDocument { snapshot, error in
                     guard let snapshot = snapshot else { return }
                     guard let user = try? snapshot.data(as: User.self) else { return }
                     

@@ -7,48 +7,59 @@
 
 import Foundation
 import StoreKit
-import SwiftUI
 
 public enum StoreError: Error {
     case failedVerification
 }
 
 class StoreKitManager: ObservableObject {
+    // if there are multiple product types - create multiple variable for each .consumable, .nonconsumable, .autoRenewable, .nonRenewable.
     @Published var storeProducts: [Product] = []
-    @Published var purchasedProducts: [Product] = []
+    @Published var purchasedProducts : [Product] = []
     
     var updateListenerTask: Task<Void, Error>? = nil
     
-    @AppStorage("hasPurchasedRemoveAds") var hasPurchasedRemoveAds: Bool = false
-    
-    private let productDict: [String: String]
-    
+    //maintain a plist of products
+    private let productDict: [String : String]
     init() {
+        //check the path for the plist
         if let plistPath = Bundle.main.path(forResource: "InAppPurchases", ofType: "plist"),
+           //get the list of products
            let plist = FileManager.default.contents(atPath: plistPath) {
-            productDict = (try? PropertyListSerialization.propertyList(from: plist, format: nil) as? [String: String]) ?? [:]
+            productDict = (try? PropertyListSerialization.propertyList(from: plist, format: nil) as? [String : String]) ?? [:]
         } else {
             productDict = [:]
         }
         
+        //Start a transaction listener as close to the app launch as possible so you don't miss any transaction
         updateListenerTask = listenForTransactions()
         
+        //create async operation
         Task {
             await requestProducts()
+            
+            //deliver the products that the customer purchased
             await updateCustomerProductStatus()
         }
     }
     
+    //denit transaction listener on exit or app close
     deinit {
         updateListenerTask?.cancel()
     }
     
+    //listen for transactions - start this early in the app
     func listenForTransactions() -> Task<Void, Error> {
         return Task.detached {
+            //iterate through any transactions that don't come from a direct call to 'purchase()'
             for await result in Transaction.updates {
                 do {
                     let transaction = try self.checkVerified(result)
+                    
+                    //the transaction is verified, deliver the content to the user
                     await self.updateCustomerProductStatus()
+                    
+                    //Always finish a transaction
                     await transaction.finish()
                 } catch {
                     print("Transaction failed verification")
@@ -57,23 +68,26 @@ class StoreKitManager: ObservableObject {
         }
     }
     
+    // request the products in the background
     @MainActor
     func requestProducts() async {
         do {
+            //using the Product static method products to retrieve the list of products
             storeProducts = try await Product.products(for: productDict.values)
-            hasPurchasedRemoveAds = {
-                return !storeProducts.isEmpty
-            }()
+            
+            // iterate the "type" if there are multiple product types.
         } catch {
             print("Failed - error retrieving products \(error)")
         }
     }
     
     func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+        //check if JWS passes the StoreKit verification
         switch result {
         case .unverified:
             throw StoreError.failedVerification
         case .verified(let signedType):
+            //the result is verified, return the unwrapped value
             return signedType
         }
     }
@@ -85,35 +99,46 @@ class StoreKitManager: ObservableObject {
         for await result in Transaction.currentEntitlements {
             do {
                 let transaction = try checkVerified(result)
-                if let product = storeProducts.first(where: { $0.id == transaction.productID }) {
-                    self.hasPurchasedRemoveAds = true
-                    purchasedCourses.append(product)
+                // since we only have one type of producttype - .nonconsumables -- check if any storeProducts matches the transaction.productID then add to the purchasedCourses
+                if let course = storeProducts.first(where: { $0.id == transaction.productID}) {
+                    purchasedCourses.append(course)
                 }
             } catch {
                 print("Transaction failed verification")
             }
+            
+            self.purchasedProducts = purchasedCourses
         }
-        
-        self.purchasedProducts = purchasedCourses
     }
     
-    func purchase(_ product: Product) async throws -> StoreKit.Transaction? {
+    func purchase(_ product: Product) async throws -> Transaction? {
+        //make a purchase request - optional parameters available
         let result = try await product.purchase()
         
+        // check the results
         switch result {
         case .success(let verificationResult):
+            //Transaction will be verified for automatically using JWT(jwsRepresentation) - we can check the result
             let transaction = try checkVerified(verificationResult)
+            
+            //the transaction is verified, deliver the content to the user
             await updateCustomerProductStatus()
+            
+            //always finish a transaction - performance
             await transaction.finish()
+            
             return transaction
         case .userCancelled, .pending:
             return nil
         default:
             return nil
         }
+        
     }
     
+    //check if product has already been purchased
     func isPurchased(_ product: Product) async throws -> Bool {
+        //as we only have one product type grouping .nonconsumable - we check if it belongs to the purchasedCourses which ran init()
         return purchasedProducts.contains(product)
     }
 }
