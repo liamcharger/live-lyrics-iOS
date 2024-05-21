@@ -218,7 +218,6 @@ struct MainView: View {
         }
         
         group.notify(queue: .main) {
-            print(users)
             completion(users)
             self.isJoinedUsersLoading = false
         }
@@ -246,11 +245,6 @@ struct MainView: View {
                     }
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
-                    }
-                }
-                .onChange(of: networkManager.getNetworkState()) { state in
-                    if state && notificationStatus == .network {
-                        mainViewModel.notificationStatus = nil
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
@@ -486,6 +480,7 @@ struct MainView: View {
                                                                                 ForEach(self.joinedUsers ?? []) { user in
                                                                                     Button {
                                                                                         selectedUser = user
+                                                                                        mainViewModel.selectedFolder = folder
                                                                                         showUserPopover = true
                                                                                     } label: {
                                                                                         Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
@@ -507,7 +502,6 @@ struct MainView: View {
                                                                                                 }
                                                                                             }
                                                                                     }
-                                                                                    .modifier(UserPopover(isPresented: $showUserPopover, joinedUsers: $joinedUsers, selectedUser: $selectedUser, user: user, song: nil, folder: folder))
                                                                                 }
                                                                             }
                                                                             .padding(12)
@@ -806,6 +800,9 @@ struct MainView: View {
                         .id("songs")
                     }
                     .padding()
+                    .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
+                        UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder)
+                    }
                     .sheet(isPresented: $showEditSheet) {
                         if let selectedFolder = mainViewModel.selectedFolder {
                             FolderEditView(folder: selectedFolder, isDisplayed: $showEditSheet, title: .constant(selectedFolder.title))

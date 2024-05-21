@@ -1215,7 +1215,7 @@ class SongService {
 		let dispatch = DispatchGroup()
 		
 		dispatch.enter()
-		Firestore.firestore().collection("users").document(forUid ?? uid).collection("shared-folders").document(folder.id!).delete { error in
+		Firestore.firestore().collection("users").document(folder.uid!).collection("folders").document(folder.id!).updateData(["joinedUsers": FieldValue.arrayRemove([forUid ?? uid])]) { error in
 			dispatch.leave()
 			if let error = error {
 				print(error.localizedDescription)
@@ -1223,7 +1223,7 @@ class SongService {
 		}
 		
 		dispatch.enter()
-		Firestore.firestore().collection("users").document(folder.uid!).collection("folders").document(folder.id!).updateData(["joinedUsers": FieldValue.arrayRemove([uid])]) { error in
+		Firestore.firestore().collection("users").document(forUid ?? uid).collection("shared-folders").document(folder.id!).delete { error in
 			dispatch.leave()
 			if let error = error {
 				print(error.localizedDescription)

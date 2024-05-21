@@ -371,7 +371,7 @@ struct SongDetailView: View {
                                 .padding(.horizontal, -16)
                             ScrollView(.horizontal) {
                                 HStack(spacing: 6) {
-                                    ForEach(joinedUsers) { user in
+                                    ForEach(joinedUsers, id: \.id) { user in
                                         Button {
                                             selectedUser = user
                                             showUserPopover = true
@@ -395,7 +395,6 @@ struct SongDetailView: View {
                                                     }
                                                 }
                                         }
-                                        .modifier(UserPopover(isPresented: $showUserPopover, joinedUsers: $joinedUsers, selectedUser: $selectedUser, user: user, song: song, folder: nil))
                                     }
                                 }
                                 .padding(12)
@@ -625,6 +624,9 @@ struct SongDetailView: View {
             fetchListener?.remove()
             UIApplication.shared.isIdleTimerDisabled = false
         }
+        .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
+            UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil)
+        }
         .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
             Button("Delete", role: .destructive) {
                 self.songViewModel.moveSongToRecentlyDeleted(song)
@@ -778,189 +780,3 @@ struct SongDetailView: View {
         }
     }
 }
-
-struct UserPopover: ViewModifier {
-    @Binding var isPresented: Bool
-    @Binding var joinedUsers: [User]?
-    @Binding var selectedUser: User?
-    
-    @State var showRemoveSheet = false
-    
-    @ObservedObject var authViewModel = AuthViewModel.shared
-    
-    let user: User?
-    let song: Song?
-    let folder: Folder?
-    
-    func songOrFolderUid() -> String {
-        if let song = song {
-            return song.uid
-        } else if let folder = folder {
-            return folder.uid ?? ""
-        }
-        return ""
-    }
-    func kickButton() -> some View {
-        return Group {
-            if songOrFolderUid() == authViewModel.currentUser?.id ?? "" {
-                Button {
-                    showRemoveSheet = true
-                } label: {
-                    HStack(spacing: 7) {
-                        Text("Remove")
-                        FAText(iconName: "square-arrow-right", size: 18)
-                    }
-                    .foregroundColor(.red)
-                    .padding(10)
-                    .padding(.horizontal, 8)
-                    .background(Material.regular)
-                    .clipShape(Capsule())
-                }
-                .frame(maxWidth: .infinity)
-            }
-        }
-    }
-    
-    func popoverContent(style: Int) -> some View {
-        return VStack(spacing: 0) {
-            if let user = user {
-                switch style {
-                case 0:
-                    VStack(alignment: .trailing) {
-                        Button(action: {isPresented = false}) {
-                            Image(systemName: "xmark")
-                                .imageScale(.medium)
-                                .padding(3)
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.gray)
-                        }
-                        VStack(spacing: 12) {
-                            Spacer()
-                            Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
-                                .font(.system(size: 28).weight(.semibold))
-                                .padding(18)
-                                .background(Material.regular)
-                                .clipShape(Circle())
-                            VStack(spacing: 7) {
-                                Text(user.username)
-                                    .font(.title.weight(.bold))
-                                Text(user.fullname)
-                                    .foregroundColor(.gray)
-                            }
-                            kickButton()
-                            Spacer()
-                            /* if currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
-                             HStack(spacing: 12) {
-                             FAText(iconName: "pen", size: 23)
-                             .padding(14)
-                             .background(Color.blue)
-                             .foregroundColor(.white)
-                             .clipShape(Circle())
-                             VStack(alignment: .leading) {
-                             Text(user.username)
-                             .font(.body.weight(.semibold))
-                             Text("is currently editing this song")
-                             }
-                             }
-                             .padding()
-                             .frame(maxWidth: .infinity, alignment: .leading)
-                             .background(Material.regular)
-                             .foregroundColor(.primary)
-                             .cornerRadius(20)
-                             */
-                        }
-                        .padding(12)
-                        .padding(.bottom, 28)
-                        .frame(maxWidth: 225, maxHeight: 195)
-                    }
-                default:
-                    Group {
-                        SheetCloseButton(isPresented: $isPresented)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding()
-                        VStack(spacing: 12) {
-                            Spacer()
-                            Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
-                                .font(.system(size: 35).weight(.semibold))
-                                .padding(22)
-                                .background(Material.regular)
-                                .clipShape(Circle())
-                            VStack(spacing: 8) {
-                                Text(user.username)
-                                    .font(.largeTitle.weight(.bold))
-                                Text(user.fullname)
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.gray)
-                            }
-                            kickButton()
-                            Spacer()
-                            /* if currentlyEditingUsers.contains(where: {$0 == user.id ?? ""}) {
-                             HStack(spacing: 12) {
-                             FAText(iconName: "pen", size: 23)
-                             .padding(14)
-                             .background(Color.blue)
-                             .foregroundColor(.white)
-                             .clipShape(Circle())
-                             VStack(alignment: .leading) {
-                             Text(user.username)
-                             .font(.body.weight(.semibold))
-                             Text("is currently editing this song")
-                             }
-                             }
-                             .padding()
-                             .frame(maxWidth: .infinity, alignment: .leading)
-                             .background(Material.regular)
-                             .foregroundColor(.primary)
-                             .cornerRadius(20)
-                             */
-                        }
-                    }
-                }
-            }
-        }
-        .padding()
-        .confirmationDialog("Remove Collaborator?", isPresented: $showRemoveSheet) {
-            confirmationBody
-        } message: {
-            if let user = user {
-                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this \(song == nil ? "song" : "folder")? They will immediately lose access.")
-            }
-        }
-    }
-    
-    var confirmationBody: some View {
-        Group {
-            Button("Remove", role: .destructive) {
-                if let song = song {
-                    SongViewModel.shared.leaveSong(forUid: user?.id!, song: song)
-                } else if let folder = folder {
-                    MainViewModel.shared.leaveCollabFolder(forUid: user?.id!, folder: folder)
-                }
-                if let joinedUsers = joinedUsers, let userId = user?.id, let index = joinedUsers.firstIndex(where: { $0.id == userId }) {
-                    self.joinedUsers?.remove(at: index)
-                }
-                selectedUser = nil
-                isPresented = false
-            }
-            Button("Cancel", role: .cancel) {
-                isPresented = false
-            }
-        }
-    }
-    
-    func body(content: Content) -> some View {
-        if #available(iOS 16.4, *) {
-            return content
-                .popover(isPresented: $isPresented) {
-                    popoverContent(style: 0)
-                        .presentationCompactAdaptation(.popover)
-                }
-        } else {
-            return content
-                .bottomSheet(isPresented: $isPresented, detents: [.medium()]) {
-                    popoverContent(style: -1)
-                }
-        }
-    }
-}
-
