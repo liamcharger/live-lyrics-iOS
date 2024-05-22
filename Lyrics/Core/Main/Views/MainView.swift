@@ -195,7 +195,7 @@ struct MainView: View {
         }
     }
     func uid() -> String {
-        return authViewModel.currentUser?.id!
+        return authViewModel.currentUser!.id ?? ""
     }
     func fetchJoinedUsers(folder: Folder, completion: @escaping([User]) -> Void) {
         var joinedUsersStrings = folder.joinedUsers ?? []

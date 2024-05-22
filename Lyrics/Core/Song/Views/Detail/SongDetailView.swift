@@ -172,7 +172,7 @@ struct SongDetailView: View {
         }
     }
     func uid() -> String {
-        return authViewModel.currentUser?.id!
+        return viewModel.currentUser!.id ?? ""
     }
     func readOnly() -> Bool {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
@@ -188,8 +188,8 @@ struct SongDetailView: View {
             if uid() != song.uid {
                 joinedUsersStrings.insert(song.uid, at: 0)
             }
-            if joinedUsersStrings.contains(uid) {
-                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid }) {
+            if joinedUsersStrings.contains(uid()) {
+                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
                     joinedUsersStrings.remove(at: index)
                 }
             }
