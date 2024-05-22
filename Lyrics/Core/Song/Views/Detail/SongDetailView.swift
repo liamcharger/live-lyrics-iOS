@@ -600,11 +600,12 @@ struct SongDetailView: View {
                 self.value = song.size ?? 18
                 self.lineSpacing = song.lineSpacing ?? 1
                 if joinedUsers == nil {
-                    if let folder = folder {
-                        self.joinedUsersStrings = folder.joinedUsers ?? []
-                    } else {
+                    // As of now, we don't want to show the folder's joinedUsers on shared folder songs because they don't appear when the song is opened without being in a folder
+//                    if let folder = folder {
+//                        self.joinedUsersStrings = folder.joinedUsers ?? []
+//                    } else {
                         self.joinedUsersStrings = song.joinedUsers ?? []
-                    }
+//                    }
                     if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
                         showAlert = true
                         activeAlert = .kickedOut
