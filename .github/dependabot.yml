@@ -9,5 +9,5 @@ updates:
     directory: "/Lyrics.xcodeproj/project.xcworkspace/xcshareddata/swiftpm"
     schedule:
       interval: "daily"
-      time: "11:15"
+      time: "11:23"
     open-pull-requests-limit: 10
