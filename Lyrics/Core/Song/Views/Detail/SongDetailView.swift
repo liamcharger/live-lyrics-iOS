@@ -172,7 +172,7 @@ struct SongDetailView: View {
         }
     }
     func uid() -> String {
-        return viewModel.currentUser!.id ?? ""
+        return viewModel.currentUser?.id ?? ""
     }
     func readOnly() -> Bool {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
