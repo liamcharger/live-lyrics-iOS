@@ -471,7 +471,7 @@ struct MainView: View {
                                                             LoadingView()
                                                         } else {
                                                             if !((joinedUsers ?? []).isEmpty) {
-                                                                VStack(alignment: .leading, spacing: 3) {
+                                                                VStack(alignment: .leading, spacing: 2) {
                                                                     Text("SHARED WITH")
                                                                         .font(.caption.weight(.semibold))
                                                                     if !isJoinedUsersLoading {
@@ -517,7 +517,7 @@ struct MainView: View {
                                                                         .padding([.horizontal, .bottom], 12)
                                                                     }
                                                                 }
-                                                                .padding(.top, 12)
+                                                                .padding(.top, 10)
                                                             }
                                                             ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { uneditedSong in
                                                                 let song = {
@@ -533,7 +533,7 @@ struct MainView: View {
                                                                         .deleteDisabled(true)
                                                                         .moveDisabled(true)
                                                                 } else {
-                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers)) {
+                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
                                                                         ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
                                                                                 if !(song.readOnly ?? false) {

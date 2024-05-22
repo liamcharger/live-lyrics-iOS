@@ -600,7 +600,7 @@ struct SongDetailView: View {
                 self.value = song.size ?? 18
                 self.lineSpacing = song.lineSpacing ?? 1
                 if joinedUsers == nil {
-                    if let folder = mainViewModel.selectedFolder {
+                    if let folder = folder {
                         self.joinedUsersStrings = folder.joinedUsers ?? []
                     } else {
                         self.joinedUsersStrings = song.joinedUsers ?? []
