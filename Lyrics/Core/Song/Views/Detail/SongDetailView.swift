@@ -171,6 +171,9 @@ struct SongDetailView: View {
             return .ultraLight
         }
     }
+    func uid() -> String {
+        return authViewModel.currentUser?.id!
+    }
     func readOnly() -> Bool {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
@@ -182,8 +185,7 @@ struct SongDetailView: View {
     }
     func fetchUsers() {
         if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
-            let uid = viewModel.currentUser?.id ?? ""
-            if uid != song.uid {
+            if uid() != song.uid {
                 joinedUsersStrings.insert(song.uid, at: 0)
             }
             if joinedUsersStrings.contains(uid) {
@@ -468,9 +470,9 @@ struct SongDetailView: View {
                                         if (song.variations ?? []).isEmpty {
                                             `default`
                                         } else {
-                                            if song.uid == viewModel.currentUser?.id ?? "" {
+                                            if song.uid == uid() {
                                                 `default`
-                                            } else if song.uid != viewModel.currentUser?.id ?? "" && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                            } else if song.uid != uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
                                                 `default`
                                             }
                                         }
@@ -485,7 +487,7 @@ struct SongDetailView: View {
                                             }
                                         }
                                         if !readOnly() {
-                                            if song.uid == viewModel.currentUser?.id ?? "" || (song.variations ?? []).isEmpty {
+                                            if song.uid == uid() || (song.variations ?? []).isEmpty {
                                                 Divider()
                                                 if songVariations.count > 0 {
                                                     Button {
@@ -577,7 +579,7 @@ struct SongDetailView: View {
                     self.songVariations = variations
                 }
             }
-            songViewModel.fetchSong(listen: true, forUser: song.uid, song.id ?? "") { song in
+            songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
                 self.title = song.title
                 if !isInputActive {
                     if selectedVariation == nil {
@@ -605,7 +607,7 @@ struct SongDetailView: View {
                     } else {
                         self.joinedUsersStrings = song.joinedUsers ?? []
                     }
-                    if !joinedUsersStrings.contains(where: { $0 == viewModel.currentUser?.id ?? "" }) && song.uid != viewModel.currentUser?.id ?? "" {
+                    if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
                         showAlert = true
                         activeAlert = .kickedOut
                     } else {
@@ -727,7 +729,7 @@ struct SongDetailView: View {
                 Label("Move", systemImage: "folder")
             }
             if let selectedFolder = mainViewModel.selectedFolder {
-                if selectedFolder.uid ?? "" == viewModel.currentUser?.id ?? "" {
+                if selectedFolder.uid ?? "" == uid() {
                     move
                 }
             } else {
