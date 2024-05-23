@@ -17,6 +17,7 @@
 
 ## Release checklist:
 - Update Firebase Remote Config version value
+- Confirm WhatsNewView row items are up-to-date
 - Generate new screenshots of updated views
 
 > ***Note:** Screenshots are currently generated using [App Mockup (Beta)](https://beta.app-mockup.com)*
