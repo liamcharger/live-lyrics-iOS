@@ -713,26 +713,11 @@ class SongService {
 	func deleteSong(_ song: Song) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		let batch = Firestore.firestore().batch()
-		let dispatch = DispatchGroup()
-		
-		let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id!)
-		batch.deleteDocument(songRef)
-		
-		for folder in MainViewModel.shared.folders {
-			dispatch.enter()
-			let folderRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id!).collection("songs").document(song.id!)
-			batch.deleteDocument(folderRef)
-			dispatch.leave()
-		}
-		
-		dispatch.notify(queue: .main) {
-			batch.commit { error in
-				if let error = error {
-					print("Error deleting song documents: \(error.localizedDescription)")
-				} else {
-					print("Song deleted successfully")
-				}
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id!).delete { error in
+			if let error = error {
+				print("Error deleting song documents: \(error.localizedDescription)")
+			} else {
+				print("Song deleted successfully")
 			}
 		}
 	}

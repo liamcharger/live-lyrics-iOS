@@ -27,10 +27,19 @@ struct NewSongView: View {
     let folder: Folder?
     
     func createSong() {
+        let dismiss = {
+            canDismissProgrammatically = true
+            view2 = false
+        }
+        
+        if NetworkManager.shared.getNetworkState() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                dismiss()
+            }
+        }
         songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
             if success {
-                canDismissProgrammatically = true
-                view2 = false
+                dismiss()
             } else {
                 self.errorMessage = errorMessage
                 showError = true
