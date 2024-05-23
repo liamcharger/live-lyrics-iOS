@@ -246,9 +246,8 @@ class SongService {
 				let folderSongs = documents.compactMap { try? $0.data(as: FolderSong.self) }
 				
 				for folderSong in folderSongs {
-					group.enter()
-					
 					self.fetchSong(listen: false, forUser: userId, withId: folderSong.id!) { song in
+						group.enter()
 						if let song = song {
 							completedSongs.append(song)
 						}
@@ -720,8 +719,8 @@ class SongService {
 		let songRef = Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id!)
 		batch.deleteDocument(songRef)
 		
-		dispatch.enter()
 		for folder in MainViewModel.shared.folders {
+			dispatch.enter()
 			let folderRef = Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id!).collection("songs").document(song.id!)
 			batch.deleteDocument(folderRef)
 			dispatch.leave()
@@ -957,7 +956,6 @@ class SongService {
 						completion(error)
 						print(error.localizedDescription)
 					}
-					
 					dispatch.leave()
 				}
 			}
