@@ -522,7 +522,8 @@
 		E050D14B2A02FD3D004CC45E /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
-				E0B02B9D2AF5A374002E10D4 /* Intro */,
+				E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */,
+				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -667,15 +668,6 @@
 				E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */,
 			);
 			path = Fonts;
-			sourceTree = "<group>";
-		};
-		E0B02B9D2AF5A374002E10D4 /* Intro */ = {
-			isa = PBXGroup;
-			children = (
-				E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */,
-				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
-			);
-			path = Intro;
 			sourceTree = "<group>";
 		};
 		E0B4CF1A2BD2F00C00F143E9 /* Variations */ = {

@@ -14,6 +14,7 @@ struct FeaturesView: View {
     
     var features: [FeaturesSection] = [
         FeaturesSection(title: "Song Variations", subtitle: "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.", imageName: "sparkles"),
+        FeaturesSection(title: "Collaboration", subtitle: "Work together on your songs and folders with fellow musicians in real-time.", imageName: "sparkles"),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
     ]
     
