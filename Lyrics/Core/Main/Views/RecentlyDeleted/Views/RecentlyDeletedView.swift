@@ -52,7 +52,7 @@ struct RecentlyDeletedView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: "Recently Deleted", navType: .RecentlyDeleted, folder: nil, showBackButton: true, isEditing: $isEditing)
+                CustomNavBar(title: "Recently Deleted", navType: .recentlyDeleted, showBackButton: true, isEditing: $isEditing)
                 CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: "Search")
             }
             .padding()
@@ -120,9 +120,10 @@ struct RecentlyDeletedView: View {
                 .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
-                            print("Deleting song: \(selectedSong.title)")
+                            let songData = Song(id: selectedSong.id ?? "", uid: selectedSong.uid, timestamp: selectedSong.timestamp, title: selectedSong.title, lyrics: selectedSong.lyrics, order: selectedSong.order)
+                            
                             recentlyDeletedViewModel.deleteSong(song: selectedSong)
-                            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
+                            TakesViewModel.shared.deleteAllTakes(forSong: songData)
                         }
                         Button("Cancel", role: .cancel) { }
                     }

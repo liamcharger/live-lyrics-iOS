@@ -47,6 +47,7 @@ struct PlayView: View {
     @State var isUserScrolling = false
     @State var isScrollingProgrammatically = true
     @State var isPressed = false
+    @State var isRecording = false
     
     @State var proxy: ScrollViewProxy?
     
@@ -338,19 +339,33 @@ struct PlayView: View {
                                 .foregroundColor(Color.gray)
                                 .padding(.trailing, 6)
                         }
-                        Button {
-                            if selectedTool == "metronome" {
-                                selectedTool = ""
-                            } else {
-                                selectedTool = "metronome"
+                        Menu {
+                            Button {
+                                if selectedTool == "takes" {
+                                    selectedTool = ""
+                                } else {
+                                    selectedTool = "takes"
+                                }
+                            } label: {
+                                Label("Takes", systemImage: selectedTool == "takes" ? "checkmark" : "")
+                            }
+                            Button {
+                                if selectedTool == "metronome" {
+                                    selectedTool = ""
+                                } else {
+                                    selectedTool = "metronome"
+                                }
+                            } label: {
+                                Label("Metronome", systemImage: selectedTool == "metronome" ? "checkmark" : "")
                             }
                         } label: {
-                            Image(systemName: "metronome")
-                                .imageScale(.medium)
-                                .padding(11)
+                            FAText(iconName: "toolbox", size: 19)
+                                .padding(12)
                                 .font(.body.weight(.semibold))
                                 .foregroundColor(selectedTool == "metronome" ? .white : .primary)
                                 .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
+                                .foregroundColor(selectedTool != "" ? .white : .primary)
+                                .background(selectedTool != "" ? .blue : .materialRegularGray)
                                 .clipShape(Circle())
                         }
                         Button(action: {
@@ -514,7 +529,7 @@ struct PlayView: View {
                                     selectedTool = ""
                                 } label: {
                                     Image(systemName: "xmark")
-                                        .padding()
+                                        .padding(15)
                                         .font(.body.weight(.semibold))
                                         .foregroundColor(.white)
                                         .background(Material.regular)
@@ -522,11 +537,13 @@ struct PlayView: View {
                                 }
                             }
                         }
+                        .padding(12)
+                    case "takes":
+                        TakesMiniView(isDisplayed: $dismiss, song: song)
                     default:
                         EmptyView()
                     }
                 }
-                .padding(12)
             }
             Divider()
             HStack {

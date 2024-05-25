@@ -69,6 +69,10 @@ struct SongDetailView: View {
     @State var showNewVariationView = false
     @State var showVariationsManagementSheet = false
     @State var showSongVariationEditView = false
+    @State var showTakesMiniView = false
+    @State var isRecording = false
+    
+    @State private var elapsedTime: TimeInterval = 0
     
     @ObservedObject var mainViewModel = MainViewModel()
     @ObservedObject var songViewModel = SongViewModel()
@@ -333,94 +337,100 @@ struct SongDetailView: View {
                 .lineSpacing(lineSpacing)
                 .focused($isInputActive)
                 .padding(.leading, 11)
-            Divider()
-            VStack(spacing: 14) {
-                if #available(iOS 17, *) {
-                    TipView(VariationsTip())
+            VStack(spacing: 0) {
+                if showTakesMiniView {
+                    Divider()
+                    TakesMiniView(isDisplayed: $showTakesMiniView, song: song)
                 }
-                HStack {
-                    if songs != nil {
-                        if wordCountBool {
-                            Group {
-                                if isChecked == "Words" {
-                                    Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
-                                } else if isChecked == "Characters" {
-                                    Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
-                                } else if isChecked == "Spaces" {
-                                    Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
-                                } else if isChecked == "Paragraphs" {
-                                    Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
-                                }
-                            }
-                            .foregroundColor(.primary)
-                            .font(.system(size: 16).weight(.semibold))
-                        }
+                Divider()
+                VStack(spacing: 14) {
+                    if #available(iOS 17, *) {
+                        TipView(VariationsTip())
                     }
-                    Spacer()
-                    Group {
-                        if songVariations.isEmpty {
-                            ProgressView()
-                        } else {
-                            if songVariations.contains(where: { $0.title == "noVariations" }) {
-                                Button {
-                                    showNewVariationView = true
-                                } label: {
-                                    HStack(spacing: 6) {
-                                        Image(systemName: "plus")
-                                        Text("New Variation")
+                    HStack {
+                        if songs != nil {
+                            if wordCountBool {
+                                Group {
+                                    if isChecked == "Words" {
+                                        Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
+                                    } else if isChecked == "Characters" {
+                                        Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
+                                    } else if isChecked == "Spaces" {
+                                        Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
+                                    } else if isChecked == "Paragraphs" {
+                                        Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
                                     }
                                 }
+                                .foregroundColor(.primary)
+                                .font(.system(size: 16).weight(.semibold))
+                            }
+                        }
+                        Spacer()
+                        Group {
+                            if songVariations.isEmpty {
+                                ProgressView()
                             } else {
-                                Menu {
-                                    Button {
-                                        self.lyrics = song.lyrics
-                                        self.selectedVariation = nil
-                                    } label: {
-                                        Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
-                                    }
-                                    Divider()
-                                    ForEach(songVariations, id: \.id) { variation in
-                                        Button {
-                                            self.selectedVariation = variation
-                                            self.lyrics = variation.lyrics
-                                        } label: {
-                                            Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
-                                        }
-                                    }
-                                    Divider()
-                                    if songVariations.count > 0 {
-                                        Button {
-                                            showVariationsManagementSheet = true
-                                        } label: {
-                                            Label("Manage", systemImage: "gear")
-                                        }
-                                    }
+                                if songVariations.contains(where: { $0.title == "noVariations" }) {
                                     Button {
                                         showNewVariationView = true
                                     } label: {
-                                        Label("New", systemImage: "square.and.pencil")
-                                    }
-                                } label: {
-                                    HStack(spacing: 5) {
-                                        if let variation = selectedVariation {
-                                            Text(variation.title)
-                                        } else {
-                                            Text("Default")
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "plus")
+                                            Text("New Variation")
                                         }
-                                        Image(systemName: "chevron.up.chevron.down")
+                                    }
+                                } else {
+                                    Menu {
+                                        Button {
+                                            self.lyrics = song.lyrics
+                                            self.selectedVariation = nil
+                                        } label: {
+                                            Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                        }
+                                        Divider()
+                                        ForEach(songVariations, id: \.id) { variation in
+                                            Button {
+                                                self.selectedVariation = variation
+                                                self.lyrics = variation.lyrics
+                                            } label: {
+                                                Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                                            }
+                                        }
+                                        Divider()
+                                        if songVariations.count > 0 {
+                                            Button {
+                                                showVariationsManagementSheet = true
+                                            } label: {
+                                                Label("Manage", systemImage: "gear")
+                                            }
+                                        }
+                                        Button {
+                                            showNewVariationView = true
+                                        } label: {
+                                            Label("New", systemImage: "square.and.pencil")
+                                        }
+                                    } label: {
+                                        HStack(spacing: 5) {
+                                            if let variation = selectedVariation {
+                                                Text(variation.title)
+                                            } else {
+                                                Text("Default")
+                                            }
+                                            Image(systemName: "chevron.up.chevron.down")
+                                        }
                                     }
                                 }
                             }
                         }
+                        if !wordCountBool {
+                            Spacer()
+                        }
                     }
-                    if !wordCountBool {
-                        Spacer()
-                    }
+                    .padding(.vertical, 20)
+                    .padding(.horizontal)
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
-            .padding(.horizontal)
         }
         .navigationBarBackButtonHidden()
         .navigationBarHidden(true)
@@ -474,7 +484,12 @@ struct SongDetailView: View {
                 }
             } else {
                 Button("Delete", role: .destructive) {
-                    self.songViewModel.moveSongToRecentlyDeleted(song)
+                    if restoreSong != nil {
+                        TakesViewModel.shared.deleteAllTakes(forSong: song)
+                        self.recentlyDeletedViewModel.deleteSong(song)
+                    } else {
+                        self.songViewModel.moveSongToRecentlyDeleted(song)
+                    }
                     self.presMode.wrappedValue.dismiss()
                 }
                 if let folder = folder {
@@ -626,6 +641,11 @@ struct SongDetailView: View {
             } label: {
                 Label("Tags", systemImage: "tag")
             }
+            Button(action: {
+                showTakesMiniView.toggle()
+            }, label: {
+                Label("Takes", systemImage: "music.mic")
+            })
             Button(role: .destructive, action: {
                 showDeleteSheet.toggle()
             }, label: {
