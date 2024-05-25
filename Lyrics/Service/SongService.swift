@@ -246,13 +246,13 @@ class SongService {
 				let folderSongs = documents.compactMap { try? $0.data(as: FolderSong.self) }
 				
 				for folderSong in folderSongs {
+					group.enter()
 					self.fetchSong(listen: false, forUser: userId, withId: folderSong.id!) { song in
-						group.enter()
 						if let song = song {
 							completedSongs.append(song)
 						}
-						group.leave()
 					} registrationCompletion: { _ in }
+					group.leave()
 				}
 				
 				group.notify(queue: .main) {
