@@ -86,8 +86,8 @@ struct SongDetailView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
+    @ObservedObject var notesViewModel = NotesViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
-    @ObservedObject var notesViewModel: NotesViewModel
     
     @Environment(\.presentationMode) var presMode
     
@@ -249,8 +249,6 @@ struct SongDetailView: View {
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
         self._tags = State(initialValue: inputSong.tags ?? ["none"])
-      
-        self.notesViewModel = NotesViewModel(song: inputSong)
  
         self._design = State(initialValue: getDesign(design: Int(inputSong.design ?? 0)))
         self._weight = State(initialValue: getWeight(weight: Int(inputSong.weight ?? 0)))
@@ -292,10 +290,7 @@ struct SongDetailView: View {
                                         }
                                 })
                                 .sheet(isPresented: $showNotesView) {
-                                    NotesView(notes: $notesViewModel.notes, isLoading: $notesViewModel.isLoading)
-                                        .onChange(of: notesViewModel.notes) { notes in
-                                            notesViewModel.updateNotes(song: song, notes: notes)
-                                        }
+                                    NotesView(song: song)
                                 }
                                 if !readOnly() {
                                     SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
@@ -618,6 +613,7 @@ struct SongDetailView: View {
                 self.fetchListener = reg
             }
             checkForUpdatedLyrics()
+            notesViewModel.fetchNotes(song: song)
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
