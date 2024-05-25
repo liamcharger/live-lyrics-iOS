@@ -48,12 +48,14 @@ struct MenuView: View {
             VStack(spacing: 10) {
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack(spacing: 6) {
-                            Text(user.fullname)
-                                .font(.title2.weight(.semibold))
+                        Text(user.fullname)
+                            .font(.title2.weight(.semibold))
+                        HStack(spacing: 4) {
+                            Text(user.username)
+                            Text("#" + viewModel.uniqueUserID)
+                                .font(.body.weight(.semibold))
                         }
-                        Text("@\(user.username)")
-                            .foregroundColor(Color.gray)
+                        .foregroundColor(Color.gray)
                     }
                     .onTapGesture {
                         #if DEBUG

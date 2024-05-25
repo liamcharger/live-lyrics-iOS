@@ -52,8 +52,12 @@ struct UserPopover: View {
                             .background(Material.regular)
                             .clipShape(Circle())
                         VStack(spacing: 8) {
-                            Text(user.username)
-                                .font(.largeTitle.weight(.bold))
+                            HStack(spacing: 5) {
+                                Text(user.username)
+                                Text("#" + user.id!.prefix(4).uppercased())
+                                    .foregroundColor(.gray)
+                            }
+                            .font(.largeTitle.weight(.bold))
                             Text(user.fullname)
                                 .font(.system(size: 18))
                                 .foregroundColor(.gray)

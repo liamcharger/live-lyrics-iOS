@@ -13,8 +13,13 @@ struct SongShareRowView: View {
     
     var body: some View {
         HStack {
-            Text(user.username)
-                .font(.body.weight(.semibold))
+            HStack(spacing: 4) {
+                Text(user.username)
+                    .font(.body.weight(.semibold))
+                Text("#" + user.id!.prefix(4).uppercased())
+                    .foregroundColor(.gray)
+            }
+            .font(.body.weight(.semibold))
             Spacer()
             if selectedUsers.contains(where: { $0.id == user.id ?? "" }) {
                 Image(systemName: "checkmark.circle.fill")

@@ -15,6 +15,7 @@ class AuthViewModel: ObservableObject {
     @Published var didAuthenticateUser = false
     @Published var isLoadingUsers = false
     @Published var currentUser: User?
+    @Published var uniqueUserID: String = ""
     
     private var tempUserSession: FirebaseAuth.User?
     private let service = UserService()
@@ -133,6 +134,8 @@ class AuthViewModel: ObservableObject {
         
         service.fetchUser(withUid: uid) { user in
             self.currentUser = user
+            
+            self.uniqueUserID = user.id!.prefix(4).uppercased()
         }
     }
     
