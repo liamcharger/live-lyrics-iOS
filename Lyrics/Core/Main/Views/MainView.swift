@@ -280,7 +280,6 @@ struct MainView: View {
                             }
                         }
                         VStack {
-                            ListHeaderView(title: "Songs")
                             NavigationLink(destination: {
                                 RecentlyDeletedView()
                             }) {
