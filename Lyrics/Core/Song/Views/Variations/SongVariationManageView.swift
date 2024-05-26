@@ -39,40 +39,42 @@ struct SongVariationManageView: View {
                             LoadingView()
                         } else {
                             ForEach(songVariations, id: \.id) { variation in
-                                HStack(spacing: 6) {
-                                    Text(variation.title)
-                                    Spacer()
-                                    Button {
-                                        selectedVariation = variation
-                                        showSongVariationEditView = true
-                                    } label: {
-                                        Image(systemName: "pencil")
-                                            .padding(12)
-                                            .font(.body.weight(.semibold))
-                                            .background(Color.blue)
-                                            .foregroundColor(.white)
-                                            .clipShape(Circle())
-                                    }
-                                    .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
-                                        if let variation = selectedVariation {
-                                            SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                                if variation.title != SongVariation.defaultId {
+                                    HStack(spacing: 6) {
+                                        Text(variation.title)
+                                        Spacer()
+                                        Button {
+                                            selectedVariation = variation
+                                            showSongVariationEditView = true
+                                        } label: {
+                                            Image(systemName: "pencil")
+                                                .padding(12)
+                                                .font(.body.weight(.semibold))
+                                                .background(Color.blue)
+                                                .foregroundColor(.white)
+                                                .clipShape(Circle())
+                                        }
+                                        .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
+                                            if let variation = selectedVariation {
+                                                SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                                            }
+                                        }
+                                        Button {
+                                            selectedVariation = variation
+                                            showDeleteSheet = true
+                                        } label: {
+                                            Image(systemName: "trash")
+                                                .padding(12)
+                                                .font(.body.weight(.semibold))
+                                                .background(Color.red)
+                                                .foregroundColor(.primary)
+                                                .clipShape(Circle())
                                         }
                                     }
-                                    Button {
-                                        selectedVariation = variation
-                                        showDeleteSheet = true
-                                    } label: {
-                                        Image(systemName: "trash")
-                                            .padding(12)
-                                            .font(.body.weight(.semibold))
-                                            .background(Color.red)
-                                            .foregroundColor(.primary)
-                                            .clipShape(Circle())
-                                    }
+                                    .padding(12)
+                                    .background(Material.regular)
+                                    .cornerRadius(18)
                                 }
-                                .padding(12)
-                                .background(Material.regular)
-                                .cornerRadius(18)
                             }
                         }
                     }
