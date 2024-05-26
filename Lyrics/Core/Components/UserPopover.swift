@@ -117,12 +117,10 @@ struct UserPopover: View {
                 }
                 dismiss()
             }
-            Button("Cancel", role: .cancel) {
-                dismiss()
-            }
+            Button("Cancel", role: .cancel) {}
         } message: {
             if let user = selectedUser {
-                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this \(song == nil ? "song" : "folder")? They will immediately lose access.")
+                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this \(folder == nil ? "song" : "folder")? They will immediately lose access.")
             }
         }
     }
