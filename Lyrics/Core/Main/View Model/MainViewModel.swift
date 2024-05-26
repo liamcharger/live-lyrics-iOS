@@ -84,7 +84,6 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchSongs(_ folder: Folder) {
-        self.isLoadingFolderSongs = true
         self.service.fetchSongs(folder) { songs in
             DispatchQueue.main.async {
                 self.folderSongs = songs

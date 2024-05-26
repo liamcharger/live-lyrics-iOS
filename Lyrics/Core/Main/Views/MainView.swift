@@ -891,12 +891,12 @@ struct MainView: View {
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
-            }
-            Button {
-                selectedSong = song
-                showSongMoveSheet.toggle()
-            } label: {
-                Label("Move", systemImage: "folder")
+                Button {
+                    selectedSong = song
+                    showSongMoveSheet.toggle()
+                } label: {
+                    Label("Move", systemImage: "folder")
+                }
             }
             Menu {
                 Button {

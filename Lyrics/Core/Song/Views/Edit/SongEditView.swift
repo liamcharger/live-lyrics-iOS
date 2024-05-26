@@ -10,6 +10,7 @@ import Combine
 
 struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @Environment(\.presentationMode) var presMode
     
     let song: Song
@@ -40,23 +41,25 @@ struct SongEditView: View {
         self.key = stateKey
         self.artist = stateArtist
         self.duration = stateDuration
-        if NetworkManager.shared.getNetworkState() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.isDisplayed = false
-            }
-        }
         songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist, duration: stateDuration) { success, errorMessage in
-            if success {
-//                self.isDisplayed = false
-            } else {
+            if !success {
                 self.showError = true
                 self.errorMessage = errorMessage
             }
         }
+        dismiss()
     }
     func isInvalidFormat(_ duration: String) -> Bool {
         let pattern = "^\\d+:\\d+\\d+$"
         return !duration.isEmpty && !(duration.range(of: pattern, options: .regularExpression) != nil)
+    }
+    func dismiss() {
+        if let folder = mainViewModel.selectedFolder {
+            mainViewModel.fetchSongs(folder)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.isDisplayed = false
+        }
     }
     
     init(song: Song, isDisplayed: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>, duration: Binding<String>) {

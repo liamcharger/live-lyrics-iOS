@@ -729,7 +729,9 @@ struct SongDetailView: View {
                     move
                 }
             } else {
-                move
+                if song.uid == uid() {
+                    move
+                }
             }
             Menu {
                 Button {
