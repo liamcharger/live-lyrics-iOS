@@ -56,6 +56,9 @@ struct FolderEditView: View {
                     if success {
                         self.title = text
                         self.isDisplayed = false
+                        if folder.uid ?? "" != AuthViewModel.shared.currentUser!.id! {
+                            MainViewModel.shared.fetchSharedFolders()
+                        }
                     } else {
                         self.showError = true
                         self.errorMessage = errorMessage
