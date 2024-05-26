@@ -19,6 +19,13 @@
 "hello" = "Hello";
 "next" = "Next";
 
+"live_stages" = "Live Stages";
+"not_joined_any_stages" = "You haven't joined any Live Stages yet.";
+"join_a_stage" = "Join a Stage";
+"create_a_stage" = "Create a Stage";
+"add_song_to_queue" = "Add a Song to Queue";
+"leave_stage" = "Leave Stage";
+
 "good_evening" = "Good Evening.";
 "good_afternoon" = "Good Afternoon.";
 "good_morning" = "Good Morning.";

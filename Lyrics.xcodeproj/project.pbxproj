@@ -113,6 +113,10 @@
 		E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC33262A040D5500CC38C6 /* SongViewModel.swift */; };
 		E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF12D2A18074C00DE8265 /* NewFolderView.swift */; };
 		E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF1372A181D2500DE8265 /* SongEditView.swift */; };
+		E0D271552C0341F2002A247B /* LiveStagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D271542C0341F1002A247B /* LiveStagesView.swift */; };
+		E0D271582C0342DC002A247B /* LiveStagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D271572C0342DC002A247B /* LiveStagesViewModel.swift */; };
+		E0D2715A2C034561002A247B /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D271592C034561002A247B /* Stage.swift */; };
+		E0D2715C2C034989002A247B /* StageSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D2715B2C034989002A247B /* StageSong.swift */; };
 		E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */; };
 		E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */; };
 		E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D411BD2A9FF12300859E4E /* Notification.swift */; };
@@ -251,6 +255,10 @@
 		E0CC33262A040D5500CC38C6 /* SongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongViewModel.swift; sourceTree = "<group>"; };
 		E0CDF12D2A18074C00DE8265 /* NewFolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFolderView.swift; sourceTree = "<group>"; };
 		E0CDF1372A181D2500DE8265 /* SongEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongEditView.swift; sourceTree = "<group>"; };
+		E0D271542C0341F1002A247B /* LiveStagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStagesView.swift; sourceTree = "<group>"; };
+		E0D271572C0342DC002A247B /* LiveStagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStagesViewModel.swift; sourceTree = "<group>"; };
+		E0D271592C034561002A247B /* Stage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
+		E0D2715B2C034989002A247B /* StageSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageSong.swift; sourceTree = "<group>"; };
 		E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTagView.swift; sourceTree = "<group>"; };
 		E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionEnum.swift; sourceTree = "<group>"; };
 		E0D411BD2A9FF12300859E4E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
@@ -436,6 +444,7 @@
 			isa = PBXGroup;
 			children = (
 				E0CC33172A03FF8800CC38C6 /* Main */,
+				E0D271532C0341CF002A247B /* Live Stages */,
 				E0CA85112B081D5100188CD0 /* Components */,
 				E0CDF1282A18073100DE8265 /* Folder */,
 				E06D77802A17B4240032332F /* Settings */,
@@ -469,6 +478,8 @@
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0A8F5052BD06887009275A2 /* Version.swift */,
 				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
+				E0D271592C034561002A247B /* Stage.swift */,
+				E0D2715B2C034989002A247B /* StageSong.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -915,6 +926,23 @@
 			path = Folder;
 			sourceTree = "<group>";
 		};
+		E0D271532C0341CF002A247B /* Live Stages */ = {
+			isa = PBXGroup;
+			children = (
+				E0D271562C0342D0002A247B /* View Model */,
+				E0D271542C0341F1002A247B /* LiveStagesView.swift */,
+			);
+			path = "Live Stages";
+			sourceTree = "<group>";
+		};
+		E0D271562C0342D0002A247B /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				E0D271572C0342DC002A247B /* LiveStagesViewModel.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
 		E0D3AA8C2BBC6B3B005650F5 /* Tag */ = {
 			isa = PBXGroup;
 			children = (
@@ -1201,6 +1229,7 @@
 				E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */,
 				E041055F2A90029900215FB0 /* HapticManager.swift in Sources */,
 				E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */,
+				E0D271552C0341F2002A247B /* LiveStagesView.swift in Sources */,
 				E0FD46262B1F7DBD00699587 /* BannerAd.swift in Sources */,
 				E0CA853B2B081D5100188CD0 /* CustomPasswordField.swift in Sources */,
 				E006A0592A214CAA00CE468A /* RecentlyDeletedSong.swift in Sources */,
@@ -1221,6 +1250,7 @@
 				E0CA85392B081D5100188CD0 /* LoadingView.swift in Sources */,
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
+				E0D271582C0342DC002A247B /* LiveStagesViewModel.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
 				E0C1D39F2BC07CB3004DD828 /* TaggedSongsView.swift in Sources */,
 				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,
@@ -1241,6 +1271,7 @@
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
 				E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */,
 				E0CA85382B081D5100188CD0 /* Modifers.swift in Sources */,
+				E0D2715C2C034989002A247B /* StageSong.swift in Sources */,
 				E0CA85372B081D5100188CD0 /* NavBarEnum.swift in Sources */,
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
@@ -1250,6 +1281,7 @@
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,
 				E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */,
 				E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */,
+				E0D2715A2C034561002A247B /* Stage.swift in Sources */,
 				E04247822A02EFC500CA48B3 /* Song.swift in Sources */,
 				E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */,
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,

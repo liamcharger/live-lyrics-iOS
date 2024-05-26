@@ -15,6 +15,7 @@ struct ListRowView: View {
     @Binding var isEditing: Bool
     
     let title: String
+    let subtitle: String?
     let navArrow: String?
     let imageName: String?
     let icon: String?
@@ -22,9 +23,10 @@ struct ListRowView: View {
     let sharedBadge: Bool?
     let song: Song?
     
-    init(isEditing: Binding<Bool>, title: String, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, sharedBadge: Bool? = nil, song: Song? = nil) {
+    init(isEditing: Binding<Bool>, title: String, subtitle: String? = nil, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, sharedBadge: Bool? = nil, song: Song? = nil) {
         self._isEditing = isEditing
         self.title = title
+        self.subtitle = subtitle
         self.navArrow = navArrow
         self.imageName = imageName
         self.icon = icon
@@ -73,7 +75,10 @@ struct ListRowView: View {
                         }
                     }
                 }
-                if let song = song, let user = viewModel.currentUser {
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .modifier(SubtitleViewModifier())
+                } else if let song = song, let user = viewModel.currentUser {
                     if user.showDataUnderSong != "None" {
                         switch user.showDataUnderSong {
                         case "Show Lyrics":
@@ -112,13 +117,17 @@ struct ListRowView: View {
         .background(Material.regular)
         .foregroundColor(.primary)
         .modifier(ListViewModifier(capsule: {
-            if let song = song {
-                if let user = viewModel.currentUser {
-                    if let showDataUnderSong = user.showDataUnderSong {
-                        if showDataUnderSong == "None" {
-                            return true
+            if subtitle == nil {
+                if song != nil {
+                    if let user = viewModel.currentUser {
+                        if let showDataUnderSong = user.showDataUnderSong {
+                            if showDataUnderSong == "None" {
+                                return true
+                            } else {
+                                return false
+                            }
                         } else {
-                            return false
+                            return true
                         }
                     } else {
                         return true
@@ -127,7 +136,7 @@ struct ListRowView: View {
                     return true
                 }
             } else {
-                return true
+                return false
             }
         }()))
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 22))

@@ -250,17 +250,16 @@ struct MainView: View {
                             }
                         }
                         VStack {
-                            ListHeaderView(title: "Songs")
                             NavigationLink(destination: {
                                 RecentlyDeletedView()
                             }) {
-                                ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right")
+                                ListRowView(isEditing: .constant(false), title: "Recently Deleted", navArrow: "chevron.right")
                             }
                             NavigationLink(destination: {
                                 SongShareDetailView()
                             }) {
                                 ZStack {
-                                    ListRowView(isEditing: $isEditingSongs, title: "Share Invites", navArrow: "chevron.right")
+                                    ListRowView(isEditing: .constant(false), title: "Share Invites", navArrow: "chevron.right")
                                     HStack {
                                         Spacer()
                                         if !mainViewModel.incomingShareRequests.isEmpty {
@@ -272,6 +271,11 @@ struct MainView: View {
                                     }
                                     .padding()
                                 }
+                            }
+                            NavigationLink(destination: {
+                                LiveStagesView()
+                            }) {
+                                ListRowView(isEditing: .constant(false), title: "Live Stages", navArrow: "chevron.right")
                             }
                         }
                         VStack {
