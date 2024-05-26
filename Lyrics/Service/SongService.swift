@@ -251,8 +251,8 @@ class SongService {
 						if let song = song {
 							completedSongs.append(song)
 						}
+						group.leave()
 					} registrationCompletion: { _ in }
-					group.leave()
 				}
 				
 				group.notify(queue: .main) {
@@ -280,7 +280,7 @@ class SongService {
 			.collection("songs")
 			.document(id)
 		
-		if listen ?? true {
+		if (listen ?? true) == true {
 			let listenerReg = documentReference.addSnapshotListener { snapshot, error in
 				if let error = error {
 					print("Error listening to song \(id): \(error.localizedDescription)")
