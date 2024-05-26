@@ -315,12 +315,12 @@ struct ShareView: View {
 struct FullscreenMessage: View {
     let imageName: String
     let title: String
-    let spaceNavbar: Bool?
+    let spaceNavbar: Bool
     
     init(imageName: String, title: String, spaceNavbar: Bool? = nil) {
         self.imageName = imageName
         self.title = title
-        self.spaceNavbar = spaceNavbar
+        self.spaceNavbar = spaceNavbar ?? true
     }
     
     var body: some View {
@@ -332,7 +332,7 @@ struct FullscreenMessage: View {
                 .font(.title2.weight(.semibold))
                 .multilineTextAlignment(.center)
             Spacer()
-            if spaceNavbar != nil {
+            if spaceNavbar {
                 Spacer()
                     .frame(height: 35)
             }
