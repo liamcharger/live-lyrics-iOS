@@ -16,6 +16,7 @@ struct MainView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var sortViewModel = SortViewModel.shared
     @ObservedObject var notificationManager = NotificationManager.shared
+    @ObservedObject var networkManager = NetworkManager.shared
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
@@ -144,7 +145,6 @@ struct MainView: View {
     
     var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let pasteboard = UIPasteboard.general
-    let networkManager = NetworkManager.shared
     
     func sortedSongs(songs: [Song]) -> [Song] {
         return songs.sorted(by: { (song1, song2) -> Bool in

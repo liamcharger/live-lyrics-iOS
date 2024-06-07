@@ -16,6 +16,7 @@ struct UserPopover: View {
     @State var showRemoveSheet = false
     
     @ObservedObject var authViewModel = AuthViewModel.shared
+    @ObservedObject var networkManager = NetworkManager.shared
     
     let song: Song?
     let folder: Folder?
@@ -64,20 +65,31 @@ struct UserPopover: View {
                             .foregroundColor(.gray)
                         }
                         if songOrFolderUid() == authViewModel.currentUser?.id ?? "" {
-                            Button {
-                                showRemoveSheet = true
-                            } label: {
-                                HStack(spacing: 7) {
-                                    Text("Remove")
-                                    FAText(iconName: "square-arrow-right", size: 18)
+                            VStack(spacing: 6) {
+                                Button {
+                                    showRemoveSheet = true
+                                } label: {
+                                    HStack(spacing: 7) {
+                                        Text("Remove")
+                                        FAText(iconName: "square-arrow-right", size: 18)
+                                    }
+                                    .foregroundColor(.red)
+                                    .padding(10)
+                                    .padding(.horizontal, 8)
+                                    .background(Material.regular)
+                                    .clipShape(Capsule())
                                 }
-                                .foregroundColor(.red)
-                                .padding(10)
-                                .padding(.horizontal, 8)
-                                .background(Material.regular)
-                                .clipShape(Capsule())
+                                .frame(maxWidth: .infinity)
+                                .disabled(!networkManager.getNetworkState())
+                                .opacity(networkManager.getNetworkState() ? 1 : 0.5)
+                                if !networkManager.getNetworkState() {
+                                    Text(NSLocalizedString("connect_internet_remove_collab", comment: ""))
+                                        .multilineTextAlignment(.center)
+                                        .font(.callout)
+                                        .foregroundColor(.gray)
+                                        .padding(6)
+                                }
                             }
-                            .frame(maxWidth: .infinity)
                             .padding(12)
                         }
                         Spacer()
