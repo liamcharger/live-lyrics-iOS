@@ -231,27 +231,17 @@ class MainViewModel: ObservableObject {
 //    }
     
     func updateSongOrder(folder: Folder) {
-       let batch = Firestore.firestore().batch()
         for(order, song) in folderSongs.enumerated() {
             guard let songId = song.id else { continue }
             
-            let songRef = Firestore.firestore()
+            Firestore.firestore()
                 .collection("users")
                 .document(folder.uid!)
                 .collection("folders")
                 .document(folder.id!)
                 .collection("songs")
                 .document(songId)
-            
-            batch.updateData(["order": order], forDocument: songRef)
-        }
-        
-        batch.commit { error in
-            if let error = error {
-                print("Error updating order in Firestore: \(error.localizedDescription)")
-            } else {
-                print("Order updated in Firestore")
-            }
+                .updateData(["order": order])
         }
     }
     
