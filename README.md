@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="header.png"></img>
+<img src="images/header.png"></img>
 
 # Live Lyrics
 *Songwriting and live performances made simple*
@@ -16,7 +16,7 @@
 - Keep track of important notes for each song, ensuring you never miss a beat during rehearsals or performances.
 
 ## Release checklist:
-- Update Firebase Remote Config version value
+- Update Firebase Remote Config value for "*currentVersion*"
 - Confirm WhatsNewView row items are up-to-date
 - Generate new screenshots of updated views
 

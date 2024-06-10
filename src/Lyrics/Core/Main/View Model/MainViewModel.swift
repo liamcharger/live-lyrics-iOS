@@ -231,14 +231,22 @@ class MainViewModel: ObservableObject {
 //    }
     
     func updateSongOrder(folder: Folder) {
-        for(order, song) in folderSongs.enumerated() {
+        guard let folderUid = folder.uid, !folderUid.isEmpty,
+              let folderId = folder.id, !folderId.isEmpty else {
+            print("Invalid folder UID or ID")
+            return
+        }
+        
+        for (order, song) in folderSongs.enumerated() {
             guard let songId = song.id else { continue }
+            
+            print("\(song.title), \(order)")
             
             Firestore.firestore()
                 .collection("users")
-                .document(folder.uid!)
+                .document(folderUid)
                 .collection("folders")
-                .document(folder.id!)
+                .document(folderId)
                 .collection("songs")
                 .document(songId)
                 .updateData(["order": order])

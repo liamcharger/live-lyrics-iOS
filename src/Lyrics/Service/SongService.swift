@@ -246,6 +246,7 @@ class SongService {
 				let folderSongs = documents.compactMap { try? $0.data(as: FolderSong.self) }
 				
 				for folderSong in folderSongs {
+					print(folderSong.id ?? "" + ", ", folderSong.order)
 					group.enter()
 					self.fetchSong(listen: false, forUser: userId, withId: folderSong.id!) { song in
 						if let song = song {
