@@ -22,13 +22,7 @@ struct FolderSongDropViewDelegate: DropDelegate {
     
     func performDrop(info: DropInfo) -> Bool {
         draggedItem = nil
-        for song in mainViewModel.folderSongs {
-            print(song.order)
-        }
         self.mainViewModel.folderSongs = items
-        for song in mainViewModel.folderSongs {
-            print(song.order)
-        }
         self.mainViewModel.updateSongOrder(folder: folder)
         return true
     }

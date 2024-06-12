@@ -237,10 +237,9 @@ class MainViewModel: ObservableObject {
             return
         }
         
-        for (order, song) in folderSongs.enumerated() {
+        for song in folderSongs {
             guard let songId = song.id else { continue }
-            
-            print("\(song.title), \(order)")
+            guard let index = folderSongs.firstIndex(where: { $0.id ?? "" == song.id ?? "" }) else { continue }
             
             Firestore.firestore()
                 .collection("users")
@@ -249,7 +248,7 @@ class MainViewModel: ObservableObject {
                 .document(folderId)
                 .collection("songs")
                 .document(songId)
-                .updateData(["order": order])
+                .updateData(["order": index])
         }
     }
     
