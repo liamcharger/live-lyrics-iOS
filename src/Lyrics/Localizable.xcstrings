@@ -1,0 +1,917 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " has version %@ or newer of the app to receive this request." : {
+
+    },
+    "." : {
+
+    },
+    "%@" : {
+
+    },
+    "%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@"
+          }
+        }
+      }
+    },
+    "%lld Beats Per Minute" : {
+
+    },
+    "%lld BPB" : {
+
+    },
+    "%lld BPM" : {
+
+    },
+    "0.0" : {
+
+    },
+    "0.5" : {
+
+    },
+    "1" : {
+
+    },
+    "1.0" : {
+
+    },
+    "1.5" : {
+
+    },
+    "2" : {
+
+    },
+    "2:33" : {
+
+    },
+    "2.0" : {
+
+    },
+    "2.5" : {
+
+    },
+    "3" : {
+
+    },
+    "3.0" : {
+
+    },
+    "4" : {
+
+    },
+    "5" : {
+
+    },
+    "6" : {
+
+    },
+    "7" : {
+
+    },
+    "8" : {
+
+    },
+    "12" : {
+
+    },
+    "14" : {
+
+    },
+    "16" : {
+
+    },
+    "18" : {
+
+    },
+    "20" : {
+
+    },
+    "24" : {
+
+    },
+    "28" : {
+
+    },
+    "30" : {
+
+    },
+    "Add Songs" : {
+
+    },
+    "Alignment" : {
+
+    },
+    "All" : {
+
+    },
+    "An unknown error has occured." : {
+
+    },
+    "Are you sure you want to %@ \"%@\"?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Are you sure you want to %1$@ \"%2$@\"?"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete \"%@\"?" : {
+
+    },
+    "Are you sure you want to delete %@\"?" : {
+
+    },
+    "Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!" : {
+
+    },
+    "Are you sure you want to leave \"%@\"? You will lose access immediately." : {
+
+    },
+    "Are you sure you want to leave the shared folder \"%@\"?" : {
+
+    },
+    "Are you sure you want to log out? This action cannot be undone." : {
+
+    },
+    "Are you sure you want to permanently delete \"%@\"?" : {
+
+    },
+    "Are you sure you want to permanently delete \"%@\"? WARNING: This action cannot be undone!" : {
+
+    },
+    "Are you sure you want to remove \"%@\" as a collaborator from this %@? They will immediately lose access." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Are you sure you want to remove \"%1$@\" as a collaborator from this %2$@? They will immediately lose access."
+          }
+        }
+      }
+    },
+    "Artist" : {
+
+    },
+    "Audio" : {
+
+    },
+    "autoscroll" : {
+      "comment" : "Autoscroll",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoscroll"
+          }
+        }
+      }
+    },
+    "Black" : {
+
+    },
+    "Bold" : {
+
+    },
+    "By signing up, you're agree to our " : {
+
+    },
+    "Can't save song to \"%@\"" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Center" : {
+
+    },
+    "Change Password" : {
+
+    },
+    "Characters" : {
+
+    },
+    "Check your email for further instructions." : {
+
+    },
+    "Clear" : {
+
+    },
+    "Close" : {
+
+    },
+    "Collaborate" : {
+
+    },
+    "connect_internet_remove_collab" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect to the internet to remove collaborators."
+          }
+        }
+      }
+    },
+    "continue" : {
+      "comment" : "Continue",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
+    "Copy" : {
+
+    },
+    "Copy Lyrics" : {
+
+    },
+    "Copy Song ID" : {
+
+    },
+    "Copy Title" : {
+
+    },
+    "Date" : {
+
+    },
+    "Date Created" : {
+
+    },
+    "Default" : {
+
+    },
+    "delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "Delete" : {
+
+    },
+    "Delete Account" : {
+
+    },
+    "Delete Folder" : {
+
+    },
+    "Delete Song" : {
+
+    },
+    "Delete User Account" : {
+
+    },
+    "Delete Variation" : {
+
+    },
+    "delete_account_confirmation_short" : {
+      "comment" : "Are you sure you want to delete this account?",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this account?"
+          }
+        }
+      }
+    },
+    "Deleted songs are stored for thirty days before being permanently removed." : {
+
+    },
+    "Deselect" : {
+
+    },
+    "Done" : {
+
+    },
+    "duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
+    },
+    "E" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Edit Folder" : {
+
+    },
+    "Edit Profile" : {
+
+    },
+    "Edit Song" : {
+
+    },
+    "Edit Variation" : {
+
+    },
+    "enable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable"
+          }
+        }
+      }
+    },
+    "Enable\nWord Count" : {
+
+    },
+    "Enable Autoscroll" : {
+
+    },
+    "Enter a name for your folder." : {
+
+    },
+    "Enter a name for your new variation." : {
+
+    },
+    "Enter a name for your song." : {
+
+    },
+    "Enter the email associated with your account." : {
+
+    },
+    "Enter the lyrics for the variation." : {
+
+    },
+    "Enter the lyrics for your song." : {
+
+    },
+    "Enter your email." : {
+
+    },
+    "error" : {
+      "comment" : "Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        }
+      }
+    },
+    "Error" : {
+
+    },
+    "error_deleting_account" : {
+      "comment" : "There was an error deleting your account"
+    },
+    "first_signin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next, let's sign you in."
+          }
+        }
+      }
+    },
+    "Font Size" : {
+
+    },
+    "Font Style" : {
+
+    },
+    "Font Weight" : {
+
+    },
+    "Forgot Password?" : {
+
+    },
+    "good_afternoon" : {
+      "comment" : "Good Afternoon.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good Afternoon."
+          }
+        }
+      }
+    },
+    "good_evening" : {
+      "comment" : "Good Evening.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good Evening."
+          }
+        }
+      }
+    },
+    "good_morning" : {
+      "comment" : "Good Morning.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good Morning."
+          }
+        }
+      }
+    },
+    "Heavy" : {
+
+    },
+    "hello" : {
+      "comment" : "Hello",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hello"
+          }
+        }
+      }
+    },
+    "hop_right_in" : {
+      "comment" : "Let's hop back in.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let's hop right in."
+          }
+        }
+      }
+    },
+    "Including variation%@:" : {
+
+    },
+    "Incorrect password." : {
+
+    },
+    "Introducing Play View" : {
+
+    },
+    "Introducing Variations" : {
+
+    },
+    "issue_deleting_account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There was an issue deleting your account"
+          }
+        }
+      }
+    },
+    "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more." : {
+
+    },
+    "Key" : {
+
+    },
+    "Key: %@" : {
+
+    },
+    "Leave" : {
+
+    },
+    "Leave Folder" : {
+
+    },
+    "Leave Song" : {
+
+    },
+    "Left" : {
+
+    },
+    "Light" : {
+
+    },
+    "Line Spacing" : {
+
+    },
+    "live_lyrics" : {
+      "comment" : "Live Lyrics.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live Lyrics."
+          }
+        }
+      }
+    },
+    "loading" : {
+
+    },
+    "Loading Ads..." : {
+
+    },
+    "loading_ads" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading ads..."
+          }
+        }
+      }
+    },
+    "Login" : {
+
+    },
+    "Logout" : {
+
+    },
+    "Looking to adjust scroll speed?" : {
+
+    },
+    "Lyrics" : {
+
+    },
+    "Make sure that " : {
+
+    },
+    "Manage" : {
+
+    },
+    "Medium" : {
+
+    },
+    "METRONOME" : {
+
+    },
+    "Metronome Style" : {
+
+    },
+    "Monospaced" : {
+
+    },
+    "Move" : {
+
+    },
+    "Move \"%@\"" : {
+
+    },
+    "Name" : {
+
+    },
+    "New" : {
+
+    },
+    "New Variation" : {
+
+    },
+    "new_in_live_lyrics" : {
+      "comment" : "What's New in Live Lyrics",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What's New?"
+          }
+        }
+      }
+    },
+    "next" : {
+      "comment" : "Next",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
+    },
+    "No account? " : {
+
+    },
+    "No artist" : {
+
+    },
+    "No Folders" : {
+
+    },
+    "No Songs" : {
+
+    },
+    "None" : {
+
+    },
+    "Notes" : {
+
+    },
+    "notes_tip" : {
+      "comment" : "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances."
+          }
+        }
+      }
+    },
+    "OK" : {
+
+    },
+    "One-Time Purchase" : {
+
+    },
+    "Paragraphs" : {
+
+    },
+    "Passwords don't match." : {
+
+    },
+    "Performance Mode" : {
+
+    },
+    "Pin" : {
+
+    },
+    "Play View introduces a new, distraction free way to experience live performances, designed for performers, by performers." : {
+
+    },
+    "play_view_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance."
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+
+    },
+    "Read Only:" : {
+
+    },
+    "Register" : {
+
+    },
+    "Regular" : {
+
+    },
+    "Remove" : {
+
+    },
+    "Remove Collaborator?" : {
+
+    },
+    "Remove from Folder" : {
+
+    },
+    "Restore" : {
+
+    },
+    "Restore In-App Purchases" : {
+
+    },
+    "Restore to Defaults" : {
+
+    },
+    "resume" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume"
+          }
+        }
+      }
+    },
+    "Right" : {
+
+    },
+    "Rounded" : {
+
+    },
+    "save" : {
+      "comment" : "Save",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
+    "Select" : {
+
+    },
+    "select_item_from_sidebar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select an item from the sidebar to continue."
+          }
+        }
+      }
+    },
+    "Semibold" : {
+
+    },
+    "Send" : {
+
+    },
+    "Send Copy" : {
+
+    },
+    "Send Feeback" : {
+
+    },
+    "Serif" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Share" : {
+
+    },
+    "Shared" : {
+
+    },
+    "SHARED WITH" : {
+
+    },
+    "Sign In" : {
+
+    },
+    "Sign Up" : {
+
+    },
+    "song" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Song"
+          }
+        }
+      }
+    },
+    "Song Subtitle" : {
+
+    },
+    "songs_parent_will_be_left" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WARNING: leaving this song will also leave its parent folder!"
+          }
+        }
+      }
+    },
+    "Sort By" : {
+
+    },
+    "Spaces" : {
+
+    },
+    "Success" : {
+
+    },
+    "Success!" : {
+
+    },
+    "Tags" : {
+
+    },
+    "Tap to enter your notes..." : {
+
+    },
+    "thanks_for_updating" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks for updating!"
+          }
+        }
+      }
+    },
+    "The duration is not formatted correctly. Correct formatting, e.g., " : {
+
+    },
+    "These settings are not specific to song variations." : {
+
+    },
+    "Thin" : {
+
+    },
+    "Tip" : {
+
+    },
+    "Title" : {
+
+    },
+    "To adjust the scroll speed, update the song's duration field in its edit view." : {
+
+    },
+    "Type:" : {
+
+    },
+    "Ultra Light" : {
+
+    },
+    "Unpin" : {
+
+    },
+    "Variations" : {
+
+    },
+    "Vibrations" : {
+
+    },
+    "WARNING: This action is permanant and cannot be undone!" : {
+
+    },
+    "welcome" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        }
+      }
+    },
+    "welcome_to" : {
+      "comment" : "Welcome to",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to"
+          }
+        }
+      }
+    },
+    "Word Count Style" : {
+
+    },
+    "Words" : {
+
+    },
+    "You need to add lyrics to a variation to create it." : {
+
+    },
+    "You no longer have access to this song." : {
+
+    },
+    "Your changes were saved." : {
+
+    },
+    "Your password must be at least 6 characters long." : {
+
+    },
+    "Your song doesn't have any lyrics. Continue anyway?" : {
+
+    }
+  },
+  "version" : "1.0"
+}

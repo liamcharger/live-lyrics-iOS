@@ -501,6 +501,7 @@ struct PlayView: View {
                                     if isPlayingMetronome {
                                         stopTimer()
                                     } else {
+                                        loadSounds()
                                         startTimer()
                                     }
                                 } label: {
@@ -624,7 +625,6 @@ struct PlayView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            loadSounds()
             UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
