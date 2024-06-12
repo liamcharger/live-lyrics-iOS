@@ -125,7 +125,7 @@ struct ProfileView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("save", comment: "Save"))
+                    Text("Save")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())

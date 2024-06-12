@@ -64,7 +64,7 @@ struct NewSongVariationView: View {
             Button(action: {view2.toggle()}, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
@@ -112,7 +112,7 @@ struct NewSongVariationView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())

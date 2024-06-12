@@ -61,7 +61,7 @@ struct ResetPasswordView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())

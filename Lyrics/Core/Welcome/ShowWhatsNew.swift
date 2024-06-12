@@ -29,7 +29,7 @@ struct ShowWhatsNew: View {
             ZStack {
                 VStack {
                     Spacer()
-                    Text(NSLocalizedString("hop_right_in", comment: "Let's hop back in."))
+                    Text("Let's hop back in.")
                         .font(.largeTitle.bold())
                     Spacer()
                     Button {
@@ -46,7 +46,7 @@ struct ShowWhatsNew: View {
                             NotificationManager.shared.updateAppVersion()
                         }
                     } label: {
-                        Text(NSLocalizedString("continue", comment: "Continue"))
+                        Text("Continue")
                             .modifier(NavButtonViewModifier())
                     }
                 }
@@ -56,11 +56,11 @@ struct ShowWhatsNew: View {
                 FeaturesView(animState: $animState)
                     .scaleEffect(animState == .third ? 1.0 : 0.2)
                     .blur(radius: animState == .third ? 0 : 20)
-                Text(NSLocalizedString("welcome_to", comment: "Welcome to") + " " + NSLocalizedString("live_lyrics", comment: "Live Lyrics."))
+                Text("Welcome to Live Lyrics.")
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .second ? 1.0 : 0.2)
                     .blur(radius: animState == .second ? 0 : 20)
-                Text(NSLocalizedString("hello", comment: "Hello"))
+                Text("Hello")
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .first ? 1.0 : 0.2)
                     .blur(radius: animState == .first ? 0 : 20)

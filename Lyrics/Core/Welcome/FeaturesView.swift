@@ -20,7 +20,7 @@ struct FeaturesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(NSLocalizedString("new_in_live_lyrics", comment: "What's New in Live Lyrics"))
+            Text("What's New in Live Lyrics")
                 .frame(maxWidth: .infinity)
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
@@ -47,10 +47,10 @@ struct FeaturesView: View {
                 }
             } label: {
                 if selectedTab < features.count - 1 {
-                    Text(NSLocalizedString("next", comment: "Next"))
+                    Text("Next")
                         .modifier(NavButtonViewModifier())
                 } else {
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                         .modifier(NavButtonViewModifier())
                 }
             }

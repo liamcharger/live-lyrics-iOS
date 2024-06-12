@@ -510,7 +510,7 @@ struct MainView: View {
                                                                     } else {
                                                                         HStack(spacing: 7) {
                                                                             ProgressView()
-                                                                            Text(NSLocalizedString("loading", comment: ""))
+                                                                            Text("Loading")
                                                                                 .foregroundColor(.gray)
                                                                         }
                                                                         .padding([.horizontal, .bottom], 12)

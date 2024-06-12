@@ -21,6 +21,8 @@ class AuthViewModel: ObservableObject {
     private let service = UserService()
     private let songService = SongService()
     
+    let error_deleting_account_string = "There was an error deleting your account"
+    
     static let shared = AuthViewModel()
     
     init() {
@@ -113,13 +115,13 @@ class AuthViewModel: ObservableObject {
         
         user?.delete { error in
             if let error = error {
-                completion(true, NSLocalizedString("error_deleting_account", comment: "There was an error deleting your account"))
+                completion(true, self.error_deleting_account_string)
                 print(error.localizedDescription)
                 return
             }
             Firestore.firestore().collection("users").document(self.currentUser?.id ?? "").delete { error in
                 if let error = error {
-                    completion(true, NSLocalizedString("error_deleting_account", comment: "There was an error deleting your account"))
+                    completion(true, self.error_deleting_account_string)
                     print(error.localizedDescription)
                     return
                 }

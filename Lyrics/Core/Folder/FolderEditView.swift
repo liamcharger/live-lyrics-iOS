@@ -65,7 +65,7 @@ struct FolderEditView: View {
                     }
                 }
             } label: {
-                Text(NSLocalizedString("save", comment: "Save"))
+                Text("Save")
                     .frame(maxWidth: .infinity)
                     .modifier(NavButtonViewModifier())
             }
@@ -74,7 +74,7 @@ struct FolderEditView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .onAppear {
             isFocused = true

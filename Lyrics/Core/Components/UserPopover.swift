@@ -83,7 +83,7 @@ struct UserPopover: View {
                                 .disabled(!networkManager.getNetworkState())
                                 .opacity(networkManager.getNetworkState() ? 1 : 0.5)
                                 if !networkManager.getNetworkState() {
-                                    Text(NSLocalizedString("connect_internet_remove_collab", comment: ""))
+                                    Text("Connect to the internet to remove collaborators.")
                                         .multilineTextAlignment(.center)
                                         .font(.callout)
                                         .foregroundColor(.gray)

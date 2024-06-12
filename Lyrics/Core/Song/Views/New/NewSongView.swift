@@ -69,7 +69,7 @@ struct NewSongView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
@@ -117,7 +117,7 @@ struct NewSongView: View {
                     createSong()
                 }
             } label: {
-                Text(NSLocalizedString("continue", comment: "Continue"))
+                Text("Continue")
                     .modifier(NavButtonViewModifier())
             }
             .padding()
@@ -126,7 +126,7 @@ struct NewSongView: View {
             Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert("Your song doesn't have any lyrics. Continue anyway?", isPresented: $showInfo, actions: {
-            Button(action: createSong, label: {Text(NSLocalizedString("continue", comment: "Continue"))})
+            Button(action: createSong, label: {Text("Continue")})
             Button(role: .cancel, action: {}, label: {Text("Cancel")})
         })
         .onAppear {

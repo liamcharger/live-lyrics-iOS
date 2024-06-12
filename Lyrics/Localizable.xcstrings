@@ -120,7 +120,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Are you sure you want to %1$@ \"%2$@\"?"
           }
         }
@@ -213,26 +213,11 @@
     "Collaborate" : {
 
     },
-    "connect_internet_remove_collab" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect to the internet to remove collaborators."
-          }
-        }
-      }
+    "Connect to the internet to remove collaborators." : {
+
     },
-    "continue" : {
-      "comment" : "Continue",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
-          }
-        }
-      }
+    "Continue" : {
+
     },
     "Copy" : {
 
@@ -254,17 +239,6 @@
     },
     "Default" : {
 
-    },
-    "delete" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
-          }
-        }
-      }
     },
     "Delete" : {
 
@@ -304,19 +278,8 @@
     "Done" : {
 
     },
-    "duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
     "E" : {
-
+      "comment" : "Used for explicit songs"
     },
     "Edit" : {
 
@@ -332,17 +295,6 @@
     },
     "Edit Variation" : {
 
-    },
-    "enable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable"
-          }
-        }
-      }
     },
     "Enable\nWord Count" : {
 
@@ -384,20 +336,6 @@
     },
     "Error" : {
 
-    },
-    "error_deleting_account" : {
-      "comment" : "There was an error deleting your account"
-    },
-    "first_signin" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next, let's sign you in."
-          }
-        }
-      }
     },
     "Font Size" : {
 
@@ -447,27 +385,8 @@
     "Heavy" : {
 
     },
-    "hello" : {
-      "comment" : "Hello",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hello"
-          }
-        }
-      }
-    },
-    "hop_right_in" : {
-      "comment" : "Let's hop back in.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Let's hop right in."
-          }
-        }
-      }
+    "Hello" : {
+
     },
     "Including variation%@:" : {
 
@@ -513,6 +432,9 @@
     "Left" : {
 
     },
+    "Let's hop back in." : {
+
+    },
     "Light" : {
 
     },
@@ -530,22 +452,11 @@
         }
       }
     },
-    "loading" : {
+    "Loading" : {
 
     },
     "Loading Ads..." : {
 
-    },
-    "loading_ads" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading ads..."
-          }
-        }
-      }
     },
     "Login" : {
 
@@ -560,7 +471,7 @@
 
     },
     "Make sure that " : {
-
+      "comment" : "Used in ShareView \"Make sure that (username is using version _._._ or higher)\""
     },
     "Manage" : {
 
@@ -592,27 +503,8 @@
     "New Variation" : {
 
     },
-    "new_in_live_lyrics" : {
-      "comment" : "What's New in Live Lyrics",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What's New?"
-          }
-        }
-      }
-    },
-    "next" : {
-      "comment" : "Next",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next"
-          }
-        }
-      }
+    "Next" : {
+
     },
     "No account? " : {
 
@@ -632,16 +524,8 @@
     "Notes" : {
 
     },
-    "notes_tip" : {
-      "comment" : "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances."
-          }
-        }
-      }
+    "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances." : {
+
     },
     "OK" : {
 
@@ -661,19 +545,8 @@
     "Pin" : {
 
     },
-    "Play View introduces a new, distraction free way to experience live performances, designed for performers, by performers." : {
+    "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance." : {
 
-    },
-    "play_view_description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance."
-          }
-        }
-      }
     },
     "Privacy Policy" : {
 
@@ -705,17 +578,6 @@
     "Restore to Defaults" : {
 
     },
-    "resume" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resume"
-          }
-        }
-      }
-    },
     "Right" : {
 
     },
@@ -733,19 +595,11 @@
         }
       }
     },
-    "Select" : {
+    "Save" : {
 
     },
-    "select_item_from_sidebar" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select an item from the sidebar to continue."
-          }
-        }
-      }
+    "Select" : {
+
     },
     "Semibold" : {
 
@@ -780,17 +634,6 @@
     "Sign Up" : {
 
     },
-    "song" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Song"
-          }
-        }
-      }
-    },
     "Song Subtitle" : {
 
     },
@@ -821,17 +664,6 @@
     },
     "Tap to enter your notes..." : {
 
-    },
-    "thanks_for_updating" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Thanks for updating!"
-          }
-        }
-      }
     },
     "The duration is not formatted correctly. Correct formatting, e.g., " : {
 
@@ -869,16 +701,8 @@
     "WARNING: This action is permanant and cannot be undone!" : {
 
     },
-    "welcome" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome"
-          }
-        }
-      }
+    "Welcome to Live Lyrics." : {
+
     },
     "welcome_to" : {
       "comment" : "Welcome to",
@@ -890,6 +714,9 @@
           }
         }
       }
+    },
+    "What's New in Live Lyrics" : {
+
     },
     "Word Count Style" : {
 
