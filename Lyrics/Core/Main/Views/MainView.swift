@@ -255,9 +255,9 @@ struct MainView: View {
     
     var content: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: "Home", navType: .home, showBackButton: false)
+            CustomNavBar(title: NSLocalizedString("home", comment: ""), navType: .home, showBackButton: false)
                 .padding([.top, .horizontal])
-            .padding(.bottom, 12)
+                .padding(.bottom, 12)
             Divider()
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -283,13 +283,13 @@ struct MainView: View {
                             NavigationLink(destination: {
                                 RecentlyDeletedView()
                             }) {
-                                ListRowView(isEditing: $isEditingSongs, title: "Recently Deleted", navArrow: "chevron.right")
+                                ListRowView(isEditing: $isEditingSongs, title: NSLocalizedString("recently_deleted", comment: ""), navArrow: "chevron.right")
                             }
                             NavigationLink(destination: {
                                 SongShareDetailView()
                             }) {
                                 ZStack {
-                                    ListRowView(isEditing: $isEditingSongs, title: "Share Invites", navArrow: "chevron.right")
+                                    ListRowView(isEditing: $isEditingSongs, title: NSLocalizedString("share_invites", comment: ""), navArrow: "chevron.right")
                                     HStack {
                                         Spacer()
                                         if !mainViewModel.incomingShareRequests.isEmpty {
@@ -306,7 +306,7 @@ struct MainView: View {
                         VStack {
                             VStack {
                                 HStack {
-                                    ListHeaderView(title: "Folders")
+                                    ListHeaderView(title: NSLocalizedString("folders", comment: ""))
                                     Spacer()
                                     Button {
                                         clearSearch()
@@ -336,7 +336,7 @@ struct MainView: View {
                                     .rotationEffect(Angle(degrees: isFoldersCollapsed ? 90 : 0))
                                 }
                                 if showFolderSearch {
-                                    CustomSearchBar(text: $folderSearchText, imageName: "magnifyingglass", placeholder: "Search")
+                                    CustomSearchBar(text: $folderSearchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
                                         .padding(.bottom)
                                 }
                             }
@@ -674,7 +674,7 @@ struct MainView: View {
                         VStack {
                             VStack {
                                 HStack(spacing: 3) {
-                                    ListHeaderView(title: "My Songs")
+                                    ListHeaderView(title: NSLocalizedString("my_songs", comment: ""))
                                     Spacer()
                                     Button {
                                         clearSearch()
@@ -726,7 +726,7 @@ struct MainView: View {
                                     .rotationEffect(Angle(degrees: isSongsCollapsed ? 90 : 0))
                                 }
                                 if showSongSearch {
-                                    CustomSearchBar(text: $songSearchText, imageName: "magnifyingglass", placeholder: "Search")
+                                    CustomSearchBar(text: $songSearchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
                                         .padding(.bottom)
                                 }
                             }
@@ -847,7 +847,7 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $showSongEditSheet) {
                         if let selectedSong = selectedSong {
-                            SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? "Not Set"), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
+                            SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? NSLocalizedString("not_set", comment: "")), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
                         }
                     }
                     .sheet(isPresented: $showTagSheet) {

@@ -525,7 +525,7 @@ class SongService {
 				guard let snapshot = snapshot else { return }
 				guard let selectedSong = try? snapshot.data(as: Song.self) else { return }
 				
-				completion(selectedSong.title, selectedSong.key ?? "Not Set", selectedSong.artist ?? "Not Set", selectedSong.duration ?? "Not Set")
+				completion(selectedSong.title, selectedSong.key ?? NSLocalizedString("not_set", comment: ""), selectedSong.artist ?? NSLocalizedString("not_set", comment: ""), selectedSong.duration ?? NSLocalizedString("not_set", comment: ""))
 			}
 	}
 	

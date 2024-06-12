@@ -36,6 +36,8 @@ struct ShareView: View {
     
     @AppStorage("ShareView.recentSearches") var recentSearches = ""
     
+    @FocusState var isFocused: Bool
+    
     let song: Song?
     let folder: Folder?
     let userService = UserService()
@@ -176,7 +178,7 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil {
+            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil && songVariations.count >= 1 {
                 HStack {
                     Text("Including variation\(selectedVariations.count > 1 || selectedVariations.isEmpty ? "s" : ""):")
                     Spacer()
@@ -184,7 +186,7 @@ struct ShareView: View {
                         Button {
                             self.selectedVariations.removeAll()
                         } label: {
-                            Label("All", systemImage: selectedVariations.isEmpty ? "checkmark" : "")
+                            Label(NSLocalizedString("All", comment: ""), systemImage: selectedVariations.isEmpty ? "checkmark" : "")
                         }
                         Button {
                             if selectedVariations.contains(where: { $0.title == defaultVariationId}) {
@@ -195,7 +197,7 @@ struct ShareView: View {
                                 self.selectedVariations.append(SongVariation(title: defaultVariationId, lyrics: "", songUid: "", songId: ""))
                             }
                         } label: {
-                            Label("Default", systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
+                            Label(NSLocalizedString("Default", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
                         }
                         Divider()
                         ForEach(songVariations, id: \.id) { variation in
@@ -214,19 +216,19 @@ struct ShareView: View {
                     } label: {
                         HStack(spacing: 5) {
                             Text({
-                                if selectedVariations.isEmpty { 
-                                    return "All"
+                                if selectedVariations.isEmpty {
+                                    return NSLocalizedString("All", comment: "")
                                 } else {
                                     if selectedVariations.count == 1 {
                                         let title = selectedVariations.first?.title ?? ""
                                         
                                         if title == defaultVariationId {
-                                            return "Default"
+                                            return NSLocalizedString("Default", comment: "")
                                         } else {
                                             return title
                                         }
                                     } else {
-                                        return "Multiple"
+                                        return NSLocalizedString("multiple", comment: "")
                                     }
                                 }
                             }())
@@ -238,20 +240,22 @@ struct ShareView: View {
             }
             Divider()
             if networkManager.getNetworkState() {
-                CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search by username...")
+                CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search_by_username", comment: ""))
+                    .focused($isFocused)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .submitLabel(.search)
                     .onSubmit {
-                        if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) {
-                            recentSearches.append(",\(searchText)")
-                        }
                         firstSearch = false
                         if searchText == "" {
                             firstSearch = true
                             authViewModel.users = []
                         } else {
-                            authViewModel.fetchUsers(username: searchText)
+                            authViewModel.fetchUsers(username: searchText) {
+                                if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) && !authViewModel.users.isEmpty {
+                                    recentSearches.append(",\(searchText)")
+                                }
+                            }
                         }
                     }
                     .padding()
@@ -260,7 +264,7 @@ struct ShareView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) {
+                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) || firstSearch {
                         ScrollView {
                             VStack {
                                 if !authViewModel.users.isEmpty {
@@ -281,9 +285,9 @@ struct ShareView: View {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }
                                     }
-                                } else if !recentSearches.isEmpty {
+                                } else if !recentSearches.isEmpty || firstSearch {
                                     HStack {
-                                        ListHeaderView(title: "Recently Searched")
+                                        ListHeaderView(title: NSLocalizedString("recently_searched", comment: ""))
                                         Spacer()
                                         Button {
                                             withAnimation(.bouncy(extraBounce: 0.1)) {
@@ -302,7 +306,7 @@ struct ShareView: View {
                                         if !search.isEmpty {
                                             Button {
                                                 searchText = search
-                                                authViewModel.fetchUsers(username: search)
+                                                authViewModel.fetchUsers(username: search) {}
                                             } label: {
                                                 Text(search)
                                                     .font(.body.weight(.semibold))

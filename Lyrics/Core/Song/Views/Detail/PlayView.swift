@@ -85,7 +85,7 @@ struct PlayView: View {
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
-        self.key = song.key ?? "Not Set"
+        self.key = song.key ?? NSLocalizedString("not_set", comment: "")
         self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
@@ -104,7 +104,7 @@ struct PlayView: View {
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
-        self.key = song.key ?? "Not Set"
+        self.key = song.key ?? NSLocalizedString("not_set", comment: "")
         self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
@@ -334,7 +334,7 @@ struct PlayView: View {
                             .font(.title2.weight(.bold))
                             .lineLimit(1).truncationMode(.tail)
                         Spacer()
-                        if key != "" && key != "Not Set" {
+                        if key != "" && key != NSLocalizedString("not_set", comment: "") {
                             Text("Key: " + key)
                                 .foregroundColor(Color.gray)
                                 .padding(.trailing, 6)
@@ -564,7 +564,7 @@ struct PlayView: View {
                         }) {
                             HStack {
                                 Image(systemName: isScrolling ? "stop" : "play")
-                                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
+                                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: ""))
                             }
                             .imageScale(.medium)
                             .padding()

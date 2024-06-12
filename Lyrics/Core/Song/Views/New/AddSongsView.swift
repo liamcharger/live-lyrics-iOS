@@ -145,7 +145,7 @@ struct AddSongsView: View {
                 ScrollView {
                     if showSearchBar {
                         HStack(spacing: 6) {
-                            CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: "Search")
+                            CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
                             Button(action: {
                                 withAnimation(.bouncy(extraBounce: 0.1)) {
                                     searchText = ""

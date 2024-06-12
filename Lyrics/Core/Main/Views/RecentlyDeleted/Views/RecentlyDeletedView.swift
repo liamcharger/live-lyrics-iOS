@@ -52,8 +52,8 @@ struct RecentlyDeletedView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: "Recently Deleted", navType: .recentlyDeleted, showBackButton: true)
-                CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: "Search")
+                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted, showBackButton: true)
+                CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
             }
             .padding()
             Divider()

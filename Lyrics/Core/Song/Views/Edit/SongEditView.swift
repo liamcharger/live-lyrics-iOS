@@ -71,9 +71,9 @@ struct SongEditView: View {
         self._duration = duration
         
         self._stateTitle = State(initialValue: title.wrappedValue)
-        self._stateArtist = State(initialValue: artist.wrappedValue == "Not Set" ? "": artist.wrappedValue)
-        self._stateKey = State(initialValue: key.wrappedValue == "Not Set" ? "": key.wrappedValue)
-        self._stateDuration = State(initialValue: duration.wrappedValue == "Not Set" ? "": duration.wrappedValue)
+        self._stateArtist = State(initialValue: artist.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": artist.wrappedValue)
+        self._stateKey = State(initialValue: key.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": key.wrappedValue)
+        self._stateDuration = State(initialValue: duration.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": duration.wrappedValue)
     }
     
     var body: some View {
@@ -88,10 +88,10 @@ struct SongEditView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {
-                    CustomTextField(text: $stateTitle, placeholder: "Title")
-                    CustomTextField(text: $stateKey, placeholder: "Key")
-                    CustomTextField(text: $stateArtist, placeholder: "Artist")
-                    CustomTextField(text: $stateDuration, placeholder: "Duration")
+                    CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
+                    CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
+                    CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
+                    CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
                     if isInvalidFormat(stateDuration) {
                         Group {
                             Text("The duration is not formatted correctly. Correct formatting, e.g., ") +
@@ -110,7 +110,7 @@ struct SongEditView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.gray)
                 Button(action: update) {
-                    Text(NSLocalizedString("save", comment: "Save"))
+                    Text("Save")
                         .frame(maxWidth: .infinity)
                         .modifier(NavButtonViewModifier())
                 }
@@ -120,7 +120,7 @@ struct SongEditView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
     }
 }

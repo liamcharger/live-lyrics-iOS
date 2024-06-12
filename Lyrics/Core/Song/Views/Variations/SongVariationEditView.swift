@@ -49,12 +49,12 @@ struct SongVariationEditView: View {
             .padding()
             Divider()
             ScrollView {
-                CustomTextField(text: $title, placeholder: "Title")
+                CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
                     .padding()
             }
             Divider()
             Button(action: update) {
-                Text(NSLocalizedString("save", comment: "Save"))
+                Text("Save")
                     .frame(maxWidth: .infinity)
                     .modifier(NavButtonViewModifier())
             }
@@ -63,7 +63,7 @@ struct SongVariationEditView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
     }
 }

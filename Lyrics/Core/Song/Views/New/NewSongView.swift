@@ -59,7 +59,7 @@ struct NewSongView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $title, placeholder: "Title")
+            CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
                 .focused($isTitleFocused)
                 .padding()
             Spacer()
@@ -123,7 +123,7 @@ struct NewSongView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert("Your song doesn't have any lyrics. Continue anyway?", isPresented: $showInfo, actions: {
             Button(action: createSong, label: {Text("Continue")})

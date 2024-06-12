@@ -52,7 +52,7 @@ struct NewSongVariationView: View {
             .padding()
             Divider()
             Spacer()
-            TextField("Title", text: $title)
+            TextField(NSLocalizedString("title", comment: ""), text: $title)
                 .padding(14)
                 .background(Material.regular)
                 .clipShape(Capsule())
@@ -120,7 +120,7 @@ struct NewSongVariationView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showInfo) {
             Alert(title: Text("You need to add lyrics to a variation to create it."), dismissButton: .cancel() )

@@ -242,8 +242,8 @@ struct SongDetailView: View {
         self._lastUpdatedLyrics = State(initialValue: inputSong.lyrics)
         self._title = State(initialValue: inputSong.title)
         self._currentIndex = State(initialValue: inputSong.order ?? 0)
-        self._key = State(initialValue: inputSong.key == "" ? "Not Set" : inputSong.key ?? "Not Set")
-        self._artist = State(initialValue: inputSong.artist == "" ? "Not Set" : inputSong.artist ?? "Not Set")
+        self._key = State(initialValue: inputSong.key == "" ? NSLocalizedString("not_set", comment: "") : inputSong.key ?? NSLocalizedString("not_set", comment: ""))
+        self._artist = State(initialValue: inputSong.artist == "" ? NSLocalizedString("not_set", comment: "") : inputSong.artist ?? NSLocalizedString("not_set", comment: ""))
         self._duration = State(initialValue: inputSong.duration ?? "")
         self._bpm = State(initialValue: inputSong.bpm ?? 120)
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
@@ -359,7 +359,7 @@ struct SongDetailView: View {
                             }
                         }
                         Spacer()
-                        Text("Key: \(key == "" ? "Not Set" : key)").foregroundColor(Color.gray)
+                        Text("Key: \(key == "" ? NSLocalizedString("not_set", comment: "") : key)").foregroundColor(Color.gray)
                     }
                     .padding((((joinedUsers?.count ?? 0) > 0) && showJoinedUsers) ? [] : [.bottom])
                     if let joinedUsers = joinedUsers, joinedUsers.count > 0 && showJoinedUsers {
@@ -587,7 +587,7 @@ struct SongDetailView: View {
                     if let key = song.key, !key.isEmpty {
                         return key
                     } else {
-                        return "Not Set"
+                        return NSLocalizedString("not_set", comment: "")
                     }
                 }()
                 self.artist = song.artist ?? ""

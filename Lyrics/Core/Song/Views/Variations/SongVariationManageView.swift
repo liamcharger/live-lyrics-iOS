@@ -31,7 +31,7 @@ struct SongVariationManageView: View {
             .padding()
             Divider()
             if !songViewModel.isLoadingVariations && songVariations.isEmpty {
-                FullscreenMessage(imageName: "circle.slash", title: "It doesn't look like you have any variations for this song.", spaceNavbar: true)
+                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_variations_for_song", comment: ""), spaceNavbar: true)
             } else {
                 ScrollView {
                     VStack {
@@ -94,7 +94,7 @@ struct SongVariationManageView: View {
                 self.selectedVariation = nil
             }
         } message: {
-            Text("Are you sure you want to delete the variation \"" + (selectedVariation?.title ?? "") + "\"?")
+            Text("Are you sure you want to delete the variation \"\(selectedVariation?.title ?? "")\"?")
         }
     }
 }

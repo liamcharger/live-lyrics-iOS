@@ -171,12 +171,8 @@ struct SettingsView: View {
                         }
                     }
                     .padding()
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Material.regular)
-                            .mask { Capsule() }
-                    }
+                    .background(Material.regular)
+                    .cornerRadius(20)
                     .foregroundColor(.primary)
                     HStack(spacing: 7) {
                         Text("Metronome Style")
@@ -231,6 +227,7 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(spacing: 7) {
                                     Text("Restore In-App Purchases")
+                                        .multilineTextAlignment(.leading)
                                     Spacer()
                                 }
                                 .foregroundColor(.primary)
@@ -251,8 +248,6 @@ struct SettingsView: View {
                 .autocapitalization(.none)
                 .padding(.top)
                 .padding(.horizontal)
-                //                .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
-                //                .disabled(!NetworkManager.shared.getNetworkState())
             }
             Divider()
             Button {
@@ -267,17 +262,15 @@ struct SettingsView: View {
             } label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("save", comment: "Save"))
+                    Text("Save")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
             }
-//            .opacity(NetworkManager.shared.getNetworkState() ? 1 : 0.5)
-//            .disabled(!NetworkManager.shared.getNetworkState())
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
     }
 }

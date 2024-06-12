@@ -97,10 +97,10 @@ struct EditPasswordView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text("Your password must be at least 6 characters long."), dismissButton: .cancel(Text("Close")))
+            Alert(title: Text("Error"), message: Text("Your password must be at least 6 characters long."), dismissButton: .cancel(Text("Close")))
         }
         .onAppear {
             viewModel.fetchUser()

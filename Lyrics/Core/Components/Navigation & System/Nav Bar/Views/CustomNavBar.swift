@@ -45,7 +45,8 @@ struct CustomNavBar: View {
                 })
             }
             Text(title)
-                .lineLimit(1)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
                 .font(.system(size: 28, design: .rounded).weight(.bold))
             Spacer()
             HStack(spacing: 8) {

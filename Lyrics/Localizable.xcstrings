@@ -2,16 +2,44 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
     },
     " has version %@ or newer of the app to receive this request." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " tiene la versión %@ o más reciente de la aplicación para recibir esta solicitud."
+          }
+        }
+      }
     },
     "." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "."
+          }
+        }
+      }
     },
     "%@" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
     },
     "%lld %@" : {
       "localizations" : {
@@ -20,101 +48,324 @@
             "state" : "new",
             "value" : "%1$lld %2$@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld %2$@"
+          }
         }
       }
     },
     "%lld Beats Per Minute" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Pulsaciones por minuto"
+          }
+        }
+      }
     },
     "%lld BPB" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld GPC"
+          }
+        }
+      }
     },
     "%lld BPM" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld PPM"
+          }
+        }
+      }
     },
     "0.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0.0"
+          }
+        }
+      }
     },
     "0.5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0.5"
+          }
+        }
+      }
     },
     "1" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1"
+          }
+        }
+      }
     },
     "1.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.0"
+          }
+        }
+      }
     },
     "1.5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.5"
+          }
+        }
+      }
     },
     "2" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2"
+          }
+        }
+      }
     },
     "2:33" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2:33"
+          }
+        }
+      }
     },
     "2.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2.0"
+          }
+        }
+      }
     },
     "2.5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2.5"
+          }
+        }
+      }
     },
     "3" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3"
+          }
+        }
+      }
     },
     "3.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3.0"
+          }
+        }
+      }
     },
     "4" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4"
+          }
+        }
+      }
     },
     "5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5"
+          }
+        }
+      }
     },
     "6" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6"
+          }
+        }
+      }
     },
     "7" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7"
+          }
+        }
+      }
     },
     "8" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8"
+          }
+        }
+      }
     },
     "12" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12"
+          }
+        }
+      }
     },
     "14" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "14"
+          }
+        }
+      }
     },
     "16" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "16"
+          }
+        }
+      }
     },
     "18" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "18"
+          }
+        }
+      }
     },
     "20" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20"
+          }
+        }
+      }
     },
     "24" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "24"
+          }
+        }
+      }
     },
     "28" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "28"
+          }
+        }
+      }
     },
     "30" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30"
+          }
+        }
+      }
     },
     "Add Songs" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir canciones"
+          }
+        }
+      }
     },
     "Alignment" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alineación"
+          }
+        }
+      }
     },
     "All" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos"
+          }
+        }
+      }
     },
     "An unknown error has occured." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido."
+          }
+        }
+      }
     },
     "Are you sure you want to %@ \"%@\"?" : {
       "localizations" : {
@@ -123,32 +374,104 @@
             "state" : "translated",
             "value" : "Are you sure you want to %1$@ \"%2$@\"?"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas %1$@ “%2$@”?"
+          }
         }
       }
     },
     "Are you sure you want to delete \"%@\"?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar “%@”?"
+          }
+        }
+      }
     },
     "Are you sure you want to delete %@\"?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar %@”?"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete the variation \"%@\"?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres eliminar la variación “%@“?"
+          }
+        }
+      }
     },
     "Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar esta cuenta de usuario? ¡ADVERTENCIA: ESTA ACCIÓN ES PERMANENTE Y NO SE PUEDE DESHACER!"
+          }
+        }
+      }
     },
     "Are you sure you want to leave \"%@\"? You will lose access immediately." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas salir de “%@”? Perderás el acceso de inmediato."
+          }
+        }
+      }
     },
     "Are you sure you want to leave the shared folder \"%@\"?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas salir de la carpeta compartida “%@”?"
+          }
+        }
+      }
     },
     "Are you sure you want to log out? This action cannot be undone." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas cerrar sesión? Esta acción no se puede deshacer."
+          }
+        }
+      }
     },
     "Are you sure you want to permanently delete \"%@\"?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar \"%@\" de forma permanente?"
+          }
+        }
+      }
     },
     "Are you sure you want to permanently delete \"%@\"? WARNING: This action cannot be undone!" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar \"%@\" de forma permanente? ¡ADVERTENCIA: ¡Esta acción no se puede deshacer!"
+          }
+        }
+      }
     },
     "Are you sure you want to remove \"%@\" as a collaborator from this %@? They will immediately lose access." : {
       "localizations" : {
@@ -157,14 +480,34 @@
             "state" : "new",
             "value" : "Are you sure you want to remove \"%1$@\" as a collaborator from this %2$@? They will immediately lose access."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar \"%1$@\" como colaborador de este %2$@? Perderán el acceso de inmediato."
+          }
         }
       }
     },
     "Artist" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artista"
+          }
+        }
+      }
     },
     "Audio" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        }
+      }
     },
     "autoscroll" : {
       "comment" : "Autoscroll",
@@ -174,89 +517,301 @@
             "state" : "translated",
             "value" : "Autoscroll"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desplazamiento automático"
+          }
         }
       }
     },
     "Black" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Negro"
+          }
+        }
+      }
     },
     "Bold" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Negrita"
+          }
+        }
+      }
     },
     "By signing up, you're agree to our " : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al inscribirse, acepta nuestra "
+          }
+        }
+      }
     },
     "Can't save song to \"%@\"" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede guardar la canción en “%@”"
+          }
+        }
+      }
     },
     "Cancel" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
+      }
     },
     "Center" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Centrar"
+          }
+        }
+      }
     },
     "Change Password" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar contraseña"
+          }
+        }
+      }
     },
     "Characters" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caracteres"
+          }
+        }
+      }
     },
     "Check your email for further instructions." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifica tu correo electrónico para obtener instrucciones adicionales."
+          }
+        }
+      }
     },
     "Clear" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claro"
+          }
+        }
+      }
     },
     "Close" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        }
+      }
     },
     "Collaborate" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colabore"
+          }
+        }
+      }
     },
     "Connect to the internet to remove collaborators." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conéctate a Internet para eliminar colaboradores."
+          }
+        }
+      }
+    },
+    "connect_to_internet_to_view_share_invites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please connect to the internet to view your share requests."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conéctese a Internet para ver sus solicitudes de acciones."
+          }
+        }
+      }
     },
     "Continue" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
+        }
+      }
     },
     "Copy" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar"
+          }
+        }
+      }
     },
     "Copy Lyrics" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar letras"
+          }
+        }
+      }
     },
     "Copy Song ID" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar ID de canción"
+          }
+        }
+      }
     },
     "Copy Title" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar título"
+          }
+        }
+      }
     },
     "Date" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha"
+          }
+        }
+      }
     },
     "Date Created" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de creación"
+          }
+        }
+      }
     },
     "Default" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predeterminado"
+          }
+        }
+      }
     },
     "Delete" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        }
+      }
     },
     "Delete Account" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar cuenta"
+          }
+        }
+      }
     },
     "Delete Folder" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar carpeta"
+          }
+        }
+      }
     },
     "Delete Song" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar canción"
+          }
+        }
+      }
     },
     "Delete User Account" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar cuenta de usuario"
+          }
+        }
+      }
     },
     "Delete Variation" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar variación"
+          }
+        }
+      }
     },
     "delete_account_confirmation_short" : {
       "comment" : "Are you sure you want to delete this account?",
@@ -266,67 +821,209 @@
             "state" : "translated",
             "value" : "Are you sure you want to delete this account?"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar esta cuenta?"
+          }
         }
       }
     },
     "Deleted songs are stored for thirty days before being permanently removed." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las canciones eliminadas se almacenan durante treinta días antes de ser eliminadas permanentemente."
+          }
+        }
+      }
     },
     "Deselect" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deseleccionar"
+          }
+        }
+      }
     },
     "Done" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho"
+          }
+        }
+      }
+    },
+    "duration" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración"
+          }
+        }
+      }
     },
     "E" : {
-      "comment" : "Used for explicit songs"
+      "comment" : "Used for explicit songs",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E"
+          }
+        }
+      }
     },
     "Edit" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        }
+      }
     },
     "Edit Folder" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar carpeta"
+          }
+        }
+      }
     },
     "Edit Profile" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar perfil"
+          }
+        }
+      }
     },
     "Edit Song" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar canción"
+          }
+        }
+      }
     },
     "Edit Variation" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar variación"
+          }
+        }
+      }
     },
     "Enable\nWord Count" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar recuento de palabras"
+          }
+        }
+      }
     },
     "Enable Autoscroll" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar desplazamiento automático"
+          }
+        }
+      }
     },
     "Enter a name for your folder." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un nombre para tu carpeta."
+          }
+        }
+      }
     },
     "Enter a name for your new variation." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un nombre para tu nueva variación."
+          }
+        }
+      }
     },
     "Enter a name for your song." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un nombre para tu canción."
+          }
+        }
+      }
     },
     "Enter the email associated with your account." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa el correo electrónico asociado a tu cuenta."
+          }
+        }
+      }
     },
     "Enter the lyrics for the variation." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa la letra para la variación."
+          }
+        }
+      }
     },
     "Enter the lyrics for your song." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa la letra para tu canción."
+          }
+        }
+      }
     },
     "Enter your email." : {
-
-    },
-    "error" : {
-      "comment" : "Error",
       "localizations" : {
-        "en" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduzca su dirección de correo electrónico."
+          }
+        }
+      }
+    },
+    "Error" : {
+      "localizations" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error"
@@ -334,20 +1031,62 @@
         }
       }
     },
-    "Error" : {
-
+    "folders" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folders"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpetas"
+          }
+        }
+      }
     },
     "Font Size" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamaño de fuente"
+          }
+        }
+      }
     },
     "Font Style" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estilo de fuente"
+          }
+        }
+      }
     },
     "Font Weight" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso de la fuente"
+          }
+        }
+      }
     },
     "Forgot Password?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Olvidaste tu contraseña?"
+          }
+        }
+      }
     },
     "good_afternoon" : {
       "comment" : "Good Afternoon.",
@@ -356,6 +1095,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Good Afternoon."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas tardes."
           }
         }
       }
@@ -368,6 +1113,12 @@
             "state" : "translated",
             "value" : "Good Evening."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas noches."
+          }
         }
       }
     },
@@ -379,26 +1130,108 @@
             "state" : "translated",
             "value" : "Good Morning."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenos días."
+          }
         }
       }
     },
     "Heavy" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pesado"
+          }
+        }
+      }
     },
     "Hello" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hola"
+          }
+        }
+      }
+    },
+    "home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        }
+      }
     },
     "Including variation%@:" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluyendo la variación %@:"
+          }
+        }
+      }
+    },
+    "incoming" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incoming"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrante"
+          }
+        }
+      }
     },
     "Incorrect password." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contraseña incorrecta."
+          }
+        }
+      }
     },
     "Introducing Play View" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentación de Play View"
+          }
+        }
+      }
     },
     "Introducing Variations" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introducción de variaciones"
+          }
+        }
+      }
     },
     "issue_deleting_account" : {
       "extractionState" : "manual",
@@ -408,38 +1241,114 @@
             "state" : "translated",
             "value" : "There was an issue deleting your account"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha habido un problema al eliminar tu cuenta"
+          }
         }
       }
     },
     "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantén organizadas las versiones de tu canción creando variaciones para los acordes de guitarra, las partes vocales y mucho más."
+          }
+        }
+      }
     },
     "Key" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave"
+          }
+        }
+      }
     },
     "Key: %@" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave: %@"
+          }
+        }
+      }
     },
     "Leave" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deja"
+          }
+        }
+      }
     },
     "Leave Folder" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpeta de permisos"
+          }
+        }
+      }
     },
     "Leave Song" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dejar la canción"
+          }
+        }
+      }
     },
     "Left" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izquierda"
+          }
+        }
+      }
     },
     "Let's hop back in." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volvamos a entrar."
+          }
+        }
+      }
     },
     "Light" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luz"
+          }
+        }
+      }
     },
     "Line Spacing" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacio entre líneas"
+          }
+        }
+      }
     },
     "live_lyrics" : {
       "comment" : "Live Lyrics.",
@@ -449,193 +1358,788 @@
             "state" : "translated",
             "value" : "Live Lyrics."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live Lyrics."
+          }
         }
       }
     },
     "Loading" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando"
+          }
+        }
+      }
     },
     "Loading Ads..." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando anuncios..."
+          }
+        }
+      }
     },
     "Login" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio de sesión"
+          }
+        }
+      }
     },
     "Logout" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cierre de sesión"
+          }
+        }
+      }
     },
     "Looking to adjust scroll speed?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres ajustar la velocidad de desplazamiento?"
+          }
+        }
+      }
     },
     "Lyrics" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letra"
+          }
+        }
+      }
     },
     "Make sure that " : {
-      "comment" : "Used in ShareView \"Make sure that (username is using version _._._ or higher)\""
+      "comment" : "Used in ShareView \"Make sure that (username is using version _._._ or higher)\"",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrate de que"
+          }
+        }
+      }
     },
     "Manage" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestione"
+          }
+        }
+      }
     },
     "Medium" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medio"
+          }
+        }
+      }
     },
     "METRONOME" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "METRÓNOMO"
+          }
+        }
+      }
     },
     "Metronome Style" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estilo metrónomo"
+          }
+        }
+      }
     },
     "Monospaced" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monoespaciado"
+          }
+        }
+      }
     },
     "Move" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover"
+          }
+        }
+      }
     },
     "Move \"%@\"" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover “%@”"
+          }
+        }
+      }
     },
-    "Name" : {
-
-    },
-    "New" : {
-
-    },
-    "New Variation" : {
-
-    },
-    "Next" : {
-
-    },
-    "No account? " : {
-
-    },
-    "No artist" : {
-
-    },
-    "No Folders" : {
-
-    },
-    "No Songs" : {
-
-    },
-    "None" : {
-
-    },
-    "Notes" : {
-
-    },
-    "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances." : {
-
-    },
-    "OK" : {
-
-    },
-    "One-Time Purchase" : {
-
-    },
-    "Paragraphs" : {
-
-    },
-    "Passwords don't match." : {
-
-    },
-    "Performance Mode" : {
-
-    },
-    "Pin" : {
-
-    },
-    "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance." : {
-
-    },
-    "Privacy Policy" : {
-
-    },
-    "Read Only:" : {
-
-    },
-    "Register" : {
-
-    },
-    "Regular" : {
-
-    },
-    "Remove" : {
-
-    },
-    "Remove Collaborator?" : {
-
-    },
-    "Remove from Folder" : {
-
-    },
-    "Restore" : {
-
-    },
-    "Restore In-App Purchases" : {
-
-    },
-    "Restore to Defaults" : {
-
-    },
-    "Right" : {
-
-    },
-    "Rounded" : {
-
-    },
-    "save" : {
-      "comment" : "Save",
+    "multiple" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Save"
+            "value" : "Multiple"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Múltiples"
+          }
+        }
+      }
+    },
+    "my_songs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mis canciones"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
+          }
+        }
+      }
+    },
+    "New" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo"
+          }
+        }
+      }
+    },
+    "New Variation" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva variante"
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
+          }
+        }
+      }
+    },
+    "No account? " : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿No tiene cuenta?"
+          }
+        }
+      }
+    },
+    "No artist" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ningún artista"
+          }
+        }
+      }
+    },
+    "No Folders" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Folders"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin carpetas"
+          }
+        }
+      }
+    },
+    "No Songs" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin canciones"
+          }
+        }
+      }
+    },
+    "no_share_invites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It doesn't look like you have any shared songs/folders being sent or received."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No parece que tengas ninguna canción/carpeta compartida siendo enviada o recibida."
+          }
+        }
+      }
+    },
+    "no_variations_for_song" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It doesn't look like you have any variations for this song."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No parece que tengas ninguna variación para esta canción."
+          }
+        }
+      }
+    },
+    "None" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguno"
+          }
+        }
+      }
+    },
+    "not_set" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Set"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No fijado"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas"
+          }
+        }
+      }
+    },
+    "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las notas son guías valiosas que sirven para recordar detalles cruciales tanto en las sesiones de práctica como en las actuaciones."
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "One-Time Purchase" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compra única"
+          }
+        }
+      }
+    },
+    "outgoing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outgoing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saliente"
+          }
+        }
+      }
+    },
+    "Paragraphs" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párrafos"
+          }
+        }
+      }
+    },
+    "Passwords don't match." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las contraseñas no coinciden."
+          }
+        }
+      }
+    },
+    "Performance Mode" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo Rendimiento"
+          }
+        }
+      }
+    },
+    "Pin" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alfiler"
+          }
+        }
+      }
+    },
+    "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play View proporciona a los músicos un espacio libre de distracciones durante los conciertos, evitando que pulsen botones accidentalmente y permitiéndoles mantenerse totalmente concentrados en su actuación."
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        }
+      }
+    },
+    "Read Only:" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sólo lectura:"
+          }
+        }
+      }
+    },
+    "recently_deleted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Deleted"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrados recientemente"
+          }
+        }
+      }
+    },
+    "recently_searched" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Searched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Búsquedas recientes"
+          }
+        }
+      }
+    },
+    "Register" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regístrese en"
+          }
+        }
+      }
+    },
+    "Regular" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regular"
+          }
+        }
+      }
+    },
+    "Remove" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        }
+      }
+    },
+    "Remove Collaborator?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Eliminar colaborador?"
+          }
+        }
+      }
+    },
+    "Remove from Folder" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar de la carpeta"
+          }
+        }
+      }
+    },
+    "Restore" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar"
+          }
+        }
+      }
+    },
+    "Restore In-App Purchases" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar compras dentro de la aplicación"
+          }
+        }
+      }
+    },
+    "Restore to Defaults" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restablecer valores por defecto"
+          }
+        }
+      }
+    },
+    "Right" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derecha"
+          }
+        }
+      }
+    },
+    "Rounded" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redondeado"
           }
         }
       }
     },
     "Save" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
+        }
+      }
+    },
+    "search" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar en"
+          }
+        }
+      }
+    },
+    "search_by_username" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search by username…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar por nombre de usuario..."
+          }
+        }
+      }
     },
     "Select" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccione"
+          }
+        }
+      }
     },
     "Semibold" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semibold"
+          }
+        }
+      }
     },
     "Send" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar"
+          }
+        }
+      }
     },
     "Send Copy" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar copia"
+          }
+        }
+      }
     },
     "Send Feeback" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar comentarios"
+          }
+        }
+      }
     },
     "Serif" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serifa"
+          }
+        }
+      }
     },
     "Settings" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        }
+      }
     },
     "Share" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir"
+          }
+        }
+      }
+    },
+    "share_invites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Invites"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir invitaciones"
+          }
+        }
+      }
     },
     "Shared" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartido"
+          }
+        }
+      }
     },
     "SHARED WITH" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMPARTIDO CON"
+          }
+        }
+      }
     },
     "Sign In" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión"
+          }
+        }
+      }
     },
     "Sign Up" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inscribirse"
+          }
+        }
+      }
     },
     "Song Subtitle" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtítulo de la canción"
+          }
+        }
+      }
     },
     "songs_parent_will_be_left" : {
       "localizations" : {
@@ -644,65 +2148,285 @@
             "state" : "translated",
             "value" : "WARNING: leaving this song will also leave its parent folder!"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ADVERTENCIA: ¡al salir de esta canción también saldrá de su carpeta principal!"
+          }
         }
       }
     },
     "Sort By" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenar por"
+          }
+        }
+      }
     },
     "Spaces" : {
-
-    },
-    "Success" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacios"
+          }
+        }
+      }
     },
     "Success!" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Éxito!"
+          }
+        }
+      }
+    },
+    "tag_blue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul"
+          }
+        }
+      }
+    },
+    "tag_green" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Green"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde"
+          }
+        }
+      }
+    },
+    "tag_orange" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naranja"
+          }
+        }
+      }
+    },
+    "tag_red" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rojo"
+          }
+        }
+      }
+    },
+    "tag_yellow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yellow"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amarillo"
+          }
+        }
+      }
     },
     "Tags" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etiquetas"
+          }
+        }
+      }
     },
     "Tap to enter your notes..." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse para introducir sus notas..."
+          }
+        }
+      }
     },
     "The duration is not formatted correctly. Correct formatting, e.g., " : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La duración no está formateada correctamente. Formato correcto, p. ej, "
+          }
+        }
+      }
     },
     "These settings are not specific to song variations." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estos ajustes no son específicos de las variaciones de las canciones."
+          }
+        }
+      }
     },
     "Thin" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delgado"
+          }
+        }
+      }
     },
     "Tip" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consejo"
+          }
+        }
+      }
     },
-    "Title" : {
-
+    "title" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
+          }
+        }
+      }
     },
     "To adjust the scroll speed, update the song's duration field in its edit view." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para ajustar la velocidad de desplazamiento, actualice el campo de duración de la canción en su vista de edición."
+          }
+        }
+      }
     },
     "Type:" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo:"
+          }
+        }
+      }
     },
     "Ultra Light" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultraligero"
+          }
+        }
+      }
     },
     "Unpin" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desenganche"
+          }
+        }
+      }
     },
     "Variations" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Variaciones"
+          }
+        }
+      }
     },
     "Vibrations" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibraciones"
+          }
+        }
+      }
     },
     "WARNING: This action is permanant and cannot be undone!" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ADVERTENCIA: Esta acción es permanente y no se puede deshacer."
+          }
+        }
+      }
     },
     "Welcome to Live Lyrics." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a Live Lyrics."
+          }
+        }
+      }
     },
     "welcome_to" : {
       "comment" : "Welcome to",
@@ -712,32 +2436,94 @@
             "state" : "translated",
             "value" : "Welcome to"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a"
+          }
         }
       }
     },
     "What's New in Live Lyrics" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novedades de Live Lyrics."
+          }
+        }
+      }
     },
     "Word Count Style" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estilo de recuento de palabras"
+          }
+        }
+      }
     },
     "Words" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras"
+          }
+        }
+      }
     },
     "You need to add lyrics to a variation to create it." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es necesario añadir letra a una variación para crearla."
+          }
+        }
+      }
     },
     "You no longer have access to this song." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya no tienes acceso a esta canción."
+          }
+        }
+      }
     },
     "Your changes were saved." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus cambios se han guardado."
+          }
+        }
+      }
     },
     "Your password must be at least 6 characters long." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Su contraseña debe tener al menos 6 caracteres."
+          }
+        }
+      }
     },
     "Your song doesn't have any lyrics. Continue anyway?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu canción no tiene letra. ¿Continúa de todos modos?"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -144,7 +144,7 @@ struct ProfileView: View {
                 Image(systemName: "trash")
                     .font(.system(size: 34).weight(.semibold))
                     .foregroundColor(.red)
-                Text(NSLocalizedString("delete_account_confirmation_short", comment: "Are you sure you want to delete this account?"))
+                Text(NSLocalizedString("delete_account_confirmation_short", comment: ""))
                     .font(.largeTitle.weight(.bold))
                 Text("WARNING: This action is permanant and cannot be undone!")
                     .font(.title3.weight(.bold))
@@ -188,7 +188,7 @@ struct ProfileView: View {
             }
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Success!"), message: Text("Your changes were saved."), dismissButton: .cancel(Text("Close")))

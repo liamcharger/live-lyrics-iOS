@@ -91,7 +91,7 @@ struct LoginView: View {
             }
         }
         .alert(isPresented: $showError, content: {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         })
         .padding()
         .navigationBarHidden(true)

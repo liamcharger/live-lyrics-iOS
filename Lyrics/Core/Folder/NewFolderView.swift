@@ -35,7 +35,7 @@ struct NewFolderView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $title, placeholder: "Title")
+            CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
                 .padding()
                 .focused($isFocused)
             Spacer()
@@ -61,7 +61,7 @@ struct NewFolderView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)

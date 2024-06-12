@@ -46,7 +46,7 @@ struct FolderEditView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $text, placeholder: "Title")
+            CustomTextField(text: $text, placeholder: NSLocalizedString("title", comment: ""))
                 .focused($isFocused)
                 .padding(.horizontal)
             Spacer()
