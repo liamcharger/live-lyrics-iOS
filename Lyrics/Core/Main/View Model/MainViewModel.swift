@@ -231,24 +231,34 @@ class MainViewModel: ObservableObject {
 //    }
     
     func updateSongOrder(folder: Folder) {
+        let batch = Firestore.firestore().batch()
+        
         guard let folderUid = folder.uid, !folderUid.isEmpty,
               let folderId = folder.id, !folderId.isEmpty else {
             print("Invalid folder UID or ID")
             return
         }
         
-        for song in folderSongs {
+        for (index, song) in folderSongs.enumerated() {
             guard let songId = song.id else { continue }
-            guard let index = folderSongs.firstIndex(where: { $0.id ?? "" == song.id ?? "" }) else { continue }
             
-            Firestore.firestore()
+            let document = Firestore.firestore()
                 .collection("users")
                 .document(folderUid)
                 .collection("folders")
                 .document(folderId)
                 .collection("songs")
                 .document(songId)
-                .updateData(["order": index])
+            
+            batch.updateData(["order": index], forDocument: document)
+        }
+        
+        batch.commit { error in
+            if let error = error {
+                print("Error updating song order: \(error.localizedDescription)")
+            } else {
+                print("Song order updated successfully")
+            }
         }
     }
     

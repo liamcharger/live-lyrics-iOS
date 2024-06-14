@@ -227,7 +227,6 @@ class SongService {
 			.collection("folders")
 			.document(folderId)
 			.collection("songs")
-			.order(by: "order")
 			.addSnapshotListener { snapshot, error in
 				if let error = error {
 					print("Error fetching songs: \(error.localizedDescription)")
