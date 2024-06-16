@@ -2340,6 +2340,12 @@
     },
     "title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
