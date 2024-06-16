@@ -646,11 +646,17 @@
         }
       }
     },
-    "Connect to the internet to remove collaborators." : {
+    "Connect to the internet to edit collaborator permissions." : {
       "localizations" : {
-        "es" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Connect to the internet to edit collaborator permissions."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Conéctate a Internet para eliminar colaboradores."
           }
         }
@@ -1805,6 +1811,9 @@
           }
         }
       }
+    },
+    "Read only:" : {
+
     },
     "Read Only:" : {
       "localizations" : {

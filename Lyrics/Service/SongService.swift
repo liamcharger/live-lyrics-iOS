@@ -166,6 +166,42 @@ class SongService {
 			}
 	}
 	
+	func fetchSharedSong(user: User, song: Song, completion: @escaping(SharedSong) -> Void) {
+		guard let uid = user.id else { return }
+		guard let songId = song.id else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(songId).getDocument { snapshot, error in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+			
+			guard let sharedSong = try? snapshot?.data(as: SharedSong.self) else {
+				print("SharedSong song not found.")
+				return
+			}
+			
+			completion(sharedSong)
+		}
+	}
+	
+	func fetchSharedFolder(user: User, folder: Folder, completion: @escaping(SharedFolder) -> Void) {
+		guard let uid = user.id else { return }
+		guard let folderId = folder.id else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("shared-folders").document(folderId).getDocument { snapshot, error in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+			
+			guard let sharedFolder = try? snapshot?.data(as: SharedFolder.self) else {
+				print("SharedSong song not found.")
+				return
+			}
+			
+			completion(sharedFolder)
+		}
+	}
+	
 	func fetchRecentlyDeletedSongs(completion: @escaping ([RecentlyDeletedSong]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		

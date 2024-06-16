@@ -31,6 +31,7 @@ class MainViewModel: ObservableObject {
     @Published var isLoadingInvites = true
     @Published var isLoadingSharedSongs = true
     @Published var isLoadingSharedFolders = true
+    @Published var isLoadingSharedMedia = true
     
     @Published var systemDoc: SystemDoc?
     
@@ -151,6 +152,40 @@ class MainViewModel: ObservableObject {
                 self.sharedFolders = folders
                 self.isLoadingSharedFolders = false
             }
+        }
+    }
+    
+    func fetchSharedObject(user: User, song: Song?, folder: Folder?, completion: @escaping(SharedSong?, SharedFolder?) -> Void) {
+        self.isLoadingSharedMedia = true
+        if let song = song {
+            service.fetchSharedSong(user: user, song: song) { song in
+                completion(song, nil)
+            }
+        } else if let folder = folder {
+            service.fetchSharedFolder(user: user, folder: folder) { folder in
+                completion(nil, folder)
+            }
+        }
+        self.isLoadingSharedMedia = false
+    }
+    
+    func updateSharedMediaReadOnly(user: User, song: Song? = nil, folder: Folder? = nil, readOnly: Bool) {
+        guard let uid = user.id else { return }
+        
+        var id: String {
+            if let song = song {
+                return song.id ?? ""
+            } else if let folder = folder {
+                return folder.id ?? ""
+            }
+            return ""
+        }
+        
+        Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(id).updateData(["readOnly": readOnly]) { error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            print("ReadOnly: updated successfully")
         }
     }
     

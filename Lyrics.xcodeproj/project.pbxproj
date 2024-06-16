@@ -116,6 +116,7 @@
 		E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC33262A040D5500CC38C6 /* SongViewModel.swift */; };
 		E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF12D2A18074C00DE8265 /* NewFolderView.swift */; };
 		E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF1372A181D2500DE8265 /* SongEditView.swift */; };
+		E0D21B912C1E833800476B3C /* UserPopoverRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */; };
 		E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */; };
 		E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */; };
 		E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D411BD2A9FF12300859E4E /* Notification.swift */; };
@@ -257,6 +258,7 @@
 		E0CC33262A040D5500CC38C6 /* SongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongViewModel.swift; sourceTree = "<group>"; };
 		E0CDF12D2A18074C00DE8265 /* NewFolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFolderView.swift; sourceTree = "<group>"; };
 		E0CDF1372A181D2500DE8265 /* SongEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongEditView.swift; sourceTree = "<group>"; };
+		E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPopoverRowView.swift; sourceTree = "<group>"; };
 		E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTagView.swift; sourceTree = "<group>"; };
 		E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionEnum.swift; sourceTree = "<group>"; };
 		E0D411BD2A9FF12300859E4E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 				E0CA85272B081D5100188CD0 /* List */,
 				E0CA852E2B081D5100188CD0 /* Notifications */,
 				E0BE613C2BFD373A003757A5 /* UserPopover.swift */,
+				E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1160,6 +1163,7 @@
 				E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */,
 				E04FB1192A17D6F0002FEEA4 /* ProfileViewModel.swift in Sources */,
 				E04CB96C2BCB5FE100F2831B /* ShareView.swift in Sources */,
+				E0D21B912C1E833800476B3C /* UserPopoverRowView.swift in Sources */,
 				E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */,
 				E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */,
 				E0C139EA2BCA30B300317A7B /* FolderSongDropViewDelegate.swift in Sources */,

@@ -482,24 +482,7 @@ struct MainView: View {
                                                                                         mainViewModel.selectedFolder = folder
                                                                                         showUserPopover = true
                                                                                     } label: {
-                                                                                        Text(user.fullname.components(separatedBy: " ").filter { !$0.isEmpty }.reduce("") { ($0 == "" ? "" : "\($0.first!)") + "\($1.first!)" })
-                                                                                            .padding(12)
-                                                                                            .font(.system(size: 16).weight(.medium))
-                                                                                            .background(Material.regular)
-                                                                                            .clipShape(Circle())
-                                                                                            .overlay {
-                                                                                                if folder.uid ?? "" == user.id! {
-                                                                                                    FAText(iconName: "crown", size: 11)
-                                                                                                        .foregroundColor(.white)
-                                                                                                        .background {
-                                                                                                            Circle()
-                                                                                                                .foregroundColor(Color.accentColor)
-                                                                                                                .frame(width: 22, height: 22)
-                                                                                                        }
-                                                                                                        .offset(x: 15, y: -13)
-                                                                                                        .shadow(radius: 3)
-                                                                                                }
-                                                                                            }
+                                                                                        UserPopoverRowView(user: user, folder: folder)
                                                                                     }
                                                                                 }
                                                                             }
