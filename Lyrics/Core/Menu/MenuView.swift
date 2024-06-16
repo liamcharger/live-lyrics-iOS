@@ -117,6 +117,9 @@ struct MenuView: View {
                     }
                 }
                 Spacer()
+                Divider()
+                    .padding(.horizontal, -16)
+                    .padding(.bottom, 12)
                 AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
                 Button(action: {
                     showWebView.toggle()
