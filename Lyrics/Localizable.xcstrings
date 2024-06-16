@@ -1634,6 +1634,17 @@
         }
       }
     },
+    "no_recently_deleted_songs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It doesn’t look like you have any recently deleted songs."
+          }
+        }
+      }
+    },
     "no_share_invites" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1813,9 +1824,6 @@
       }
     },
     "Read only:" : {
-
-    },
-    "Read Only:" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {

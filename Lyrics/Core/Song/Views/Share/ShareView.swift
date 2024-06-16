@@ -170,7 +170,7 @@ struct ShareView: View {
                 }
                 if collaborate {
                     HStack {
-                        Text("Read Only:")
+                        Text("Read only:")
                         Spacer()
                         Toggle("", isOn: $readOnly).labelsHidden()
                     }

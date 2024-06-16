@@ -215,12 +215,7 @@ class SongService {
 					return
 				}
 				
-				guard let documents = snapshot?.documents else {
-					print("No documents found")
-					let noSongs = RecentlyDeletedSong(uid: "", timestamp: Date(), folderIds: [], deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)
-					completion([noSongs])
-					return
-				}
+				guard let documents = snapshot?.documents else { return }
 				
 				let group = DispatchGroup()
 				var songs: [RecentlyDeletedSong] = []
@@ -240,7 +235,9 @@ class SongService {
 					}
 				}
 				
-				group.notify(queue: .main) {
+				if songs.isEmpty {
+					completion([RecentlyDeletedSong(uid: "", timestamp: Date(), folderIds: [], deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)])
+				} else {
 					completion(songs)
 				}
 			}

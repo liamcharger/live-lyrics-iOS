@@ -45,15 +45,12 @@ struct RecentlyDeletedView: View {
         showDeleteSheet.toggle()
     }
     
-    init() {
-        recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
-    }
-    
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
                 CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted, showBackButton: true)
                 CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
+                    .disabled(recentlyDeletedViewModel.songs.contains(where: { $0.title == "noSongs" }))
             }
             .padding()
             Divider()
@@ -64,16 +61,16 @@ struct RecentlyDeletedView: View {
                         Text("Deleted songs are stored for thirty days before being permanently removed.")
                             .foregroundColor(Color.gray)
                             .deleteDisabled(true)
+                        Divider()
+                            .padding(.horizontal, -16)
                         ForEach(searchableSongs, id: \.id) { song in
                             if song.title == "noSongs" {
                                 Text("No Songs")
-                                    .foregroundColor(Color.gray)
                                     .frame(maxWidth: .infinity)
-                                    .padding()
+                                    .padding(12)
                                     .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .cornerRadius(20)
-                                    .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
+                                    .foregroundColor(.gray)
+                                    .clipShape(Capsule())
                             } else {
                                 let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
                                 
@@ -131,6 +128,9 @@ struct RecentlyDeletedView: View {
         }
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
+        }
     }
 }
 
