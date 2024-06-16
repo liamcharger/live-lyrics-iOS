@@ -97,6 +97,20 @@ struct SettingsView: View {
                     .background(Material.regular)
                     .cornerRadius(20)
                     .foregroundColor(.primary)
+                    HStack {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack(spacing: 7) {
+                                Text("Enable Autoscroll")
+                                Spacer()
+                                Toggle(isOn: $enableAutoscroll, label: {})
+                            }
+                            .foregroundColor(.primary)
+                        }
+                    }
+                    .padding()
+                    .background(Material.regular)
+                    .cornerRadius(20)
+                    .foregroundColor(.primary)
                     HStack(spacing: 7) {
                         Text("Word Count Style")
                         Spacer()
@@ -159,20 +173,6 @@ struct SettingsView: View {
                             .background(Material.regular)
                             .mask { Capsule() }
                     }
-                    .foregroundColor(.primary)
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Enable Autoscroll")
-                                Spacer()
-                                Toggle(isOn: $enableAutoscroll, label: {})
-                            }
-                            .foregroundColor(.primary)
-                        }
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .cornerRadius(20)
                     .foregroundColor(.primary)
                     HStack(spacing: 7) {
                         Text("Metronome Style")
