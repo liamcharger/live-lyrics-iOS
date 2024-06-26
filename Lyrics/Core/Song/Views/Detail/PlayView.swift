@@ -435,6 +435,7 @@ struct PlayView: View {
                                         .cornerRadius(8)
                                 }
                                 .onChange(of: bpm) { bpm in
+                                    stopTimer()
                                     songViewModel.updateBpm(for: song, with: bpm)
                                 }
                                 .disabled(readOnly())
