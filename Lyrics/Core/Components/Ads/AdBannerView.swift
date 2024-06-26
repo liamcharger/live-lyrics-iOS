@@ -20,7 +20,7 @@ struct AdBannerView: View {
     var paddingRight: CGFloat
     
     var body: some View {
-        if storeKitManager.purchasedProducts.isEmpty {
+        if (authViewModel.currentUser?.showAds ?? true) == false {
             ZStack {
                 HStack(spacing: 7) {
                     ProgressView()

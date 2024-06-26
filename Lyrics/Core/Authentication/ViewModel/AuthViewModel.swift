@@ -152,27 +152,16 @@ class AuthViewModel: ObservableObject {
         try? Auth.auth().signOut()
     }
     
-    func removeAds(showAds: Bool, completion: @escaping(Bool, String) -> Void) {
+    func showAds(_ showAds: Bool) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("users").document(uid).updateData(["showAds": showAds]) { error in
-            if let error = error {
-                print("Error:", error.localizedDescription)
-                completion(false, error.localizedDescription)
-                return
+        
+        if (currentUser?.showAds ?? true) != showAds {
+            Firestore.firestore().collection("users").document(uid).updateData(["showAds": showAds]) { error in
+                if let error = error {
+                    print("Error:", error.localizedDescription)
+                }
+                self.fetchUser()
             }
-            completion(true, "Success!")
-        }
-    }
-    
-    func updateLocalStatus(localStatus: Bool, completion: @escaping(Bool, String) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("users").document(uid).updateData(["isLocal": localStatus]) { error in
-            if let error = error {
-                print("Error:", error.localizedDescription)
-                completion(false, error.localizedDescription)
-                return
-            }
-            completion(true, "Success!")
         }
     }
     

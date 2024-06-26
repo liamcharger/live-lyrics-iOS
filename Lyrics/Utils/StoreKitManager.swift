@@ -5,7 +5,7 @@
 //  Created by Liam Willey on 12/7/23.
 //
 
-import Foundation
+import SwiftUI
 import StoreKit
 
 public enum StoreError: Error {
@@ -15,14 +15,15 @@ public enum StoreError: Error {
 class StoreKitManager: ObservableObject {
     // if there are multiple product types - create multiple variable for each .consumable, .nonconsumable, .autoRenewable, .nonRenewable.
     @Published var storeProducts: [Product] = []
-    @Published var purchasedProducts : [Product] = []
+    @Published var purchasedProducts: [Product] = []
+    
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     var updateListenerTask: Task<Void, Error>? = nil
     
     //maintain a plist of products
     private let productDict: [String : String]
     init() {
-        //check the path for the plist
         if let plistPath = Bundle.main.path(forResource: "InAppPurchases", ofType: "plist"),
            //get the list of products
            let plist = FileManager.default.contents(atPath: plistPath) {
@@ -101,6 +102,11 @@ class StoreKitManager: ObservableObject {
                 let transaction = try checkVerified(result)
                 // since we only have one type of producttype - .nonconsumables -- check if any storeProducts matches the transaction.productID then add to the purchasedCourses
                 if let course = storeProducts.first(where: { $0.id == transaction.productID}) {
+                    if transaction.productID == "remove_ads" {
+                        authViewModel.showAds(false)
+                    } else {
+                        authViewModel.showAds(true)
+                    }
                     purchasedCourses.append(course)
                 }
             } catch {
@@ -111,7 +117,7 @@ class StoreKitManager: ObservableObject {
         }
     }
     
-    func purchase(_ product: Product) async throws -> Transaction? {
+    func purchase(_ product: Product) async throws -> StoreKit.Transaction? {
         //make a purchase request - optional parameters available
         let result = try await product.purchase()
         

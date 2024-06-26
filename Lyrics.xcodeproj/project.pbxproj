@@ -323,14 +323,6 @@
 		E01EB4462B210FE3009C48F2 /* Ads */ = {
 			isa = PBXGroup;
 			children = (
-				E01EB44C2B211292009C48F2 /* Ads */,
-			);
-			path = Ads;
-			sourceTree = "<group>";
-		};
-		E01EB44C2B211292009C48F2 /* Ads */ = {
-			isa = PBXGroup;
-			children = (
 				E02F21E42B21130600302646 /* AdBannerView.swift */,
 				E0FD46252B1F7DBD00699587 /* BannerAd.swift */,
 			);
