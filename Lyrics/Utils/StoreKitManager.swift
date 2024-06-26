@@ -55,7 +55,7 @@ class StoreKitManager: ObservableObject {
             //iterate through any transactions that don't come from a direct call to 'purchase()'
             for await result in Transaction.updates {
                 do {
-                    let transaction = try self.checkVerified(result)
+                    let transaction = try await self.checkVerified(result)
                     
                     //the transaction is verified, deliver the content to the user
                     await self.updateCustomerProductStatus()
