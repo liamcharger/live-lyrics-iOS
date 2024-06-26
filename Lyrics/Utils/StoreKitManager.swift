@@ -102,11 +102,6 @@ class StoreKitManager: ObservableObject {
                 let transaction = try checkVerified(result)
                 // since we only have one type of producttype - .nonconsumables -- check if any storeProducts matches the transaction.productID then add to the purchasedCourses
                 if let course = storeProducts.first(where: { $0.id == transaction.productID}) {
-                    if transaction.productID == "remove_ads" {
-                        authViewModel.showAds(false)
-                    } else {
-                        authViewModel.showAds(true)
-                    }
                     purchasedCourses.append(course)
                 }
             } catch {
@@ -114,6 +109,12 @@ class StoreKitManager: ObservableObject {
             }
             
             self.purchasedProducts = purchasedCourses
+            
+            if purchasedProducts.contains(where: { $0.id == "remove_ads" }) {
+                authViewModel.showAds(false)
+            } else {
+                authViewModel.showAds(true)
+            }
         }
     }
     
