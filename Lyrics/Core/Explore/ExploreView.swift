@@ -10,6 +10,13 @@ import SwiftUI
 struct ExploreView: View {
     @State var searchText = ""
     
+    let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    @ObservedObject var musixmatchService = MusixmatchService()
+    
     var body: some View {
         VStack(spacing: 0) {
             CustomNavBar(title: NSLocalizedString("explore", comment: ""))
@@ -17,7 +24,7 @@ struct ExploreView: View {
             Divider()
             GeometryReader { geo in
                 ScrollView {
-                    VStack {
+                    VStack(spacing: 22) {
                         ZStack {
                             Circle()
                                 .frame(width: geo.size.width * 0.60, height: geo.size.width * 0.60)
@@ -32,9 +39,8 @@ struct ExploreView: View {
                         .frame(height: 360)
                         .overlay {
                             VStack(spacing: 20) {
-                                VStack(spacing: 12) {
-                                    Image(systemName: "rectangle.and.text.magnifyingglass")
-                                        .font(.system(size: 55))
+                                VStack(spacing: 14) {
+                                    FAText(iconName: "music-magnifying-glass", size: 55)
                                     Text("search_and_add")
                                         .font(.largeTitle.weight(.bold))
                                         .multilineTextAlignment(.center)
@@ -44,24 +50,30 @@ struct ExploreView: View {
                                         .foregroundColor(.gray)
                                     TextField("search", text: $searchText)
                                         .textFieldStyle(PlainTextFieldStyle())
+                                        .onSubmit {
+                                            musixmatchService.searchForSongs(searchText)
+                                        }
                                 }
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 11)
                                 .background(Material.thin)
                                 .clipShape(Capsule())
-                                .shadow(color: .white.opacity(0.3), radius: 10)
                                 .frame(width: geo.size.width * 0.70)
                             }
                         }
-                        .padding(.vertical, 15)
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("popular_songs")
-                                .textCase(.uppercase)
-                                .font(.system(size: 14).weight(.bold))
-                            VStack {
-                                ForEach(1...2, id: \.self) { _ in
-                                    HStack {
-                                        ForEach(geo.size.width < 393 ? 1...2 : 1...3, id: \.self) { index in
+                        if musixmatchService.isLoadingPopularSongs || musixmatchService.isLoadingPopularArtists {
+                            ProgressView("Loading")
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("popular_songs")
+                                    .textCase(.uppercase)
+                                    .font(.system(size: 14).weight(.bold))
+                                LazyVGrid(columns: columns) {
+                                    ForEach(musixmatchService.popularSongs, id: \.trackId) { song in
+                                        NavigationLink {
+                                            SongExploreDetailView(song: song)
+                                        } label: {
                                             VStack(alignment: .leading) {
                                                 Text("E")
                                                     .font(.system(size: 12))
@@ -69,20 +81,54 @@ struct ExploreView: View {
                                                     .padding(3)
                                                     .background(Color.gray.opacity(0.3))
                                                     .clipShape(RoundedRectangle(cornerRadius: 3))
+                                                    .opacity(song.explicit == 1 ? 1 : 0)
                                                 Spacer()
-                                                    .frame(minHeight: 30)
-                                                Text("Example Song \(index)")
-                                                    .font(.body.weight(.semibold))
+                                                VStack(alignment: .leading, spacing: 6) {
+                                                    Text(song.artistName)
+                                                        .foregroundColor(.gray)
+                                                        .lineLimit(2)
+                                                        .font(.system(size: 16))
+                                                    Text(song.trackName)
+                                                        .font(.body.weight(.semibold))
+                                                }
+                                                .multilineTextAlignment(.leading)
                                             }
                                             .padding(13)
                                             .frame(maxWidth: .infinity, alignment: .leading)
+                                            .frame(height: 175)
                                             .background(Material.regular)
+                                            .foregroundColor(.primary)
                                             .clipShape(RoundedRectangle(cornerRadius: 20))
                                         }
                                     }
                                 }
                             }
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("popular_artists")
+                                    .textCase(.uppercase)
+                                    .font(.system(size: 14).weight(.bold))
+                                LazyVGrid(columns: columns) {
+                                    ForEach(musixmatchService.popularArtists, id: \.artist_id) { artist in
+                                        HStack {
+                                            Text(artist.artist_name)
+                                                .font(.body.weight(.semibold))
+                                                .lineLimit(3)
+                                                .multilineTextAlignment(.leading)
+                                            Spacer()
+                                        }
+                                        .padding(13)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .frame(height: 70)
+                                        .background(Material.regular)
+                                        .foregroundColor(.primary)
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                                    }
+                                }
+                            }
                         }
+                        Text("powered_by_musixmatch")
+                            .font(.system(size: 15))
+                            .foregroundColor(.gray)
                     }
                     .padding()
                 }
@@ -90,6 +136,14 @@ struct ExploreView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if musixmatchService.popularArtists.isEmpty || musixmatchService.popularSongs.isEmpty {
+                DispatchQueue.main.async {
+                    musixmatchService.requestPopularSongs()
+                    musixmatchService.requestPopularArtists()
+                }
+            }
+        }
     }
 }
 

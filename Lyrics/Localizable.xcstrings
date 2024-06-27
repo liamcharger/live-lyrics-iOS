@@ -656,8 +656,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Conéctate a Internet para eliminar colaboradores."
+            "state" : "translated",
+            "value" : "Conéctese a Internet para editar los permisos de los colaboradores."
           }
         }
       }
@@ -1037,9 +1037,6 @@
         }
       }
     },
-    "Example Song %lld" : {
-
-    },
     "explore" : {
       "localizations" : {
         "en" : {
@@ -1050,8 +1047,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "explore"
+            "state" : "translated",
+            "value" : "Explore"
           }
         }
       }
@@ -1661,6 +1658,12 @@
             "state" : "translated",
             "value" : "It doesn’t look like you have any recently deleted songs."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No parece que tengas ninguna canción borrada recientemente."
+          }
         }
       }
     },
@@ -1832,6 +1835,22 @@
         }
       }
     },
+    "popular_artists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Artists"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artistas populares"
+          }
+        }
+      }
+    },
     "popular_songs" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1839,6 +1858,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Popular Songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canciones populares"
+          }
+        }
+      }
+    },
+    "powered_by_musixmatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Powered by Musixmatch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Musixmatch"
           }
         }
       }
@@ -2031,6 +2073,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search and add songs to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca y añade canciones a tu biblioteca."
           }
         }
       }
