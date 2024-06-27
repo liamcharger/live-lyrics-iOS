@@ -20,4 +20,5 @@ struct ShareRequest: Codable, Identifiable {
     var toUsername: [String]
     var fromUsername: String
     var songVariations: [String]?
+    var readOnly: Bool?
 }

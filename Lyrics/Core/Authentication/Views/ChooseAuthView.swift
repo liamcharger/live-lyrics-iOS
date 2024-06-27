@@ -23,11 +23,11 @@ struct ChooseAuthView: View {
         var greetingText = "Hello."
         switch currentHour {
         case 0..<12:
-            greetingText = NSLocalizedString("good_morning", comment: "Good Morning.")
+            greetingText = NSLocalizedString("good_morning", comment: "")
         case 12..<18:
-            greetingText = NSLocalizedString("good_afternoon", comment: "Good Afternoon.")
+            greetingText = NSLocalizedString("good_afternoon", comment: "")
         default:
-            greetingText = NSLocalizedString("good_evening", comment: "Good Evening.")
+            greetingText = NSLocalizedString("good_evening", comment: "")
         }
         return greetingText
     }
@@ -42,8 +42,8 @@ struct ChooseAuthView: View {
                 VStack {
                     VStack {
                         Text(greetingLogic())
-                        Text(NSLocalizedString("welcome_to", comment: "Welcome to"))
-                        Text(NSLocalizedString("live_lyrics", comment: "Live Lyrics."))
+                        Text(NSLocalizedString("welcome_to", comment: ""))
+                        Text(NSLocalizedString("live_lyrics", comment: ""))
                     }
                     .font(.largeTitle.bold())
                     .multilineTextAlignment(.center)

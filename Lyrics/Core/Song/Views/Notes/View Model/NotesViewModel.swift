@@ -11,26 +11,31 @@ class NotesViewModel: ObservableObject {
     @Published var notes: String = ""
     @Published var isLoading = true
     
-    init(song: Song) {
-        self.fetchNotesForInit(song: song)
-    }
-    
     let service = SongService()
     
-    func updateNotes(_ song: Song, notes: String) {
-        service.updateNotes(song: song, notes: notes)
-    }
+    static let shared = NotesViewModel()
     
-    func fetchNotes(_ song: Song, completion: @escaping(String) -> Void) {
-        service.fetchNotes(song: song) { notes in
-            completion(notes)
-            self.isLoading = false
+    func updateNotes(song: Song? = nil, folder: Folder? = nil, notes: String) {
+        DispatchQueue.main.async {
+            if let song = song {
+                self.service.updateNotes(song: song, notes: notes)
+            } else if let folder = folder {
+                self.service.updateNotes(folder: folder, notes: notes)
+            }
         }
     }
     
-    func fetchNotesForInit(song: Song) {
-        fetchNotes(song) { notes in
-            self.notes = notes
+    func fetchNotes(song: Song? = nil, folder: Folder? = nil) {
+        DispatchQueue.main.async {
+            if let song = song {
+                self.service.fetchNotes(song: song) { notes in
+                    self.notes = notes
+                }
+            } else if let folder = folder {
+                self.service.fetchNotes(folder: folder) { notes in
+                    self.notes = notes
+                }
+            }
             self.isLoading = false
         }
     }

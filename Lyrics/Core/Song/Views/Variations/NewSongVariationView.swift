@@ -41,7 +41,7 @@ struct NewSongVariationView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Enter a name for your new variation.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -49,25 +49,26 @@ struct NewSongVariationView: View {
                 Spacer()
                 SheetCloseButton(isPresented: $isDisplayed)
             }
-            .padding(.top)
+            .padding()
+            Divider()
             Spacer()
-            TextField("Title", text: $title)
+            TextField(NSLocalizedString("title", comment: ""), text: $title)
                 .padding(14)
                 .background(Material.regular)
                 .clipShape(Capsule())
                 .cornerRadius(10)
                 .focused($isFocused)
+                .padding()
             Spacer()
+            Divider()
             Button(action: {view2.toggle()}, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
             })
-            .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-            .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .sheet(isPresented: $view2) {
                 nextView
             }
@@ -80,8 +81,8 @@ struct NewSongVariationView: View {
             }
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+            .padding()
         }
-        .padding()
         .onAppear {
             isFocused = true
         }
@@ -111,7 +112,7 @@ struct NewSongVariationView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
@@ -119,7 +120,7 @@ struct NewSongVariationView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showInfo) {
             Alert(title: Text("You need to add lyrics to a variation to create it."), dismissButton: .cancel() )

@@ -14,12 +14,13 @@ struct FeaturesView: View {
     
     var features: [FeaturesSection] = [
         FeaturesSection(title: "Song Variations", subtitle: "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.", imageName: "sparkles"),
+        FeaturesSection(title: "Collaboration", subtitle: "Work together on your songs and folders with fellow musicians in real-time.", imageName: "sparkles"),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
     ]
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(NSLocalizedString("new_in_live_lyrics", comment: "What's New in Live Lyrics"))
+            Text("What's New in Live Lyrics")
                 .frame(maxWidth: .infinity)
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
@@ -46,10 +47,10 @@ struct FeaturesView: View {
                 }
             } label: {
                 if selectedTab < features.count - 1 {
-                    Text(NSLocalizedString("next", comment: "Next"))
+                    Text("Next")
                         .modifier(NavButtonViewModifier())
                 } else {
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                         .modifier(NavButtonViewModifier())
                 }
             }

@@ -61,7 +61,7 @@ struct ResetPasswordView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
@@ -71,10 +71,10 @@ struct ResetPasswordView: View {
             .opacity(text.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showSuccess) {
-            Alert(title: Text("Success"), message: Text("Check your email for further instructions."), dismissButton: .cancel(Text("OK"), action: {presMode.wrappedValue.dismiss()}))
+            Alert(title: Text("Success!"), message: Text("Check your email for further instructions."), dismissButton: .cancel(Text("OK"), action: {presMode.wrappedValue.dismiss()}))
         }
     }
 }

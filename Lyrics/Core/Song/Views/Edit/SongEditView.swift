@@ -10,6 +10,7 @@ import Combine
 
 struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @Environment(\.presentationMode) var presMode
     
     let song: Song
@@ -40,21 +41,25 @@ struct SongEditView: View {
         self.key = stateKey
         self.artist = stateArtist
         self.duration = stateDuration
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.isDisplayed = false
-        }
         songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist, duration: stateDuration) { success, errorMessage in
-            if success {
-//                self.isDisplayed = false
-            } else {
+            if !success {
                 self.showError = true
                 self.errorMessage = errorMessage
             }
         }
+        dismiss()
     }
     func isInvalidFormat(_ duration: String) -> Bool {
         let pattern = "^\\d+:\\d+\\d+$"
         return !duration.isEmpty && !(duration.range(of: pattern, options: .regularExpression) != nil)
+    }
+    func dismiss() {
+        if let folder = mainViewModel.selectedFolder {
+            mainViewModel.fetchSongs(folder)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.isDisplayed = false
+        }
     }
     
     init(song: Song, isDisplayed: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>, duration: Binding<String>) {
@@ -66,9 +71,9 @@ struct SongEditView: View {
         self._duration = duration
         
         self._stateTitle = State(initialValue: title.wrappedValue)
-        self._stateArtist = State(initialValue: artist.wrappedValue == "Not Set" ? "": artist.wrappedValue)
-        self._stateKey = State(initialValue: key.wrappedValue == "Not Set" ? "": key.wrappedValue)
-        self._stateDuration = State(initialValue: duration.wrappedValue == "Not Set" ? "": duration.wrappedValue)
+        self._stateArtist = State(initialValue: artist.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": artist.wrappedValue)
+        self._stateKey = State(initialValue: key.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": key.wrappedValue)
+        self._stateDuration = State(initialValue: duration.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": duration.wrappedValue)
     }
     
     var body: some View {
@@ -83,10 +88,10 @@ struct SongEditView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {
-                    CustomTextField(text: $stateTitle, placeholder: "Title")
-                    CustomTextField(text: $stateKey, placeholder: "Key")
-                    CustomTextField(text: $stateArtist, placeholder: "Artist")
-                    CustomTextField(text: $stateDuration, placeholder: "Duration")
+                    CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
+                    CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
+                    CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
+                    CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
                     if isInvalidFormat(stateDuration) {
                         Group {
                             Text("The duration is not formatted correctly. Correct formatting, e.g., ") +
@@ -105,7 +110,7 @@ struct SongEditView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.gray)
                 Button(action: update) {
-                    Text(NSLocalizedString("save", comment: "Save"))
+                    Text("Save")
                         .frame(maxWidth: .infinity)
                         .modifier(NavButtonViewModifier())
                 }
@@ -115,7 +120,7 @@ struct SongEditView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
     }
 }

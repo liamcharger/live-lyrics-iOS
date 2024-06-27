@@ -11,7 +11,6 @@ import FirebaseFirestore
 
 struct Song: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
-    // Use uid to check if the song is a shared song or not
     let uid: String
     let timestamp: Date
     var title: String
@@ -31,4 +30,8 @@ struct Song: Identifiable, Codable, Equatable {
     var performanceMode: Bool?
     var duration: String?
     var tags: [String]?
+    
+    var joinedUsers: [String]?
+    var variations: [String]?
+    var readOnly: Bool?
 }

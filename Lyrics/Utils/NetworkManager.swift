@@ -8,11 +8,11 @@
 import Foundation
 import Network
 
-class NetworkManager {
+class NetworkManager: ObservableObject {
     static let shared = NetworkManager()
     
     private let monitor = NWPathMonitor()
-    private var connected = true
+    @Published var connected = true
     
     init() {
         monitor.pathUpdateHandler = { path in

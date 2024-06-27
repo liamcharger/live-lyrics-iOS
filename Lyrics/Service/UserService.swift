@@ -48,8 +48,8 @@ struct UserService {
                     // Handle password update error
                     return
                 }
-                // Password update successful
-                Firestore.firestore().collection("users").document(user?.uid ?? "")
+                
+                Firestore.firestore().collection("users").document(user!.uid)
                     .updateData(["password": password]) {
                         error in
                         if let error = error {
@@ -64,7 +64,7 @@ struct UserService {
     }
     
     func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, showsExplicitSongs: Bool, enableAutoscroll: Bool, metronomeStyle: [String], completion: @escaping(Bool, String) -> Void) {
-        Firestore.firestore().collection("users").document(user.id ?? "")
+        Firestore.firestore().collection("users").document(user.id!)
             .updateData(["wordCount": wordCount, "showDataUnderSong": data, "wordCountStyle": wordCountStyle, "showsExplicitSongs": showsExplicitSongs, "enableAutoscroll": enableAutoscroll, "metronomeStyle": metronomeStyle]) {
                 error in
                 if let error = error {
@@ -85,6 +85,29 @@ struct UserService {
             }
     }
     
+    func fetchUsers(withUids uids: [String], completion: @escaping([User]) -> Void) {
+        let group = DispatchGroup()
+        var users = [User]()
+        
+        for uid in uids {
+            group.enter()
+            Firestore.firestore().collection("users")
+                .document(uid)
+                .getDocument { snapshot, error in
+                    guard let snapshot = snapshot else { return }
+                    guard let user = try? snapshot.data(as: User.self) else { return }
+                    
+                    users.append(user)
+                    
+                    group.leave()
+                }
+        }
+        
+        group.notify(queue: .main) {
+            completion(users)
+        }
+    }
+    
     func fetchUsers(withUsername username: String, completion: @escaping([User]) -> Void) {
         Firestore.firestore().collection("users").whereField("username", isEqualTo: username).getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else { return }
@@ -94,7 +117,7 @@ struct UserService {
     }
     
     func updateFCMId(_ user: User, id: String) {
-        Firestore.firestore().collection("users").document(user.id ?? "")
+        Firestore.firestore().collection("users").document(user.id!)
             .updateData(["fcmId": id]) {
                 error in
                 if let error = error {

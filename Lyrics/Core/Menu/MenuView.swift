@@ -48,12 +48,21 @@ struct MenuView: View {
             VStack(spacing: 10) {
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack(spacing: 6) {
-                            Text(user.fullname)
-                                .font(.title2.weight(.semibold))
+                        Text(user.fullname)
+                            .font(.title2.weight(.semibold))
+                        HStack(spacing: 4) {
+                            Text(user.username)
+                            Text("#" + viewModel.uniqueUserID)
+                                .font(.body.weight(.semibold))
                         }
-                        Text("@\(user.username)")
-                            .foregroundColor(Color.gray)
+                        .foregroundColor(Color.gray)
+                    }
+                    .onTapGesture {
+                        #if DEBUG
+                        if let id = user.id {
+                            UIPasteboard.general.string = id
+                        }
+                        #endif
                     }
                     .padding([.top, .bottom, .trailing])
                     Spacer()
@@ -108,10 +117,10 @@ struct MenuView: View {
                     }
                 }
                 Spacer()
-                if storeKitManager.purchasedProducts.isEmpty {
-                    AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 70)
-                        .padding(.bottom, 6)
-                }
+                Divider()
+                    .padding(.horizontal, -16)
+                    .padding(.bottom, 12)
+                AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
                 Button(action: {
                     showWebView.toggle()
                 }, label: {

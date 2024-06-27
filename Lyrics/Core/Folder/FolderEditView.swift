@@ -22,6 +22,8 @@ struct FolderEditView: View {
     
     @State var showError = false
     
+    @FocusState var isFocused: Bool
+    
     var isEmpty: Bool {
         text.trimmingCharacters(in: .whitespaces).isEmpty
     }
@@ -34,7 +36,7 @@ struct FolderEditView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 Text("Edit Folder")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -42,22 +44,28 @@ struct FolderEditView: View {
                 SheetCloseButton(isPresented: $isDisplayed)
             }
             .padding()
+            Divider()
             Spacer()
-            CustomTextField(text: $text, placeholder: "Title")
+            CustomTextField(text: $text, placeholder: NSLocalizedString("title", comment: ""))
+                .focused($isFocused)
                 .padding(.horizontal)
             Spacer()
+            Divider()
             Button {
                 songViewModel.updateTitle(folder, title: text) { success, errorMessage in
                     if success {
                         self.title = text
                         self.isDisplayed = false
+                        if folder.uid ?? "" != AuthViewModel.shared.currentUser!.id! {
+                            MainViewModel.shared.fetchSharedFolders()
+                        }
                     } else {
                         self.showError = true
                         self.errorMessage = errorMessage
                     }
                 }
             } label: {
-                Text(NSLocalizedString("save", comment: "Save"))
+                Text("Save")
                     .frame(maxWidth: .infinity)
                     .modifier(NavButtonViewModifier())
             }
@@ -66,9 +74,10 @@ struct FolderEditView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .onAppear {
+            isFocused = true
             text = title
         }
     }

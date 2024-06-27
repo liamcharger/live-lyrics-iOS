@@ -63,7 +63,7 @@ struct SongTagView: View {
                             }
                         }) {
                             HStack {
-                                Text(fullTag.rawValue.capitalized)
+                                Text(NSLocalizedString("tag_\(fullTag.rawValue)", comment: ""))
                                 Spacer()
                                 if tags.contains(fullTag) {
                                     Image(systemName: "checkmark")

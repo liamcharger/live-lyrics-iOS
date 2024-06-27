@@ -53,7 +53,7 @@ struct PlayView: View {
     @State var clickAudioPlayer: AVAudioPlayer?
     @State var accentAudioPlayer: AVAudioPlayer?
     
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
@@ -85,7 +85,7 @@ struct PlayView: View {
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
-        self.key = song.key ?? "Not Set"
+        self.key = song.key ?? NSLocalizedString("not_set", comment: "")
         self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
@@ -104,7 +104,7 @@ struct PlayView: View {
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
-        self.key = song.key ?? "Not Set"
+        self.key = song.key ?? NSLocalizedString("not_set", comment: "")
         self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
@@ -168,8 +168,6 @@ struct PlayView: View {
     }
     func startTimer() {
         stopTimer()
-        
-        loadSounds()
         
         isPlayingMetronome = true
         beatCounter = 0
@@ -244,14 +242,14 @@ struct PlayView: View {
             switch style {
             case .medium:
                 if metronomeStyle.contains("Vibrations") {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    hapticByStyle(.medium)
                 }
                 if metronomeStyle.contains("Audio") {
                     clickAudioPlayer?.play()
                 }
             case .heavy:
                 if metronomeStyle.contains("Vibrations") {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    hapticByStyle(.heavy)
                 }
                 if metronomeStyle.contains("Audio") {
                     accentAudioPlayer?.play()
@@ -304,6 +302,9 @@ struct PlayView: View {
             }
         }
     }
+    func readOnly() -> Bool {
+        return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
+    }
     
     init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
         self.songs = songs
@@ -333,7 +334,7 @@ struct PlayView: View {
                             .font(.title2.weight(.bold))
                             .lineLimit(1).truncationMode(.tail)
                         Spacer()
-                        if key != "" && key != "Not Set" {
+                        if key != "" && key != NSLocalizedString("not_set", comment: "") {
                             Text("Key: " + key)
                                 .foregroundColor(Color.gray)
                                 .padding(.trailing, 6)
@@ -434,8 +435,10 @@ struct PlayView: View {
                                         .cornerRadius(8)
                                 }
                                 .onChange(of: bpm) { bpm in
+                                    stopTimer()
                                     songViewModel.updateBpm(for: song, with: bpm)
                                 }
+                                .disabled(readOnly())
                                 Menu {
                                     Button {
                                         bpb = 1
@@ -488,6 +491,7 @@ struct PlayView: View {
                                 .onChange(of: bpb) { bpb in
                                     songViewModel.updateBpm(for: song, with: bpb)
                                 }
+                                .disabled(readOnly())
                                 Spacer()
                                 if isPulsing {
                                     Circle()
@@ -498,6 +502,7 @@ struct PlayView: View {
                                     if isPlayingMetronome {
                                         stopTimer()
                                     } else {
+                                        loadSounds()
                                         startTimer()
                                     }
                                 } label: {
@@ -560,7 +565,7 @@ struct PlayView: View {
                         }) {
                             HStack {
                                 Image(systemName: isScrolling ? "stop" : "play")
-                                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: "Autoscroll"))
+                                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: ""))
                             }
                             .imageScale(.medium)
                             .padding()
@@ -569,23 +574,25 @@ struct PlayView: View {
                             .background(isScrolling ? .red : .blue)
                             .clipShape(Capsule())
                         }
-                        Menu {
-                            Button {
-                                performanceMode.toggle()
+                        if !readOnly() {
+                            Menu {
+                                Button {
+                                    performanceMode.toggle()
+                                } label: {
+                                    Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                                }
                             } label: {
-                                Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                                FAText(iconName: "gear", size: 20)
+                                    .imageScale(.medium)
+                                    .padding()
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .background(Material.regular)
+                                    .clipShape(Circle())
                             }
-                        } label: {
-                            FAText(iconName: "gear", size: 20)
-                                .imageScale(.medium)
-                                .padding()
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .background(Material.regular)
-                                .clipShape(Circle())
-                        }
-                        .onChange(of: performanceMode) { performanceMode in
-                            songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                            .onChange(of: performanceMode) { performanceMode in
+                                songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                            }
                         }
                     }
                     

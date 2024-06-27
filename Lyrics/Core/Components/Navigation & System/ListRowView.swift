@@ -112,7 +112,7 @@ struct ListRowView: View {
         .background(Material.regular)
         .foregroundColor(.primary)
         .modifier(ListViewModifier(capsule: {
-            if let song = song {
+            if song != nil {
                 if let user = viewModel.currentUser {
                     if let showDataUnderSong = user.showDataUnderSong {
                         if showDataUnderSong == "None" {

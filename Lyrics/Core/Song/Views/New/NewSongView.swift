@@ -27,10 +27,19 @@ struct NewSongView: View {
     let folder: Folder?
     
     func createSong() {
+        let dismiss = {
+            canDismissProgrammatically = true
+            view2 = false
+        }
+        
+        if NetworkManager.shared.getNetworkState() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                dismiss()
+            }
+        }
         songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
             if success {
-                canDismissProgrammatically = true
-                view2 = false
+                dismiss()
             } else {
                 self.errorMessage = errorMessage
                 showError = true
@@ -50,7 +59,7 @@ struct NewSongView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $title, placeholder: "Title")
+            CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
                 .focused($isTitleFocused)
                 .padding()
             Spacer()
@@ -60,7 +69,7 @@ struct NewSongView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("continue", comment: "Continue"))
+                    Text("Continue")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
@@ -108,16 +117,16 @@ struct NewSongView: View {
                     createSong()
                 }
             } label: {
-                Text(NSLocalizedString("continue", comment: "Continue"))
+                Text("Continue")
                     .modifier(NavButtonViewModifier())
             }
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert("Your song doesn't have any lyrics. Continue anyway?", isPresented: $showInfo, actions: {
-            Button(action: createSong, label: {Text(NSLocalizedString("continue", comment: "Continue"))})
+            Button(action: createSong, label: {Text("Continue")})
             Button(role: .cancel, action: {}, label: {Text("Cancel")})
         })
         .onAppear {

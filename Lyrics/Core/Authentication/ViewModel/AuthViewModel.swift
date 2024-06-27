@@ -15,10 +15,13 @@ class AuthViewModel: ObservableObject {
     @Published var didAuthenticateUser = false
     @Published var isLoadingUsers = false
     @Published var currentUser: User?
+    @Published var uniqueUserID: String = ""
     
     private var tempUserSession: FirebaseAuth.User?
     private let service = UserService()
     private let songService = SongService()
+    
+    let error_deleting_account_string = "There was an error deleting your account"
     
     static let shared = AuthViewModel()
     
@@ -112,13 +115,13 @@ class AuthViewModel: ObservableObject {
         
         user?.delete { error in
             if let error = error {
-                completion(true, NSLocalizedString("error_deleting_account", comment: "There was an error deleting your account"))
+                completion(true, self.error_deleting_account_string)
                 print(error.localizedDescription)
                 return
             }
             Firestore.firestore().collection("users").document(self.currentUser?.id ?? "").delete { error in
                 if let error = error {
-                    completion(true, NSLocalizedString("error_deleting_account", comment: "There was an error deleting your account"))
+                    completion(true, self.error_deleting_account_string)
                     print(error.localizedDescription)
                     return
                 }
@@ -133,6 +136,14 @@ class AuthViewModel: ObservableObject {
         
         service.fetchUser(withUid: uid) { user in
             self.currentUser = user
+            
+            self.uniqueUserID = user.id!.prefix(4).uppercased()
+        }
+    }
+    
+    func fetchUsers(uids: [String], completion: @escaping([User]) -> Void) {
+        service.fetchUsers(withUids: uids) { users in
+            completion(users)
         }
     }
     
@@ -141,27 +152,16 @@ class AuthViewModel: ObservableObject {
         try? Auth.auth().signOut()
     }
     
-    func removeAds(showAds: Bool, completion: @escaping(Bool, String) -> Void) {
+    func showAds(_ showAds: Bool) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("users").document(uid).updateData(["showAds": showAds]) { error in
-            if let error = error {
-                print("Error:", error.localizedDescription)
-                completion(false, error.localizedDescription)
-                return
+        
+        if (currentUser?.showAds ?? true) != showAds {
+            Firestore.firestore().collection("users").document(uid).updateData(["showAds": showAds]) { error in
+                if let error = error {
+                    print("Error:", error.localizedDescription)
+                }
+                self.fetchUser()
             }
-            completion(true, "Success!")
-        }
-    }
-    
-    func updateLocalStatus(localStatus: Bool, completion: @escaping(Bool, String) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("users").document(uid).updateData(["isLocal": localStatus]) { error in
-            if let error = error {
-                print("Error:", error.localizedDescription)
-                completion(false, error.localizedDescription)
-                return
-            }
-            completion(true, "Success!")
         }
     }
     
@@ -175,11 +175,12 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchUsers(username: String) {
+    func fetchUsers(username: String, completion: @escaping() -> Void) {
         self.isLoadingUsers = true
         service.fetchUsers(withUsername: username) { users in
             self.users = users
             self.isLoadingUsers = false
+            completion()
         }
     }
     
@@ -187,8 +188,8 @@ class AuthViewModel: ObservableObject {
         service.updateFCMId(user, id: id)
     }
     
-    func sendInviteToUser(request: ShareRequest, completion: @escaping(Error?) -> Void) {
-        songService.sendInviteToUser(request: request) { error in
+    func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
+        songService.sendInviteToUser(request: request, includeDefault: includeDefault) { error in
             completion(error)
         }
     }

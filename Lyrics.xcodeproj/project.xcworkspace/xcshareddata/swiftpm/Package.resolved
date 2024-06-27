@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/app-check.git",
       "state" : {
-        "revision" : "c218c2054299b15ae577e818bbba16084d3eabe6",
-        "version" : "10.18.2"
+        "revision" : "3b62f154d00019ae29a71e9738800bb6f18b236d",
+        "version" : "10.19.2"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
-        "revision" : "42eae77a0af79e9c3f41df04a23c76f05cfdda77",
-        "version" : "10.24.0"
+        "revision" : "e57841b296d04370ea23580f908881b0ccab17b9",
+        "version" : "10.28.1"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "51ba746a9d51a4bd0774b68499b0c73ef6e8570d",
-        "version" : "10.24.0"
+        "revision" : "fe727587518729046fc1465625b9afd80b5ab361",
+        "version" : "10.28.0"
       }
     },
     {
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleUtilities.git",
       "state" : {
-        "revision" : "26c898aed8bed13b8a63057ee26500abbbcb8d55",
-        "version" : "7.13.1"
+        "revision" : "57a1d307f42df690fdef2637f3e5b776da02aad6",
+        "version" : "7.13.3"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/gtm-session-fetcher.git",
       "state" : {
-        "revision" : "9534039303015a84837090d20fa21cae6e5eadb6",
-        "version" : "3.3.2"
+        "revision" : "0382ca27f22fb3494cf657d8dc356dc282cd1193",
+        "version" : "3.4.1"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
       "state" : {
-        "revision" : "9ab66e38f5f0c2d02f2b024b1babd880130f19bf",
-        "version" : "11.3.0"
+        "revision" : "2e4ae78561feac7192c5d8757464546adebb4c7d",
+        "version" : "11.6.0"
       }
     },
     {
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git",
       "state" : {
-        "revision" : "cfe8b2ae16b9bc81f4cdf1d1a12a01a452489c32",
-        "version" : "2.3.0"
+        "revision" : "9b68aa69fb508f0274853e226c734151a973c7b7",
+        "version" : "2.4.0"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect.git",
       "state" : {
-        "revision" : "0cd2a5a5895306bc21d54a2254302d24a9a571e4",
-        "version" : "1.1.3"
+        "revision" : "668a65735751432b640260c56dfa621cec568368",
+        "version" : "1.2.0"
       }
     }
   ],

@@ -45,38 +45,32 @@ struct RecentlyDeletedView: View {
         showDeleteSheet.toggle()
     }
     
-    init() {
-        recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
-    }
-    
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: "Recently Deleted", navType: .RecentlyDeleted, folder: nil, showBackButton: true, isEditing: $isEditing)
-                CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: "Search")
+                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted, showBackButton: true)
+                CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
+                    .disabled(recentlyDeletedViewModel.songs.contains(where: { $0.title == "noSongs" }))
             }
             .padding()
             Divider()
             ScrollView {
                 VStack {
-                    if storeKitManager.purchasedProducts.isEmpty {
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 70)
-                            .padding(.bottom, 10)
-                    }
+                    AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                     if !recentlyDeletedViewModel.isLoadingSongs {
                         Text("Deleted songs are stored for thirty days before being permanently removed.")
                             .foregroundColor(Color.gray)
                             .deleteDisabled(true)
+                        Divider()
+                            .padding(.horizontal, -16)
                         ForEach(searchableSongs, id: \.id) { song in
                             if song.title == "noSongs" {
                                 Text("No Songs")
-                                    .foregroundColor(Color.gray)
                                     .frame(maxWidth: .infinity)
-                                    .padding()
+                                    .padding(12)
                                     .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .cornerRadius(20)
-                                    .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
+                                    .foregroundColor(.gray)
+                                    .clipShape(Capsule())
                             } else {
                                 let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
                                 
@@ -115,8 +109,7 @@ struct RecentlyDeletedView: View {
                         LoadingView()
                     }
                 }
-                .padding(.top)
-                .padding(.horizontal)
+                .padding()
                 .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
                     if let selectedSong = selectedSong {
                         Button("Delete", role: .destructive) {
@@ -135,6 +128,9 @@ struct RecentlyDeletedView: View {
         }
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
+        }
     }
 }
 

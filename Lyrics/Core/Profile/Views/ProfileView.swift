@@ -125,7 +125,7 @@ struct ProfileView: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text(NSLocalizedString("save", comment: "Save"))
+                    Text("Save")
                     Spacer()
                 }
                 .modifier(NavButtonViewModifier())
@@ -144,7 +144,7 @@ struct ProfileView: View {
                 Image(systemName: "trash")
                     .font(.system(size: 34).weight(.semibold))
                     .foregroundColor(.red)
-                Text(NSLocalizedString("delete_account_confirmation_short", comment: "Are you sure you want to delete this account?"))
+                Text(NSLocalizedString("delete_account_confirmation_short", comment: ""))
                     .font(.largeTitle.weight(.bold))
                 Text("WARNING: This action is permanant and cannot be undone!")
                     .font(.title3.weight(.bold))
@@ -184,11 +184,11 @@ struct ProfileView: View {
                     showDeleteConfirmation = false
                 }
             } message: {
-                Text("Are you sure you want to delete this user account? WARNING: THIS ACTION CANNOT BE UNDONE!")
+                Text("Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!")
             }
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Success!"), message: Text("Your changes were saved."), dismissButton: .cancel(Text("Close")))

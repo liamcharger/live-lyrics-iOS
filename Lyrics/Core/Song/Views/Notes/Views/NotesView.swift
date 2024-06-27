@@ -9,12 +9,21 @@ import SwiftUI
 import TipKit
 
 struct NotesView: View {
-    @Binding var notes: String
-    @Binding var isLoading: Bool
+    let song: Song?
+    let folder: Folder?
     
     @FocusState var isInputActive: Bool
     
+    @State var notes = ""
+    
+    @ObservedObject var notesViewModel = NotesViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
+    
+    init(song: Song? = nil, folder: Folder? = nil) {
+        self.song = song
+        self.folder = folder
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -38,7 +47,7 @@ struct NotesView: View {
                     .padding([.bottom, .horizontal])
             }
             Divider()
-            if isLoading {
+            if notesViewModel.isLoading {
                 VStack {
                     Spacer()
                     ProgressView()
@@ -46,10 +55,14 @@ struct NotesView: View {
                 }
             } else {
                 ZStack {
-                    TextEditor(text: $notes)
+                    // Slight lag on enter because notesViewModel.notes is being used rather than a @State variable
+                    TextEditor(text: $notesViewModel.notes)
                         .padding(.leading, 13)
                         .focused($isInputActive)
-                    if notes.isEmpty && !isInputActive {
+                        .onChange(of: notesViewModel.notes) { notes in
+                            notesViewModel.updateNotes(song: song, folder: folder, notes: notes)
+                        }
+                    if notesViewModel.notes.isEmpty && !isInputActive {
                         Text("Tap to enter your notes...")
                             .foregroundColor(.gray.opacity(0.6))
                             .font(.system(size: 20).weight(.semibold))
@@ -63,6 +76,8 @@ struct NotesView: View {
                 }
             }
         }
-        
+        .onAppear {
+            notesViewModel.fetchNotes(song: song, folder: folder)
+        }
     }
 }

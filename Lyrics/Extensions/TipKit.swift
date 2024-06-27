@@ -15,7 +15,7 @@ struct PlayViewTip: Tip {
     }
     
     var message: Text? {
-        Text("Play View introduces a new, distraction free way to experience live performances, designed for performers, by performers.")
+        Text("Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance.")
     }
     
     var asset: Image? {
@@ -78,7 +78,7 @@ struct NotesViewTip: Tip {
     }
     
     var message: Text? {
-        Text(NSLocalizedString("notes_tip", comment: "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances."))
+        Text("Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances.")
     }
     
     var options: [TipOption] {

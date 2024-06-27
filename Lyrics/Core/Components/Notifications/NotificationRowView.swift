@@ -176,13 +176,15 @@ struct NotificationRowView: View {
                 }
             }
             Spacer()
-            Button(action: {notificationStatus = nil}) {
-                Image(systemName: "xmark")
-                    .padding(12)
-                    .font(.body.weight(.semibold))
-                    .background(Material.regular)
-                    .foregroundColor(.primary)
-                    .clipShape(Circle())
+            if notificationStatus != .network {
+                Button(action: {notificationStatus = nil}) {
+                    Image(systemName: "xmark")
+                        .padding(12)
+                        .font(.body.weight(.semibold))
+                        .background(Material.regular)
+                        .foregroundColor(.primary)
+                        .clipShape(Circle())
+                }
             }
         }
     }

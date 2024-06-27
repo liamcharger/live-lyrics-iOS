@@ -26,7 +26,7 @@ struct SongShareDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: "Share Invites", navType: .ShareDetail, folder: nil, showBackButton: true, isEditing: .constant(false))
+            CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true)
                 .padding()
             Divider()
             if NetworkManager.shared.getNetworkState() {
@@ -35,18 +35,18 @@ struct SongShareDetailView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty {
-                        FullscreenMessage(imageName: "circle.slash", title: "It doesn't look like you have any shared songs/folders being sent or received.", spaceNavbar: true)
+                        FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_share_invites", comment: ""), spaceNavbar: true)
                     } else {
                         ScrollView {
                             VStack(spacing: 16) {
                                 VStack {
-                                    ListHeaderView(title: "Outgoing")
+                                    ListHeaderView(title: NSLocalizedString("outgoing", comment: ""))
                                     ForEach(mainViewModel.outgoingShareRequests) { request in
                                         rowView(request: request, type: .outgoing)
                                     }
                                 }
                                 VStack {
-                                    ListHeaderView(title: "Incoming")
+                                    ListHeaderView(title: NSLocalizedString("incoming", comment: ""))
                                     ForEach(mainViewModel.incomingShareRequests) { request in
                                         rowView(request: request, type: .incoming)
                                     }
@@ -57,7 +57,7 @@ struct SongShareDetailView: View {
                     }
                 }
             } else {
-                FullscreenMessage(imageName: "wifi.slash", title: "Please connect to the internet to view your share requests.", spaceNavbar: true)
+                FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""), spaceNavbar: true)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

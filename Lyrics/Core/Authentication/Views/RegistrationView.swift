@@ -93,7 +93,7 @@ struct RegistrationView: View {
                     }}, label: {
                         HStack {
                             Spacer()
-                            Text(NSLocalizedString("continue", comment: "Continue"))
+                            Text("Continue")
                             Spacer()
                         }
                         .modifier(NavButtonViewModifier())
@@ -108,7 +108,7 @@ struct RegistrationView: View {
             WebView()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text(NSLocalizedString("error", comment: "Error")), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)

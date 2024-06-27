@@ -5,7 +5,7 @@
 //  Created by Liam Willey on 12/7/23.
 //
 
-import Foundation
+import SwiftUI
 import StoreKit
 
 public enum StoreError: Error {
@@ -15,14 +15,15 @@ public enum StoreError: Error {
 class StoreKitManager: ObservableObject {
     // if there are multiple product types - create multiple variable for each .consumable, .nonconsumable, .autoRenewable, .nonRenewable.
     @Published var storeProducts: [Product] = []
-    @Published var purchasedProducts : [Product] = []
+    @Published var purchasedProducts: [Product] = []
+    
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     var updateListenerTask: Task<Void, Error>? = nil
     
     //maintain a plist of products
     private let productDict: [String : String]
     init() {
-        //check the path for the plist
         if let plistPath = Bundle.main.path(forResource: "InAppPurchases", ofType: "plist"),
            //get the list of products
            let plist = FileManager.default.contents(atPath: plistPath) {
@@ -54,7 +55,7 @@ class StoreKitManager: ObservableObject {
             //iterate through any transactions that don't come from a direct call to 'purchase()'
             for await result in Transaction.updates {
                 do {
-                    let transaction = try self.checkVerified(result)
+                    let transaction = try await self.checkVerified(result)
                     
                     //the transaction is verified, deliver the content to the user
                     await self.updateCustomerProductStatus()
@@ -108,10 +109,16 @@ class StoreKitManager: ObservableObject {
             }
             
             self.purchasedProducts = purchasedCourses
+            
+            if purchasedProducts.contains(where: { $0.id == "remove_ads" }) {
+                authViewModel.showAds(false)
+            } else {
+                authViewModel.showAds(true)
+            }
         }
     }
     
-    func purchase(_ product: Product) async throws -> Transaction? {
+    func purchase(_ product: Product) async throws -> StoreKit.Transaction? {
         //make a purchase request - optional parameters available
         let result = try await product.purchase()
         

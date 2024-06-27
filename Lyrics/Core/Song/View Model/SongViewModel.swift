@@ -98,8 +98,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func fetchSong(_ id: String, completion: @escaping(Song) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
-        service.fetchSong(withId: id) { song in
+    func fetchSong(listen: Bool? = nil, forUser: String? = nil, _ id: String, completion: @escaping(Song) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
+        service.fetchSong(listen: listen, forUser: forUser, withId: id) { song in
             if let song = song {
                 completion(song)
             }
@@ -177,6 +177,10 @@ class SongViewModel: ObservableObject {
         service.updateVariation(song: song, variation: variation, title: title)
     }
     
+    func leaveSong(forUid: String? = nil, song: Song) {
+        service.leaveCollabSong(forUid: forUid, song: song) {}
+    }
+    
     func getColorForTag(_ tagColor: String) -> Color {
         switch tagColor {
         case "red":
@@ -196,5 +200,9 @@ class SongViewModel: ObservableObject {
         default:
             return .gray
         }
+    }
+    
+    func isShared(song: Song) -> Bool {
+        return song.uid != authViewModel.currentUser?.id
     }
 }

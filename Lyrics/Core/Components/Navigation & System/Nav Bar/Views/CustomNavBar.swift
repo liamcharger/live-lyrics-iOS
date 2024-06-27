@@ -15,10 +15,7 @@ struct CustomNavBar: View {
     
     let title: String
     let navType: NavBarEnum
-    let folder: Folder?
     let showBackButton: Bool
-    
-    @Binding var isEditing: Bool
     
     @State var showSheet1 = false
     @State var showSheet2 = false
@@ -26,6 +23,12 @@ struct CustomNavBar: View {
     
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
+    
+    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool) {
+        self.title = title
+        self.navType = navType ?? .detail
+        self.showBackButton = showBackButton
+    }
     
     var body: some View {
         HStack(spacing: 12) {
@@ -42,12 +45,13 @@ struct CustomNavBar: View {
                 })
             }
             Text(title)
-                .lineLimit(1)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
                 .font(.system(size: 28, design: .rounded).weight(.bold))
             Spacer()
             HStack(spacing: 8) {
                 switch navType {
-                case .HomeView:
+                case .home:
                     Button {
                         showNewFolder.toggle()
                     } label: {
@@ -76,33 +80,7 @@ struct CustomNavBar: View {
                         MenuView(showMenu: $showSheet3)
                             .environmentObject(storeKitManager)
                     }
-                case .DetailView:
-                    Button {
-                        withAnimation(.bouncy(extraBounce: 0.1)) {
-                            isEditing.toggle()
-                        }
-                    } label: {
-                        Text(isEditing ? "Done" : "Edit")
-                            .padding(12)
-                            .font(.body.weight(.semibold))
-                            .background(Material.regular)
-                            .foregroundColor(.blue)
-                            .clipShape(Capsule())
-                    }
-                    Button {
-                        showSheet1.toggle()
-                    } label: {
-                        FAText(iconName: "pen-to-square", size: 20)
-                            .modifier(NavBarRowViewModifier())
-                    }
-                    .sheet(isPresented: $showSheet1) {
-                        if let folder = folder {
-                            NewSongView(isDisplayed: $showSheet1, folder: folder)
-                        } else {
-                            NewSongView(isDisplayed: $showSheet1, folder: nil)
-                        }
-                    }
-                case .RecentlyDeleted, .Auth, .ShareDetail:
+                case .recentlyDeleted, .auth, .detail:
                     EmptyView()
                 }
             }
@@ -111,5 +89,5 @@ struct CustomNavBar: View {
 }
 
 #Preview {
-    CustomNavBar(title: "Home", navType: .HomeView, folder: nil, showBackButton: true, isEditing: .constant(true))
+    CustomNavBar(title: "Home", navType: .home, showBackButton: true)
 }

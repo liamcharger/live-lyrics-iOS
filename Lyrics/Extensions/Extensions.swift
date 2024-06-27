@@ -22,6 +22,17 @@ func hasHomeButton() -> Bool {
     return true
 }
 
+func completionOnConnectionState(noConnection: @escaping() -> Void, connection: @escaping() -> Void) {
+    if NetworkManager.shared.getNetworkState() {
+        // Add extra second because otherwise it seems unnaturally quick
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            connection()
+        }
+    } else {
+        noConnection()
+    }
+}
+
 extension View {
     @ViewBuilder
     func showPlayViewTip() -> some View {
@@ -146,7 +157,6 @@ struct Wave: Shape {
         
         let width = Double(rect.width)
         let height = Double(rect.height)
-        let midWidth = width / 2
         let midHeight = height / 2
         
         let wavelength = width / frequency

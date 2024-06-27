@@ -36,7 +36,7 @@ struct ContentView: View {
                     }
                 } else {
                     if let systemDoc = mainViewModel.systemDoc {
-                        AlertView(title: systemDoc.title ?? "Error", message: systemDoc.subtitle ?? "An unknown error has occured. Please try again later.", imageName: systemDoc.imageName ?? "exclamationmark.triangle", buttonText: systemDoc.buttonText ?? NSLocalizedString("continue", comment: "Continue"))
+                        AlertView(title: systemDoc.title ?? "Error", message: systemDoc.subtitle ?? "An unknown error has occured. Please try again later.", imageName: systemDoc.imageName ?? "exclamationmark.triangle", buttonText: systemDoc.buttonText ?? "Continue")
                     }
                 }
             }
