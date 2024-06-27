@@ -21,6 +21,12 @@ struct UserPopoverRowView: View {
         }
         return ""
     }
+    var small: Bool {
+        return size == [16: 12]
+    }
+    var ownerBadgeDimensions: CGFloat {
+        return small ? 22 : 33
+    }
     
     init(user: User, song: Song? = nil, folder: Folder? = nil, size: [CGFloat: CGFloat]? = nil) {
         self.user = user
@@ -37,14 +43,14 @@ struct UserPopoverRowView: View {
             .clipShape(Circle())
             .overlay {
                 if uid == user.id! {
-                    FAText(iconName: "crown", size: 11)
+                    FAText(iconName: "crown", size: small ? 11 : 17)
                         .foregroundColor(.white)
                         .background {
                             Circle()
                                 .foregroundColor(Color.accentColor)
-                                .frame(width: 22, height: 22)
+                                .frame(width: ownerBadgeDimensions, height: ownerBadgeDimensions)
                         }
-                        .offset(x: 15, y: -13)
+                        .offset(x: small ? 15 : 35, y: small ? -13 : -25)
                         .shadow(radius: 3)
                 }
             }

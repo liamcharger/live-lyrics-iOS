@@ -150,10 +150,12 @@ struct UserPopover: View {
         .onAppear {
             if let user = selectedUser {
                 mainViewModel.fetchSharedObject(user: user, song: song, folder: folder) { sharedSong, sharedFolder in
-                    if let sharedSong = sharedSong {
-                        self.readOnly = sharedSong.readOnly ?? false
-                    } else if let sharedFolder = sharedFolder {
-                        self.readOnly = sharedFolder.readOnly ?? false
+                    withAnimation(.none) {
+                        if let sharedSong = sharedSong {
+                            self.readOnly = sharedSong.readOnly ?? false
+                        } else if let sharedFolder = sharedFolder {
+                            self.readOnly = sharedFolder.readOnly ?? false
+                        }
                     }
                 }
             }

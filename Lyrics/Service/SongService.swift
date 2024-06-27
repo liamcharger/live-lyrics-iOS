@@ -176,7 +176,7 @@ class SongService {
 			}
 			
 			guard let sharedSong = try? snapshot?.data(as: SharedSong.self) else {
-				print("SharedSong song not found.")
+				print("SharedSong object not found.")
 				return
 			}
 			
@@ -194,7 +194,7 @@ class SongService {
 			}
 			
 			guard let sharedFolder = try? snapshot?.data(as: SharedFolder.self) else {
-				print("SharedSong song not found.")
+				print("SharedFolder object not found.")
 				return
 			}
 			
@@ -1149,7 +1149,7 @@ class SongService {
 					]
 					
 					dispatch.enter()
-					Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id ?? "").setData(sharedSong) { error in
+					Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id!).setData(sharedSong) { error in
 						dispatch.leave()
 						if let error = error {
 							print("Error: \(error.localizedDescription)")

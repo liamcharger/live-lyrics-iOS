@@ -180,10 +180,19 @@ class MainViewModel: ObservableObject {
             }
             return ""
         }
+        var media: String {
+            if song != nil {
+                return "songs"
+            } else if folder != nil {
+                return "folders"
+            }
+            return ""
+        }
         
-        Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(id).updateData(["readOnly": readOnly]) { error in
+        Firestore.firestore().collection("users").document(uid).collection("shared-\(media)").document(id).updateData(["readOnly": readOnly]) { error in
             if let error = error {
                 print(error.localizedDescription)
+                return
             }
             print("ReadOnly: updated successfully")
         }
