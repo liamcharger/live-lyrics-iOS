@@ -18,7 +18,7 @@ struct CustomTextField: View {
                 .background(Material.regular)
                 .clipShape(Capsule())
         }
-        .cornerRadius(10)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

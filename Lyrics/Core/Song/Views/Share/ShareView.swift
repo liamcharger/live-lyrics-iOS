@@ -137,7 +137,7 @@ struct ShareView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Material.regular)
                     .foregroundColor(.primary)
-                    .cornerRadius(20)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay {
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.yellow, lineWidth: 2.5)

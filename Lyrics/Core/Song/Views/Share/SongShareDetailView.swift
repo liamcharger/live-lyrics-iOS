@@ -26,7 +26,7 @@ struct SongShareDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true)
+            CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail)
                 .padding()
             Divider()
             if NetworkManager.shared.getNetworkState() {
@@ -167,7 +167,7 @@ struct SongShareDetailView: View {
         .padding()
         .background(Material.regular)
         .foregroundColor(.primary)
-        .cornerRadius(20)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 

@@ -122,7 +122,7 @@ struct UserPopover: View {
                          .frame(maxWidth: .infinity, alignment: .leading)
                          .background(Material.regular)
                          .foregroundColor(.primary)
-                         .cornerRadius(20)
+                         .clipShape(RoundedRectangle(cornerRadius: 20))
                          */
                     }
                 }

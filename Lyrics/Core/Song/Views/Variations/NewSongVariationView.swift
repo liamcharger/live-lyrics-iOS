@@ -56,7 +56,7 @@ struct NewSongVariationView: View {
                 .padding(14)
                 .background(Material.regular)
                 .clipShape(Capsule())
-                .cornerRadius(10)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .focused($isFocused)
                 .padding()
             Spacer()

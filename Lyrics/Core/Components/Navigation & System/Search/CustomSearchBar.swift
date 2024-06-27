@@ -13,15 +13,13 @@ struct CustomSearchBar: View {
     let placeholder: String
     
     var body: some View {
-        VStack(spacing: 18) {
-            HStack {
-                Image(systemName: imageName)
-                    .foregroundColor(.gray)
-                TextField(placeholder, text: $text)
-            }
-            .padding(12)
-            .background(Material.regular)
-            .clipShape(Capsule())
+        HStack {
+            Image(systemName: imageName)
+                .foregroundColor(.gray)
+            TextField(placeholder, text: $text)
         }
+        .padding(12)
+        .background(Material.regular)
+        .clipShape(Capsule())
     }
 }

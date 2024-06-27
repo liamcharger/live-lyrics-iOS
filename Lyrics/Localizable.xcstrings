@@ -1037,6 +1037,25 @@
         }
       }
     },
+    "Example Song %lld" : {
+
+    },
+    "explore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "explore"
+          }
+        }
+      }
+    },
     "folders" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1813,6 +1832,17 @@
         }
       }
     },
+    "popular_songs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Songs"
+          }
+        }
+      }
+    },
     "Privacy Policy" : {
       "localizations" : {
         "es" : {
@@ -1990,6 +2020,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscar en"
+          }
+        }
+      }
+    },
+    "search_and_add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search and add songs to your library."
           }
         }
       }

@@ -283,13 +283,13 @@ struct MainView: View {
                             NavigationLink(destination: {
                                 RecentlyDeletedView()
                             }) {
-                                ListRowView(isEditing: $isEditingSongs, title: NSLocalizedString("recently_deleted", comment: ""), navArrow: "chevron.right")
+                                ListRowView( title: NSLocalizedString("recently_deleted", comment: ""), navArrow: "chevron.right")
                             }
                             NavigationLink(destination: {
                                 SongShareDetailView()
                             }) {
                                 ZStack {
-                                    ListRowView(isEditing: $isEditingSongs, title: NSLocalizedString("share_invites", comment: ""), navArrow: "chevron.right")
+                                    ListRowView(title: NSLocalizedString("share_invites", comment: ""), navArrow: "chevron.right")
                                     HStack {
                                         Spacer()
                                         if !mainViewModel.incomingShareRequests.isEmpty {
@@ -301,6 +301,11 @@ struct MainView: View {
                                     }
                                     .padding()
                                 }
+                            }
+                            NavigationLink(destination: {
+                                ExploreView()
+                            }) {
+                                ListRowView(title: NSLocalizedString("explore", comment: ""), navArrow: "chevron.right")
                             }
                         }
                         VStack {
@@ -516,7 +521,7 @@ struct MainView: View {
                                                                         .moveDisabled(true)
                                                                 } else {
                                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
-                                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
+                                                                        ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
                                                                                 if !(song.readOnly ?? false) {
                                                                                     Button {
@@ -729,7 +734,7 @@ struct MainView: View {
                                                 VStack(alignment: .leading, spacing: 6) {
                                                     HStack {
                                                         NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
-                                                            ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
+                                                            ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                 .contextMenu {
                                                                     songContextMenu(song: song)
                                                                 }

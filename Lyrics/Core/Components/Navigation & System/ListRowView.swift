@@ -12,8 +12,6 @@ struct ListRowView: View {
     
     @ObservedObject var songViewModel = SongViewModel.shared
     
-    @Binding var isEditing: Bool
-    
     let title: String
     let navArrow: String?
     let imageName: String?
@@ -22,8 +20,7 @@ struct ListRowView: View {
     let sharedBadge: Bool?
     let song: Song?
     
-    init(isEditing: Binding<Bool>, title: String, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, sharedBadge: Bool? = nil, song: Song? = nil) {
-        self._isEditing = isEditing
+    init(title: String, navArrow: String? = nil, imageName: String? = nil, icon: String? = nil, badge: String? = nil, sharedBadge: Bool? = nil, song: Song? = nil) {
         self.title = title
         self.navArrow = navArrow
         self.imageName = imageName
@@ -148,7 +145,7 @@ struct ListViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         if !capsule {
             content
-                .cornerRadius(22)
+                .clipShape(RoundedRectangle(cornerRadius: 22))
         } else {
             content
                 .clipShape(Capsule())
@@ -157,5 +154,5 @@ struct ListViewModifier: ViewModifier {
 }
 
 #Preview {
-    ListRowView(isEditing: .constant(true), title: "Favorites", navArrow: nil, imageName: "pin.fill", icon: "folder", song: Song.song)
+    ListRowView(title: "Favorites", navArrow: nil, imageName: "pin.fill", icon: "folder", song: Song.song)
 }

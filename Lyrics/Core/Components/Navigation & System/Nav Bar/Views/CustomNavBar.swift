@@ -24,10 +24,10 @@ struct CustomNavBar: View {
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
     
-    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool) {
+    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool? = nil) {
         self.title = title
         self.navType = navType ?? .detail
-        self.showBackButton = showBackButton
+        self.showBackButton = showBackButton ?? true
     }
     
     var body: some View {

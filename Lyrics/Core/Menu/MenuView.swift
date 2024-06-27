@@ -109,7 +109,7 @@ struct MenuView: View {
                                 .padding()
                                 .background(Color.blue)
                                 .foregroundColor(.white)
-                                .cornerRadius(15)
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
                             }
                             .disabled(!isAuthorizedForPayments)
                             .opacity(!isAuthorizedForPayments ? 0.5 : 1)

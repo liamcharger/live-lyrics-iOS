@@ -48,7 +48,7 @@ struct RecentlyDeletedView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted, showBackButton: true)
+                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted)
                 CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
                     .disabled(recentlyDeletedViewModel.songs.contains(where: { $0.title == "noSongs" }))
             }
@@ -88,7 +88,7 @@ struct RecentlyDeletedView: View {
                                     .padding()
                                     .background(Material.regular)
                                     .foregroundColor(.primary)
-                                    .cornerRadius(20)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
                                     .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
                                     .contextMenu {
                                         Button {

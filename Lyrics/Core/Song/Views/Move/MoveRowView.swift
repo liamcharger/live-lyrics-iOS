@@ -44,7 +44,7 @@ struct RowView: View {
                 .padding()
                 .background(Material.regular)
                 .foregroundColor(.primary)
-                .cornerRadius(20)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
             } else {
                 HStack {
                     VStack(alignment: .leading, spacing: 7) {
@@ -62,7 +62,7 @@ struct RowView: View {
                 .padding()
                 .background(Material.regular)
                 .foregroundColor(.primary)
-                .cornerRadius(20)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
             }
         } else {
             HStack {
@@ -76,7 +76,7 @@ struct RowView: View {
             .padding()
             .background(Material.regular)
             .foregroundColor(.primary)
-            .cornerRadius(20)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
         }
     }
 }
