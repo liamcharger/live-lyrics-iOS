@@ -9,14 +9,17 @@ import Foundation
 
 class MusixmatchService: ObservableObject {
     @Published var popularSongs = [Track]()
+    @Published var searchedSongs = [Track]()
     @Published var popularArtists = [Artist]()
     
     @Published var isLoadingPopularSongs = true
     @Published var isLoadingPopularArtists = true
+    // Used when song detail view is opened by user
     @Published var isLoadingSong = true
+    // Used for songs searched by user
+    @Published var isLoadingSongs = false
     
     private static let endpoint: String = "https://api.musixmatch.com/ws/1.1/"
-    //    private static let apiKey: String = "f8c86a1b7c8b921a4a8252815ca62e03"
     private static let apiKey: String = "b26ca438b52fdba4a6c276cacbf6ef43"
     
     static let shared = MusixmatchService()
@@ -148,6 +151,8 @@ class MusixmatchService: ObservableObject {
     }
     
     func searchForSongs(_ query: String) {
+        self.isLoadingSongs = true
+        
         var components = URLComponents(string: MusixmatchService.endpoint + "track.search")
         components?.queryItems = [
             URLQueryItem(name: "q", value: query),
@@ -173,10 +178,12 @@ class MusixmatchService: ObservableObject {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(SongResponse.self, from: data)
                 
-                print(response)
+                for track in response.message.body.trackList {
+                    self.searchedSongs.append(track.track)
+                }
                 
                 DispatchQueue.main.async {
-                    self.isLoadingSong = false
+                    self.isLoadingSongs = false
                 }
             } catch let decodingError {
                 print("Error decoding JSON: \(decodingError.localizedDescription)")
