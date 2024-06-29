@@ -25,6 +25,7 @@
 		E01EB4452B20CA3A009C48F2 /* remote_config_defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */; };
 		E0239E592BE9C133007796BE /* SongVariationManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0239E582BE9C133007796BE /* SongVariationManageView.swift */; };
 		E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */; };
+		E02A0ADF2C3068AF00105365 /* CustomBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0ADE2C3068AE00105365 /* CustomBackButton.swift */; };
 		E02E674D2C191BBA00806190 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E02E674C2C191BBA00806190 /* Localizable.xcstrings */; };
 		E02F21E52B21130600302646 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F21E42B21130600302646 /* AdBannerView.swift */; };
 		E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E03540F82BC05A3400273830 /* FirebaseAnalytics */; };
@@ -173,6 +174,7 @@
 		E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = remote_config_defaults.plist; sourceTree = "<group>"; };
 		E0239E582BE9C133007796BE /* SongVariationManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariationManageView.swift; sourceTree = "<group>"; };
 		E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E02A0ADE2C3068AE00105365 /* CustomBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackButton.swift; sourceTree = "<group>"; };
 		E02E674C2C191BBA00806190 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
@@ -800,6 +802,7 @@
 			isa = PBXGroup;
 			children = (
 				E0CA851C2B081D5100188CD0 /* CustomNavBar.swift */,
+				E02A0ADE2C3068AE00105365 /* CustomBackButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1210,6 +1213,7 @@
 				E04247982A02F5FB00CA48B3 /* RegistrationView.swift in Sources */,
 				E0CA85392B081D5100188CD0 /* LoadingView.swift in Sources */,
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
+				E02A0ADF2C3068AF00105365 /* CustomBackButton.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
 				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,

@@ -147,6 +147,7 @@ struct ArtistResponse: Codable {
                 }
             }
         }
+        
         struct Header: Codable {
             let status_code: Int
             let execute_time: Double
@@ -158,18 +159,11 @@ struct Artist: Codable {
     let artist_id: Int
     let artist_name: String
     let artist_name_translation_list: [ArtistNameTranslation]
-    let artist_comment: String
-    let artist_country: String
     let artist_alias_list: [ArtistAlias]
     let artist_rating: Int
-    let artist_twitter_url: String
-    let artist_credits: ArtistCredits
+    let artist_twitter_url: String?
     let restricted: Int
     let updated_time: String
-    let begin_date_year: String
-    let begin_date: String
-    let end_date_year: String
-    let end_date: String
     
     struct ArtistNameTranslation: Codable {
         let artist_name_translation: ArtistNameTranslationDetail
@@ -182,10 +176,6 @@ struct Artist: Codable {
     
     struct ArtistAlias: Codable {
         let artist_alias: String
-    }
-    
-    struct ArtistCredits: Codable {
-        let artist_list: [String]
     }
 }
 

@@ -57,6 +57,7 @@ struct ExploreView: View {
                                     TextField("search", text: $searchText)
                                         .textFieldStyle(PlainTextFieldStyle())
                                         .onSubmit {
+                                            hasSearchedASong = true
                                             musixmatchService.searchForSongs(searchText)
                                         }
                                 }
@@ -72,37 +73,39 @@ struct ExploreView: View {
                                 .frame(maxWidth: .infinity)
                         } else {
                             if hasSearchedASong {
-                                ForEach(musixmatchService.searchedSongs, id: \.trackId) { song in
-                                    NavigationLink {
-                                        SongExploreDetailView(song: song)
-                                    } label: {
-                                        HStack {
-                                            VStack(alignment: .leading, spacing: 6) {
-                                                Text(song.artistName)
+                                VStack {
+                                    ForEach(musixmatchService.searchedSongs, id: \.trackId) { track in
+                                        NavigationLink {
+                                            SongExploreDetailView(track: track)
+                                        } label: {
+                                            HStack {
+                                                VStack(alignment: .leading, spacing: 5) {
+                                                    Text(track.trackName)
+                                                        .font(.body.weight(.semibold))
+                                                    Text(track.artistName)
+                                                        .foregroundColor(.gray)
+                                                        .lineLimit(2)
+                                                        .font(.system(size: 16))
+                                                }
+                                                .multilineTextAlignment(.leading)
+                                                Spacer()
+                                                Text("E")
+                                                    .font(.system(size: 12))
+                                                    .foregroundColor(Color(.lightGray))
+                                                    .padding(3)
+                                                    .background(Color.gray.opacity(0.3))
+                                                    .clipShape(RoundedRectangle(cornerRadius: 3))
+                                                    .opacity(track.explicit == 1 ? 1 : 0)
+                                                Image(systemName: "chevron.right")
+                                                    .font(.body.weight(.medium))
                                                     .foregroundColor(.gray)
-                                                    .lineLimit(2)
-                                                    .font(.system(size: 16))
-                                                Text(song.trackName)
-                                                    .font(.body.weight(.semibold))
                                             }
-                                            .multilineTextAlignment(.leading)
-                                            Spacer()
-                                            Text("E")
-                                                .font(.system(size: 12))
-                                                .foregroundColor(Color(.lightGray))
-                                                .padding(3)
-                                                .background(Color.gray.opacity(0.3))
-                                                .clipShape(RoundedRectangle(cornerRadius: 3))
-                                                .opacity(song.explicit == 1 ? 1 : 0)
-                                            Image(systemName: "chevron.right")
-                                                .font(.body.weight(.medium))
-                                                .foregroundColor(.gray)
+                                            .padding()
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .background(Material.regular)
+                                            .foregroundColor(.primary)
+                                            .clipShape(RoundedRectangle(cornerRadius: 20))
                                         }
-                                        .padding()
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(Material.regular)
-                                        .foregroundColor(.primary)
-                                        .clipShape(Capsule())
                                     }
                                 }
                             } else {
@@ -111,9 +114,9 @@ struct ExploreView: View {
                                         .textCase(.uppercase)
                                         .font(.system(size: 14).weight(.bold))
                                     LazyVGrid(columns: columns) {
-                                        ForEach(musixmatchService.popularSongs, id: \.trackId) { song in
+                                        ForEach(musixmatchService.popularSongs, id: \.trackId) { track in
                                             NavigationLink {
-                                                SongExploreDetailView(song: song)
+                                                SongExploreDetailView(track: track)
                                             } label: {
                                                 VStack(alignment: .leading) {
                                                     Text("E")
@@ -122,14 +125,14 @@ struct ExploreView: View {
                                                         .padding(3)
                                                         .background(Color.gray.opacity(0.3))
                                                         .clipShape(RoundedRectangle(cornerRadius: 3))
-                                                        .opacity(song.explicit == 1 ? 1 : 0)
+                                                        .opacity(track.explicit == 1 ? 1 : 0)
                                                     Spacer()
                                                     VStack(alignment: .leading, spacing: 6) {
-                                                        Text(song.artistName)
+                                                        Text(track.artistName)
                                                             .foregroundColor(.gray)
                                                             .lineLimit(2)
                                                             .font(.system(size: 16))
-                                                        Text(song.trackName)
+                                                        Text(track.trackName)
                                                             .font(.body.weight(.semibold))
                                                     }
                                                     .multilineTextAlignment(.leading)

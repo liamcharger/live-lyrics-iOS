@@ -65,7 +65,7 @@ class MusixmatchService: ObservableObject {
                     self.isLoadingPopularSongs = false
                 }
             } catch let decodingError {
-                print("Error decoding JSON: \(decodingError.localizedDescription)")
+                print("Error decoding JSON for popular songs: \(decodingError.localizedDescription)")
             }
         }.resume()
     }
@@ -108,7 +108,7 @@ class MusixmatchService: ObservableObject {
                     self.isLoadingPopularArtists = false
                 }
             } catch let decodingError {
-                print("Error decoding JSON: \(decodingError.localizedDescription)")
+                print("Error decoding JSON for popular artists: \(decodingError.localizedDescription)")
             }
         }.resume()
     }
@@ -145,7 +145,7 @@ class MusixmatchService: ObservableObject {
                     self.isLoadingSong = false
                 }
             } catch let decodingError {
-                print("Error decoding JSON: \(decodingError.localizedDescription)")
+                print("Error decoding JSON for song lyrics: \(decodingError.localizedDescription)")
             }
         }.resume()
     }
@@ -156,6 +156,7 @@ class MusixmatchService: ObservableObject {
         var components = URLComponents(string: MusixmatchService.endpoint + "track.search")
         components?.queryItems = [
             URLQueryItem(name: "q", value: query),
+            URLQueryItem(name: "f_has_lyrics", value: "1"),
             URLQueryItem(name: "apikey", value: MusixmatchService.apiKey)
         ]
         guard let url = components?.url else {
@@ -186,7 +187,7 @@ class MusixmatchService: ObservableObject {
                     self.isLoadingSongs = false
                 }
             } catch let decodingError {
-                print("Error decoding JSON: \(decodingError.localizedDescription)")
+                print("Error decoding JSON while searching for songs: \(decodingError.localizedDescription)")
             }
         }.resume()
     }
