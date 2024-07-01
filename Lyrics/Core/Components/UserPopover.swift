@@ -143,8 +143,14 @@ struct UserPopover: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
+            let folderMatches = mainViewModel.selectedFolder?.id == folder?.id
+            let isSharedMedia = folderMatches && song != nil
+            let isSong = (folder == nil || isSharedMedia)
+            let itemType = isSong ? "song" : "folder"
+            let folderMessage = isSharedMedia ? NSLocalizedString("song_is_part_of_folder_and_will_be_left", comment: "") : ""
+            
             if let user = selectedUser {
-                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this \(folder == nil ? "song" : "folder")? They will immediately lose access.")
+                Text("Are you sure you want to remove \"\(user.username)\" as a collaborator from this \(itemType)? They will immediately lose access. \(folderMessage)")
             }
         }
         .onAppear {

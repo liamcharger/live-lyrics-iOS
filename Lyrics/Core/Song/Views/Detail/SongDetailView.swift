@@ -608,7 +608,11 @@ struct SongDetailView: View {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
-            UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil)
+            if let folder = mainViewModel.selectedFolder, mainViewModel.folderSongs.contains(where: { $0.id! == song.id! }) {
+                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: folder)
+            } else {
+                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil)
+            }
         }
         .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
             Button("Delete", role: .destructive) {

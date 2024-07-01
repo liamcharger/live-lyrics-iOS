@@ -160,7 +160,6 @@ class SongService {
 				}
 				
 				group.notify(queue: .main) {
-					print(completedFolders)
 					completion(completedFolders)
 				}
 			}

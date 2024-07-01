@@ -16,10 +16,8 @@ struct SongShareDetailView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @EnvironmentObject var authViewModel: AuthViewModel
     
-    @State var isLoadingAccept = false
-    @State var isLoadingDecline = false
-    @State var loadingIdAccept = ""
-    @State var loadingIdDecline = ""
+    @State var isLoading = false
+    @State var loadingId = ""
     
     let userService = UserService()
     let songService = SongService()
@@ -88,16 +86,14 @@ struct SongShareDetailView: View {
                         Text({
                             let dateFormatter = DateFormatter()
                             dateFormatter.dateFormat = "MM/dd/yyyy"
-                            
                             return dateFormatter.string(from: request.timestamp)
                         }())
                         Button {
-                            self.loadingIdDecline = request.id ?? ""
-                            self.isLoadingDecline = true
-                            // Update when multiple users are supported
+                            self.loadingId = request.id ?? ""
+                            self.isLoading = true
                             mainViewModel.declineInvite(incomingReqColUid: request.to.first, request: request) {
-                                self.loadingIdDecline = ""
-                                self.isLoadingDecline = false
+                                self.loadingId = ""
+                                self.isLoading = false
                             }
                         } label: {
                             Image(systemName: "trash")
@@ -107,16 +103,18 @@ struct SongShareDetailView: View {
                                 .foregroundColor(.red)
                                 .clipShape(Circle())
                         }
+                        .disabled(isLoading)
+                        .opacity(isLoading ? 0.5 : 1)
                     }
                 } else {
                     HStack(spacing: 6) {
-                        if !isLoadingAccept && loadingIdAccept != request.id {
+                        if !isLoading || loadingId != request.id {
                             Button {
-                                self.loadingIdAccept = request.id ?? ""
-                                self.isLoadingAccept = true
+                                self.loadingId = request.id ?? ""
+                                self.isLoading = true
                                 mainViewModel.acceptInvite(request: request) {
-                                    self.loadingIdAccept = ""
-                                    self.isLoadingAccept = false
+                                    self.loadingId = ""
+                                    self.isLoading = false
                                 }
                             } label: {
                                 Image(systemName: "checkmark")
@@ -126,12 +124,14 @@ struct SongShareDetailView: View {
                                     .foregroundColor(.white)
                                     .clipShape(Circle())
                             }
+                            .disabled(isLoading)
+                            .opacity(isLoading ? 0.5 : 1)
                             Button {
-                                self.loadingIdDecline = request.id ?? ""
-                                self.isLoadingDecline = true
+                                self.loadingId = request.id ?? ""
+                                self.isLoading = true
                                 mainViewModel.declineInvite(request: request) {
-                                    self.loadingIdDecline = ""
-                                    self.isLoadingDecline = false
+                                    self.loadingId = ""
+                                    self.isLoading = false
                                 }
                             } label: {
                                 Image(systemName: "xmark")
@@ -141,7 +141,9 @@ struct SongShareDetailView: View {
                                     .foregroundColor(.primary)
                                     .clipShape(Circle())
                             }
-                        } else {
+                            .disabled(isLoading)
+                            .opacity(isLoading ? 0.5 : 1)
+                        } else if loadingId == request.id {
                             ProgressView()
                         }
                     }
@@ -153,11 +155,9 @@ struct SongShareDetailView: View {
                         .padding(.horizontal, -16)
                     Text({
                         var users = ""
-                        
                         for to in request.toUsername {
                             users += "\(users.isEmpty ? "" : ", ")\(to)"
                         }
-                        
                         return users.isEmpty ? "Loading..." : "To: " + users
                     }())
                     .foregroundColor(.gray)
