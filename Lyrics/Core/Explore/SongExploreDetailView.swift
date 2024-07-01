@@ -75,7 +75,7 @@ struct SongExploreDetailView: View {
                             .padding(.vertical, 12)
                         Text(lyrics.lyrics_body)
                     }
-                    .padding()
+                    .padding([.bottom, .horizontal])
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
                         DispatchQueue.main.async {
                             self.offset = value.first ?? 0
