@@ -473,18 +473,18 @@
         }
       }
     },
-    "Are you sure you want to remove \"%@\" as a collaborator from this %@? They will immediately lose access." : {
+    "Are you sure you want to remove \"%@\" as a collaborator from this %@? They will immediately lose access. %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Are you sure you want to remove \"%1$@\" as a collaborator from this %2$@? They will immediately lose access."
+            "value" : "Are you sure you want to remove \"%1$@\" as a collaborator from this %2$@? They will immediately lose access. %3$@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Estás seguro de que deseas eliminar \"%1$@\" como colaborador de este %2$@? Perderán el acceso de inmediato."
+            "value" : "¿Estás seguro de que deseas eliminar \"%1$@\" como colaborador de este %2$@? Perderán el acceso de inmediato. %3$@"
           }
         }
       }
@@ -656,8 +656,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Conéctate a Internet para eliminar colaboradores."
+            "state" : "translated",
+            "value" : "Conéctese a Internet para editar los permisos de los colaboradores."
           }
         }
       }
@@ -868,6 +868,12 @@
     },
     "duration" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1642,6 +1648,12 @@
             "state" : "translated",
             "value" : "It doesn’t look like you have any recently deleted songs."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No parece que tengas ninguna canción borrada recientemente."
+          }
         }
       }
     },
@@ -2154,6 +2166,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subtítulo de la canción"
+          }
+        }
+      }
+    },
+    "song_is_part_of_folder_and_will_be_left" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WARNING: the user will be removed from the song’s parent folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ATENCIÓN: el usuario será eliminado de la carpeta padre de la canción."
           }
         }
       }
