@@ -83,64 +83,65 @@ struct MainView: View {
         let lowercasedQuery = songSearchText.lowercased()
         let songs = mainViewModel.sharedSongs + mainViewModel.songs
         
-        return songs.sorted(by: { (song1, song2) -> Bool in
-            switch sortSelection {
-            case .noSelection:
-                return false
-            case .name:
-                return song1.title < song2.title
-            case .artist:
-                return song1.artist ?? "" < song2.artist ?? ""
-            case .key:
-                if let key1 = song1.key, let key2 = song2.key {
-                    return key1 < key2
-                } else if song1.key != nil {
-                    return true
-                } else {
+        return songs
+            .sorted(by: { (song1, song2) -> Bool in
+                switch sortSelection {
+                case .noSelection:
                     return false
-                }
-            case .dateCreated:
-                return song1.timestamp < song2.timestamp
-            case .tags:
-                let tags1Exist = song1.tags != nil && !song1.tags!.isEmpty
-                let tags2Exist = song2.tags != nil && !song2.tags!.isEmpty
-                
-                if tags1Exist && !tags2Exist {
-                    return true
-                } else if !tags1Exist && tags2Exist {
-                    return false
-                } else if tags1Exist && tags2Exist {
-                    let tags1Colors = Set(song1.tags!.map { $0.lowercased() })
-                    let tags2Colors = Set(song2.tags!.map { $0.lowercased() })
-                    let colorOrder: [String] = ["red", "blue", "green", "yellow", "orange"]
-                    
-                    let firstColor1 = colorOrder.first { tags1Colors.contains($0) }
-                    let firstColor2 = colorOrder.first { tags2Colors.contains($0) }
-                    
-                    if let index1 = firstColor1, let index2 = firstColor2 {
-                        return colorOrder.firstIndex(of: index1)! < colorOrder.firstIndex(of: index2)!
+                case .name:
+                    return song1.title.lowercased() < song2.title.lowercased()
+                case .artist:
+                    return (song1.artist ?? "").lowercased() < (song2.artist ?? "").lowercased()
+                case .key:
+                    if let key1 = song1.key, let key2 = song2.key {
+                        return key1 < key2
+                    } else if song1.key != nil {
+                        return true
                     } else {
-                        return tags1Colors.count < tags2Colors.count
+                        return false
+                    }
+                case .dateCreated:
+                    return song1.timestamp < song2.timestamp
+                case .tags:
+                    let tags1Exist = song1.tags != nil && !song1.tags!.isEmpty
+                    let tags2Exist = song2.tags != nil && !song2.tags!.isEmpty
+                    
+                    if tags1Exist && !tags2Exist {
+                        return true
+                    } else if !tags1Exist && tags2Exist {
+                        return false
+                    } else if tags1Exist && tags2Exist {
+                        let tags1Colors = Set(song1.tags!.map { $0.lowercased() })
+                        let tags2Colors = Set(song2.tags!.map { $0.lowercased() })
+                        let colorOrder: [String] = ["red", "blue", "green", "yellow", "orange"]
+                        
+                        let firstColor1 = colorOrder.first { tags1Colors.contains($0) }
+                        let firstColor2 = colorOrder.first { tags2Colors.contains($0) }
+                        
+                        if let index1 = firstColor1, let index2 = firstColor2 {
+                            return colorOrder.firstIndex(of: index1)! < colorOrder.firstIndex(of: index2)!
+                        } else {
+                            return tags1Colors.count < tags2Colors.count
+                        }
+                    } else {
+                        return false
+                    }
+                }
+            })
+            .sorted(by: { song1, song2 in
+                return (song1.pinned ?? false) && !(song2.pinned ?? false)
+            })
+            .filter { item in
+                if !songSearchText.isEmpty {
+                    if let artist = item.artist {
+                        return item.title.lowercased().contains(lowercasedQuery) || artist.lowercased().contains(lowercasedQuery)
+                    } else {
+                        return item.title.lowercased().contains(lowercasedQuery)
                     }
                 } else {
-                    return false
+                    return true
                 }
             }
-        })
-        .sorted(by: { song1, song2 in
-            return song1.pinned ?? false && !(song2.pinned ?? false)
-        })
-        .filter { item in
-            if !songSearchText.isEmpty {
-                if let artist = item.artist {
-                    return item.title.lowercased().contains(lowercasedQuery) || artist.lowercased().contains(lowercasedQuery)
-                } else {
-                    return item.title.lowercased().contains(lowercasedQuery)
-                }
-            } else {
-                return true
-            }
-        }
     }
     
     var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
