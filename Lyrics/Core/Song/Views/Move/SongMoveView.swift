@@ -70,7 +70,7 @@ struct SongMoveView: View {
                                         showError = true
                                     } else {
                                         songViewModel.moveSongsToFolder(folder: folder, songs: [song]) { error in
-                                            if let error = error {
+                                            if error != nil {
                                                 if errorMessage == "Failed to get document because the client is offline." {
                                                     self.errorMessage = "Please connect to the internet to perform this action."
                                                 } else {
