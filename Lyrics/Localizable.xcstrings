@@ -526,6 +526,23 @@
         }
       }
     },
+    "bands" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bands"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bandas"
+          }
+        }
+      }
+    },
     "Black" : {
       "localizations" : {
         "es" : {
@@ -1170,6 +1187,9 @@
           }
         }
       }
+    },
+    "Hello, World!" : {
+
     },
     "home" : {
       "extractionState" : "manual",

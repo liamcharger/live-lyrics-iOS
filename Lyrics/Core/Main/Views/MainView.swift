@@ -303,6 +303,11 @@ struct MainView: View {
                                     .padding()
                                 }
                             }
+                            NavigationLink(destination: {
+                                EmptyView()
+                            }) {
+                                ListRowView(isEditing: .constant(false), title: NSLocalizedString("bands", comment: ""), navArrow: "chevron.right")
+                            }
                         }
                         VStack {
                             VStack {
