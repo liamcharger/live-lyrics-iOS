@@ -127,9 +127,9 @@ struct UserService {
             }
     }
     
-    func sendNotificationToFCM(deviceToken: String, title: String, body: String) {
+    func sendNotificationToFCM(tokens: [String], title: String, body: String) {
         let data: [String: Any] = [
-            "fcmId": deviceToken,
+            "tokens": tokens,
             "title": title,
             "body": body
         ]
