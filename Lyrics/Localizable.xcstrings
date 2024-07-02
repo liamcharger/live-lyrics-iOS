@@ -87,6 +87,9 @@
         }
       }
     },
+    "%lld members" : {
+
+    },
     "0.0" : {
       "localizations" : {
         "es" : {
@@ -1188,9 +1191,6 @@
         }
       }
     },
-    "Hello, World!" : {
-
-    },
     "home" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1690,6 +1690,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No parece que tengas ninguna canción/carpeta compartida siendo enviada o recibida."
+          }
+        }
+      }
+    },
+    "no_user_bands" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hmm, it doesn’t look like you have any joined bands."
           }
         }
       }

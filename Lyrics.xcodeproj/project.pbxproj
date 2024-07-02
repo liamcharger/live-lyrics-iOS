@@ -26,6 +26,7 @@
 		E02A0AEC2C33565300105365 /* BandsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AEB2C33565300105365 /* BandsViewModel.swift */; };
 		E02A0AEE2C3356B100105365 /* Band.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AED2C3356B100105365 /* Band.swift */; };
 		E02A0AF22C339DE300105365 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = E02A0AF12C339DE300105365 /* FirebaseFunctions */; };
+		E02A0AF42C33A9F200105365 /* BandRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AF32C33A9F200105365 /* BandRowView.swift */; };
 		E02E674D2C191BBA00806190 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E02E674C2C191BBA00806190 /* Localizable.xcstrings */; };
 		E02F21E52B21130600302646 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F21E42B21130600302646 /* AdBannerView.swift */; };
 		E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E03540F82BC05A3400273830 /* FirebaseAnalytics */; };
@@ -174,6 +175,7 @@
 		E02A0AE72C33563C00105365 /* BandsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandsView.swift; sourceTree = "<group>"; };
 		E02A0AEB2C33565300105365 /* BandsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandsViewModel.swift; sourceTree = "<group>"; };
 		E02A0AED2C3356B100105365 /* Band.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Band.swift; sourceTree = "<group>"; };
+		E02A0AF32C33A9F200105365 /* BandRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandRowView.swift; sourceTree = "<group>"; };
 		E02E674C2C191BBA00806190 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 			isa = PBXGroup;
 			children = (
 				E02A0AE72C33563C00105365 /* BandsView.swift */,
+				E02A0AF32C33A9F200105365 /* BandRowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1224,6 +1227,7 @@
 				E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */,
 				E0CC33232A040BB700CC38C6 /* NewSongView.swift in Sources */,
 				E050D1592A03031B004CC45E /* MenuView.swift in Sources */,
+				E02A0AF42C33A9F200105365 /* BandRowView.swift in Sources */,
 				E00E845D2B222AEB00573A9F /* StoreKitManager.swift in Sources */,
 				E04247982A02F5FB00CA48B3 /* RegistrationView.swift in Sources */,
 				E0CA85392B081D5100188CD0 /* LoadingView.swift in Sources */,

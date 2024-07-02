@@ -304,7 +304,7 @@ struct MainView: View {
                                 }
                             }
                             NavigationLink(destination: {
-                                EmptyView()
+                                BandsView()
                             }) {
                                 ListRowView(isEditing: .constant(false), title: NSLocalizedString("bands", comment: ""), navArrow: "chevron.right")
                             }
