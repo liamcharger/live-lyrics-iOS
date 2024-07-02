@@ -25,6 +25,7 @@
 		E02A0AE82C33563C00105365 /* BandsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AE72C33563C00105365 /* BandsView.swift */; };
 		E02A0AEC2C33565300105365 /* BandsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AEB2C33565300105365 /* BandsViewModel.swift */; };
 		E02A0AEE2C3356B100105365 /* Band.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AED2C3356B100105365 /* Band.swift */; };
+		E02A0AF22C339DE300105365 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = E02A0AF12C339DE300105365 /* FirebaseFunctions */; };
 		E02E674D2C191BBA00806190 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E02E674C2C191BBA00806190 /* Localizable.xcstrings */; };
 		E02F21E52B21130600302646 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F21E42B21130600302646 /* AdBannerView.swift */; };
 		E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E03540F82BC05A3400273830 /* FirebaseAnalytics */; };
@@ -291,6 +292,7 @@
 				E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */,
 				E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */,
 				E03541012BC05A3400273830 /* FirebaseMessaging in Frameworks */,
+				E02A0AF22C339DE300105365 /* FirebaseFunctions in Frameworks */,
 				E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */,
 				E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */,
 				E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */,
@@ -1030,6 +1032,7 @@
 				E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */,
 				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
 				E0867CF02BD5989B005605CD /* BottomSheet */,
+				E02A0AF12C339DE300105365 /* FirebaseFunctions */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1694,6 +1697,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
 			productName = SwiftUIIntrospect;
+		};
+		E02A0AF12C339DE300105365 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
 		};
 		E03540F82BC05A3400273830 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

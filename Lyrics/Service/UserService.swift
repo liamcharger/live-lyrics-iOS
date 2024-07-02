@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
+import FirebaseFunctions
 import FirebaseFirestore
 import FirebaseAuth
 import Firebase
@@ -128,52 +128,17 @@ struct UserService {
     }
     
     func sendNotificationToFCM(deviceToken: String, title: String, body: String) {
-        let fcmUrlString = "https://fcm.googleapis.com/v1/projects/charger-tech-lyrics/messages:send"
-        guard let fcmUrl = URL(string: fcmUrlString) else {
-            print("Error: Invalid FCM URL")
-            return
-        }
-        
-        let notification: [String: Any] = [
+        let data: [String: Any] = [
+            "fcmId": deviceToken,
             "title": title,
             "body": body
         ]
-        let message: [String: Any] = [
-            "token": deviceToken,
-            "notification": notification
-        ]
-        let jsonData: Data
-        do {
-            jsonData = try JSONSerialization.data(withJSONObject: message, options: [])
-        } catch {
-            print("Error serializing notification payload: \(error.localizedDescription)")
-            return
-        }
-        
-        var request = URLRequest(url: fcmUrl)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(deviceToken)", forHTTPHeaderField: "Authorization")
-        
-        request.httpBody = jsonData
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
             if let error = error {
                 print("Error sending notification: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Error: Invalid HTTP response")
-                return
-            }
-            
-            if (200..<300).contains(httpResponse.statusCode) {
-                print("Notification sent successfully")
             } else {
-                print("Error sending notification. Status code: \(httpResponse.statusCode)")
+                print("Notification sent successfully")
             }
         }
-        task.resume()
     }
 }

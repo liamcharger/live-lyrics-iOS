@@ -18,10 +18,10 @@ struct User: Identifiable, Codable {
     var wordCountStyle: String?
     var hasSubscription: Bool?
     var showAds: Bool?
-    var hasCollapsedPremium: Bool?
     var currentVersion: String?
     var showsExplicitSongs: Bool?
     var enableAutoscroll: Bool?
     var isLocal: Bool?
     var metronomeStyle: [String]?
+    var fcmId: String?
 }
