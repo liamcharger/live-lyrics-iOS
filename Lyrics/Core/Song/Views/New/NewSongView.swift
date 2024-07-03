@@ -75,8 +75,6 @@ struct NewSongView: View {
                 .modifier(NavButtonViewModifier())
             })
             .padding()
-            .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-            .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .sheet(isPresented: $view2) {
                 nextView
             }

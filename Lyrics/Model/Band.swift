@@ -14,6 +14,6 @@ struct Band: Identifiable, Codable {
     // Used by user to join a band
     let joinId: String
     let members: [String]
-    // Should there be global notes?
+    // Should there be band-public notes?
     // let notes: String
 }

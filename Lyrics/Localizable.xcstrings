@@ -87,8 +87,15 @@
         }
       }
     },
-    "%lld members" : {
-
+    "%lld member%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld member%2$@"
+          }
+        }
+      }
     },
     "0.0" : {
       "localizations" : {
@@ -492,6 +499,9 @@
         }
       }
     },
+    "Are you sure you want to remove \"%@\" as a member of this band? They will immediately lose access." : {
+
+    },
     "Artist" : {
       "localizations" : {
         "es" : {
@@ -656,6 +666,9 @@
         }
       }
     },
+    "Code" : {
+
+    },
     "Collaborate" : {
       "localizations" : {
         "es" : {
@@ -748,6 +761,15 @@
           }
         }
       }
+    },
+    "Create a Band" : {
+
+    },
+    "Create a New Band" : {
+
+    },
+    "Create Band" : {
+
     },
     "Date" : {
       "localizations" : {
@@ -1120,6 +1142,9 @@
         }
       }
     },
+    "Get Code" : {
+
+    },
     "good_afternoon" : {
       "comment" : "Good Afternoon.",
       "localizations" : {
@@ -1281,6 +1306,12 @@
           }
         }
       }
+    },
+    "Join a Band" : {
+
+    },
+    "Join Band" : {
+
     },
     "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more." : {
       "localizations" : {
@@ -1940,6 +1971,9 @@
         }
       }
     },
+    "Remove Band Member?" : {
+
+    },
     "Remove Collaborator?" : {
       "localizations" : {
         "es" : {
@@ -2440,6 +2474,9 @@
           }
         }
       }
+    },
+    "To join a band, enter the six digit code from a band administrator." : {
+
     },
     "Type:" : {
       "localizations" : {

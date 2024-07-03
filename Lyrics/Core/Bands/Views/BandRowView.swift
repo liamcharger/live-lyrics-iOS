@@ -10,37 +10,86 @@ import SwiftUI
 struct BandRowView: View {
     let band: Band
     
+    @ObservedObject var bandsViewModel = BandsViewModel.shared
+    
+    @State var members = [BandMember]()
+    @Binding var selectedMember: BandMember?
+    
+    @State var loadingMembers = true
+    @Binding var showUserPopover: Bool
+    
     var body: some View {
-        VStack {
+        VStack(spacing: 2) {
             HStack {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(band.name)
                         .font(.title2.weight(.bold))
-                    Text("\(band.members.count) members")
+                    Text("\(band.members.count) member\(band.members.count == 1 ? "" : "s")")
                         .foregroundColor(.gray)
                 }
                 Spacer()
                 // Notes button for band-public notes?
-                // TODO: add menu button with actions: leave, etc.
+                Menu {
+                    Button {
+                        let pasteboard = UIPasteboard.general
+                        pasteboard.string = band.joinId
+                        // TODO: create user visible confirmation
+                    } label: {
+                        Label("Get Code", systemImage: "lock.open")
+                    }
+                    // TODO: update button display logic
+                    Button(role: .destructive) {
+                        bandsViewModel.leaveBand(band)
+                    } label: {
+                        Label("Leave", systemImage: "trash")
+                    }
+                    Button(role: .destructive) {
+                        bandsViewModel.deleteBand(band)
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .padding(14)
+                        .background(Material.regular)
+                        .foregroundColor(.primary)
+                        .clipShape(Circle())
+                }
             }
             .padding()
             Divider()
-            ScrollView(.horizontal) {
-                HStack {
-                    // TODO: replace with BandPopoverRowView that displays roles (drummer, guitarist, etc.)
-                    UserPopoverRowView(user: User(id: "thisistheid", email: "testingemail@icloud.com", username: "testingusername", fullname: "Untest Fullname"))
-                    UserPopoverRowView(user: User(id: "thisistheid", email: "testingemail1@icloud.com", username: "testingusername1", fullname: "Test Fullname"))
-                    UserPopoverRowView(user: User(id: "thisistheid", email: "testingemail2@icloud.com", username: "testingusername2", fullname: "Different Fullname"))
-                    UserPopoverRowView(user: User(id: "thisistheid", email: "testingemail3@icloud.com", username: "testingusername3", fullname: "A-Different Fullname"))
+            if loadingMembers {
+                HStack(spacing: 5) {
+                    Spacer()
+                    ProgressView()
+                    Text("Loading")
+                    Spacer()
                 }
-                .padding()
+                .foregroundColor(.gray)
+            } else {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(members) { member in
+                            Button {
+                                selectedMember = member
+                                showUserPopover = true
+                            } label: {
+                                BandMemberPopoverRowView(member: member)
+                            }
+                        }
+                    }
+                    .padding(12)
+                }
             }
         }
         .background(Material.regular)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .onAppear {
-            // TODO: load band members with IDs
-            
+            bandsViewModel.fetchBandMembers(band) { members in
+                self.loadingMembers = false
+                self.members = members
+//                self.members.append(BandMember(id: UUID().uuidString, uid: AuthViewModel.shared.currentUser?.id ?? "", fullname: "Liam Willey", username: "liamcharger", admin: true, role: "vocalist", roleColor: nil, roleIcon: "microphone-stand"))
+            }
         }
     }
 }
