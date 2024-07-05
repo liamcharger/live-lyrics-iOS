@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import BottomSheet
 
 struct SongVariationEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var bandsViewModel = BandsViewModel.shared
     
     let song: Song
     let variation: SongVariation
@@ -18,7 +20,10 @@ struct SongVariationEditView: View {
     @State var errorMessage = ""
     @State var title = ""
     
+    @State var selectedRole: BandRole?
+    
     @State var showError = false
+    @State var showAddRoleSheet = false
     
     var isEmpty: Bool {
         title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -28,7 +33,7 @@ struct SongVariationEditView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.isDisplayed = false
         }
-        songViewModel.updateVariation(song: song, variation: variation, title: title)
+        songViewModel.updateVariation(song: song, variation: variation, title: title, role: selectedRole)
     }
     
     init(song: Song, variation: SongVariation, isDisplayed: Binding<Bool>) {
@@ -49,8 +54,23 @@ struct SongVariationEditView: View {
             .padding()
             Divider()
             ScrollView {
-                CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
-                    .padding()
+                VStack {
+                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+                    Button {
+                        showAddRoleSheet = true
+                    } label: {
+                        HStack {
+                            Text(selectedRole?.name ?? "Add a Role")
+                            Spacer()
+                            FAText(iconName: selectedRole?.icon ?? "plus", size: 18)
+                        }
+                        .padding()
+                        .background(Material.regular)
+                        .clipShape(Capsule())
+                        .cornerRadius(10)
+                    }
+                }
+                .padding()
             }
             Divider()
             Button(action: update) {
@@ -62,8 +82,16 @@ struct SongVariationEditView: View {
             .disabled(isEmpty)
             .padding()
         }
+        .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium()]) {
+            BandMemberAddRoleView(member: nil, band: nil, selectedRole: $selectedRole)
+        }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
+        }
+        .onAppear {
+            if let roleId = variation.roleId {
+                selectedRole = bandsViewModel.memberRoles.first(where: { $0.id! == roleId })
+            }
         }
     }
 }

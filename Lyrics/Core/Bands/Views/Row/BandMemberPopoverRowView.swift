@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BandMemberPopoverRowView: View {
     let member: BandMember
+    let role: BandRole?
     let showBadge: Bool
     let size: [CGFloat: CGFloat]
     
@@ -19,8 +20,9 @@ struct BandMemberPopoverRowView: View {
         return small ? 22 : 33
     }
     
-    init(member: BandMember, size: [CGFloat: CGFloat]? = nil, showBadge: Bool? = nil) {
+    init(member: BandMember, size: [CGFloat: CGFloat]? = nil, showBadge: Bool? = nil, role: BandRole? = nil) {
         self.member = member
+        self.role = role
         self.showBadge = showBadge ?? true
         self.size = size ?? [16: 12]
     }
@@ -32,8 +34,8 @@ struct BandMemberPopoverRowView: View {
             .background(Material.regular)
             .clipShape(Circle())
             .overlay {
-                if let roleIcon = member.roleIcon, showBadge {
-                    FAText(iconName: roleIcon, size: small ? 11 : 17)
+                if let role = role, showBadge {
+                    FAText(iconName: role.icon ?? "star", size: small ? 11 : 17)
                         .foregroundColor(.white)
                         .background {
                             Circle()

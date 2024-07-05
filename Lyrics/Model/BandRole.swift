@@ -11,6 +11,6 @@ import FirebaseFirestoreSwift
 struct BandRole: Identifiable, Codable {
     @DocumentID var id: String?
     let name: String
-    let color: String
-    let icon: String
+    let icon: String?
+    let color: String?
 }

@@ -13,9 +13,11 @@ struct BandRowView: View {
     @ObservedObject var bandsViewModel = BandsViewModel.shared
     
     @State var members = [BandMember]()
+    @State var roles = [BandRole]()
     @Binding var selectedMember: BandMember?
     
     @State var loadingMembers = true
+    @State var loadingRoles = true
     @Binding var showUserPopover: Bool
     
     var body: some View {
@@ -35,7 +37,7 @@ struct BandRowView: View {
                         pasteboard.string = band.joinId
                         // TODO: create user visible confirmation
                     } label: {
-                        Label("Get Code", systemImage: "lock.open")
+                        Label("Get Join Code", systemImage: "lock.open")
                     }
                     // TODO: update button display logic
                     Button(role: .destructive) {
@@ -58,7 +60,7 @@ struct BandRowView: View {
             }
             .padding()
             Divider()
-            if loadingMembers {
+            if loadingMembers || loadingRoles {
                 HStack(spacing: 5) {
                     Spacer()
                     ProgressView()
@@ -70,11 +72,13 @@ struct BandRowView: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(members) { member in
+                            let role = roles.first(where: { $0.id! == member.roleId ?? "" })
+                            
                             Button {
                                 selectedMember = member
                                 showUserPopover = true
                             } label: {
-                                BandMemberPopoverRowView(member: member)
+                                BandMemberPopoverRowView(member: member, role: role)
                             }
                         }
                     }
@@ -88,7 +92,10 @@ struct BandRowView: View {
             bandsViewModel.fetchBandMembers(band) { members in
                 self.loadingMembers = false
                 self.members = members
-//                self.members.append(BandMember(id: UUID().uuidString, uid: AuthViewModel.shared.currentUser?.id ?? "", fullname: "Liam Willey", username: "liamcharger", admin: true, role: "vocalist", roleColor: nil, roleIcon: "microphone-stand"))
+            }
+            bandsViewModel.fetchMemberRoles(band) { roles in
+                self.loadingRoles = false
+                self.roles = roles
             }
         }
     }

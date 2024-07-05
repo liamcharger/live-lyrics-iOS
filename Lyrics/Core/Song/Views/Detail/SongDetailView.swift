@@ -442,7 +442,7 @@ struct SongDetailView: View {
                                                     self.lyrics = song.lyrics
                                                     self.selectedVariation = nil
                                                 } label: {
-                                                    Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                                    Label("Main", systemImage: selectedVariation == nil ? "checkmark" : "")
                                                 }
                                                 Divider()
                                             }
@@ -487,7 +487,7 @@ struct SongDetailView: View {
                                                 if let variation = selectedVariation {
                                                     Text(variation.title)
                                                 } else {
-                                                    Text("Default")
+                                                    Text("Main")
                                                 }
                                                 Image(systemName: "chevron.up.chevron.down")
                                             }

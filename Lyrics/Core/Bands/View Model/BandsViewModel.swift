@@ -15,7 +15,17 @@ class BandsViewModel: ObservableObject {
     @Published var isLoadingUserBands = true
     @Published var isLoadingBands = true
     @Published var isCreatingBand = false
+    @Published var isSavingMemberRole = false
     
+    let memberRoles: [BandRole] = [
+        BandRole(id: "vocalist", name: "Vocalist", icon: "microphone-stand", color: nil),
+        BandRole(id: "backup_vocalist", name: "Backup Vocalist", icon: "microphone-stand", color: nil),
+        BandRole(id: "lead_guitarist", name: "Lead Guitarist", icon: "guitar", color: nil),
+        BandRole(id: "rhythm_guitarist", name: "Rhythm Guitarist", icon: "guitar", color: nil),
+        BandRole(id: "bass_guitarist", name: "Bass Guitarist", icon: "guitar-electric", color: nil),
+        BandRole(id: "drummer", name: "Drummer", icon: "drum", color: nil),
+        BandRole(id: "keyboardist", name: "Keyboardist", icon: "piano-keyboard", color: nil),
+    ]
     let service = BandService()
     
     static let shared = BandsViewModel()
@@ -40,6 +50,15 @@ class BandsViewModel: ObservableObject {
         }
     }
     
+    func fetchMemberRoles(_ band: Band, completion: @escaping([BandRole]) -> Void) {
+        completion(memberRoles)
+        /*
+         service.fetchMemberRoles(band: band) { roles in
+            completion(roles)
+        }
+         */
+    }
+    
     func createBand(_ name: String, completion: @escaping() -> Void) {
         self.isCreatingBand = true
         service.createBand(name: name) {
@@ -55,7 +74,7 @@ class BandsViewModel: ObservableObject {
                     completion()
                 }
             } else {
-                // Error...
+                print("Band is nil")
             }
         }
     }
@@ -66,6 +85,13 @@ class BandsViewModel: ObservableObject {
     
     func deleteBand(_ band: Band) {
         service.deleteBand(band: band)
+    }
+    
+    func saveRole(to member: BandMember, for band: Band, role: BandRole?) {
+        self.isSavingMemberRole = true
+        service.saveRole(member: member, band: band, role: role) {
+            self.isSavingMemberRole = false
+        }
     }
     
     func getRoleColor(_ color: String) -> Color {

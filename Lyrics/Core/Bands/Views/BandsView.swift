@@ -23,9 +23,12 @@ struct BandsView: View {
                 .padding()
             Divider()
             if bandsViewModel.isLoadingUserBands {
-                Spacer()
-                ProgressView("Loading")
-                Spacer()
+                HStack {
+                    Spacer()
+                    ProgressView("Loading")
+                    Spacer()
+                }
+                .padding()
             } else if bandsViewModel.userBands.isEmpty {
                 // TODO: add "what are bands?" button
                 FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
@@ -34,14 +37,14 @@ struct BandsView: View {
                     VStack {
                         ForEach(bandsViewModel.userBands) { band in
                             BandRowView(band: band, selectedMember: $selectedMember, showUserPopover: $showUserPopover)
+                                .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
+                                    if let member = selectedMember {
+                                        BandMemberPopover(member: member, band: band)
+                                    }
+                                }
                         }
                     }
                     .padding()
-                    .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
-                        if let member = selectedMember {
-                            BandMemberPopover(member: member)
-                        }
-                    }
                 }
             }
             Divider()

@@ -79,6 +79,7 @@
 		E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77832A17CAA50032332F /* EditPasswordView.swift */; };
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
+		E08063D02C37454100B598B0 /* BandMemberAddRoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08063CE2C37454100B598B0 /* BandMemberAddRoleView.swift */; };
 		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
 		E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E0867CF02BD5989B005605CD /* BottomSheet */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
@@ -92,6 +93,8 @@
 		E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */; };
 		E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */; };
 		E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */; };
+		E09C612D2C35D4220061986F /* BandChooseRoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C612C2C35D4220061986F /* BandChooseRoleView.swift */; };
+		E09C612F2C35E1430061986F /* BandChooseRoleIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C612E2C35E1430061986F /* BandChooseRoleIcon.swift */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
 		E0A8F5062BD06887009275A2 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A8F5052BD06887009275A2 /* Version.swift */; };
 		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
@@ -232,6 +235,7 @@
 		E06D77832A17CAA50032332F /* EditPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordView.swift; sourceTree = "<group>"; };
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
+		E08063CE2C37454100B598B0 /* BandMemberAddRoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandMemberAddRoleView.swift; sourceTree = "<group>"; };
 		E0867CED2BD57812005605CD /* SongDetailMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailMenuView.swift; sourceTree = "<group>"; };
 		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
 		E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Solid-900.otf"; sourceTree = "<group>"; };
@@ -244,6 +248,8 @@
 		E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Regular-400.otf"; sourceTree = "<group>"; };
 		E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Thin-100.otf"; sourceTree = "<group>"; };
 		E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Solid-900.otf"; sourceTree = "<group>"; };
+		E09C612C2C35D4220061986F /* BandChooseRoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandChooseRoleView.swift; sourceTree = "<group>"; };
+		E09C612E2C35E1430061986F /* BandChooseRoleIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandChooseRoleIcon.swift; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		E0A8F5052BD06887009275A2 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
@@ -365,10 +371,10 @@
 		E02A0AE42C33560C00105365 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E08063CF2C37454100B598B0 /* Role */,
+				E08063CB2C37452A00B598B0 /* New */,
+				E08063C92C37451600B598B0 /* Row */,
 				E02A0AE72C33563C00105365 /* BandsView.swift */,
-				E02A0AF32C33A9F200105365 /* BandRowView.swift */,
-				E02A0AF52C344AD000105365 /* NewBandView.swift */,
-				E02A0AFB2C34E6B300105365 /* BandMemberPopoverRowView.swift */,
 				E02A0AFD2C34EB8D00105365 /* BandMemberPopover.swift */,
 				E02A0AFF2C34F7D500105365 /* BandJoinView.swift */,
 			);
@@ -694,6 +700,33 @@
 				E0867CED2BD57812005605CD /* SongDetailMenuView.swift */,
 			);
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		E08063C92C37451600B598B0 /* Row */ = {
+			isa = PBXGroup;
+			children = (
+				E02A0AF32C33A9F200105365 /* BandRowView.swift */,
+				E02A0AFB2C34E6B300105365 /* BandMemberPopoverRowView.swift */,
+			);
+			path = Row;
+			sourceTree = "<group>";
+		};
+		E08063CB2C37452A00B598B0 /* New */ = {
+			isa = PBXGroup;
+			children = (
+				E02A0AF52C344AD000105365 /* NewBandView.swift */,
+			);
+			path = New;
+			sourceTree = "<group>";
+		};
+		E08063CF2C37454100B598B0 /* Role */ = {
+			isa = PBXGroup;
+			children = (
+				E09C612E2C35E1430061986F /* BandChooseRoleIcon.swift */,
+				E09C612C2C35D4220061986F /* BandChooseRoleView.swift */,
+				E08063CE2C37454100B598B0 /* BandMemberAddRoleView.swift */,
+			);
+			path = Role;
 			sourceTree = "<group>";
 		};
 		E0986BE92B2B50FC00CE938B /* Resources */ = {
@@ -1199,6 +1232,7 @@
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
 				E004F4262A69C2D40089B6DF /* PlayView.swift in Sources */,
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
+				E09C612D2C35D4220061986F /* BandChooseRoleView.swift in Sources */,
 				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,
 				E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */,
@@ -1209,6 +1243,7 @@
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
 				E0CC33272A040D5500CC38C6 /* SongViewModel.swift in Sources */,
+				E08063D02C37454100B598B0 /* BandMemberAddRoleView.swift in Sources */,
 				E02A0AFA2C346ABA00105365 /* BandRole.swift in Sources */,
 				E0B4CF1C2BD2F01D00F143E9 /* SongVariationEditView.swift in Sources */,
 				E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */,
@@ -1265,6 +1300,7 @@
 				E0B695542A141E7700FAAD5A /* ResetPasswordView.swift in Sources */,
 				E02F21E52B21130600302646 /* AdBannerView.swift in Sources */,
 				E0CA85352B081D5100188CD0 /* CustomNavBar.swift in Sources */,
+				E09C612F2C35E1430061986F /* BandChooseRoleIcon.swift in Sources */,
 				E04CB96E2BCB618C00F2831B /* ShareRequest.swift in Sources */,
 				E02A0AFC2C34E6B300105365 /* BandMemberPopoverRowView.swift in Sources */,
 				E0CA85362B081D5100188CD0 /* CustomSearchBar.swift in Sources */,

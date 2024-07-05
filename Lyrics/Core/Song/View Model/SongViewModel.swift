@@ -47,8 +47,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?, String) -> Void) {
-        service.createSongVariation(song: song, lyrics: lyrics, title: title) { error, createdId in
+    func createSongVariation(song: Song, lyrics: String, title: String, role: BandRole?, completion: @escaping(Error?, String) -> Void) {
+        service.createSongVariation(song: song, lyrics: lyrics, title: title, role: role) { error, createdId in
             completion(error, createdId)
         }
     }
@@ -173,8 +173,8 @@ class SongViewModel: ObservableObject {
         service.deleteVariation(song: song, variation: variation)
     }
     
-    func updateVariation(song: Song, variation: SongVariation, title: String) {
-        service.updateVariation(song: song, variation: variation, title: title)
+    func updateVariation(song: Song, variation: SongVariation, title: String, role: BandRole?) {
+        service.updateVariation(song: song, variation: variation, title: title, role: role)
     }
     
     func leaveSong(forUid: String? = nil, song: Song) {

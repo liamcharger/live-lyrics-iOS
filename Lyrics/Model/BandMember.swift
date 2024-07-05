@@ -13,8 +13,5 @@ struct BandMember: Identifiable, Codable {
     let uid: String
     let fullname: String
     let username: String
-    let admin: Bool
-    let role: String?
-    let roleColor: String?
-    let roleIcon: String?
+    let roleId: String?
 }

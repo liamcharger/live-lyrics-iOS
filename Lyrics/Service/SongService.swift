@@ -643,13 +643,13 @@ class SongService {
 		}
 	}
 	
-	func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?, String) -> Void) {
+	func createSongVariation(song: Song, lyrics: String, title: String, role: BandRole?, completion: @escaping(Error?, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let id = UUID().uuidString
 		
 		let documentRef = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(id)
 		
-		documentRef.setData(["title": title, "lyrics": lyrics, "songUid": uid, "songId": song.id!]) { error in
+		documentRef.setData(["title": title, "lyrics": lyrics, "songUid": uid, "songId": song.id!, "roleId": role?.id ?? FieldValue.delete()]) { error in
 			if let error = error {
 				print("Error creating song variation: \(error.localizedDescription)")
 				completion(error, "")
@@ -734,8 +734,8 @@ class SongService {
 		}
 	}
 	
-	func updateVariation(song: Song, variation: SongVariation, title: String) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).updateData(["title": title]) { error in
+	func updateVariation(song: Song, variation: SongVariation, title: String, role: BandRole?) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).updateData(["title": title, "roleId": role == nil ? FieldValue.delete() : role?.name ?? ""]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -976,7 +976,7 @@ class SongService {
 				return
 			}
 			
-			for toUser in request.to {
+			for toUser in request.to.filter({ $0 != request.from }) {
 				dispatch.enter()
 				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(id).setData(requestData) { error in
 					if let error = error {
@@ -1123,9 +1123,20 @@ class SongService {
 						}
 						
 						dispatch.notify(queue: .main) {
-							self.deleteRequest(request, uid: uid)
 							if let currentUser = AuthViewModel.shared.currentUser {
 								UserService().sendNotificationToFCM(deviceToken: currentUser.fcmId ?? "", title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
+								if request.to.count > 1 {
+									for toUser in request.to {
+										Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in
+											if let error = error {
+												print(error.localizedDescription)
+											}
+											self.deleteRequest(request, uid: uid, outgoing: false)
+										}
+									}
+								} else {
+									self.deleteRequest(request, uid: uid)
+								}
 							}
 							completion()
 						}
@@ -1216,17 +1227,19 @@ class SongService {
 		}
 	}
 	
-	func deleteRequest(_ request: ShareRequest, uid: String) {
+	func deleteRequest(_ request: ShareRequest, uid: String, outgoing: Bool? = nil) {
 		Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id!).delete { error in
 			if let error = error {
 				print("Error: \(error.localizedDescription)")
 				return
 			}
 		}
-		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id!).delete { error in
-			if let error = error {
-				print("Error: \(error.localizedDescription)")
-				return
+		if outgoing ?? true {
+			Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id!).delete { error in
+				if let error = error {
+					print("Error: \(error.localizedDescription)")
+					return
+				}
 			}
 		}
 	}

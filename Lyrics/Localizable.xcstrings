@@ -337,6 +337,9 @@
         }
       }
     },
+    "Add Role" : {
+
+    },
     "Add Songs" : {
       "localizations" : {
         "es" : {
@@ -576,6 +579,9 @@
         }
       }
     },
+    "By Role" : {
+
+    },
     "By signing up, you're agree to our " : {
       "localizations" : {
         "es" : {
@@ -645,6 +651,12 @@
           }
         }
       }
+    },
+    "Choose a Role" : {
+
+    },
+    "Choose an Icon" : {
+
     },
     "Clear" : {
       "localizations" : {
@@ -766,6 +778,9 @@
 
     },
     "Create a New Band" : {
+
+    },
+    "Create a Role" : {
 
     },
     "Create Band" : {
@@ -1016,6 +1031,7 @@
       }
     },
     "Enter a name for your new variation." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1034,6 +1050,9 @@
           }
         }
       }
+    },
+    "Enter some details for your new variation." : {
+
     },
     "Enter the email associated with your account." : {
       "localizations" : {
@@ -1142,7 +1161,7 @@
         }
       }
     },
-    "Get Code" : {
+    "Get Join Code" : {
 
     },
     "good_afternoon" : {
@@ -1490,6 +1509,9 @@
         }
       }
     },
+    "Main" : {
+
+    },
     "Make sure that " : {
       "comment" : "Used in ShareView \"Make sure that (username is using version _._._ or higher)\"",
       "localizations" : {
@@ -1820,6 +1842,17 @@
         }
       }
     },
+    "or_choose_band" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "or choose a band"
+          }
+        }
+      }
+    },
     "outgoing" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2033,6 +2066,9 @@
           }
         }
       }
+    },
+    "Role Name" : {
+
     },
     "Rounded" : {
       "localizations" : {

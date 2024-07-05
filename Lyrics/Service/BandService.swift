@@ -10,15 +10,22 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct BandService {
-    func fetchBand(fromCode joinCode: String, completion: @escaping(Band?) -> Void) {
-        Firestore.firestore().collection("bands").whereField("joinCode", arrayContains: joinCode).getDocuments { snapshot, error in
+    func fetchBand(fromCode joinCode: String, completion: @escaping (Band?) -> Void) {
+        Firestore.firestore().collection("bands").whereField("joinId", isEqualTo: joinCode).getDocuments { snapshot, error in
             if let error = error {
-                print(error.localizedDescription)
+                print("Error fetching band: \(error.localizedDescription)")
+                completion(nil)
                 return
             }
-            guard let documents = snapshot?.documents else { return }
             
-            let bands = documents.compactMap({ try? $0.data(as: Band.self) })
+            guard let documents = snapshot?.documents else {
+                completion(nil)
+                return
+            }
+            
+            let bands = documents.compactMap { document in
+                try? document.data(as: Band.self)
+            }
             
             completion(bands.first)
         }
@@ -62,10 +69,23 @@ struct BandService {
             }
             guard let documents = snapshot?.documents else { return }
             
-            print(documents)
             let members = documents.compactMap({ try? $0.data(as: BandMember.self) })
             
             completion(members)
+        }
+    }
+    
+    func fetchMemberRoles(band: Band, completion: @escaping([BandRole]) -> Void) {
+        Firestore.firestore().collection("bands").document(band.id!).collection("roles").addSnapshotListener { snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            guard let documents = snapshot?.documents else { return }
+            
+            let roles = documents.compactMap({ try? $0.data(as: BandRole.self) })
+            
+            completion(roles)
         }
     }
     
@@ -75,7 +95,7 @@ struct BandService {
         
         let id = UUID().uuidString
         
-        Firestore.firestore().collection("bands").document(id).setData(["name": name, "joinId": generateBandJoinCode(), "members": FieldValue.arrayUnion([uid])]) { error in
+        Firestore.firestore().collection("bands").document(id).setData(["name": name, "joinId": generateBandJoinCode(), "admins": FieldValue.arrayUnion([uid]), "members": FieldValue.arrayUnion([uid])]) { error in
             if let error = error {
                 print(error.localizedDescription)
                 return
@@ -93,8 +113,7 @@ struct BandService {
             "username": user.username,
             "role": role?.name,
             "roleColor": role?.color,
-            "roleIcon": role?.icon,
-            "admin": admin
+            "roleIcon": role?.icon
         ]
         Firestore.firestore().collection("bands").document(bandId).collection("members").document(user.id!).setData(member) { error in
             if let error = error {
@@ -138,6 +157,27 @@ struct BandService {
                 return
             }
             createBandMember(from: user, admin: admin ?? false, bandId: band.id!) {
+                completion()
+            }
+        }
+    }
+    
+    func saveRole(member: BandMember, band: Band, role: BandRole?, completion: @escaping () -> Void) {
+        guard let bandId = band.id, let memberId = member.id else { return }
+        let ref = Firestore.firestore().collection("bands").document(bandId).collection("members").document(memberId)
+        
+        if let roleId = role?.id {
+            ref.updateData(["roleId": roleId]) { error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                completion()
+            }
+        } else {
+            ref.updateData(["roleId": FieldValue.delete()]) { error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
                 completion()
             }
         }

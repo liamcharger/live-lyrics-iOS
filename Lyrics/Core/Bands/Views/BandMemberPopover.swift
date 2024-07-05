@@ -6,15 +6,20 @@
 //
 
 import SwiftUI
+import BottomSheet
 
 struct BandMemberPopover: View {
     @Environment(\.dismiss) var dismiss
     
     let member: BandMember
+    let band: Band
+    
+    @State var role: BandRole?
     
     @ObservedObject var bandsViewModel = BandsViewModel.shared
     
     @State var showRemoveSheet = false
+    @State var showAddRoleView = false
     @State var readOnly = false
     
     var body: some View {
@@ -44,33 +49,50 @@ struct BandMemberPopover: View {
                     .font(.system(size: 20))
                     .foregroundColor(.gray)
                 }
-                if let role = member.role {
-                    HStack(spacing: 8) {
-                        // Better icon than "star"?
-                        FAText(iconName: member.roleIcon ?? "star", size: 23)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                        Text(role.capitalized)
-                            .font(.body.weight(.semibold))
-                    }
-                    .padding()
-                    .background {
-                        if let color = member.roleColor {
-                            if !color.isEmpty {
+                Button {
+                    showAddRoleView = true
+                } label: {
+                    if let role = role {
+                        HStack(spacing: 8) {
+                            // Better icon than "star"?
+                            FAText(iconName: role.icon ?? "star", size: 23)
+                            Text(role.name.capitalized)
+                                .font(.body.weight(.semibold))
+                        }
+                        .padding(12)
+                        .padding(.horizontal, 4)
+                        .background {
+                            if let color = role.color, !color.isEmpty {
                                 return bandsViewModel.getRoleColor(color)
                             }
+                            return Color.blue
                         }
-                        return Color.blue
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(14)
+                    } else if band.admins.contains(where: { $0 == AuthViewModel.shared.currentUser?.id! }) {
+                        HStack(spacing: 9) {
+                            FAText(iconName: "plus", size: 23)
+                            Text("Add Role")
+                                .font(.body.weight(.semibold))
+                        }
+                        .padding(12)
+                        .padding(.horizontal, 4)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(14)
                     }
-                    .foregroundColor(.white)
-                    .clipShape(Capsule())
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(14)
                 }
                 Spacer()
             }
         }
         .padding(12)
+        .bottomSheet(isPresented: $showAddRoleView, detents: [.medium()], onDismiss: {}) {
+            BandMemberAddRoleView(member: member, band: band, selectedRole: $role)
+        }
         .confirmationDialog("Remove Band Member?", isPresented: $showRemoveSheet) {
             Button("Remove", role: .destructive) {
                 
@@ -79,6 +101,11 @@ struct BandMemberPopover: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("Are you sure you want to remove \"\(member.username)\" as a member of this band? They will immediately lose access.")
+        }
+        .onAppear {
+            bandsViewModel.fetchMemberRoles(band) { roles in
+                self.role = roles.first(where: { $0.id! == member.roleId ?? "" })
+            }
         }
     }
 }

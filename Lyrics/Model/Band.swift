@@ -11,9 +11,9 @@ import FirebaseFirestoreSwift
 struct Band: Identifiable, Codable {
     @DocumentID var id: String?
     let name: String
-    // Used by user to join a band
     let joinId: String
     let members: [String]
+    let admins: [String]
     // Should there be band-public notes?
     // let notes: String
 }
