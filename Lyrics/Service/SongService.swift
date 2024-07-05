@@ -7,7 +7,7 @@
 
 import FirebaseAuth
 import Firebase
-import CoreData
+import FirebaseFirestore
 
 class SongService {
 	var songListener: ListenerRegistration?
@@ -1123,8 +1123,8 @@ class SongService {
 						}
 						
 						dispatch.notify(queue: .main) {
-							if let currentUser = AuthViewModel.shared.currentUser {
-								UserService().sendNotificationToFCM(deviceToken: currentUser.fcmId ?? "", title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
+							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
 								if request.to.count > 1 {
 									for toUser in request.to {
 										Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in
