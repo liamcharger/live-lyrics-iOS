@@ -11,6 +11,7 @@ struct UserToShare: Codable {
     var id: String?
     var username: String
     var appVersion: String?
+    var notificationToken: String?
 }
 
 struct ShareView: View {
@@ -68,6 +69,7 @@ struct ShareView: View {
                         guard let fromUser = authViewModel.currentUser else { return }
                         let toUsernames = selectedUsers.map { $0.username }
                         let toUserIds = selectedUsers.compactMap { $0.id }
+                        let fcmIds = selectedUsers.compactMap { $0.notificationToken }
                         let type = collaborate ? "collaborate" : "copy"
                         
                         var request: ShareRequest?
@@ -359,7 +361,7 @@ struct ShareView: View {
                                                 if let existingIndex = selectedUsers.firstIndex(where: { $0.id == userId && $0.username == user.username }) {
                                                     selectedUsers.remove(at: existingIndex)
                                                 } else {
-                                                    selectedUsers.append(UserToShare(id: userId, username: user.username, appVersion: user.currentVersion))
+                                                    selectedUsers.append(UserToShare(id: userId, username: user.username, appVersion: user.currentVersion, notificationToken: user.fcmId))
                                                 }
                                             }
                                         } label: {

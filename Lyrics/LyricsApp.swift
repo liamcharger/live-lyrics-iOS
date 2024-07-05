@@ -89,6 +89,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token:", deviceToken)
+        if let currentUser = AuthViewModel.shared.currentUser, !deviceToken.isEmpty {
+            UserService().updateFCMId(currentUser, id: deviceToken.values.first!)
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
