@@ -845,17 +845,16 @@ struct MainView: View {
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
                         }
                     }
-                    .confirmationDialog("Delete Song", isPresented: $showSongDeleteSheet) {
+                    .confirmationDialog(selectedSong?.uid ?? uid() == uid() ? "Delete Song" : "Leave Song", isPresented: $showSongDeleteSheet) {
                         if let selectedSong = selectedSong {
                             Button("Delete", role: .destructive) {
                                 songViewModel.moveSongToRecentlyDeleted(selectedSong)
-                                mainViewModel.fetchSongs()
                             }
                             Button("Cancel", role: .cancel) {}
                         }
                     } message: {
                         if let selectedSong = selectedSong {
-                            Text("Are you sure you want to delete \"\(selectedSong.title)\"?")
+                            Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                         }
                     }
                 }
@@ -934,11 +933,7 @@ struct MainView: View {
             }
             Button(role: .destructive, action: {
                 selectedSong = song
-                if !songViewModel.isShared(song: song) {
-                    showSongDeleteSheet.toggle()
-                } else {
-                    showDeleteSheet.toggle()
-                }
+                showSongDeleteSheet = true
             }, label: {
                 if songViewModel.isShared(song: song) {
                     Label("Leave", systemImage: "arrow.backward.square")

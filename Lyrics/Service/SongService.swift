@@ -947,7 +947,7 @@ class SongService {
 		}
 	}
 	
-	func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
+	func sendInviteToUser(request: ShareRequest, users: [ShareUser], includeDefault: Bool, completion: @escaping(Error?) -> Void) {
 		let id = UUID().uuidString
 		let dispatch = DispatchGroup()
 		
@@ -976,21 +976,35 @@ class SongService {
 				return
 			}
 			
-			for toUser in request.to.filter({ $0 != request.from }) {
+			for user in users {
+				let requestData: [String: Any?] = [
+					"timestamp": request.timestamp,
+					"from": request.from,
+					"to": request.to,
+					"contentId": request.contentId,
+					"contentType": request.contentType,
+					"contentName": request.contentName,
+					"type": request.type,
+					"toUsername": request.toUsername,
+					"fromUsername": request.fromUsername,
+					"songVariations": user.songVariations,
+					"readOnly": request.readOnly
+				]
+				
 				dispatch.enter()
-				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(id).setData(requestData) { error in
+				Firestore.firestore().collection("users").document(user.uid).collection("incoming-share-requests").document(id).setData(requestData) { error in
 					if let error = error {
 						completion(error)
 						print(error.localizedDescription)
 					}
 					dispatch.leave()
+					if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
+						UserService().sendNotificationToFCM(tokens: [token], title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song"). Tap to view.")
+					}
 				}
 			}
 			
 			dispatch.notify(queue: .main) {
-				if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song"). Tap to view.")
-				}
 				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers":FieldValue.arrayUnion([request.from])])
 				completion(nil)
 			}

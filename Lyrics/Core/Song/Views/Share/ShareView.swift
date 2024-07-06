@@ -67,12 +67,14 @@ struct ShareView: View {
                         let timestamp = Date()
                         let dispatch = DispatchGroup()
                         guard let fromUser = authViewModel.currentUser else { return }
+                        guard let fromUserId = authViewModel.currentUser?.id else { return }
                         let toUsernames = selectedUsers.map { $0.username }
                         let toUserIds = selectedUsers.compactMap { $0.id }
                         let fcmIds = selectedUsers.compactMap { $0.notificationToken }
                         let type = collaborate ? "collaborate" : "copy"
                         
                         var request: ShareRequest?
+                        var users = [ShareUser]()
                         
                         if let selectedBand = selectedBand {
                             let toUserIds = selectedBand.members
@@ -80,41 +82,51 @@ struct ShareView: View {
                             dispatch.enter()
                             bandsViewModel.fetchBandMembers(selectedBand) { members in
                                 dispatch.leave()
-                                request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: (song?.id ?? (folder?.id!))!, contentType: song == nil ? "folder" : "song", contentName: song?.title ?? (folder?.title)!, type: type, toUsername: [selectedBand.name], fromUsername: fromUser.username, songVariations: {
-                                    if selectedVariations.contains(where: { $0.title == "byRole" }) {
-                                        var uniqueVariations: [String] = []
-                                        
-                                        for toUser in toUserIds {
-                                            let member = members.first(where: { $0.uid == toUser })!
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: (song?.id ?? (folder?.id!))!, contentType: song == nil ? "folder" : "song", contentName: song?.title ?? (folder?.title)!, type: type, toUsername: [selectedBand.name], fromUsername: fromUser.username, songVariations: [SongVariation.defaultId], readOnly: readOnly)
+                                
+                                for member in members.filter({ $0.uid != fromUserId }) {
+                                    users.append(ShareUser(uid: member.uid, songVariations: {
+                                        if selectedVariations.contains(where: { $0.title == "byRole" }) {
+                                            var uniqueVariations: [String] = []
                                             
-                                            if selectedVariations.contains(where: { $0.title == "byRole" }) {
-                                                for realVariation in songVariations {
-                                                    if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
-                                                        uniqueVariations.append(realVariation.title)
+                                            for toUser in toUserIds {
+                                                if selectedVariations.contains(where: { $0.title == "byRole" }) {
+                                                    for realVariation in songVariations {
+                                                        if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
+                                                            uniqueVariations.append(realVariation.title)
+                                                        }
                                                     }
                                                 }
                                             }
+                                            
+                                            return uniqueVariations.isEmpty ? [SongVariation.defaultId] : uniqueVariations
+                                        } else {
+                                            return selectedVariations.isEmpty ? [] : selectedVariations.compactMap({ $0.id })
                                         }
-                                        
-                                        return uniqueVariations.isEmpty ? [SongVariation.defaultId] : uniqueVariations
-                                    } else {
-                                        return selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id })
-                                    }
-                                }(), readOnly: readOnly)
+                                    }(), fcmId: member.fcmId))
+                                }
                             }
                         } else {
                             dispatch.enter()
                             if let song = song {
-                                request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly)
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: [SongVariation.defaultId], readOnly: readOnly)
+                                
+                                for user in selectedUsers {
+                                    users.append(ShareUser(uid: user.id!, songVariations: selectedVariations.isEmpty ? [SongVariation.defaultId] : selectedVariations.compactMap({ $0.id }), fcmId: user.notificationToken))
+                                }
                             } else if let folder = folder {
-                                request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly)
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly)
+                                
+                                for user in selectedUsers {
+                                    users.append(ShareUser(uid: user.id!, songVariations: [SongVariation.defaultId], fcmId: user.notificationToken))
+                                }
                             }
                             dispatch.leave()
                         }
                         dispatch.notify(queue: .main) {
                             if let request = request {
                                 self.isSendingRequest = true
-                                authViewModel.sendInviteToUser(request: request, includeDefault: selectedVariations.contains(where: { $0.title == defaultVariationId})) { error in
+                                authViewModel.sendInviteToUser(request: request, users: users, includeDefault: selectedVariations.contains(where: { $0.title == defaultVariationId})) { error in
                                     if let error = error {
                                         print(error.localizedDescription)
                                         return

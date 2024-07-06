@@ -14,4 +14,5 @@ struct BandMember: Identifiable, Codable {
     let fullname: String
     let username: String
     let roleId: String?
+    let fcmId: String?
 }

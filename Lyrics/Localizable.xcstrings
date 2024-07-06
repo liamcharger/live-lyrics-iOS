@@ -397,6 +397,7 @@
       }
     },
     "Are you sure you want to delete \"%@\"?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
