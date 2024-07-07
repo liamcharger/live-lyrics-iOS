@@ -1057,8 +1057,9 @@ class SongService {
 		let group = DispatchGroup()
 		
 		group.enter()
-		deleteRequest(request, uid: incomingReqColUid ?? uid)
+		deleteRequest(if: request, uid: incomingReqColUid ?? uid)
 		group.leave()
+		
 		group.notify(queue: .main) {
 			if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
 				UserService().sendNotificationToFCM(tokens: tokens, title: "Request Declined", body: "\(currentUser.username) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\". Tap to view.")
@@ -1101,7 +1102,8 @@ class SongService {
 						}
 						
 						dispatch.notify(queue: .main) {
-							self.deleteRequest(request, uid: uid)
+							Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])])
+							self.deleteRequest(if: request, uid: uid)
 							completion()
 						}
 					} else {
@@ -1193,7 +1195,7 @@ class SongService {
 					}
 					
 					dispatch.notify(queue: .main) {
-						self.deleteRequest(request, uid: uid)
+						self.deleteRequest(if: request, uid: uid)
 						if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
 							UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\". Tap to view.")
 						}
@@ -1255,6 +1257,21 @@ class SongService {
 					return
 				}
 			}
+		}
+	}
+	
+	func deleteRequest(if request: ShareRequest, uid: String) {
+		if request.to.count > 2 {
+			for toUser in request.to {
+				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in
+					if let error = error {
+						print(error.localizedDescription)
+					}
+					self.deleteRequest(request, uid: uid, outgoing: false)
+				}
+			}
+		} else {
+			self.deleteRequest(request, uid: uid)
 		}
 	}
 	

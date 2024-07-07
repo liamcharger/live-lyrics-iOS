@@ -847,8 +847,12 @@ struct MainView: View {
                     }
                     .confirmationDialog(selectedSong?.uid ?? uid() == uid() ? "Delete Song" : "Leave Song", isPresented: $showSongDeleteSheet) {
                         if let selectedSong = selectedSong {
-                            Button("Delete", role: .destructive) {
-                                songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                            Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                if !songViewModel.isShared(song: selectedSong) {
+                                    songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                } else {
+                                    songViewModel.leaveSong(song: selectedSong)
+                                }
                             }
                             Button("Cancel", role: .cancel) {}
                         }

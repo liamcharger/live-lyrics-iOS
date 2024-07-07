@@ -89,13 +89,9 @@ struct ShareView: View {
                                         if selectedVariations.contains(where: { $0.title == "byRole" }) {
                                             var uniqueVariations: [String] = []
                                             
-                                            for toUser in toUserIds {
-                                                if selectedVariations.contains(where: { $0.title == "byRole" }) {
-                                                    for realVariation in songVariations {
-                                                        if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
-                                                            uniqueVariations.append(realVariation.title)
-                                                        }
-                                                    }
+                                            for realVariation in songVariations {
+                                                if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
+                                                    uniqueVariations.append(realVariation.title)
                                                 }
                                             }
                                             
