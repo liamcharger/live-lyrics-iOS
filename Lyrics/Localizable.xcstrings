@@ -41,6 +41,16 @@
         }
       }
     },
+    "%@ Song" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Canción"
+          }
+        }
+      }
+    },
     "%lld %@" : {
       "localizations" : {
         "en" : {
@@ -384,6 +394,7 @@
       }
     },
     "Are you sure you want to delete \"%@\"?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
