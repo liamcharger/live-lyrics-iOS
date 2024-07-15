@@ -41,6 +41,16 @@
         }
       }
     },
+    "%@ Song" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Canción"
+          }
+        }
+      }
+    },
     "%lld %@" : {
       "localizations" : {
         "en" : {
@@ -1921,6 +1931,16 @@
         }
       }
     },
+    "Print" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imprimir"
+          }
+        }
+      }
+    },
     "Privacy Policy" : {
       "localizations" : {
         "es" : {
@@ -2258,6 +2278,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inscribirse"
+          }
+        }
+      }
+    },
+    "some_features_may_not_work_expectedly" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some features may not work as expected."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es posible que algunas funciones no funcionen como se esperaba."
           }
         }
       }
@@ -2678,6 +2714,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu canción no tiene letra. ¿Continúa de todos modos?"
+          }
+        }
+      }
+    },
+    "youre_offline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’re offline"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estás desconectado"
           }
         }
       }

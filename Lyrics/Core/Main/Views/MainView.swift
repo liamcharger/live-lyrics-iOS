@@ -230,7 +230,6 @@ struct MainView: View {
                 .onAppear {
                     DispatchQueue.main.async {
                         if !networkManager.getNetworkState() {
-                            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
                             mainViewModel.notificationStatus = .network
                         }
                         
@@ -272,10 +271,12 @@ struct MainView: View {
                                         NotificationRowView(title: "Update Available", subtitle: "Tap here to update Live Lyrics. This version may expire soon.", imageName: "arrow.down", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                     case .collaborationChanges:
                                         NotificationRowView(title: mainViewModel.notification?.title ?? "", subtitle: mainViewModel.notification?.subtitle ?? "", imageName: mainViewModel.notification?.imageName ?? "", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
-                                    case .firebaseNotification, .network:
+                                    case .firebaseNotification:
                                         if let notification = mainViewModel.notification {
                                             NotificationRowView(title: notification.title, subtitle: notification.subtitle, imageName: notification.imageName, notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                         }
+                                    case .network:
+                                        NotificationRowView(title: NSLocalizedString("youre_offline", comment: ""), subtitle: NSLocalizedString("some_features_may_not_work_expectedly", comment: ""), imageName: "wifi.slash", notificationStatus: .constant(NotificationStatus.network), isDisplayed: .constant(false))
                                     }
                                 }
                             }
@@ -845,7 +846,7 @@ struct MainView: View {
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
                         }
                     }
-                    .confirmationDialog(selectedSong?.uid ?? uid() == uid() ? "Delete Song" : "Leave Song", isPresented: $showSongDeleteSheet) {
+                    .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
                         if let selectedSong = selectedSong {
                             Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
                                 if !songViewModel.isShared(song: selectedSong) {

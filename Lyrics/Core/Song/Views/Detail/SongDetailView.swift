@@ -575,7 +575,10 @@ struct SongDetailView: View {
                 }()
                 self.artist = song.artist ?? ""
                 self.duration = song.duration ?? ""
-                self.tags = song.tags ?? []
+                // Only refresh the tags if the song isn't shared because it's already been inherited from the SharedSong
+                if !songViewModel.isShared(song: song) {
+                    self.tags = song.tags ?? []
+                }
                 self.design = getDesign(design: Int(song.design ?? 0))
                 self.weight = getWeight(weight: Int(song.weight ?? 0))
                 self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
@@ -707,6 +710,60 @@ struct SongDetailView: View {
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
+            }
+            Button {
+                let printController = UIPrintInteractionController.shared
+                
+                let printInfo = UIPrintInfo(dictionary: nil)
+                printInfo.outputType = UIPrintInfo.OutputType.general
+                printInfo.jobName = song.title
+                printController.printInfo = printInfo
+                
+                let artistString = song.artist?.isEmpty == false ? "<div style='color: gray;'>\(song.artist!)</div>" : ""
+                
+                let htmlString = """
+<html>
+<head>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 34px;
+        box-sizing: border-box;
+    }
+    .content {
+        column-count: 2;
+        column-gap: 20px;
+        column-fill: auto; /* Ensure the columns fill equally */
+    }
+    h2 {
+        margin-bottom: 5px;
+    }
+    .gray-text {
+        color: gray;
+    }
+</style>
+</head>
+<body>
+<div>
+    <h2>\(song.title)</h2>
+    \(artistString)
+</div>
+<br/>
+<div class="content">
+    \(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
+</div>
+</body>
+</html>
+"""
+                
+                let formatter = UIMarkupTextPrintFormatter(markupText: htmlString)
+                formatter.perPageContentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                printController.printFormatter = formatter
+                
+                printController.present(animated: true, completionHandler: nil)
+            } label: {
+                Label("Print", systemImage: "printer")
             }
             let move = Button {
                 showMoveView.toggle()
