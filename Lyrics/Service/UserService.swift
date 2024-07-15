@@ -133,12 +133,13 @@ struct UserService {
             "title": title,
             "body": body
         ]
-        Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
-            if let error = error {
-                print("Error sending notification: \(error.localizedDescription)")
-            } else {
-                print("Notification sent successfully")
-            }
-        }
+        // Do not call notifications due to inpredictability, remove for release
+//        Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
+//            if let error = error {
+//                print("Error sending notification: \(error.localizedDescription)")
+//            } else {
+//                print("Notification sent successfully")
+//            }
+//        }
     }
 }
