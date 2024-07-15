@@ -101,7 +101,7 @@ class SongService {
 							song.variations = sharedSong.variations
 							song.readOnly = sharedSong.readOnly
 							song.pinned = sharedSong.pinned
-							song.tags = sharedSong.tags
+							song.tags = sharedSong.tags ?? ["none"]
 							song.performanceMode = sharedSong.performanceMode
 							completedSongs.append(song)
 						}

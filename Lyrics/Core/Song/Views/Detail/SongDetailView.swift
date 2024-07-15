@@ -575,7 +575,10 @@ struct SongDetailView: View {
                 }()
                 self.artist = song.artist ?? ""
                 self.duration = song.duration ?? ""
-                self.tags = song.tags ?? []
+                // Only refresh the tags if the song isn't shared because it's already been inherited from the SharedSong
+                if !songViewModel.isShared(song: song) {
+                    self.tags = song.tags ?? []
+                }
                 self.design = getDesign(design: Int(song.design ?? 0))
                 self.weight = getWeight(weight: Int(song.weight ?? 0))
                 self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
