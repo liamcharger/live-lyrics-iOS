@@ -708,6 +708,33 @@ struct SongDetailView: View {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
             }
+            Button {
+                let printController = UIPrintInteractionController.shared
+                
+                let printInfo = UIPrintInfo(dictionary: nil)
+                printInfo.outputType = UIPrintInfo.OutputType.general
+                printInfo.jobName = "Print \(song.title)"
+                printController.printInfo = printInfo
+                
+                let artistString = song.artist?.isEmpty == false ? "<div style='color: #888B8D;'>\(song.artist!)</div>" : ""
+                
+                let htmlString = """
+<div>
+    <h2 style='margin-bottom: 5px;'>\(song.title)</h2>
+    \(artistString)
+</div>
+<br/>
+\(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
+"""
+                
+                let formatter = UIMarkupTextPrintFormatter(markupText: htmlString)
+                formatter.perPageContentInsets = UIEdgeInsets(top: 32, left: 32, bottom: 32, right: 32)
+                printController.printFormatter = formatter
+                
+                printController.present(animated: true, completionHandler: nil)
+            } label: {
+                Label("Print", systemImage: "printer")
+            }
             let move = Button {
                 showMoveView.toggle()
             } label: {
