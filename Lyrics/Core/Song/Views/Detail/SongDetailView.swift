@@ -713,22 +713,49 @@ struct SongDetailView: View {
                 
                 let printInfo = UIPrintInfo(dictionary: nil)
                 printInfo.outputType = UIPrintInfo.OutputType.general
-                printInfo.jobName = "Print \(song.title)"
+                printInfo.jobName = song.title
                 printController.printInfo = printInfo
                 
-                let artistString = song.artist?.isEmpty == false ? "<div style='color: #888B8D;'>\(song.artist!)</div>" : ""
+                let artistString = song.artist?.isEmpty == false ? "<div style='color: gray;'>\(song.artist!)</div>" : ""
                 
                 let htmlString = """
+<html>
+<head>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 34px;
+        box-sizing: border-box;
+    }
+    .content {
+        column-count: 2;
+        column-gap: 20px;
+        column-fill: auto; /* Ensure the columns fill equally */
+    }
+    h2 {
+        margin-bottom: 5px;
+    }
+    .gray-text {
+        color: gray;
+    }
+</style>
+</head>
+<body>
 <div>
-    <h2 style='margin-bottom: 5px;'>\(song.title)</h2>
+    <h2>\(song.title)</h2>
     \(artistString)
 </div>
 <br/>
-\(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
+<div class="content">
+    \(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
+</div>
+</body>
+</html>
 """
                 
                 let formatter = UIMarkupTextPrintFormatter(markupText: htmlString)
-                formatter.perPageContentInsets = UIEdgeInsets(top: 32, left: 32, bottom: 32, right: 32)
+                formatter.perPageContentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
                 printController.printFormatter = formatter
                 
                 printController.present(animated: true, completionHandler: nil)
