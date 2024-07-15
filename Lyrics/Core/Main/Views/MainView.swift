@@ -840,17 +840,20 @@ struct MainView: View {
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
                         }
                     }
-                    .confirmationDialog("Delete Song", isPresented: $showSongDeleteSheet) {
+                    .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
                         if let selectedSong = selectedSong {
-                            Button("Delete", role: .destructive) {
-                                songViewModel.moveSongToRecentlyDeleted(selectedSong)
-                                mainViewModel.fetchSongs()
+                            Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                if songViewModel.isShared(song: selectedSong) {
+                                    songViewModel.leaveSong(song: selectedSong)
+                                } else {
+                                    songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                }
                             }
                             Button("Cancel", role: .cancel) {}
                         }
                     } message: {
                         if let selectedSong = selectedSong {
-                            Text("Are you sure you want to delete \"\(selectedSong.title)\"?")
+                            Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                         }
                     }
                 }
@@ -929,11 +932,7 @@ struct MainView: View {
             }
             Button(role: .destructive, action: {
                 selectedSong = song
-                if !songViewModel.isShared(song: song) {
-                    showSongDeleteSheet.toggle()
-                } else {
-                    showDeleteSheet.toggle()
-                }
+                showSongDeleteSheet.toggle()
             }, label: {
                 if songViewModel.isShared(song: song) {
                     Label("Leave", systemImage: "arrow.backward.square")
