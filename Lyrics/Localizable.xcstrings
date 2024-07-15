@@ -1836,6 +1836,16 @@
         }
       }
     },
+    "Print" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imprimir"
+          }
+        }
+      }
+    },
     "Privacy Policy" : {
       "localizations" : {
         "es" : {
