@@ -28,7 +28,7 @@ struct ShareView: View {
     @State var selectedVariations = [SongVariation]()
     @State var songVariations = [SongVariation]()
     @State var searchText = ""
-    @State var collaborate = false
+    @State var collaborate = true
     @State var firstSearch = true
     @State var isSendingRequest = false
     @State var readOnly = false
