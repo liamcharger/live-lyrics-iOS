@@ -91,7 +91,7 @@ struct ShareView: View {
                                             
                                             for realVariation in songVariations {
                                                 if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
-                                                    uniqueVariations.append(realVariation.title)
+                                                    uniqueVariations.append(realVariation.id ?? "")
                                                 }
                                             }
                                             

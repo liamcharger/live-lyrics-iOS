@@ -531,25 +531,25 @@ struct SongDetailView: View {
                         fullVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
                     }
                     
+                    print(variations)
+                    print(variationIds)
+                    
                     let filteredVariations = variations.filter { variation in
                         if variationIds.isEmpty {
                             return true
                         } else {
-                            if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
-                                if !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
-                                    selectedVariation = variation
-                                }
-                            }
-                            if let selectedVariation = selectedVariation, selectedVariation.id ?? "" == variation.id ?? "" && !isInputActive {
-                                self.lyrics = variation.lyrics
-                            } else {
-                                if !isInputActive {
-                                    self.lyrics = song.lyrics
-                                }
-                            }
-                            
                             return variationIds.contains(variation.id ?? "")
                         }
+                    }
+                    
+                    if let firstVariation = filteredVariations.first {
+                        print(firstVariation)
+                        selectedVariation = firstVariation
+                        if !isInputActive {
+                            self.lyrics = firstVariation.lyrics
+                        }
+                    } else if !isInputActive {
+                        self.lyrics = song.lyrics
                     }
                     
                     fullVariations.append(contentsOf: filteredVariations)
