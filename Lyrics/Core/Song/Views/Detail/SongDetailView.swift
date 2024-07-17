@@ -28,6 +28,8 @@ struct SongDetailView: View {
     @State private var weight: Font.Weight
     @State private var alignment: TextAlignment
     
+    @State private var attributedText = NSAttributedString(string: "Type your text here...")
+    
     @State var lyrics = ""
     @State var lastUpdatedLyrics = ""
     @State var key = ""
@@ -210,6 +212,35 @@ struct SongDetailView: View {
         }
     }
     
+    func createStyledChord(text: String, backgroundColor: UIColor, cornerRadius: CGFloat, padding: UIEdgeInsets) -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont.boldSystemFont(ofSize: 18)
+        ]
+        let attachment = StyledTextAttachment(text: text, attributes: attributes, backgroundColor: backgroundColor, cornerRadius: cornerRadius, padding: padding)
+        let attributedString = NSAttributedString(attachment: attachment)
+        
+        return attributedString
+    }
+    
+    func addStyledChord() {
+        let styledChord = createStyledChord(text: "C", backgroundColor: .red, cornerRadius: 5, padding: UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
+        let mutableText = NSMutableAttributedString(attributedString: attributedText)
+        mutableText.append(styledChord)
+        attributedText = mutableText
+    }
+    
+    func addInlineNote() {
+        let note = NSAttributedString(string: " (note)", attributes: [
+            .foregroundColor: UIColor.blue,
+            .font: UIFont.italicSystemFont(ofSize: 18)
+        ])
+        
+        let mutableText = NSMutableAttributedString(attributedString: attributedText)
+        mutableText.append(note)
+        attributedText = mutableText
+    }
+    
     enum ActiveAlert {
         case kickedOut, error
     }
@@ -390,12 +421,23 @@ struct SongDetailView: View {
                 .padding(.horizontal)
             }
             Divider()
-            TextEditor(text: readOnly() || songs == nil ? .constant(lyrics) : $lyrics)
-                .multilineTextAlignment(alignment)
-                .font(.system(size: CGFloat(value), weight: weight, design: design))
-                .lineSpacing(lineSpacing)
-                .focused($isInputActive)
-                .padding(.leading, 11)
+//            TextEditor(text: readOnly() || songs == nil ? .constant(lyrics) : $lyrics)
+//                .multilineTextAlignment(alignment)
+//                .font(.system(size: CGFloat(value), weight: weight, design: design))
+//                .lineSpacing(lineSpacing)
+//                .focused($isInputActive)
+//                .padding(.leading, 11)
+            RichTextEditor(text: $attributedText)
+                .frame(height: 300)
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1))
+                .padding()
+            Button(action: addStyledChord) {
+                Text("Add Chord")
+            }
+            
+            Button(action: addInlineNote) {
+                Text("Add Inline Note")
+            }
             Divider()
             if restoreSong == nil {
                 VStack(spacing: 14) {
@@ -827,5 +869,88 @@ struct SongDetailView: View {
             FAText(iconName: "ellipsis", size: 18)
                 .modifier(NavBarButtonViewModifier())
         }
+    }
+}
+
+struct RichTextEditor: UIViewRepresentable {
+    @Binding var text: NSAttributedString
+    
+    class Coordinator: NSObject, UITextViewDelegate {
+        var parent: RichTextEditor
+        
+        init(parent: RichTextEditor) {
+            self.parent = parent
+        }
+        
+        func textViewDidChange(_ textView: UITextView) {
+            parent.text = textView.attributedText
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+    
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        textView.delegate = context.coordinator
+        textView.isScrollEnabled = true
+        textView.backgroundColor = UIColor.systemBackground
+        textView.textColor = UIColor.label
+        textView.font = UIFont.systemFont(ofSize: 20)
+        textView.attributedText = text
+        return textView
+    }
+    
+    func updateUIView(_ uiView: UITextView, context: Context) {
+        if uiView.attributedText.string != text.string {
+            uiView.attributedText = text
+        }
+    }
+}
+
+class StyledTextAttachment: NSTextAttachment {
+    var text: String
+    var attributes: [NSAttributedString.Key: Any]
+    var backgroundColor: UIColor
+    var cornerRadius: CGFloat
+    var padding: UIEdgeInsets
+    
+    init(text: String, attributes: [NSAttributedString.Key: Any], backgroundColor: UIColor, cornerRadius: CGFloat, padding: UIEdgeInsets) {
+        self.text = text
+        self.attributes = attributes
+        self.backgroundColor = backgroundColor
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        super.init(data: nil, ofType: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func image(forBounds imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
+        let nsText = NSAttributedString(string: text, attributes: attributes)
+        let size = nsText.size()
+        let rect = CGRect(x: 0, y: 0, width: size.width + padding.left + padding.right, height: size.height + padding.top + padding.bottom)
+        
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        context.setFillColor(backgroundColor.cgColor)
+        let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+        path.fill()
+        
+        nsText.draw(in: CGRect(x: padding.left, y: padding.top, width: size.width, height: size.height))
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
+    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+        let size = NSAttributedString(string: text, attributes: attributes).size()
+        return CGRect(x: 0, y: 0, width: size.width + padding.left + padding.right, height: size.height + padding.top + padding.bottom)
     }
 }
