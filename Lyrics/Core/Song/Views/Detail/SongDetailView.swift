@@ -95,6 +95,7 @@ struct SongDetailView: View {
     
     var songs: [Song]?
     let pasteboard = UIPasteboard.general
+    let isSongFromFolder: Bool
     private var wordCount: Int {
         let words = lyrics.split { !$0.isLetter }
         return words.count
@@ -111,6 +112,7 @@ struct SongDetailView: View {
         let paragraphs = lyrics.components(separatedBy: "\n\n")
         return paragraphs.count
     }
+    
     func removeFeatAndAfter(from input: String) -> String {
         let keyword = "feat"
         
@@ -226,8 +228,9 @@ struct SongDetailView: View {
         })
     }
     
-    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, wordCountStyle: String, folder: Folder? = nil, joinedUsers: [User]? = nil) {
+    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, wordCountStyle: String, folder: Folder? = nil, joinedUsers: [User]? = nil, isSongFromFolder: Bool? = nil) {
         self.songs = songs
+        self.isSongFromFolder = isSongFromFolder ?? false
         self._joinedUsers = State(initialValue: joinedUsers)
         self._isChecked = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
@@ -612,9 +615,9 @@ struct SongDetailView: View {
         }
         .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
             if let folder = mainViewModel.selectedFolder, mainViewModel.folderSongs.contains(where: { $0.id! == song.id! }) {
-                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: folder)
+                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: folder, isSongFromFolder: isSongFromFolder)
             } else {
-                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil)
+                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil, isSongFromFolder: isSongFromFolder)
             }
         }
         .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
@@ -645,7 +648,7 @@ struct SongDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            if mainViewModel.selectedFolder != nil && mainViewModel.folderSongs.contains(where: { $0.id ?? "" == song.id ?? "" }) {
+            if isSongFromFolder {
                 Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately. " + NSLocalizedString("songs_parent_will_be_left", comment: ""))
             } else {
                 Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately.")

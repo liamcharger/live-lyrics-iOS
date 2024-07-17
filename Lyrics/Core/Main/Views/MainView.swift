@@ -517,7 +517,7 @@ struct MainView: View {
                                                                         .deleteDisabled(true)
                                                                         .moveDisabled(true)
                                                                 } else {
-                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
+                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
                                                                         ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
                                                                                 if !(song.readOnly ?? false) {
@@ -785,7 +785,7 @@ struct MainView: View {
                     }
                     .padding()
                     .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
-                        UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder)
+                        UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder, isSongFromFolder: true)
                     }
                     .sheet(isPresented: $showEditSheet) {
                         if let selectedFolder = mainViewModel.selectedFolder {
