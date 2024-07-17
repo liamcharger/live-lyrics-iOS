@@ -6,19 +6,26 @@
 //
 
 import SwiftUI
+import SimpleToast
 
 struct BandRowView: View {
     let band: Band
     
     @ObservedObject var bandsViewModel = BandsViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @State var members = [BandMember]()
     @State var roles = [BandRole]()
     @Binding var selectedMember: BandMember?
+    @Binding var showToast: Bool
     
     @State var loadingMembers = true
     @State var loadingRoles = true
     @Binding var showUserPopover: Bool
+    
+    var uid: String {
+        return authViewModel.currentUser?.id ?? ""
+    }
     
     var body: some View {
         VStack(spacing: 2) {
@@ -35,20 +42,25 @@ struct BandRowView: View {
                     Button {
                         let pasteboard = UIPasteboard.general
                         pasteboard.string = band.joinId
-                        // TODO: create user visible confirmation
+                        
+                        showToast = true
                     } label: {
                         Label("Get Join Code", systemImage: "lock.open")
                     }
-                    // TODO: update button display logic
-                    Button(role: .destructive) {
-                        bandsViewModel.leaveBand(band)
-                    } label: {
-                        Label("Leave", systemImage: "trash")
-                    }
-                    Button(role: .destructive) {
-                        bandsViewModel.deleteBand(band)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
+                    if members.contains(where: { $0.uid == uid }) {
+                        Button(role: .destructive) {
+                            // TODO: add confirmation
+                            bandsViewModel.deleteBand(band)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    } else {
+                        Button(role: .destructive) {
+                            bandsViewModel.leaveBand(band)
+                        } label: {
+                            // TODO: add confirmation
+                            Label("Leave", systemImage: "trash")
+                        }
                     }
                 } label: {
                     Image(systemName: "ellipsis")

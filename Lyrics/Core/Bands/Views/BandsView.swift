@@ -7,6 +7,7 @@
 
 import SwiftUI
 import BottomSheet
+import SimpleToast
 
 struct BandsView: View {
     @ObservedObject var bandsViewModel = BandsViewModel.shared
@@ -14,6 +15,7 @@ struct BandsView: View {
     @State var showNewBandSheet = false
     @State var showJoinBandSheet = false
     @State var showUserPopover = false
+    @State var showToast = false
     
     @State var selectedMember: BandMember?
     
@@ -23,12 +25,14 @@ struct BandsView: View {
                 .padding()
             Divider()
             if bandsViewModel.isLoadingUserBands {
+                Spacer()
                 HStack {
                     Spacer()
                     ProgressView("Loading")
                     Spacer()
                 }
                 .padding()
+                Spacer()
             } else if bandsViewModel.userBands.isEmpty {
                 // TODO: add "what are bands?" button
                 FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
@@ -36,7 +40,7 @@ struct BandsView: View {
                 ScrollView {
                     VStack {
                         ForEach(bandsViewModel.userBands) { band in
-                            BandRowView(band: band, selectedMember: $selectedMember, showUserPopover: $showUserPopover)
+                            BandRowView(band: band, selectedMember: $selectedMember, showToast: $showToast, showUserPopover: $showUserPopover)
                                 .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
                                     if let member = selectedMember {
                                         BandMemberPopover(member: member, band: band)
@@ -75,6 +79,19 @@ struct BandsView: View {
         }
         .sheet(isPresented: $showJoinBandSheet) {
             BandJoinView(isPresented: $showJoinBandSheet)
+        }
+        .simpleToast(isPresented: $showToast, options: SimpleToastOptions(
+            alignment: .top,
+            hideAfter: 5,
+            animation: Animation.bouncy(extraBounce: 0.15),
+            modifierType: .slide
+        )) {
+            Label("The band join code has been copied to the clipboard. ", systemImage: "info.circle")
+                .padding()
+                .background(Color.blue.opacity(0.9))
+                .foregroundColor(Color.white)
+                .cornerRadius(15)
+                .padding()
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)

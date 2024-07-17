@@ -2482,6 +2482,9 @@
         }
       }
     },
+    "The band join code has been copied to the clipboard. " : {
+
+    },
     "The duration is not formatted correctly. Correct formatting, e.g., " : {
       "localizations" : {
         "es" : {

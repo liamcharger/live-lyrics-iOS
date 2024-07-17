@@ -241,11 +241,13 @@ struct ShareView: View {
                         } label: {
                             Label(NSLocalizedString("Main", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
                         }
-                        Button {
-                            self.selectedVariations.removeAll()
-                            self.selectedVariations.append(SongVariation(title: "byRole", lyrics: "", songUid: "", songId: ""))
-                        } label: {
-                            Label(NSLocalizedString("By Role", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == "byRole"}) ? "checkmark" : "")
+                        if selectedBand != nil {
+                            Button {
+                                self.selectedVariations.removeAll()
+                                self.selectedVariations.append(SongVariation(title: "byRole", lyrics: "", songUid: "", songId: ""))
+                            } label: {
+                                Label(NSLocalizedString("By Role", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == "byRole"}) ? "checkmark" : "")
+                            }
                         }
                         Divider()
                         ForEach(songVariations, id: \.id) { variation in
