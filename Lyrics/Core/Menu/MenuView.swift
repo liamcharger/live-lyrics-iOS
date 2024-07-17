@@ -84,7 +84,7 @@ struct MenuView: View {
                 Divider()
                     .padding(.horizontal, -16)
                     .padding(.bottom, 12)
-                if let currentUser = viewModel.currentUser, currentUser.showAds ?? true {
+                if user.showAds ?? true {
                     HStack {
                         ForEach(storeKitManager.storeProducts, id: \.self) { product in
                             Button {
