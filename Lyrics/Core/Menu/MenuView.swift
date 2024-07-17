@@ -84,7 +84,7 @@ struct MenuView: View {
                 Divider()
                     .padding(.horizontal, -16)
                     .padding(.bottom, 12)
-                if storeKitManager.purchasedProducts.isEmpty {
+                if user.showAds ?? true {
                     HStack {
                         ForEach(storeKitManager.storeProducts, id: \.self) { product in
                             Button {
