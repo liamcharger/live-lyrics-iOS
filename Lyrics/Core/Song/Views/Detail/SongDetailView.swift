@@ -182,8 +182,10 @@ struct SongDetailView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     func getShowVariationCondition() -> Bool {
-        if (song.variations ?? []).isEmpty {
+        if (song.variations ?? []).isEmpty && !(song.readOnly ?? false) {
             return true
+        } else if songVariations.count < 1 && song.readOnly ?? false {
+            return false
         }
         return songVariations.count > 1
     }
@@ -605,41 +607,43 @@ struct SongDetailView: View {
                 }
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
-                self.title = song.title
-                if !isInputActive {
-                    if selectedVariation == nil {
-                        self.lyrics = song.lyrics
+                if let song = song {
+                    self.title = song.title
+                    if !isInputActive {
+                        if selectedVariation == nil {
+                            self.lyrics = song.lyrics
+                        }
                     }
-                }
-                self.key = {
-                    if let key = song.key, !key.isEmpty {
-                        return key
-                    } else {
-                        return NSLocalizedString("not_set", comment: "")
+                    self.key = {
+                        if let key = song.key, !key.isEmpty {
+                            return key
+                        } else {
+                            return NSLocalizedString("not_set", comment: "")
+                        }
+                    }()
+                    self.artist = song.artist ?? ""
+                    self.duration = song.duration ?? ""
+                    // Only refresh the tags if the song isn't shared because it's already been inherited from the SharedSong
+                    if !songViewModel.isShared(song: song) {
+                        self.tags = song.tags ?? []
                     }
-                }()
-                self.artist = song.artist ?? ""
-                self.duration = song.duration ?? ""
-                // Only refresh the tags if the song isn't shared because it's already been inherited from the SharedSong
-                if !songViewModel.isShared(song: song) {
-                    self.tags = song.tags ?? []
-                }
-                self.design = getDesign(design: Int(song.design ?? 0))
-                self.weight = getWeight(weight: Int(song.weight ?? 0))
-                self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
-                self.value = song.size ?? 18
-                self.lineSpacing = song.lineSpacing ?? 1
-                if joinedUsers == nil {
-                    if let folder = folder, folder.id! != uid() {
-                        self.joinedUsersStrings = folder.joinedUsers ?? []
-                    } else {
-                        self.joinedUsersStrings = song.joinedUsers ?? []
-                    }
-                    if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
-                        showAlert = true
-                        activeAlert = .kickedOut
-                    } else {
-                        fetchUsers()
+                    self.design = getDesign(design: Int(song.design ?? 0))
+                    self.weight = getWeight(weight: Int(song.weight ?? 0))
+                    self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
+                    self.value = song.size ?? 18
+                    self.lineSpacing = song.lineSpacing ?? 1
+                    if joinedUsers == nil {
+                        if let folder = folder, folder.id! != uid() {
+                            self.joinedUsersStrings = folder.joinedUsers ?? []
+                        } else {
+                            self.joinedUsersStrings = song.joinedUsers ?? []
+                        }
+                        if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
+                            showAlert = true
+                            activeAlert = .kickedOut
+                        } else {
+                            fetchUsers()
+                        }
                     }
                 }
             } regCompletion: { reg in

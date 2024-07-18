@@ -42,31 +42,38 @@ struct AddSongsView: View {
         }
         
         var songs: [Song] = []
+        let dispatch = DispatchGroup()
         
         for(songID, isSelected) in selectedSongs {
             guard isSelected else {
                 continue
             }
             
-            self.songViewModel.fetchSong(songID) { song in
-                songs.append(song)
+            dispatch.enter()
+            self.songViewModel.fetchSong(listen: false, songID) { song in
+                if let song = song {
+                    songs.append(song)
+                }
+                dispatch.leave()
             } regCompletion: { _ in }
         }
         
-        self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { error in
-            if let error = error {
-                if error.localizedDescription == "Failed to get document because the client is offline." {
-                    self.errorMessage = "Please connect to the internet to perform this action."
-                    self.showError = true
-                    self.isLoading = false
+        dispatch.notify(queue: .main) {
+            self.songViewModel.moveSongsToFolder(folder: folder, songs: songs) { error in
+                if let error = error {
+                    if error.localizedDescription == "Failed to get document because the client is offline." {
+                        self.errorMessage = "Please connect to the internet to perform this action."
+                        self.showError = true
+                        self.isLoading = false
+                    } else {
+                        self.errorMessage = errorMessage
+                        self.showError = true
+                        self.isLoading = false
+                    }
                 } else {
-                    self.errorMessage = errorMessage
-                    self.showError = true
+                    presMode.wrappedValue.dismiss()
                     self.isLoading = false
                 }
-            } else {
-                presMode.wrappedValue.dismiss()
-                self.isLoading = false
             }
         }
     }
