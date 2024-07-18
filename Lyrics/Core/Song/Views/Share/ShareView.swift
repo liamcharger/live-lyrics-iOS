@@ -220,7 +220,7 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil && songVariations.count >= 1 {
+            if (folder == nil ? !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && songVariations.count >= 1 : true) && collaborate {
                 HStack {
                     Text("Including variation\(selectedVariations.count > 1 || selectedVariations.isEmpty ? "s" : ""):")
                     Spacer()
@@ -249,18 +249,23 @@ struct ShareView: View {
                                 Label(NSLocalizedString("By Role", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == "byRole"}) ? "checkmark" : "")
                             }
                         }
-                        Divider()
-                        ForEach(songVariations, id: \.id) { variation in
-                            Button {
-                                if selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) {
-                                    if selectedVariations.count >= 2 {
-                                        self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
+                        if folder == nil {
+                            Divider()
+                            ForEach(songVariations, id: \.id) { variation in
+                                Button {
+                                    if let byRole = selectedVariations.firstIndex(where: { $0.title == "byRole" }) {
+                                        self.selectedVariations.remove(at: byRole)
                                     }
-                                } else {
-                                    self.selectedVariations.append(variation)
+                                    if selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) {
+                                        if selectedVariations.count >= 2 {
+                                            self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
+                                        }
+                                    } else {
+                                        self.selectedVariations.append(variation)
+                                    }
+                                } label: {
+                                    Label(variation.title, systemImage: selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) ? "checkmark" : "")
                                 }
-                            } label: {
-                                Label(variation.title, systemImage: selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) ? "checkmark" : "")
                             }
                         }
                     } label: {

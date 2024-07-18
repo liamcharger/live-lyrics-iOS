@@ -104,6 +104,12 @@
             "state" : "new",
             "value" : "%1$lld member%2$@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld miembro%@"
+          }
         }
       }
     },
@@ -348,7 +354,14 @@
       }
     },
     "Add Role" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir función"
+          }
+        }
+      }
     },
     "Add Songs" : {
       "localizations" : {
@@ -402,17 +415,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Estás seguro de que deseas %1$@ “%2$@”?"
-          }
-        }
-      }
-    },
-    "Are you sure you want to delete \"%@\"?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Estás seguro de que deseas eliminar “%@”?"
           }
         }
       }
@@ -514,7 +516,14 @@
       }
     },
     "Are you sure you want to remove \"%@\" as a member of this band? They will immediately lose access." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres eliminar a «%@» como miembro de esta banda? Perderán el acceso inmediatamente."
+          }
+        }
+      }
     },
     "Artist" : {
       "localizations" : {
@@ -591,7 +600,14 @@
       }
     },
     "By Role" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por función"
+          }
+        }
+      }
     },
     "By signing up, you're agree to our " : {
       "localizations" : {
@@ -664,10 +680,24 @@
       }
     },
     "Choose a Role" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elija un papel"
+          }
+        }
+      }
     },
     "Choose an Icon" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elija un icono"
+          }
+        }
+      }
     },
     "Clear" : {
       "localizations" : {
@@ -690,7 +720,14 @@
       }
     },
     "Code" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código"
+          }
+        }
+      }
     },
     "Collaborate" : {
       "localizations" : {
@@ -786,16 +823,44 @@
       }
     },
     "Create a Band" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear una banda"
+          }
+        }
+      }
     },
     "Create a New Band" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear una nueva banda"
+          }
+        }
+      }
     },
     "Create a Role" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear una función"
+          }
+        }
+      }
     },
     "Create Band" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear banda"
+          }
+        }
+      }
     },
     "Date" : {
       "localizations" : {
@@ -1041,17 +1106,6 @@
         }
       }
     },
-    "Enter a name for your new variation." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa un nombre para tu nueva variación."
-          }
-        }
-      }
-    },
     "Enter a name for your song." : {
       "localizations" : {
         "es" : {
@@ -1063,7 +1117,14 @@
       }
     },
     "Enter some details for your new variation." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduzca algunos datos para su nueva variación."
+          }
+        }
+      }
     },
     "Enter the email associated with your account." : {
       "localizations" : {
@@ -1173,7 +1234,14 @@
       }
     },
     "Get Join Code" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener código de afiliación"
+          }
+        }
+      }
     },
     "good_afternoon" : {
       "comment" : "Good Afternoon.",
@@ -1338,10 +1406,24 @@
       }
     },
     "Join a Band" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Únete a una banda"
+          }
+        }
+      }
     },
     "Join Band" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unirse a la banda"
+          }
+        }
+      }
     },
     "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more." : {
       "localizations" : {
@@ -1521,7 +1603,14 @@
       }
     },
     "Main" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principal"
+          }
+        }
+      }
     },
     "Make sure that " : {
       "comment" : "Used in ShareView \"Make sure that (username is using version _._._ or higher)\"",
@@ -1766,6 +1855,12 @@
             "state" : "translated",
             "value" : "Hmm, it doesn’t look like you have any joined bands."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hmm, no parece que tengas bandas unidas."
+          }
         }
       }
     },
@@ -1860,6 +1955,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "or choose a band"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "o elija una banda"
           }
         }
       }
@@ -2026,7 +2127,14 @@
       }
     },
     "Remove Band Member?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Retirar a un miembro de la banda?"
+          }
+        }
+      }
     },
     "Remove Collaborator?" : {
       "localizations" : {
@@ -2089,7 +2197,14 @@
       }
     },
     "Role Name" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre del rol"
+          }
+        }
+      }
     },
     "Rounded" : {
       "localizations" : {
@@ -2482,8 +2597,15 @@
         }
       }
     },
-    "The band join code has been copied to the clipboard. " : {
-
+    "The band join code has been copied to the clipboard." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código de unión de banda se ha copiado en el portapapeles."
+          }
+        }
+      }
     },
     "The duration is not formatted correctly. Correct formatting, e.g., " : {
       "localizations" : {
@@ -2552,7 +2674,14 @@
       }
     },
     "To join a band, enter the six digit code from a band administrator." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para unirse a una banda, introduzca el código de seis dígitos de un administrador de banda."
+          }
+        }
+      }
     },
     "Type:" : {
       "localizations" : {

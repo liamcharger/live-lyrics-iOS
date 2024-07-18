@@ -18,6 +18,8 @@ struct BandsView: View {
     @State var showToast = false
     
     @State var selectedMember: BandMember?
+    @State var selectedBand: Band?
+    @State var isSheetPresented = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -40,12 +42,7 @@ struct BandsView: View {
                 ScrollView {
                     VStack {
                         ForEach(bandsViewModel.userBands) { band in
-                            BandRowView(band: band, selectedMember: $selectedMember, showToast: $showToast, showUserPopover: $showUserPopover)
-                                .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
-                                    if let member = selectedMember {
-                                        BandMemberPopover(member: member, band: band)
-                                    }
-                                }
+                            BandRowView(band: band, selectedMember: $selectedMember, selectedBand: $selectedBand, showToast: $showToast, showUserPopover: $showUserPopover, isSheetPresented: $isSheetPresented)
                         }
                     }
                     .padding()
@@ -86,7 +83,7 @@ struct BandsView: View {
             animation: Animation.bouncy(extraBounce: 0.15),
             modifierType: .slide
         )) {
-            Label("The band join code has been copied to the clipboard. ", systemImage: "info.circle")
+            Label("The band join code has been copied to the clipboard.", systemImage: "info.circle")
                 .padding()
                 .background(Color.blue.opacity(0.9))
                 .foregroundColor(Color.white)
@@ -97,6 +94,11 @@ struct BandsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             bandsViewModel.fetchUserBands()
+        }
+        .bottomSheet(isPresented: $showUserPopover, detents: [.medium()], onDismiss: { isSheetPresented = false }) {
+            if let member = selectedMember, let band = selectedBand {
+                BandMemberPopover(member: member, band: band)
+            }
         }
     }
 }

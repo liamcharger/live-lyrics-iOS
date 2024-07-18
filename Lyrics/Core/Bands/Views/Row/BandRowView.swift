@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SimpleToast
 
 struct BandRowView: View {
     let band: Band
@@ -17,11 +16,13 @@ struct BandRowView: View {
     @State var members = [BandMember]()
     @State var roles = [BandRole]()
     @Binding var selectedMember: BandMember?
+    @Binding var selectedBand: Band?
     @Binding var showToast: Bool
     
     @State var loadingMembers = true
     @State var loadingRoles = true
     @Binding var showUserPopover: Bool
+    @Binding var isSheetPresented: Bool
     
     var uid: String {
         return authViewModel.currentUser?.id ?? ""
@@ -87,8 +88,12 @@ struct BandRowView: View {
                             let role = roles.first(where: { $0.id! == member.roleId ?? "" })
                             
                             Button {
+                                // Use guard variable to check if sheet is already up, otherwise multiple sheets will present if the user is in more than one joined band
+                                guard !isSheetPresented else { return }
                                 selectedMember = member
+                                selectedBand = band
                                 showUserPopover = true
+                                isSheetPresented = true
                             } label: {
                                 BandMemberPopoverRowView(member: member, role: role)
                             }
@@ -109,6 +114,9 @@ struct BandRowView: View {
                 self.loadingRoles = false
                 self.roles = roles
             }
+        }
+        .onDisappear {
+            isSheetPresented = false
         }
     }
 }
