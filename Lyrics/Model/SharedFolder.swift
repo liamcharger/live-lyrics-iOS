@@ -15,4 +15,6 @@ struct SharedFolder: Identifiable, Codable, Equatable {
     let folderId: String
     var order: Int?
     var readOnly: Bool?
+    var songVariations: [String]?
+    var bandId: String?
 }

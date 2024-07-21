@@ -50,6 +50,7 @@ struct AddSongsView: View {
             }
             
             dispatch.enter()
+            // TODO: move songs to folder with their ID, removing the need to fetch them
             self.songViewModel.fetchSong(listen: false, songID) { song in
                 if let song = song {
                     songs.append(song)

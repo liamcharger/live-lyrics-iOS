@@ -70,7 +70,6 @@ struct ShareView: View {
                         guard let fromUserId = authViewModel.currentUser?.id else { return }
                         let toUsernames = selectedUsers.map { $0.username }
                         let toUserIds = selectedUsers.compactMap { $0.id }
-                        let fcmIds = selectedUsers.compactMap { $0.notificationToken }
                         let type = collaborate ? "collaborate" : "copy"
                         
                         var request: ShareRequest?
@@ -82,22 +81,28 @@ struct ShareView: View {
                             dispatch.enter()
                             bandsViewModel.fetchBandMembers(selectedBand) { members in
                                 dispatch.leave()
-                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: (song?.id ?? (folder?.id!))!, contentType: song == nil ? "folder" : "song", contentName: song?.title ?? (folder?.title)!, type: type, toUsername: [selectedBand.name], fromUsername: fromUser.username, songVariations: [SongVariation.defaultId], readOnly: readOnly)
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: (song?.id ?? (folder?.id!))!, contentType: song == nil ? "folder" : "song", contentName: song?.title ?? (folder?.title)!, type: type, toUsername: [selectedBand.name], fromUsername: fromUser.username, songVariations: [SongVariation.defaultId], readOnly: readOnly, bandId: selectedBand.id!)
                                 
                                 for member in members.filter({ $0.uid != fromUserId }) {
                                     users.append(ShareUser(uid: member.uid, songVariations: {
                                         if selectedVariations.contains(where: { $0.title == "byRole" }) {
-                                            var uniqueVariations: [String] = []
-                                            
-                                            for realVariation in songVariations {
-                                                if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
-                                                    uniqueVariations.append(realVariation.id ?? "")
+                                            if song != nil {
+                                                var uniqueVariations: [String] = []
+                                                
+                                                for realVariation in songVariations {
+                                                    if realVariation.roleId ?? "" == member.roleId ?? SongVariation.defaultId {
+                                                        uniqueVariations.append(realVariation.id ?? "")
+                                                    }
                                                 }
+                                                
+                                                return uniqueVariations.isEmpty ? [SongVariation.defaultId] : uniqueVariations
+                                            } else {
+                                                return selectedVariations.compactMap({ $0.title })
                                             }
-                                            
-                                            return uniqueVariations.isEmpty ? [SongVariation.defaultId] : uniqueVariations
+                                        } else if selectedVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                            return [SongVariation.defaultId]
                                         } else {
-                                            return selectedVariations.isEmpty ? [] : selectedVariations.compactMap({ $0.id })
+                                            return []
                                         }
                                     }(), fcmId: member.fcmId))
                                 }
@@ -114,7 +119,7 @@ struct ShareView: View {
                                 request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly)
                                 
                                 for user in selectedUsers {
-                                    users.append(ShareUser(uid: user.id!, songVariations: [SongVariation.defaultId], fcmId: user.notificationToken))
+                                    users.append(ShareUser(uid: user.id!, songVariations: selectedVariations.compactMap({ $0.title }), fcmId: user.notificationToken))
                                 }
                             }
                             dispatch.leave()

@@ -562,6 +562,17 @@
         }
       }
     },
+    "band_with_code_not_found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A band with the specified join code could not be found."
+          }
+        }
+      }
+    },
     "bands" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -751,6 +762,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conéctese a Internet para editar los permisos de los colaboradores."
+          }
+        }
+      }
+    },
+    "connect_to_internet_to_view_bands" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please connect to the internet to view and join bands."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, conéctese a Internet para ver y unirse a las bandas."
           }
         }
       }

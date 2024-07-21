@@ -548,7 +548,6 @@ struct SongDetailView: View {
                     }
                     
                     if let firstVariation = filteredVariations.first {
-                        print(firstVariation)
                         selectedVariation = firstVariation
                         if !isInputActive {
                             self.lyrics = firstVariation.lyrics

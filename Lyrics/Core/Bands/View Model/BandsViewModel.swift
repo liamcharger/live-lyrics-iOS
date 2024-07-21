@@ -30,10 +30,11 @@ class BandsViewModel: ObservableObject {
     
     static let shared = BandsViewModel()
     
-    func fetchUserBands() {
+    func fetchUserBands(completion: @escaping() -> Void) {
         service.fetchUserBands { bands in
             self.isLoadingUserBands = false
             self.userBands = bands
+            completion()
         }
     }
     
@@ -67,14 +68,14 @@ class BandsViewModel: ObservableObject {
         }
     }
     
-    func joinBand(_ code: String, completion: @escaping() -> Void) {
+    func joinBand(_ code: String, completion: @escaping(Bool) -> Void) {
         service.fetchBand(fromCode: code) { band in
             if let band = band {
                 self.service.joinBand(band: band) {
-                    completion()
+                    completion(true)
                 }
             } else {
-                print("Band is nil")
+                completion(false)
             }
         }
     }

@@ -26,7 +26,9 @@ struct BandsView: View {
             CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true)
                 .padding()
             Divider()
-            if bandsViewModel.isLoadingUserBands {
+            if !NetworkManager.shared.getNetworkState() {
+                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
+            } else if bandsViewModel.isLoadingUserBands {
                 Spacer()
                 HStack {
                     Spacer()
@@ -93,7 +95,7 @@ struct BandsView: View {
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            bandsViewModel.fetchUserBands()
+            bandsViewModel.fetchUserBands {}
         }
         .bottomSheet(isPresented: $showUserPopover, detents: [.medium()], onDismiss: { isSheetPresented = false }) {
             if let member = selectedMember, let band = selectedBand {

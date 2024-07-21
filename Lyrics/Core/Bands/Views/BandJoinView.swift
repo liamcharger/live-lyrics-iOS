@@ -11,6 +11,7 @@ struct BandJoinView: View {
     @ObservedObject var bandsViewModel = BandsViewModel.shared
     
     @State var code = ""
+    @State var showAlert = false
     
     @Binding var isPresented: Bool
     @FocusState var isCodeFocused: Bool
@@ -22,30 +23,37 @@ struct BandJoinView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Join a Band")
-                    .font(.system(size: 28, design: .rounded).weight(.bold))
-                    .multilineTextAlignment(.leading)
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Join a Band")
+                        .font(.system(size: 28, design: .rounded).weight(.bold))
+                    Text("To join a band, enter the six digit code from a band administrator.")
+                }
                 Spacer()
-                SheetCloseButton(isPresented: $isPresented)
+                Button(action: {isPresented = false}) {
+                    Image(systemName: "xmark")
+                        .imageScale(.medium)
+                        .padding(12)
+                        .font(.body.weight(.semibold))
+                        .foregroundColor(.primary)
+                        .background(Material.regular)
+                        .clipShape(Circle())
+                }
             }
             .padding()
             Divider()
             Spacer()
-            VStack(spacing: 14) {
-                VStack(spacing: 12) {
-                    FAText(iconName: "lock", size: 40)
-                    Text("To join a band, enter the six digit code from a band administrator.")
-                        .multilineTextAlignment(.center)
-                }
-                CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""))
-                    .focused($isCodeFocused)
-            }
-            .padding()
+            CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""))
+                .focused($isCodeFocused)
+                .padding()
             Spacer()
             Divider()
             Button {
-                bandsViewModel.joinBand(code) {
-                    isPresented = false
+                bandsViewModel.joinBand(code) { success in
+                    if success {
+                        isPresented = false
+                    } else {
+                        showAlert = true
+                    }
                 }
             } label: {
                 HStack {
@@ -61,6 +69,9 @@ struct BandJoinView: View {
         }
         .onAppear {
             isCodeFocused = true
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text(NSLocalizedString("band_with_code_not_found", comment: "")), dismissButton: .cancel())
         }
     }
 }

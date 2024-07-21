@@ -154,6 +154,8 @@ class SongService {
 						}
 						
 						folder.readOnly = sharedFolder.readOnly
+						folder.songVariations = sharedFolder.songVariations
+						folder.bandId = sharedFolder.bandId
 						completedFolders.append(folder)
 						group.leave()
 					}
@@ -277,13 +279,39 @@ class SongService {
 				let folderSongs = documents.compactMap { try? $0.data(as: FolderSong.self) }
 				
 				for folderSong in folderSongs {
-					print(folderSong.id ?? "" + ", ", folderSong.order)
 					group.enter()
 					self.fetchSong(listen: false, forUser: userId, withId: folderSong.id!) { song in
-						if let song = song {
+						group.leave()
+						if var song = song {
+							if let variations = folder.songVariations {
+								if let bandId = folder.bandId, variations.contains(where: { $0 == "byRole" }) {
+									if BandsViewModel.shared.isLoadingUserBands || BandsViewModel.shared.userBands.isEmpty {
+										group.enter()
+										BandsViewModel.shared.fetchUserBands {
+											group.leave()
+											group.enter()
+											self.handleVariations(song, bandId: bandId) { songVariations in
+												print(song.title, ", ", songVariations)
+												song.variations = songVariations
+												group.leave()
+											}
+										}
+									} else {
+										group.enter()
+										self.handleVariations(song, bandId: bandId) { songVariations in
+											print(song.title, ", ", songVariations)
+											song.variations = songVariations
+											group.leave()
+										}
+									}
+								} else if variations.contains(where: { $0 == SongVariation.defaultId }){
+									song.variations?.append(SongVariation.defaultId)
+								} else if variations.isEmpty {
+									song.variations = []
+								}
+							}
 							completedSongs.append(song)
 						}
-						group.leave()
 					} registrationCompletion: { _ in }
 				}
 				
@@ -295,6 +323,55 @@ class SongService {
 					}
 				}
 			}
+	}
+	
+	func handleVariations(_ song: Song, bandId: String, completion: @escaping([String]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		let group = DispatchGroup()
+		var filteredVariations = [SongVariation]()
+		
+		if let band = BandsViewModel.shared.userBands.first(where: { $0.id ?? "" == bandId }) {
+			print("BAND: ", band)
+			group.enter()
+			BandsViewModel.shared.fetchBandMembers(band) { members in
+				group.leave()
+				guard let member = members.first(where: { $0.uid == uid }) else { return }
+				print("MEMBER: ", member)
+				group.enter()
+				BandsViewModel.shared.fetchMemberRoles(band) { roles in
+					group.leave()
+					guard let memberRoleId = roles.first(where: { $0.id ?? "" == member.roleId })?.id else { return }
+					print("MEMBER ROLE ID: ", member)
+					
+					group.enter()
+					SongViewModel.shared.fetchSongVariations(song: song) { songVariations in
+						print("SONG VARIATIONS: ", songVariations)
+						filteredVariations = songVariations.filter { variation in
+							if let roleId = variation.roleId {
+								print("VARIATION: ", variation, "ROLE ID: ", roleId)
+								if roleId == memberRoleId {
+									return true
+								}
+							}
+							return false
+						}
+						
+						if filteredVariations.isEmpty {
+							filteredVariations.append(SongVariation(id: SongVariation.defaultId, title: "", lyrics: "", songUid: "", songId: "", roleId: ""))
+						}
+						
+						group.leave()
+					}
+				}
+			}
+		} else {
+			print("Band is nil")
+		}
+		
+		group.notify(queue: .main) {
+			completion(filteredVariations.compactMap({ $0.id ?? "" }))
+		}
 	}
 	
 	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, folder: Folder? = nil, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
@@ -735,7 +812,7 @@ class SongService {
 	}
 	
 	func updateVariation(song: Song, variation: SongVariation, title: String, role: BandRole?) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).updateData(["title": title, "roleId": role == nil ? FieldValue.delete() : role?.name ?? ""]) { error in
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).updateData(["title": title, "roleId": role?.id ?? FieldValue.delete()]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -966,7 +1043,8 @@ class SongService {
 			"toUsername": request.toUsername,
 			"fromUsername": request.fromUsername,
 			"songVariations": songVariations,
-			"readOnly": request.readOnly
+			"readOnly": request.readOnly,
+			"bandId": request.bandId
 		]
 		
 		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(id).setData(requestData) { error in
@@ -988,7 +1066,8 @@ class SongService {
 					"toUsername": request.toUsername,
 					"fromUsername": request.fromUsername,
 					"songVariations": user.songVariations,
-					"readOnly": request.readOnly
+					"readOnly": request.readOnly,
+					"bandId": request.bandId
 				]
 				
 				dispatch.enter()
@@ -1078,11 +1157,13 @@ class SongService {
 			self.fetchFolder(forUser: request.from, withId: request.contentId) { folder in
 				if let folder = folder {
 					if request.type == "collaborate" {
-						let sharedFolder: [String: Any] = [
+						let sharedFolder: [String: Any?] = [
 							"from": request.from,
 							"folderId": request.contentId,
 							"order": 0,
-							"readOnly": request.readOnly ?? false
+							"readOnly": request.readOnly ?? false,
+							"songVariations": request.songVariations,
+							"bandId": request.bandId
 						]
 						
 						dispatch.enter()

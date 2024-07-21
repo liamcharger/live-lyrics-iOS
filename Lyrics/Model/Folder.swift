@@ -18,4 +18,6 @@ struct Folder: Identifiable, Codable, Equatable {
     var readOnly: Bool?
     var notes: String?
     var joinedUsers: [String]?
+    var songVariations: [String]?
+    var bandId: String?
 }
