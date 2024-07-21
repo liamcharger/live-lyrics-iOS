@@ -216,8 +216,10 @@ struct SongDetailView: View {
         return htmlTemplate
     }
     func getShowVariationCondition() -> Bool {
-        if (song.variations ?? []).isEmpty {
+        if (song.variations ?? []).isEmpty && !(song.readOnly ?? false) {
             return true
+        } else if songVariations.count < 1 && song.readOnly ?? false {
+            return false
         }
         return songVariations.count > 1
     }
