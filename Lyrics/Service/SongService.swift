@@ -494,11 +494,16 @@ class SongService {
 			}
 	}
 	
-	func updateLyrics(forVariation: SongVariation? = nil, song: Song, lyrics: String) {
+	func updateLyrics(forVariation: SongVariation? = nil, song: Song, lyrics: NSAttributedString) {
+		let htmlData = try? lyrics.data(from: NSRange(location: 0, length: lyrics.length), documentAttributes: [.documentType: NSAttributedString.DocumentType.html])
+		let htmlLyrics = String(data: htmlData!, encoding: .utf8)
+		
+		print(htmlLyrics)
+		
 		if let variation = forVariation {
 			print("Updating variation")
 			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!)
-				.updateData(["lyrics": lyrics]) { error in
+				.updateData(["lyrics": htmlLyrics]) { error in
 					if let error = error {
 						print(error.localizedDescription)
 					}
@@ -506,7 +511,7 @@ class SongService {
 		} else {
 			print("Updating default")
 			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-				.updateData(["lyrics": lyrics]) { error in
+				.updateData(["lyrics": htmlLyrics]) { error in
 					if let error = error {
 						print(error.localizedDescription)
 					}

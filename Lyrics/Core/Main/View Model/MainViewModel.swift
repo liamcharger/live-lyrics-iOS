@@ -248,7 +248,7 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func updateLyrics(forVariation variation: SongVariation? = nil, _ song: Song, lyrics: String) {
+    func updateLyrics(forVariation variation: SongVariation? = nil, _ song: Song, lyrics: NSAttributedString) {
         self.service.updateLyrics(forVariation: variation, song: song, lyrics: lyrics)
     }
     

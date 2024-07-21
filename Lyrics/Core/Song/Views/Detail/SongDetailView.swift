@@ -28,7 +28,8 @@ struct SongDetailView: View {
     @State private var weight: Font.Weight
     @State private var alignment: TextAlignment
     
-    @State private var attributedText = NSAttributedString(string: "Type your text here...")
+    @State var attributedLyrics = NSAttributedString(string: "")
+    @State var lastUpdatedAttributedLyrics = NSAttributedString(string: "")
     
     @State var lyrics = ""
     @State var lastUpdatedLyrics = ""
@@ -181,6 +182,39 @@ struct SongDetailView: View {
     func readOnly() -> Bool {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
+    func getLyrics(string: String) -> NSAttributedString {
+        var renderedString = NSAttributedString(string: "")
+        
+        DispatchQueue.main.async {
+//            let htmlString = plainTextToStyledHTML(string)
+            guard let data = string.data(using: .utf8) else {
+                print("Error: Unable to convert string to Data")
+                return
+            }
+            
+            if let attributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+                renderedString = attributedString
+            }
+        }
+        return renderedString
+    }
+    func plainTextToStyledHTML(_ plainText: String) -> String {
+        let htmlTemplate = """
+    <html>
+    <head>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+    </style>
+    </head>
+    <body>
+    \(plainText.replacingOccurrences(of: "\n", with: "<br/>"))
+    </body>
+    </html>
+    """
+        return htmlTemplate
+    }
     func getShowVariationCondition() -> Bool {
         if (song.variations ?? []).isEmpty {
             return true
@@ -205,40 +239,45 @@ struct SongDetailView: View {
     }
     func checkForUpdatedLyrics() {
         self.updatedLyricsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            if lyrics != lastUpdatedLyrics {
-                mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
-                lastUpdatedLyrics = lyrics
+            if attributedLyrics != lastUpdatedAttributedLyrics {
+                mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: attributedLyrics)
+                lastUpdatedAttributedLyrics = attributedLyrics
             }
         }
     }
-    
     func createStyledChord(text: String, backgroundColor: UIColor, cornerRadius: CGFloat, padding: UIEdgeInsets) -> NSAttributedString {
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.white,
-            .font: UIFont.boldSystemFont(ofSize: 18)
+            .font: UIFont.boldSystemFont(ofSize: 15)
         ]
         let attachment = StyledTextAttachment(text: text, attributes: attributes, backgroundColor: backgroundColor, cornerRadius: cornerRadius, padding: padding)
         let attributedString = NSAttributedString(attachment: attachment)
         
         return attributedString
     }
-    
-    func addStyledChord() {
-        let styledChord = createStyledChord(text: "C", backgroundColor: .red, cornerRadius: 5, padding: UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
-        let mutableText = NSMutableAttributedString(attributedString: attributedText)
-        mutableText.append(styledChord)
-        attributedText = mutableText
-    }
-    
-    func addInlineNote() {
-        let note = NSAttributedString(string: " (note)", attributes: [
-            .foregroundColor: UIColor.blue,
-            .font: UIFont.italicSystemFont(ofSize: 18)
-        ])
+    func createStyledNote(note: String) -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont.boldSystemFont(ofSize: 15)
+        ]
+        let attachment = StyledTextAttachment(text: note, attributes: attributes, backgroundColor: .systemBlue, cornerRadius: 30, padding: UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10))
+        let attributedString = NSAttributedString(attachment: attachment)
         
-        let mutableText = NSMutableAttributedString(attributedString: attributedText)
+        return attributedString
+    }
+    func addStyledChord() {
+        let styledChord = createStyledChord(text: "C", backgroundColor: .systemGray5, cornerRadius: 5, padding: UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4))
+        let mutableText = NSMutableAttributedString(attributedString: attributedLyrics)
+        // TODO: insert chord at cursor
+        mutableText.append(styledChord)
+        attributedLyrics = mutableText
+    }
+    func addInlineNote() {
+        let note = createStyledNote(note: "This is my note...")
+        let mutableText = NSMutableAttributedString(attributedString: attributedLyrics)
+        // TODO: insert chord at cursor
         mutableText.append(note)
-        attributedText = mutableText
+        attributedLyrics = mutableText
     }
     
     enum ActiveAlert {
@@ -272,6 +311,8 @@ struct SongDetailView: View {
         self._alignment = State(initialValue: .leading)
         self._folder = State(initialValue: folder)
         self._song = State(initialValue: inputSong)
+        self._attributedLyrics = State(initialValue: getLyrics(string: inputSong.lyrics))
+        self._lastUpdatedAttributedLyrics = State(initialValue: getLyrics(string: inputSong.lyrics))
         self._lyrics = State(initialValue: inputSong.lyrics)
         self._lastUpdatedLyrics = State(initialValue: inputSong.lyrics)
         self._title = State(initialValue: inputSong.title)
@@ -421,22 +462,42 @@ struct SongDetailView: View {
                 .padding(.horizontal)
             }
             Divider()
-//            TextEditor(text: readOnly() || songs == nil ? .constant(lyrics) : $lyrics)
-//                .multilineTextAlignment(alignment)
-//                .font(.system(size: CGFloat(value), weight: weight, design: design))
-//                .lineSpacing(lineSpacing)
-//                .focused($isInputActive)
-//                .padding(.leading, 11)
-            RichTextEditor(text: $attributedText)
-                .frame(height: 300)
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1))
-                .padding()
-            Button(action: addStyledChord) {
-                Text("Add Chord")
-            }
-            
-            Button(action: addInlineNote) {
-                Text("Add Inline Note")
+            if readOnly() || songs == nil {
+                RichTextEditor(text: .constant(attributedLyrics), size: Binding(get: { CGFloat(value) }, set: { value in
+                    value
+                }), weight: $weight)
+                .focused($isInputActive)
+                .padding(.leading, 11)
+                .lineSpacing(lineSpacing)
+            } else {
+                RichTextEditor(text: $attributedLyrics, size: Binding(get: { CGFloat(value) }, set: { value in
+                    value
+                }), weight: $weight)
+                .focused($isInputActive)
+                .padding(.leading, 11)
+                .lineSpacing(lineSpacing)
+                .overlay {
+                    // TODO: add extra space to text to offset the overlay and create a background blur
+                    HStack {
+                        Spacer()
+                        Menu {
+                            Button(action: addStyledChord) {
+                                Label("Add Chord", systemImage: "plus")
+                            }
+                            Button(action: addInlineNote) {
+                                Label("Add Inline Note", systemImage: "plus")
+                            }
+                        } label: {
+                            Image(systemName: "plus")
+                                .padding(12)
+                                .background(Material.thin)
+                                .foregroundColor(.primary)
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding(12)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                }
             }
             Divider()
             if restoreSong == nil {
@@ -608,7 +669,8 @@ struct SongDetailView: View {
                 self.title = song.title
                 if !isInputActive {
                     if selectedVariation == nil {
-                        self.lyrics = song.lyrics
+//                        self.lyrics = song.lyrics
+                        self.attributedLyrics = getLyrics(string: song.lyrics)
                     }
                 }
                 self.key = {
@@ -874,6 +936,10 @@ struct SongDetailView: View {
 
 struct RichTextEditor: UIViewRepresentable {
     @Binding var text: NSAttributedString
+    @Binding var size: CGFloat
+    @Binding var weight: Font.Weight
+    
+    @Environment(\.colorScheme) var colorScheme
     
     class Coordinator: NSObject, UITextViewDelegate {
         var parent: RichTextEditor
@@ -891,13 +957,42 @@ struct RichTextEditor: UIViewRepresentable {
         Coordinator(parent: self)
     }
     
+    func getWeight(from weight: Font.Weight) -> UIFont.Weight {
+        switch weight {
+        case .black:
+            return UIFont.Weight.black
+        case .bold:
+            return UIFont.Weight.bold
+        case .heavy:
+            return UIFont.Weight.heavy
+        case .light:
+            return UIFont.Weight.light
+        case .medium:
+            return UIFont.Weight.medium
+        case .regular:
+            return UIFont.Weight.regular
+        case .semibold:
+            return UIFont.Weight.semibold
+        case .thin:
+            return UIFont.Weight.thin
+        case .ultraLight:
+            return UIFont.Weight.ultraLight
+        default:
+            return UIFont.Weight.regular
+        }
+    }
+    
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
         textView.delegate = context.coordinator
         textView.isScrollEnabled = true
         textView.backgroundColor = UIColor.systemBackground
-        textView.textColor = UIColor.label
-        textView.font = UIFont.systemFont(ofSize: 20)
+        if colorScheme == .dark {
+            textView.textColor = UIColor.white
+        } else {
+            textView.textColor = UIColor.black
+        }
+        textView.font = UIFont.systemFont(ofSize: size, weight: getWeight(from: weight))
         textView.attributedText = text
         return textView
     }
@@ -906,6 +1001,12 @@ struct RichTextEditor: UIViewRepresentable {
         if uiView.attributedText.string != text.string {
             uiView.attributedText = text
         }
+        if colorScheme == .dark {
+            uiView.textColor = UIColor.white
+        } else {
+            uiView.textColor = UIColor.black
+        }
+        uiView.font = UIFont.systemFont(ofSize: size, weight: getWeight(from: weight))
     }
 }
 
