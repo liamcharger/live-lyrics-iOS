@@ -205,18 +205,21 @@ class MainViewModel: ObservableObject {
         remoteConfig.configSettings = settings
         remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
         
-        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
-            guard let configUpdate, error == nil else {
-                print("Error listening for config updates: \(String(describing: error?.localizedDescription))")
+        remoteConfig.addOnConfigUpdateListener { [weak self] configUpdate, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error listening for config updates: \(error.localizedDescription)")
                 return
             }
             
-            print("Updated keys: \(configUpdate.updatedKeys)")
+            print("Updated keys: \(configUpdate?.updatedKeys ?? [])")
             
             self.remoteConfig.activate { changed, error in
                 if let error = error {
                     print(error.localizedDescription)
                 }
+                
                 DispatchQueue.main.async {
                     guard let remoteVersionString = self.remoteConfig.configValue(forKey: "currentVersion").stringValue else {
                         return

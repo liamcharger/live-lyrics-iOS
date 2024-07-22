@@ -22,6 +22,23 @@ func hasHomeButton() -> Bool {
     return true
 }
 
+func greeting() -> String {
+    let date = Date()
+    let calendar = Calendar.current
+    let currentHour = calendar.component(.hour, from: date)
+    
+    var greetingText = "Hello."
+    switch currentHour {
+    case 0..<12:
+        greetingText = NSLocalizedString("good_morning", comment: "")
+    case 12..<18:
+        greetingText = NSLocalizedString("good_afternoon", comment: "")
+    default:
+        greetingText = NSLocalizedString("good_evening", comment: "")
+    }
+    return greetingText
+}
+
 func completionOnConnectionState(noConnection: @escaping() -> Void, connection: @escaping() -> Void) {
     if NetworkManager.shared.getNetworkState() {
         // Add extra second because otherwise it seems unnaturally quick
