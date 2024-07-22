@@ -18,8 +18,6 @@ struct LoginView: View {
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
     
-    @AppStorage("authViewState") var authViewState = "choose"
-    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
     }
@@ -34,7 +32,7 @@ struct LoginView: View {
         VStack(spacing: 15) {
             HStack(spacing: 12) {
                 Button(action: {
-                    authViewState = "choose"
+                    presMode.wrappedValue.dismiss()
                 }, label: {
                     Image(systemName: "chevron.left")
                         .padding()
@@ -83,11 +81,11 @@ struct LoginView: View {
                 })
                 .opacity(isEmpty ? 0.5 : 1.0)
                 .disabled(isEmpty)
-                Button(action: {
-                    authViewState = "register"
-                }, label: {
+                NavigationLink {
+                    RegistrationView()
+                } label: {
                     Text("No account? ") + Text("Sign Up").bold()
-                })
+                }
             }
         }
         .alert(isPresented: $showError, content: {

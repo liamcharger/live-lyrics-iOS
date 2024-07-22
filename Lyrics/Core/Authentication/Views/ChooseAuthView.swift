@@ -8,40 +8,14 @@
 import SwiftUI
 
 struct ChooseAuthView: View {
-    @AppStorage("authViewState") var authViewState = "choose"
-    
-    @State private var blurLoginView = true
-    @State private var blurRegisterView = true
-    
     @EnvironmentObject var authViewModel: AuthViewModel
-    
-    func greetingLogic() -> String {
-        let date = Date()
-        let calendar = Calendar.current
-        let currentHour = calendar.component(.hour, from: date)
-        
-        var greetingText = "Hello."
-        switch currentHour {
-        case 0..<12:
-            greetingText = NSLocalizedString("good_morning", comment: "")
-        case 12..<18:
-            greetingText = NSLocalizedString("good_afternoon", comment: "")
-        default:
-            greetingText = NSLocalizedString("good_evening", comment: "")
-        }
-        return greetingText
-    }
-    
-    init() {
-        authViewState = "choose"
-    }
     
     var body: some View {
         NavigationView {
             ZStack {
                 VStack {
                     VStack {
-                        Text(greetingLogic())
+                        Text(greeting())
                         Text(NSLocalizedString("welcome_to", comment: ""))
                         Text(NSLocalizedString("live_lyrics", comment: ""))
                     }
@@ -53,22 +27,14 @@ struct ChooseAuthView: View {
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.clear)
                     VStack {
-                        Button {
-                            withAnimation {
-                                blurLoginView = true
-                                blurRegisterView = false
-                                authViewState = "register"
-                            }
+                        NavigationLink {
+                            RegistrationView()
                         } label: {
                             Text("Sign Up")
                                 .modifier(NavButtonViewModifier())
                         }
-                        Button {
-                            withAnimation {
-                                blurLoginView = true
-                                blurRegisterView = false
-                                authViewState = "login"
-                            }
+                        NavigationLink {
+                            LoginView()
                         } label: {
                             Text("Sign In")
                                 .padding()
@@ -81,44 +47,6 @@ struct ChooseAuthView: View {
                 }
                 .padding()
                 .frame(maxHeight: 350)
-                .blur(radius: (blurLoginView && blurRegisterView) ? 0 : 5)
-                .opacity((blurLoginView && blurRegisterView) ? 1 : 0)
-                .disabled(!(blurLoginView && blurRegisterView))
-                .zIndex((blurLoginView && blurRegisterView) ? 1 : 0)
-                VStack {
-                    LoginView()
-                        .environmentObject(authViewModel)
-                }
-                .blur(radius: blurLoginView ? 5 : 0)
-                .opacity(blurLoginView ? 0 : 1)
-                .disabled(blurLoginView)
-                .zIndex(blurLoginView ? 1 : 0)
-                VStack {
-                    RegistrationView()
-                        .environmentObject(authViewModel)
-                }
-                .blur(radius: blurRegisterView ? 5 : 0)
-                .opacity(blurRegisterView ? 0 : 1)
-                .disabled(blurRegisterView)
-                .zIndex(blurRegisterView ? 1 : 0)
-            }
-            .onChange(of: authViewState) { newValue in
-                if newValue == "login" {
-                    withAnimation {
-                        blurLoginView = false
-                        blurRegisterView = true
-                    }
-                } else if newValue == "register" {
-                    withAnimation {
-                        blurLoginView = true
-                        blurRegisterView = false
-                    }
-                } else {
-                    withAnimation {
-                        blurLoginView = true
-                        blurRegisterView = true
-                    }
-                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())

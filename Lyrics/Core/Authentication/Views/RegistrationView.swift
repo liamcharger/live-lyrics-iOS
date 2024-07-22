@@ -18,8 +18,6 @@ struct RegistrationView: View {
     @State var showWebView = false
     @State var showError = false
     
-    @AppStorage("authViewState") var authViewState = "choose"
-    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
@@ -33,7 +31,7 @@ struct RegistrationView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 12) {
                     Button(action: {
-                        authViewState = "choose"
+                        presMode.wrappedValue.dismiss()
                     }, label: {
                         Image(systemName: "chevron.left")
                             .padding()
