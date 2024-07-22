@@ -14,6 +14,7 @@
 - Efficiently create and manage setlists to organize your performance seamlessly. Utilize folders to categorize songs, allowing for easy navigation and smooth transitions between tracks.
 - Experience a dedicated "Play View" feature for an immersive on-stage experience. Enhance your connection with the audience by effortlessly navigating songs while performing.
 - Keep track of important notes for each song, ensuring you never miss a beat during rehearsals or performances.
+- Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.
 - Easily collaborate on songs and folders with friends and band members.
 
 ## Release checklist:
