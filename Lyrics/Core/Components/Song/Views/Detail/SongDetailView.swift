@@ -95,6 +95,7 @@ struct SongDetailView: View {
     
     var songs: [Song]?
     let pasteboard = UIPasteboard.general
+    let isSongFromFolder: Bool
     private var wordCount: Int {
         let words = lyrics.split { !$0.isLetter }
         return words.count
@@ -111,6 +112,7 @@ struct SongDetailView: View {
         let paragraphs = lyrics.components(separatedBy: "\n\n")
         return paragraphs.count
     }
+    
     func removeFeatAndAfter(from input: String) -> String {
         let keyword = "feat"
         
@@ -178,8 +180,10 @@ struct SongDetailView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     func getShowVariationCondition() -> Bool {
-        if (song.variations ?? []).isEmpty {
+        if (song.variations ?? []).isEmpty && !(song.readOnly ?? false) {
             return true
+        } else if songVariations.count < 1 && song.readOnly ?? false {
+            return false
         }
         return songVariations.count > 1
     }
@@ -226,8 +230,9 @@ struct SongDetailView: View {
         })
     }
     
-    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, wordCountStyle: String, folder: Folder? = nil, joinedUsers: [User]? = nil) {
+    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, wordCountStyle: String, folder: Folder? = nil, joinedUsers: [User]? = nil, isSongFromFolder: Bool? = nil) {
         self.songs = songs
+        self.isSongFromFolder = isSongFromFolder ?? false
         self._joinedUsers = State(initialValue: joinedUsers)
         self._isChecked = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
@@ -560,38 +565,43 @@ struct SongDetailView: View {
                 }
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
-                self.title = song.title
-                if !isInputActive {
-                    if selectedVariation == nil {
-                        self.lyrics = song.lyrics
+                if let song = song {
+                    self.title = song.title
+                    if !isInputActive {
+                        if selectedVariation == nil {
+                            self.lyrics = song.lyrics
+                        }
                     }
-                }
-                self.key = {
-                    if let key = song.key, !key.isEmpty {
-                        return key
-                    } else {
-                        return NSLocalizedString("not_set", comment: "")
+                    self.key = {
+                        if let key = song.key, !key.isEmpty {
+                            return key
+                        } else {
+                            return NSLocalizedString("not_set", comment: "")
+                        }
+                    }()
+                    self.artist = song.artist ?? ""
+                    self.duration = song.duration ?? ""
+                    // Only refresh the tags if the song isn't shared because it's already been inherited from the SharedSong
+                    if !songViewModel.isShared(song: song) {
+                        self.tags = song.tags ?? []
                     }
-                }()
-                self.artist = song.artist ?? ""
-                self.duration = song.duration ?? ""
-                self.tags = song.tags ?? []
-                self.design = getDesign(design: Int(song.design ?? 0))
-                self.weight = getWeight(weight: Int(song.weight ?? 0))
-                self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
-                self.value = song.size ?? 18
-                self.lineSpacing = song.lineSpacing ?? 1
-                if joinedUsers == nil {
-                    if let folder = folder, folder.id! != uid() {
-                        self.joinedUsersStrings = folder.joinedUsers ?? []
-                    } else {
-                        self.joinedUsersStrings = song.joinedUsers ?? []
-                    }
-                    if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
-                        showAlert = true
-                        activeAlert = .kickedOut
-                    } else {
-                        fetchUsers()
+                    self.design = getDesign(design: Int(song.design ?? 0))
+                    self.weight = getWeight(weight: Int(song.weight ?? 0))
+                    self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
+                    self.value = song.size ?? 18
+                    self.lineSpacing = song.lineSpacing ?? 1
+                    if joinedUsers == nil {
+                        if let folder = folder, folder.id! != uid() {
+                            self.joinedUsersStrings = folder.joinedUsers ?? []
+                        } else {
+                            self.joinedUsersStrings = song.joinedUsers ?? []
+                        }
+                        if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
+                            showAlert = true
+                            activeAlert = .kickedOut
+                        } else {
+                            fetchUsers()
+                        }
                     }
                 }
             } regCompletion: { reg in
@@ -609,9 +619,9 @@ struct SongDetailView: View {
         }
         .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
             if let folder = mainViewModel.selectedFolder, mainViewModel.folderSongs.contains(where: { $0.id! == song.id! }) {
-                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: folder)
+                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: folder, isSongFromFolder: isSongFromFolder)
             } else {
-                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil)
+                UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil, isSongFromFolder: isSongFromFolder)
             }
         }
         .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
@@ -642,7 +652,7 @@ struct SongDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            if mainViewModel.selectedFolder != nil && mainViewModel.folderSongs.contains(where: { $0.id ?? "" == song.id ?? "" }) {
+            if isSongFromFolder {
                 Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately. " + NSLocalizedString("songs_parent_will_be_left", comment: ""))
             } else {
                 Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately.")
@@ -707,6 +717,60 @@ struct SongDetailView: View {
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
+            }
+            Button {
+                let printController = UIPrintInteractionController.shared
+                
+                let printInfo = UIPrintInfo(dictionary: nil)
+                printInfo.outputType = UIPrintInfo.OutputType.general
+                printInfo.jobName = song.title
+                printController.printInfo = printInfo
+                
+                let artistString = song.artist?.isEmpty == false ? "<div style='color: gray;'>\(song.artist!)</div>" : ""
+                
+                let htmlString = """
+<html>
+<head>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 34px;
+        box-sizing: border-box;
+    }
+    .content {
+        column-count: 2;
+        column-gap: 20px;
+        column-fill: auto; /* Ensure the columns fill equally */
+    }
+    h2 {
+        margin-bottom: 5px;
+    }
+    .gray-text {
+        color: gray;
+    }
+</style>
+</head>
+<body>
+<div>
+    <h2>\(song.title)</h2>
+    \(artistString)
+</div>
+<br/>
+<div class="content">
+    \(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
+</div>
+</body>
+</html>
+"""
+                
+                let formatter = UIMarkupTextPrintFormatter(markupText: htmlString)
+                formatter.perPageContentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                printController.printFormatter = formatter
+                
+                printController.present(animated: true, completionHandler: nil)
+            } label: {
+                Label("Print", systemImage: "printer")
             }
             let move = Button {
                 showMoveView.toggle()

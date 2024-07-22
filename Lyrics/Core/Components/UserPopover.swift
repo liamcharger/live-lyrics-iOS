@@ -22,6 +22,7 @@ struct UserPopover: View {
     
     let song: Song?
     let folder: Folder?
+    let isSongFromFolder: Bool
     
     func songOrFolderUid() -> String {
         if let song = song {
@@ -143,10 +144,8 @@ struct UserPopover: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            let folderMatches = mainViewModel.selectedFolder?.id == folder?.id
-            let isSharedMedia = folderMatches && song != nil
-            let isSong = (folder == nil || isSharedMedia)
-            let itemType = isSong ? "song" : "folder"
+            let isSharedMedia = isSongFromFolder && song != nil
+            let itemType = folder == nil ? "song" : "folder"
             let folderMessage = isSharedMedia ? NSLocalizedString("song_is_part_of_folder_and_will_be_left", comment: "") : ""
             
             if let user = selectedUser {

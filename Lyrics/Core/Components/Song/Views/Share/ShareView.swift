@@ -11,6 +11,7 @@ struct UserToShare: Codable {
     var id: String?
     var username: String
     var appVersion: String?
+    var notificationToken: String?
 }
 
 struct ShareView: View {
@@ -27,7 +28,7 @@ struct ShareView: View {
     @State var selectedVariations = [SongVariation]()
     @State var songVariations = [SongVariation]()
     @State var searchText = ""
-    @State var collaborate = false
+    @State var collaborate = true
     @State var firstSearch = true
     @State var isSendingRequest = false
     @State var readOnly = false
@@ -64,16 +65,16 @@ struct ShareView: View {
                         let timestamp = Date()
                         guard let fromUser = authViewModel.currentUser else { return }
                         let toUsernames = selectedUsers.map { $0.username }
+                        let toUserIds = selectedUsers.compactMap { $0.id }
+                        let fcmIds = selectedUsers.compactMap { $0.notificationToken }
                         let type = collaborate ? "collaborate" : "copy"
                         
                         var request: ShareRequest?
                         
                         if let song = song {
-                            let toUserIds = selectedUsers.compactMap { $0.id }
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly, notificationTokens: fcmIds)
                         } else if let folder = folder {
-                            let toUserIds = selectedUsers.compactMap { $0.id }
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly, notificationTokens: fcmIds)
                         } else {
                             print("Song and folder are nil")
                         }
@@ -278,7 +279,7 @@ struct ShareView: View {
                                                 if let existingIndex = selectedUsers.firstIndex(where: { $0.id == userId && $0.username == user.username }) {
                                                     selectedUsers.remove(at: existingIndex)
                                                 } else {
-                                                    selectedUsers.append(UserToShare(id: userId, username: user.username, appVersion: user.currentVersion))
+                                                    selectedUsers.append(UserToShare(id: userId, username: user.username, appVersion: user.currentVersion, notificationToken: user.fcmId))
                                                 }
                                             }
                                         } label: {

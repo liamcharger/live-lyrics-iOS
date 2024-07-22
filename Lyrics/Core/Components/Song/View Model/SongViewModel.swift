@@ -98,11 +98,9 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func fetchSong(listen: Bool? = nil, forUser: String? = nil, _ id: String, completion: @escaping(Song) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
+    func fetchSong(listen: Bool? = nil, forUser: String? = nil, _ id: String, completion: @escaping(Song?) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
         service.fetchSong(listen: listen, forUser: forUser, withId: id) { song in
-            if let song = song {
-                completion(song)
-            }
+            completion(song)
         } registrationCompletion: { reg in
             regCompletion(reg)
         }

@@ -101,7 +101,7 @@ class SongService {
 							song.variations = sharedSong.variations
 							song.readOnly = sharedSong.readOnly
 							song.pinned = sharedSong.pinned
-							song.tags = sharedSong.tags
+							song.tags = sharedSong.tags ?? ["none"]
 							song.performanceMode = sharedSong.performanceMode
 							completedSongs.append(song)
 						}
@@ -988,10 +988,9 @@ class SongService {
 			}
 			
 			dispatch.notify(queue: .main) {
-				// Send notification to user's device
-				//		if let fcmId = toUser.fcmId {
-				//			UserService().sendNotificationToFCM(deviceToken: fcmId, title: "Live Lyrics", body: "\(fromUser.username) has sent a song. Tap to view.")
-				//		}
+				if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song"). Tap to view.")
+				}
 				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers":FieldValue.arrayUnion([request.from])])
 				completion(nil)
 			}
@@ -1047,6 +1046,9 @@ class SongService {
 		deleteRequest(request, uid: incomingReqColUid ?? uid)
 		group.leave()
 		group.notify(queue: .main) {
+			if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+				UserService().sendNotificationToFCM(tokens: tokens, title: "Request Declined", body: "\(currentUser.username) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\". Tap to view.")
+			}
 			completion()
 		}
 	}
@@ -1122,6 +1124,9 @@ class SongService {
 						
 						dispatch.notify(queue: .main) {
 							self.deleteRequest(request, uid: uid)
+							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
+							}
 							completion()
 						}
 					}
@@ -1164,6 +1169,9 @@ class SongService {
 					
 					dispatch.notify(queue: .main) {
 						self.deleteRequest(request, uid: uid)
+						if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+							UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\". Tap to view.")
+						}
 						completion()
 					}
 				} else {
@@ -1197,6 +1205,10 @@ class SongService {
 							if let variations = request.songVariations, variations.contains(where: { $0 == variation.id ?? ""}) {
 								Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title])
 							}
+						}
+						
+						if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+							UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
 						}
 					}
 				}

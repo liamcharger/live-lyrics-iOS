@@ -230,7 +230,6 @@ struct MainView: View {
                 .onAppear {
                     DispatchQueue.main.async {
                         if !networkManager.getNetworkState() {
-                            mainViewModel.notification = Notification(title: "You're offline", subtitle: "Some features may not work as expected.", imageName: "wifi.slash")
                             mainViewModel.notificationStatus = .network
                         }
                         
@@ -272,10 +271,12 @@ struct MainView: View {
                                         NotificationRowView(title: "Update Available", subtitle: "Tap here to update Live Lyrics. This version may expire soon.", imageName: "arrow.down", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                     case .collaborationChanges:
                                         NotificationRowView(title: mainViewModel.notification?.title ?? "", subtitle: mainViewModel.notification?.subtitle ?? "", imageName: mainViewModel.notification?.imageName ?? "", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
-                                    case .firebaseNotification, .network:
+                                    case .firebaseNotification:
                                         if let notification = mainViewModel.notification {
                                             NotificationRowView(title: notification.title, subtitle: notification.subtitle, imageName: notification.imageName, notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
                                         }
+                                    case .network:
+                                        NotificationRowView(title: NSLocalizedString("youre_offline", comment: ""), subtitle: NSLocalizedString("some_features_may_not_work_expectedly", comment: ""), imageName: "wifi.slash", notificationStatus: .constant(NotificationStatus.network), isDisplayed: .constant(false))
                                     }
                                 }
                             }
@@ -521,7 +522,7 @@ struct MainView: View {
                                                                         .deleteDisabled(true)
                                                                         .moveDisabled(true)
                                                                 } else {
-                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder)) {
+                                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
                                                                         ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                             .contextMenu {
                                                                                 if !(song.readOnly ?? false) {
@@ -789,7 +790,7 @@ struct MainView: View {
                     }
                     .padding()
                     .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
-                        UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder)
+                        UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder, isSongFromFolder: true)
                     }
                     .sheet(isPresented: $showEditSheet) {
                         if let selectedFolder = mainViewModel.selectedFolder {
@@ -845,17 +846,20 @@ struct MainView: View {
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
                         }
                     }
-                    .confirmationDialog("Delete Song", isPresented: $showSongDeleteSheet) {
+                    .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
                         if let selectedSong = selectedSong {
-                            Button("Delete", role: .destructive) {
-                                songViewModel.moveSongToRecentlyDeleted(selectedSong)
-                                mainViewModel.fetchSongs()
+                            Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                if songViewModel.isShared(song: selectedSong) {
+                                    songViewModel.leaveSong(song: selectedSong)
+                                } else {
+                                    songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                }
                             }
                             Button("Cancel", role: .cancel) {}
                         }
                     } message: {
                         if let selectedSong = selectedSong {
-                            Text("Are you sure you want to delete \"\(selectedSong.title)\"?")
+                            Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                         }
                     }
                 }
@@ -934,11 +938,7 @@ struct MainView: View {
             }
             Button(role: .destructive, action: {
                 selectedSong = song
-                if !songViewModel.isShared(song: song) {
-                    showSongDeleteSheet.toggle()
-                } else {
-                    showDeleteSheet.toggle()
-                }
+                showSongDeleteSheet.toggle()
             }, label: {
                 if songViewModel.isShared(song: song) {
                     Label("Leave", systemImage: "arrow.backward.square")

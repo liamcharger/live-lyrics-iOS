@@ -56,6 +56,7 @@ struct SongTagView: View {
                             tags.removeAll()
                             tagsToUpdate.removeAll()
                             tags.append(fullTag)
+                            
                             songViewModel.updateTagsForSong(song, tags: tags)
                             
                             for tag in tags {
