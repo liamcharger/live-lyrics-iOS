@@ -1196,14 +1196,16 @@ class SongService {
 						"duration": song.duration
 					]
 					
-					Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).setData(songData)
-					Firestore.firestore().collection("users").document(request.from).collection("songs").document(request.contentId).collection("variations").getDocuments { snapshot, error in
+					let id = UUID().uuidString
+					
+					Firestore.firestore().collection("users").document(uid).collection("songs").document(id).setData(songData)
+					Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).collection("variations").getDocuments { snapshot, error in
 						guard let documents = snapshot?.documents else { return }
 						let variations = documents.compactMap({ try? $0.data(as: SongVariation.self )})
 						
 						for variation in variations {
 							if let variations = request.songVariations, variations.contains(where: { $0 == variation.id ?? ""}) {
-								Firestore.firestore().collection("users").document(uid).collection("songs").document(request.contentId).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title])
+								Firestore.firestore().collection("users").document(uid).collection("songs").document(id).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title])
 							}
 						}
 						
