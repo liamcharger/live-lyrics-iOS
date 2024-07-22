@@ -1198,19 +1198,41 @@ class SongService {
 					
 					let id = UUID().uuidString
 					
-					Firestore.firestore().collection("users").document(uid).collection("songs").document(id).setData(songData)
+					dispatch.enter()
+					Firestore.firestore().collection("users").document(uid).collection("songs").document(id).setData(songData) { error in
+						if let error = error {
+							print(error.localizedDescription)
+						}
+						dispatch.leave()
+					}
+					dispatch.enter()
 					Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).collection("variations").getDocuments { snapshot, error in
+						dispatch.leave()
 						guard let documents = snapshot?.documents else { return }
 						let variations = documents.compactMap({ try? $0.data(as: SongVariation.self )})
 						
 						for variation in variations {
+							dispatch.enter()
 							if let variations = request.songVariations, variations.contains(where: { $0 == variation.id ?? ""}) {
-								Firestore.firestore().collection("users").document(uid).collection("songs").document(id).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title])
+								Firestore.firestore().collection("users").document(uid).collection("songs").document(id).collection("variations").document(variation.id ?? "").setData(["lyrics": variation.lyrics, "songId": variation.songId, "songUid": variation.songUid, "title": variation.title]) { error in
+									if let error = error {
+										print(error.localizedDescription)
+									}
+									dispatch.leave()
+								}
 							}
 						}
 						
 						if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
 							UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
+						}
+						
+						dispatch.notify(queue: .main) {
+							self.deleteRequest(request, uid: uid)
+							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\". Tap to view.")
+							}
+							completion()
 						}
 					}
 				}
