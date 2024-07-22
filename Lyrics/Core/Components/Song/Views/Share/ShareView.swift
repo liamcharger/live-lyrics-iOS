@@ -265,7 +265,7 @@ struct ShareView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) || firstSearch {
+                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) && firstSearch {
                         ScrollView {
                             VStack {
                                 if !authViewModel.users.isEmpty {
@@ -286,7 +286,7 @@ struct ShareView: View {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }
                                     }
-                                } else if !recentSearches.isEmpty || firstSearch {
+                                } else if recentSearches.contains(",") && firstSearch {
                                     HStack {
                                         ListHeaderView(title: NSLocalizedString("recently_searched", comment: ""))
                                         Spacer()
@@ -317,6 +317,7 @@ struct ShareView: View {
                                                     .foregroundColor(.primary)
                                                     .clipShape(Capsule())
                                             }
+                                            .contentShape(.contextMenuPreview, Capsule())
                                             .contextMenu {
                                                 Button(role: .destructive) {
                                                     if let index = recentSearches.components(separatedBy: ",").firstIndex(of: search) {

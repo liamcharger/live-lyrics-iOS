@@ -67,7 +67,7 @@ struct SongVariationManageView: View {
                                                 .padding(12)
                                                 .font(.body.weight(.semibold))
                                                 .background(Color.red)
-                                                .foregroundColor(.primary)
+                                                .foregroundColor(.white)
                                                 .clipShape(Circle())
                                         }
                                     }

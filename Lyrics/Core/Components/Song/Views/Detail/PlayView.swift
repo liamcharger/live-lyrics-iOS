@@ -519,9 +519,9 @@ struct PlayView: View {
                                     selectedTool = ""
                                 } label: {
                                     Image(systemName: "xmark")
-                                        .padding()
+                                        .padding(15)
                                         .font(.body.weight(.semibold))
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.primary)
                                         .background(Material.regular)
                                         .clipShape(Circle())
                                 }
