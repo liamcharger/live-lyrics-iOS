@@ -21,6 +21,9 @@
         }
       }
     },
+    " plan." : {
+
+    },
     "." : {
       "localizations" : {
         "es" : {
@@ -337,6 +340,39 @@
         }
       }
     },
+    "access_to_tuner" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A tuner—make sure your instruments sound sharp"
+          }
+        }
+      }
+    },
+    "access_to_worlds_largest_lyric_database" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to the world’s largest lyric database, right in the app"
+          }
+        }
+      }
+    },
+    "ad_free_experience" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove ads—get rid of distractions and focus on your songs"
+          }
+        }
+      }
+    },
     "Add Songs" : {
       "localizations" : {
         "es" : {
@@ -389,17 +425,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Estás seguro de que deseas %1$@ “%2$@”?"
-          }
-        }
-      }
-    },
-    "Are you sure you want to delete \"%@\"?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Estás seguro de que deseas eliminar “%@”?"
           }
         }
       }
@@ -1565,6 +1590,9 @@
         }
       }
     },
+    "Nah, I'll miss out" : {
+
+    },
     "Name" : {
       "localizations" : {
         "es" : {
@@ -1855,6 +1883,9 @@
           }
         }
       }
+    },
+    "pro" : {
+
     },
     "Read only:" : {
       "localizations" : {
@@ -2260,12 +2291,26 @@
         }
       }
     },
+    "Subscribe for $4.99/mo" : {
+
+    },
     "Success!" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Éxito!"
+          }
+        }
+      }
+    },
+    "support_the_developers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support the developers—signing up helps us make the app better"
           }
         }
       }
@@ -2507,6 +2552,9 @@
         }
       }
     },
+    "We know, yet another subscription to pay for every month. But...with this one you get:" : {
+
+    },
     "Welcome to Live Lyrics." : {
       "localizations" : {
         "es" : {
@@ -2563,6 +2611,20 @@
           }
         }
       }
+    },
+    "world_of_worlds_at_your_fingertips" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rhymes, synonyms, antynoms—a world of words at your fingertips (yeah, we thought that was kind of cheesy, too.)"
+          }
+        }
+      }
+    },
+    "Yes, there's a \n" : {
+
     },
     "You need to add lyrics to a variation to create it." : {
       "localizations" : {
