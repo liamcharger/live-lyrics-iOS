@@ -24,7 +24,7 @@ struct SongShareDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true)
+            CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true, collapsed: .constant(false), collapsedTitle: .constant(true))
                 .padding()
             Divider()
             if NetworkManager.shared.getNetworkState() {

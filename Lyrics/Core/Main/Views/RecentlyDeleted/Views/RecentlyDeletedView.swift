@@ -48,7 +48,7 @@ struct RecentlyDeletedView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 10) {
-                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted, showBackButton: true)
+                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), navType: .recentlyDeleted, showBackButton: true, collapsed: .constant(false), collapsedTitle: .constant(true))
                 CustomSearchBar(text: $text, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
                     .disabled(recentlyDeletedViewModel.songs.contains(where: { $0.title == "noSongs" }))
             }

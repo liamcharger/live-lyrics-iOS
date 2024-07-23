@@ -16,6 +16,9 @@ struct ContentView: View {
     @State private var showWhatsNew = false
     @State private var showChangeToLocal = false
     
+    @AppStorage(showNewSongKey) var showNewSong = false
+    @AppStorage(showNewFolderKey) var showNewFolder = false
+    
     init() {
         mainViewModel.fetchSystemStatus()
     }
@@ -40,6 +43,12 @@ struct ContentView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showNewFolder) {
+            NewFolderView(isDisplayed: $showNewFolder)
+        }
+        .sheet(isPresented: $showNewSong) {
+            NewSongView(isDisplayed: $showNewSong, folder: nil)
         }
         .onAppear {
             notificationManager.checkForUpdate { isNewVersion in

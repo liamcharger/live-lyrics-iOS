@@ -23,6 +23,9 @@ struct MainView: View {
     
     @FocusState var isSearching: Bool
     
+    @AppStorage(showNewSongKey) var showNewSong = false
+    @AppStorage(showNewFolderKey) var showNewFolder = false
+    
     @State var selectedSong: Song?
     @State var selectedUser: User?
     @State var draggedSong: Song?
@@ -60,11 +63,16 @@ struct MainView: View {
     @State var showSortSheet = false
     @State var isJoinedUsersLoading = false
     @State var showUserPopover = false
+    @State var showCollapsedNavBar = true
+    @State var showCollapsedNavBarTitle = false
+    @State var showCollapsedNavBarDivider = false
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
     @State var sharedSongSearchText = ""
     @State var newFolder = ""
+    
+    @State var offset: CGFloat = 0
     
     @State var sortSelection: SortSelectionEnum = .noSelection
     
@@ -146,19 +154,21 @@ struct MainView: View {
     
     var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let pasteboard = UIPasteboard.general
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     func sortedSongs(songs: [Song]) -> [Song] {
         return songs.sorted(by: { (song1, song2) -> Bool in
             return song1.pinned ?? false && !(song2.pinned ?? false)
         })
     }
-    
     func move(from source: IndexSet, to destination: Int) {
         mainViewModel.folders.move(fromOffsets: source, toOffset: destination)
         mainViewModel.updateFolderOrder()
         mainViewModel.fetchFolders()
     }
-    
     func delete(at offsets: IndexSet) {
         for index in offsets {
             let folder = mainViewModel.folders[index]
@@ -223,6 +233,87 @@ struct MainView: View {
             self.isJoinedUsersLoading = false
         }
     }
+    func songContextMenu(song: Song) -> some View {
+        return VStack {
+            if !(song.readOnly ?? false) {
+                Button {
+                    selectedSong = song
+                    showSongEditSheet.toggle()
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+            }
+            if !songViewModel.isShared(song: song) {
+                Button {
+                    selectedSong = song
+                    showShareSheet.toggle()
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+                Button {
+                    selectedSong = song
+                    showSongMoveSheet.toggle()
+                } label: {
+                    Label("Move", systemImage: "folder")
+                }
+            }
+            Menu {
+                Button {
+                    selectedSong = song
+                    
+                    if let title = selectedSong?.title {
+                        self.pasteboard.string = title
+                    }
+                } label: {
+                    Label("Copy Title", systemImage: "textformat")
+                }
+                Button {
+                    selectedSong = song
+                    
+                    if let lyrics = selectedSong?.lyrics {
+                        self.pasteboard.string = lyrics
+                    }
+                } label: {
+                    Label("Copy Lyrics", systemImage: "doc.plaintext")
+                }
+            } label: {
+                Label("Copy", systemImage: "doc.on.doc")
+            }
+            Button {
+                DispatchQueue.main.async {
+                    if song.pinned ?? false {
+                        songViewModel.unpinSong(song)
+                    } else {
+                        songViewModel.pinSong(song)
+                    }
+                }
+            } label: {
+                if song.pinned ?? false {
+                    Label("Unpin", systemImage: "pin.slash")
+                } else {
+                    Label("Pin", systemImage: "pin")
+                }
+            }
+            if !(song.readOnly ?? false) {
+                Button {
+                    selectedSong = song
+                    showTagSheet = true
+                } label: {
+                    Label("Tags", systemImage: "tag")
+                }
+            }
+            Button(role: .destructive, action: {
+                selectedSong = song
+                showSongDeleteSheet.toggle()
+            }, label: {
+                if songViewModel.isShared(song: song) {
+                    Label("Leave", systemImage: "arrow.backward.square")
+                } else {
+                    Label("Delete", systemImage: "trash")
+                }
+            })
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -255,14 +346,48 @@ struct MainView: View {
     
     var content: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("home", comment: ""), navType: .home, showBackButton: false)
+            CustomNavBar(title: NSLocalizedString("home", comment: ""), navType: .home, showBackButton: false, collapsed: $showCollapsedNavBar, collapsedTitle: $showCollapsedNavBarTitle)
                 .padding([.top, .horizontal])
                 .padding(.bottom, 12)
             Divider()
+                .opacity(showCollapsedNavBarDivider ? 1 : 0)
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
                     AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 80, paddingTop: 16, paddingLeft: 16, paddingBottom: 0, paddingRight: 16)
                     VStack(spacing: 22) {
+                        GeometryReader { geo in
+                            Color.clear
+                                .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
+                        }
+                        .frame(height: 0)
+                        VStack(alignment: .leading) {
+                            Text(greeting(withName: true))
+                                .font(.largeTitle.weight(.bold))
+                            HStack(spacing: 10) {
+                                ForEach(0...1, id: \.self) { index in
+                                    Button {
+                                        if index == 0 {
+                                            showNewSong = true
+                                        } else {
+                                            showNewFolder = true
+                                        }
+                                    } label: {
+                                        HStack(spacing: 7) {
+                                            FAText(iconName: index == 0 ? "pen-to-square" : "folder-plus", size: 18)
+                                            Text(index == 0 ? "New Song" : "New Folder")
+                                                .font(.body.weight(.semibold))
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                                    }
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, -28)
                         if let notificationStatus = mainViewModel.notificationStatus {
                             if !isSearching {
                                 VStack {
@@ -282,26 +407,60 @@ struct MainView: View {
                             }
                         }
                         VStack {
-                            NavigationLink(destination: {
-                                RecentlyDeletedView()
-                            }) {
-                                ListRowView(isEditing: $isEditingSongs, title: NSLocalizedString("recently_deleted", comment: ""), navArrow: "chevron.right")
-                            }
-                            NavigationLink(destination: {
-                                SongShareDetailView()
-                            }) {
-                                ZStack {
-                                    ListRowView(isEditing: $isEditingSongs, title: NSLocalizedString("share_invites", comment: ""), navArrow: "chevron.right")
-                                    HStack {
-                                        Spacer()
-                                        if !mainViewModel.incomingShareRequests.isEmpty {
-                                            Circle()
-                                                .frame(width: 11, height: 11)
-                                                .foregroundColor(.blue)
-                                                .offset(x: 15, y: -18)
+                            LazyVGrid(columns: columns) {
+                                ForEach(0...1, id: \.self) { index in
+                                    let title = {
+                                        if index == 0 {
+                                            return NSLocalizedString("recently_deleted", comment: "")
+                                        } else if index == 1 {
+                                            return NSLocalizedString("share_invites", comment: "")
+                                        }
+                                        return ""
+                                    }()
+                                    let icon = {
+                                        if index == 0 {
+                                            return "trash-can"
+                                        } else if index == 1 {
+                                            return "users"
+                                        }
+                                        return ""
+                                    }()
+                                    let color = {
+                                        if index == 0 {
+                                            return Color.red
+                                        } else if index == 1 {
+                                            return Color.blue
+                                        }
+                                        return Color.primary
+                                    }()
+                                    
+                                    NavigationLink(destination: {
+                                        if index == 0 {
+                                            RecentlyDeletedView()
+                                        } else if index == 1 {
+                                            SongShareDetailView()
+                                        }
+                                    }) {
+                                        ZStack {
+                                            ContentRowView(title, icon: icon, color: color)
+                                            // Badge to show number of incoming share requests
+                                            HStack {
+                                                Spacer()
+                                                if !mainViewModel.incomingShareRequests.isEmpty && index == 1 {
+                                                    Circle()
+                                                        .frame(width: 24, height: 24)
+                                                        .foregroundColor(.blue)
+                                                        .overlay {
+                                                            Text(String(mainViewModel.incomingShareRequests.count))
+                                                                .font(.caption.weight(.semibold))
+                                                                .foregroundColor(.white)
+                                                        }
+                                                        .offset(x: 24, y: -38)
+                                                }
+                                            }
+                                            .padding()
                                         }
                                     }
-                                    .padding()
                                 }
                             }
                         }
@@ -342,6 +501,7 @@ struct MainView: View {
                                         .padding(.bottom)
                                 }
                             }
+                            // TODO: conform folders to grid with a separate detail view
                             if mainViewModel.isLoadingFolders || mainViewModel.isLoadingSharedFolders {
                                 LoadingView()
                             } else {
@@ -759,23 +919,6 @@ struct MainView: View {
                                                     }
                                                 }
                                             }
-//                                            .onDrag {
-//                                                sortViewModel.loadFromUserDefaults { sortSelection in
-//                                                    if sortSelection == .noSelection {
-//                                                        self.draggedSong = song
-//                                                    }
-//                                                }
-//                                                return NSItemProvider()
-//                                            }
-//                                            .onDrop(
-//                                                of: [.text],
-//                                                delegate: SongDropViewDelegate(
-//                                                    destinationItem: song,
-//                                                    items: $mainViewModel.songs,
-//                                                    draggedItem: $draggedSong,
-//                                                    authViewModel: authViewModel
-//                                                )
-//                                            )
                                         }
                                     }
                                 }
@@ -857,90 +1000,31 @@ struct MainView: View {
                             Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                         }
                     }
-                }
-            }
-        }
-    }
-    
-    func songContextMenu(song: Song) -> some View {
-        return VStack {
-            if !(song.readOnly ?? false) {
-                Button {
-                    selectedSong = song
-                    showSongEditSheet.toggle()
-                } label: {
-                    Label("Edit", systemImage: "pencil")
-                }
-            }
-            if !songViewModel.isShared(song: song) {
-                Button {
-                    selectedSong = song
-                    showShareSheet.toggle()
-                } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
-                }
-                Button {
-                    selectedSong = song
-                    showSongMoveSheet.toggle()
-                } label: {
-                    Label("Move", systemImage: "folder")
-                }
-            }
-            Menu {
-                Button {
-                    selectedSong = song
-                    
-                    if let title = selectedSong?.title {
-                        self.pasteboard.string = title
-                    }
-                } label: {
-                    Label("Copy Title", systemImage: "textformat")
-                }
-                Button {
-                    selectedSong = song
-                    
-                    if let lyrics = selectedSong?.lyrics {
-                        self.pasteboard.string = lyrics
-                    }
-                } label: {
-                    Label("Copy Lyrics", systemImage: "doc.plaintext")
-                }
-            } label: {
-                Label("Copy", systemImage: "doc.on.doc")
-            }
-            Button {
-                DispatchQueue.main.async {
-                    if song.pinned ?? false {
-                        songViewModel.unpinSong(song)
-                    } else {
-                        songViewModel.pinSong(song)
+                    .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                        DispatchQueue.main.async {
+                            self.offset = value.first ?? 0
+                            
+                            withAnimation(.easeInOut(duration: 0.22)) {
+                                if offset <= 145 {
+                                    showCollapsedNavBarDivider = true
+                                } else {
+                                    showCollapsedNavBarDivider = false
+                                }
+                                if offset <= 55 {
+                                    showCollapsedNavBarTitle = true
+                                } else {
+                                    showCollapsedNavBarTitle = false
+                                }
+                                if offset <= -15 {
+                                    showCollapsedNavBar = false
+                                } else {
+                                    showCollapsedNavBar = true
+                                }
+                            }
+                        }
                     }
                 }
-            } label: {
-                if song.pinned ?? false {
-                    Label("Unpin", systemImage: "pin.slash")
-                } else {
-                    Label("Pin", systemImage: "pin")
-                }
             }
-            if !(song.readOnly ?? false) {
-                Button {
-                    selectedSong = song
-                    showTagSheet = true
-                } label: {
-                    Label("Tags", systemImage: "tag")
-                }
-            }
-            Button(role: .destructive, action: {
-                selectedSong = song
-                showSongDeleteSheet.toggle()
-            }, label: {
-                if songViewModel.isShared(song: song) {
-                    Label("Leave", systemImage: "arrow.backward.square")
-                } else {
-                    Label("Delete", systemImage: "trash")
-                }
-            })
         }
     }
 }

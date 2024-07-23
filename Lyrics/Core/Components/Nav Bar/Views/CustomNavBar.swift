@@ -21,13 +21,18 @@ struct CustomNavBar: View {
     @State var showSheet2 = false
     @State var showSheet3 = false
     
+    @Binding var showCollapsedNavBar: Bool
+    @Binding var showCollapsedNavBarTitle: Bool
+    
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
     
-    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool) {
+    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool, collapsed: Binding<Bool>, collapsedTitle: Binding<Bool>) {
         self.title = title
         self.navType = navType ?? .detail
         self.showBackButton = showBackButton
+        self._showCollapsedNavBar = collapsed
+        self._showCollapsedNavBarTitle = collapsedTitle
     }
     
     var body: some View {
@@ -48,37 +53,49 @@ struct CustomNavBar: View {
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
                 .font(.system(size: 28, design: .rounded).weight(.bold))
+                .opacity(showCollapsedNavBarTitle ? 1 : 0)
             Spacer()
             HStack(spacing: 8) {
                 switch navType {
                 case .home:
-                    Button {
-                        showNewFolder.toggle()
-                    } label: {
-                        FAText(iconName: "folder-plus", size: 20)
-                            .modifier(NavBarRowViewModifier())
-                    }
-                    .sheet(isPresented: $showNewFolder) {
-                        NewFolderView(isDisplayed: $showNewFolder)
-                    }
-                    Button {
-                        showNewSong.toggle()
-                    } label: {
-                        FAText(iconName: "pen-to-square", size: 20)
-                            .modifier(NavBarRowViewModifier())
-                    }
-                    .sheet(isPresented: $showNewSong) {
-                        NewSongView(isDisplayed: $showNewSong, folder: nil)
-                    }
-                    Button {
-                        showSheet3.toggle()
-                    } label: {
-                        FAText(iconName: "user", size: 20)
-                            .modifier(NavBarRowViewModifier())
-                    }
-                    .sheet(isPresented: $showSheet3) {
-                        MenuView(showMenu: $showSheet3)
-                            .environmentObject(storeKitManager)
+                    if showCollapsedNavBar {
+                        Button {
+                            showSheet3.toggle()
+                        } label: {
+                            FAText(iconName: "user", size: 20)
+                                .frame(width: 23, height: 23)
+                                .padding(12)
+                                .font(.body.weight(.semibold))
+                                .background(Material.thin)
+                                .clipShape(Capsule())
+                        }
+                        .sheet(isPresented: $showSheet3) {
+                            MenuView(showMenu: $showSheet3)
+                                .environmentObject(storeKitManager)
+                        }
+                    } else {
+                        Button {
+                            showNewFolder.toggle()
+                        } label: {
+                            FAText(iconName: "folder-plus", size: 20)
+                                .modifier(NavBarRowViewModifier())
+                        }
+                        Button {
+                            showNewSong.toggle()
+                        } label: {
+                            FAText(iconName: "pen-to-square", size: 20)
+                                .modifier(NavBarRowViewModifier())
+                        }
+                        Button {
+                            showSheet3.toggle()
+                        } label: {
+                            FAText(iconName: "user", size: 20)
+                                .modifier(NavBarRowViewModifier())
+                        }
+                        .sheet(isPresented: $showSheet3) {
+                            MenuView(showMenu: $showSheet3)
+                                .environmentObject(storeKitManager)
+                        }
                     }
                 case .recentlyDeleted, .auth, .detail:
                     EmptyView()
@@ -89,5 +106,5 @@ struct CustomNavBar: View {
 }
 
 #Preview {
-    CustomNavBar(title: "Home", navType: .home, showBackButton: true)
+    CustomNavBar(title: "Home", navType: .home, showBackButton: true, collapsed: .constant(false), collapsedTitle: .constant(true))
 }

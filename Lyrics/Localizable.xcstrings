@@ -1112,7 +1112,6 @@
       }
     },
     "good_afternoon" : {
-      "comment" : "Good Afternoon.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1128,8 +1127,24 @@
         }
       }
     },
+    "good_afternoon_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good afternoon,"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas tardes,"
+          }
+        }
+      }
+    },
     "good_evening" : {
-      "comment" : "Good Evening.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1145,8 +1160,24 @@
         }
       }
     },
+    "good_evening_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good evening,"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas noches,"
+          }
+        }
+      }
+    },
     "good_morning" : {
-      "comment" : "Good Morning.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1158,6 +1189,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buenos días."
+          }
+        }
+      }
+    },
+    "good_morning_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning,"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenos días,"
           }
         }
       }
@@ -1390,6 +1438,9 @@
         }
       }
     },
+    "live_lyrics_user" : {
+
+    },
     "Loading" : {
       "localizations" : {
         "es" : {
@@ -1584,6 +1635,12 @@
           }
         }
       }
+    },
+    "New Folder" : {
+
+    },
+    "New Song" : {
+
     },
     "New Variation" : {
       "localizations" : {

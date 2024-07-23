@@ -22,19 +22,34 @@ func hasHomeButton() -> Bool {
     return true
 }
 
-func greeting() -> String {
+func greeting(withName: Bool? = nil) -> String {
     let date = Date()
     let calendar = Calendar.current
     let currentHour = calendar.component(.hour, from: date)
     
+    let withName = withName ?? false
+    let fullname = AuthViewModel.shared.currentUser?.fullname ?? NSLocalizedString("live_lyrics_user", comment: "")
+    
     var greetingText = "Hello."
     switch currentHour {
     case 0..<12:
-        greetingText = NSLocalizedString("good_morning", comment: "")
+        if withName {
+            greetingText = NSLocalizedString("good_morning_greeting", comment: "") + " \n" + fullname + "!"
+        } else {
+            greetingText = NSLocalizedString("good_morning", comment: "")
+        }
     case 12..<18:
-        greetingText = NSLocalizedString("good_afternoon", comment: "")
+        if withName {
+            greetingText = NSLocalizedString("good_afternoon_greeting", comment: "") + " \n" + fullname + "!"
+        } else {
+            greetingText = NSLocalizedString("good_afternoon", comment: "")
+        }
     default:
-        greetingText = NSLocalizedString("good_evening", comment: "")
+        if withName {
+            greetingText = NSLocalizedString("good_evening_greeting", comment: "") + " \n" + fullname + "!"
+        } else {
+            greetingText = NSLocalizedString("good_evening", comment: "")
+        }
     }
     return greetingText
 }
@@ -191,5 +206,13 @@ struct Wave: Shape {
         }
         
         return Path(path.cgPath)
+    }
+}
+
+struct ScrollViewOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: [CGFloat] = []
+    
+    static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
+        value.append(contentsOf: nextValue())
     }
 }
