@@ -15,6 +15,8 @@ struct MenuView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
     
+    @ObservedObject var mainViewModel = MainViewModel.shared
+    
     @State var showLogoutMenu = false
     @State var showNewSong = false
     @State var showMailView = false
@@ -45,7 +47,7 @@ struct MenuView: View {
     
     var body: some View {
         if let user = viewModel.currentUser {
-            VStack(spacing: 10) {
+            VStack(spacing: 0) {
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(user.fullname)
@@ -58,11 +60,11 @@ struct MenuView: View {
                         .foregroundColor(Color.gray)
                     }
                     .onTapGesture {
-                        #if DEBUG
+#if DEBUG
                         if let id = user.id {
                             UIPasteboard.general.string = id
                         }
-                        #endif
+#endif
                     }
                     .padding([.top, .bottom, .trailing])
                     Spacer()
@@ -81,9 +83,8 @@ struct MenuView: View {
                     }
                     SheetCloseButton(isPresented: $showMenu)
                 }
+                .padding()
                 Divider()
-                    .padding(.horizontal, -16)
-                    .padding(.bottom, 12)
                 if user.showAds ?? true {
                     HStack {
                         ForEach(storeKitManager.storeProducts, id: \.self) { product in
@@ -116,113 +117,127 @@ struct MenuView: View {
                         }
                     }
                 }
-                Spacer()
+                if mainViewModel.notifications.isEmpty {
+                    // TODO: replace with envelope (slashed) and localize title
+                    FullscreenMessage(imageName: "envelope", title: "Hmm, it doesn't look like you have any new messages.")
+                } else {
+                    ScrollView {
+                        VStack {
+                            ForEach(mainViewModel.notifications) { notif in
+                                NotificationRowView(notification: notif)
+                            }
+                        }
+                        .padding()
+                    }
+                }
                 Divider()
-                    .padding(.horizontal, -16)
-                    .padding(.bottom, 12)
-                AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
-                Button(action: {
-                    showWebView.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Privacy Policy")
-                                    .fontWeight(.semibold)
+                Group {
+                    VStack(spacing: 10) {
+                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
+                        Button(action: {
+                            showWebView.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Privacy Policy")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "files", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(.primary)
+                                }
                                 Spacer()
-                                FAText(iconName: "files", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
+                            .padding()
+                            .background(Material.regular)
                             .foregroundColor(.primary)
+                            .clipShape(Capsule())
+                        })
+                        .sheet(isPresented: $showWebView) {
+                            WebView()
                         }
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .foregroundColor(.primary)
-                    .clipShape(Capsule())
-                })
-                .sheet(isPresented: $showWebView) {
-                    WebView()
-                }
-                Button(action: {
-                    showSettingsView.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Settings")
-                                    .fontWeight(.semibold)
+                        Button(action: {
+                            showSettingsView.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Settings")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "gear", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(.primary)
+                                }
                                 Spacer()
-                                FAText(iconName: "gear", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
+                            .padding()
+                            .background(Material.regular)
                             .foregroundColor(.primary)
+                            .clipShape(Capsule())
+                        })
+                        .sheet(isPresented: $showSettingsView) {
+                            SettingsView(user: user)
                         }
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .foregroundColor(.primary)
-                    .clipShape(Capsule())
-                })
-                .sheet(isPresented: $showSettingsView) {
-                    SettingsView(user: user)
-                }
-                Button(action: {
-                    showMailView.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Send Feeback")
-                                    .fontWeight(.semibold)
+                        Button(action: {
+                            showMailView.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Send Feeback")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "envelope", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(Color.white)
+                                }
                                 Spacer()
-                                FAText(iconName: "envelope", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
-                            .foregroundColor(Color.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Capsule())
+                        })
+                        .opacity(!MFMailComposeViewController.canSendMail() ? 0.5 : 1.0)
+                        .disabled(!MFMailComposeViewController.canSendMail())
+                        .sheet(isPresented: $showMailView) {
+                            MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
                         }
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Color.blue)
-                    .clipShape(Capsule())
-                })
-                .opacity(!MFMailComposeViewController.canSendMail() ? 0.5 : 1.0)
-                .disabled(!MFMailComposeViewController.canSendMail())
-                .sheet(isPresented: $showMailView) {
-                    MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
-                }
-                Button(action: {
-                    showDeleteSheet.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Logout")
-                                    .fontWeight(.semibold)
+                        Button(action: {
+                            showDeleteSheet.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Logout")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "square-arrow-right", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(Color.white)
+                                }
                                 Spacer()
-                                FAText(iconName: "square-arrow-right", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
-                            .foregroundColor(Color.white)
+                            .padding()
+                            .background(Color.red)
+                            .clipShape(Capsule())
+                        })
+                        .confirmationDialog("Are you sure you want to log out? This action cannot be undone.", isPresented: $showDeleteSheet, titleVisibility: .visible) {
+                            Button("Logout", role: .destructive) {
+                                viewModel.signOut()
+                                showMenu = false
+                            }
+                            Button("Cancel", role: .cancel) { }
                         }
-                        Spacer()
                     }
-                    .padding()
-                    .background(Color.red)
-                    .clipShape(Capsule())
-                })
-                .confirmationDialog("Are you sure you want to log out? This action cannot be undone.", isPresented: $showDeleteSheet, titleVisibility: .visible) {
-                    Button("Logout", role: .destructive) {
-                        viewModel.signOut()
-                        showMenu = false
-                    }
-                    Button("Cancel", role: .cancel) { }
                 }
+                .padding()
             }
-            .padding()
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
         }

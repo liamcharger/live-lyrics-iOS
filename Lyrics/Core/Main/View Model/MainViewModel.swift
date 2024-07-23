@@ -35,13 +35,17 @@ class MainViewModel: ObservableObject {
     
     @Published var systemDoc: SystemDoc?
     
-    @Published var notificationStatus: NotificationStatus?
-    @Published var notification: Notification?
+//    @State var notifications: [Notification] = ((UserDefaults.standard.array(forKey: "notifications") ?? []) as? [Notification]) ?? []
+    @Published var notifications = [Notification]()
     
     let service = SongService()
     let userService = UserService()
     
     static let shared = MainViewModel()
+    
+    init() {
+        loadNotificationFromUserDefaults()
+    }
     
     func removeSongEventListener() {
         service.removeSongEventListener()
@@ -77,10 +81,21 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    func saveNotificationToUserDefaults(notification: Notification) {
+//        UserDefaults.standard.set(notifications., forKey: self.sortSelectionKey)
+    }
+    
+    func loadNotificationFromUserDefaults() {
+//        if let notifications = UserDefaults.standard.value(forKey: "notifications") as? [Notification],
+//           self.notifications = notifications
+//        }
+    }
+    
     func receivedNotificationFromFirebase(_ notification: Notification) {
         DispatchQueue.main.async {
-            self.notificationStatus = .firebaseNotification
-            self.notification = notification
+            self.notifications.append(notification)
+            self.saveNotificationToUserDefaults(notification: notification)
+            self.loadNotificationFromUserDefaults()
         }
     }
     
@@ -199,56 +214,56 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchNotificationStatus() {
-        remoteConfig = RemoteConfig.remoteConfig()
-        let settings = RemoteConfigSettings()
-        settings.minimumFetchInterval = 0
-        remoteConfig.configSettings = settings
-        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
-        
-        remoteConfig.addOnConfigUpdateListener { [weak self] configUpdate, error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("Error listening for config updates: \(error.localizedDescription)")
-                return
-            }
-            
-            print("Updated keys: \(configUpdate?.updatedKeys ?? [])")
-            
-            self.remoteConfig.activate { changed, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-                
-                DispatchQueue.main.async {
-                    guard let remoteVersionString = self.remoteConfig.configValue(forKey: "currentVersion").stringValue else {
-                        return
-                    }
-                    
-                    let remoteVersionComponents = remoteVersionString.split(separator: ".")
-                    
-                    let currentVersionString = self.notificationManager.getCurrentAppVersion()
-                    let currentVersionComponents = currentVersionString.split(separator: ".")
-                    
-                    for (remoteComponent, currentComponent) in zip(remoteVersionComponents, currentVersionComponents) {
-                        guard let remoteNumber = Int(remoteComponent), let currentNumber = Int(currentComponent) else {
-                            return
-                        }
-                        
-                        if remoteNumber < currentNumber {
-                            self.notificationStatus = .updateAvailable
-                            return
-                        } else if remoteNumber > currentNumber {
-                            return
-                        }
-                    }
-                    
-                    if remoteVersionComponents.count < currentVersionComponents.count {
-                        self.notificationStatus = .updateAvailable
-                    }
-                }
-            }
-        }
+//        remoteConfig = RemoteConfig.remoteConfig()
+//        let settings = RemoteConfigSettings()
+//        settings.minimumFetchInterval = 0
+//        remoteConfig.configSettings = settings
+//        remoteConfig.setDefaults(fromPlist: "remote_config_defaults")
+//        
+//        remoteConfig.addOnConfigUpdateListener { [weak self] configUpdate, error in
+//            guard let self = self else { return }
+//            
+//            if let error = error {
+//                print("Error listening for config updates: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            print("Updated keys: \(configUpdate?.updatedKeys ?? [])")
+//            
+//            self.remoteConfig.activate { changed, error in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                }
+//                
+//                DispatchQueue.main.async {
+//                    guard let remoteVersionString = self.remoteConfig.configValue(forKey: "currentVersion").stringValue else {
+//                        return
+//                    }
+//                    
+//                    let remoteVersionComponents = remoteVersionString.split(separator: ".")
+//                    
+//                    let currentVersionString = self.notificationManager.getCurrentAppVersion()
+//                    let currentVersionComponents = currentVersionString.split(separator: ".")
+//                    
+//                    for (remoteComponent, currentComponent) in zip(remoteVersionComponents, currentVersionComponents) {
+//                        guard let remoteNumber = Int(remoteComponent), let currentNumber = Int(currentComponent) else {
+//                            return
+//                        }
+//                        
+//                        if remoteNumber < currentNumber {
+//                            self.notificationStatus = .updateAvailable
+//                            return
+//                        } else if remoteNumber > currentNumber {
+//                            return
+//                        }
+//                    }
+//                    
+//                    if remoteVersionComponents.count < currentVersionComponents.count {
+//                        self.notificationStatus = .updateAvailable
+//                    }
+//                }
+//            }
+//        }
     }
     
     func updateLyrics(forVariation variation: SongVariation? = nil, _ song: Song, lyrics: String) {

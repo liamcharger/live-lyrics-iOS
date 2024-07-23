@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CustomNavBar: View {
-    @ObservedObject var mainViewModel = MainViewModel()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     
     @Environment(\.presentationMode) var presMode
     @EnvironmentObject var storeKitManager: StoreKitManager
@@ -68,6 +68,19 @@ struct CustomNavBar: View {
                                 .font(.body.weight(.semibold))
                                 .background(Material.thin)
                                 .clipShape(Capsule())
+                                .overlay {
+                                    if mainViewModel.notifications.count >= 1 {
+                                        Circle()
+                                            .frame(width: 24, height: 24)
+                                            .foregroundColor(.blue)
+                                            .overlay {
+                                                Text(String(mainViewModel.notifications.count))
+                                                    .font(.caption.weight(.semibold))
+                                                    .foregroundColor(.white)
+                                            }
+                                            .offset(x: 17, y: -18)
+                                    }
+                                }
                         }
                         .sheet(isPresented: $showSheet3) {
                             MenuView(showMenu: $showSheet3)
@@ -91,6 +104,25 @@ struct CustomNavBar: View {
                         } label: {
                             FAText(iconName: "user", size: 20)
                                 .modifier(NavBarRowViewModifier())
+                                .overlay {
+                                    if mainViewModel.notifications.count >= 1 {
+                                        Circle()
+                                            .frame(width: 24, height: 24)
+                                            .overlay {
+                                                Circle()
+                                                    .stroke(Color(.systemBackground), lineWidth: 3)
+                                                    .frame(width: 27, height: 27)
+                                                    .foregroundColor(.clear)
+                                            }
+                                            .foregroundColor(.blue)
+                                            .overlay {
+                                                Text(String(mainViewModel.notifications.count))
+                                                    .font(.caption.weight(.semibold))
+                                                    .foregroundColor(.white)
+                                            }
+                                            .offset(x: 17, y: -18)
+                                    }
+                                }
                         }
                         .sheet(isPresented: $showSheet3) {
                             MenuView(showMenu: $showSheet3)

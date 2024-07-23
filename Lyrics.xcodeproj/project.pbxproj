@@ -70,6 +70,7 @@
 		E074E5062C4DEEEF00E269C8 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E074E5052C4DEEEF00E269C8 /* AlertView.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E07C50392C4F457A002EE9A1 /* ContentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07C50382C4F457A002EE9A1 /* ContentRowView.swift */; };
+		E07C503A2C4F608F002EE9A1 /* NotificationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852F2B081D5100188CD0 /* NotificationRowView.swift */; };
 		E07D4AC82C45B04D00D29396 /* PrintManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07D4AC72C45B04D00D29396 /* PrintManager.swift */; };
 		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
 		E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E0867CF02BD5989B005605CD /* BottomSheet */; };
@@ -111,7 +112,6 @@
 		E0CA853D2B081D5100188CD0 /* ListIconButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA85292B081D5100188CD0 /* ListIconButtonView.swift */; };
 		E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852A2B081D5100188CD0 /* ListEditButtonView.swift */; };
 		E0CA853F2B081D5100188CD0 /* ListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852B2B081D5100188CD0 /* ListHeaderView.swift */; };
-		E0CA85412B081D5100188CD0 /* NotificationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852F2B081D5100188CD0 /* NotificationRowView.swift */; };
 		E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC33182A03FF8F00CC38C6 /* MainView.swift */; };
 		E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC331C2A0405CE00CC38C6 /* MainViewModel.swift */; };
 		E0CC33212A04064500CC38C6 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC33202A04064500CC38C6 /* SongService.swift */; };
@@ -1181,7 +1181,6 @@
 				E0CA85362B081D5100188CD0 /* CustomSearchBar.swift in Sources */,
 				E0CA853F2B081D5100188CD0 /* ListHeaderView.swift in Sources */,
 				E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */,
-				E0CA85412B081D5100188CD0 /* NotificationRowView.swift in Sources */,
 				E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */,
 				E0C078282B4463FB00F91287 /* SortView.swift in Sources */,
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
@@ -1192,6 +1191,7 @@
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
 				E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */,
 				E04247992A02F5FB00CA48B3 /* LoginView.swift in Sources */,
+				E07C503A2C4F608F002EE9A1 /* NotificationRowView.swift in Sources */,
 				E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */,
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,
 				E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */,

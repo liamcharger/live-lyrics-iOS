@@ -2239,6 +2239,7 @@
       }
     },
     "some_features_may_not_work_expectedly" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2672,6 +2673,7 @@
       }
     },
     "youre_offline" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

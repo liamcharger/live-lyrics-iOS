@@ -321,7 +321,7 @@ struct MainView: View {
                 .onAppear {
                     DispatchQueue.main.async {
                         if !networkManager.getNetworkState() {
-                            mainViewModel.notificationStatus = .network
+                            // TODO: add toast for Network State
                         }
                         
                         if !hasFirestoreStartedListening {
@@ -388,24 +388,6 @@ struct MainView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, -28)
-                        if let notificationStatus = mainViewModel.notificationStatus {
-                            if !isSearching {
-                                VStack {
-                                    switch notificationStatus {
-                                    case .updateAvailable:
-                                        NotificationRowView(title: "Update Available", subtitle: "Tap here to update Live Lyrics. This version may expire soon.", imageName: "arrow.down", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
-                                    case .collaborationChanges:
-                                        NotificationRowView(title: mainViewModel.notification?.title ?? "", subtitle: mainViewModel.notification?.subtitle ?? "", imageName: mainViewModel.notification?.imageName ?? "", notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
-                                    case .firebaseNotification:
-                                        if let notification = mainViewModel.notification {
-                                            NotificationRowView(title: notification.title, subtitle: notification.subtitle, imageName: notification.imageName, notificationStatus: $mainViewModel.notificationStatus, isDisplayed: .constant(false))
-                                        }
-                                    case .network:
-                                        NotificationRowView(title: NSLocalizedString("youre_offline", comment: ""), subtitle: NSLocalizedString("some_features_may_not_work_expectedly", comment: ""), imageName: "wifi.slash", notificationStatus: .constant(NotificationStatus.network), isDisplayed: .constant(false))
-                                    }
-                                }
-                            }
-                        }
                         VStack {
                             LazyVGrid(columns: columns) {
                                 ForEach(0...1, id: \.self) { index in
