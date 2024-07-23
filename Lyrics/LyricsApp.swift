@@ -44,6 +44,11 @@ struct LyricsApp: App {
             ContentView()
                 .environmentObject(viewModel)
                 .environmentObject(storeKitManager)
+                .onOpenURL { url in
+                    if url.absoluteString == "live-lyrics://profile" {
+                        MainViewModel.shared.showProfileView = true
+                    }
+                }
                 .onChange(of: phase) { phase in
                     switch phase {
                     case .background:
@@ -124,6 +129,16 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         completionHandler([.badge, .banner])
     }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let deepLink = userInfo["deep_link"] as? String {
+            print(deepLink)
+            UIApplication.shared.open(URL(string: deepLink)!)
+        }
+        completionHandler()
+    }
+    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
     }
@@ -159,4 +174,8 @@ enum QuickAction {
     static func addQuickItems() {
         UIApplication.shared.shortcutItems = QuickAction.shortcutItems
     }
+}
+
+enum DeepLinkView: Hashable {
+    case profile
 }

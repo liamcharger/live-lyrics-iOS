@@ -28,25 +28,37 @@ func greeting(withName: Bool? = nil) -> String {
     let currentHour = calendar.component(.hour, from: date)
     
     let withName = withName ?? false
-    let fullname = AuthViewModel.shared.currentUser?.fullname ?? NSLocalizedString("live_lyrics_user", comment: "")
+    let fullname: String? = AuthViewModel.shared.currentUser?.fullname
     
     var greetingText = "Hello."
     switch currentHour {
     case 0..<12:
         if withName {
-            greetingText = NSLocalizedString("good_morning_greeting", comment: "") + " \n" + fullname + "!"
+            if let fullname = fullname {
+                greetingText = NSLocalizedString("good_morning_greeting", comment: "") + ", \n" + fullname + "!"
+            } else {
+                greetingText = NSLocalizedString("good_morning_greeting", comment: "") + "!"
+            }
         } else {
             greetingText = NSLocalizedString("good_morning", comment: "")
         }
     case 12..<18:
         if withName {
-            greetingText = NSLocalizedString("good_afternoon_greeting", comment: "") + " \n" + fullname + "!"
+            if let fullname = fullname {
+                greetingText = NSLocalizedString("good_afternoon_greeting", comment: "") + ", \n" + fullname + "!"
+            } else {
+                greetingText = NSLocalizedString("good_afternoon_greeting", comment: "") + "!"
+            }
         } else {
             greetingText = NSLocalizedString("good_afternoon", comment: "")
         }
     default:
         if withName {
-            greetingText = NSLocalizedString("good_evening_greeting", comment: "") + " \n" + fullname + "!"
+            if let fullname = fullname {
+                greetingText = NSLocalizedString("good_evening_greeting", comment: "") + ", \n" + fullname + "!"
+            } else {
+                greetingText = NSLocalizedString("good_evening_greeting", comment: "") + "!"
+            }
         } else {
             greetingText = NSLocalizedString("good_evening", comment: "")
         }
@@ -214,5 +226,39 @@ struct ScrollViewOffsetPreferenceKey: PreferenceKey {
     
     static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
         value.append(contentsOf: nextValue())
+    }
+}
+
+extension URL {
+    var isDeeplink: Bool {
+        return scheme == "live-lyrics"
+    }
+    
+    var deepLinkView: DeepLinkView? {
+        guard isDeeplink else { return nil }
+        
+        switch host {
+        case "profile": return .profile
+        default: return nil
+        }
+    }
+}
+
+extension UserDefaults {
+    func setCodable<T: Codable>(_ value: T, forKey key: String) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(value) {
+            self.set(encoded, forKey: key)
+        }
+    }
+    
+    func codable<T: Codable>(forKey key: String) -> T? {
+        if let data = self.data(forKey: key) {
+            let decoder = JSONDecoder()
+            if let decoded = try? decoder.decode(T.self, from: data) {
+                return decoded
+            }
+        }
+        return nil
     }
 }

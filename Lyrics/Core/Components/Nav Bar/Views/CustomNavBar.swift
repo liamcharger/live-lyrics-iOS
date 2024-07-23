@@ -19,7 +19,6 @@ struct CustomNavBar: View {
     
     @State var showSheet1 = false
     @State var showSheet2 = false
-    @State var showSheet3 = false
     
     @Binding var showCollapsedNavBar: Bool
     @Binding var showCollapsedNavBarTitle: Bool
@@ -60,7 +59,7 @@ struct CustomNavBar: View {
                 case .home:
                     if showCollapsedNavBar {
                         Button {
-                            showSheet3.toggle()
+                            mainViewModel.showProfileView.toggle()
                         } label: {
                             FAText(iconName: "user", size: 20)
                                 .frame(width: 23, height: 23)
@@ -82,8 +81,8 @@ struct CustomNavBar: View {
                                     }
                                 }
                         }
-                        .sheet(isPresented: $showSheet3) {
-                            MenuView(showMenu: $showSheet3)
+                        .sheet(isPresented: $mainViewModel.showProfileView) {
+                            MenuView(showMenu: $mainViewModel.showProfileView)
                                 .environmentObject(storeKitManager)
                         }
                     } else {
@@ -100,7 +99,7 @@ struct CustomNavBar: View {
                                 .modifier(NavBarRowViewModifier())
                         }
                         Button {
-                            showSheet3.toggle()
+                            mainViewModel.showProfileView.toggle()
                         } label: {
                             FAText(iconName: "user", size: 20)
                                 .modifier(NavBarRowViewModifier())
@@ -124,8 +123,8 @@ struct CustomNavBar: View {
                                     }
                                 }
                         }
-                        .sheet(isPresented: $showSheet3) {
-                            MenuView(showMenu: $showSheet3)
+                        .sheet(isPresented: $mainViewModel.showProfileView) {
+                            MenuView(showMenu: $mainViewModel.showProfileView)
                                 .environmentObject(storeKitManager)
                         }
                     }

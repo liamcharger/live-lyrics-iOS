@@ -1133,13 +1133,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Good afternoon,"
+            "value" : "Good afternoon"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buenas tardes,"
+            "state" : "needs_review",
+            "value" : "Buenas tardes"
           }
         }
       }
@@ -1166,13 +1166,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Good evening,"
+            "value" : "Good evening"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buenas noches,"
+            "state" : "needs_review",
+            "value" : "Buenas noches"
           }
         }
       }
@@ -1199,13 +1199,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Good morning,"
+            "value" : "Good morning"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buenos días,"
+            "state" : "needs_review",
+            "value" : "Buenos días"
           }
         }
       }
@@ -1437,9 +1437,6 @@
           }
         }
       }
-    },
-    "live_lyrics_user" : {
-
     },
     "Loading" : {
       "localizations" : {

@@ -66,6 +66,7 @@ struct MainView: View {
     @State var showCollapsedNavBar = true
     @State var showCollapsedNavBarTitle = false
     @State var showCollapsedNavBarDivider = false
+    @State var showShareInvitesShadow = false
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
@@ -387,7 +388,7 @@ struct MainView: View {
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, -28)
+                        .padding(.top, -26)
                         VStack {
                             LazyVGrid(columns: columns) {
                                 ForEach(0...1, id: \.self) { index in
@@ -425,6 +426,12 @@ struct MainView: View {
                                     }) {
                                         ZStack {
                                             ContentRowView(title, icon: icon, color: color)
+                                                .shadow(color: showShareInvitesShadow && index == 1 ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
+                                                .onChange(of: mainViewModel.incomingShareRequests.count >= 1) { _ in
+                                                    withAnimation(.easeInOut) {
+                                                        showShareInvitesShadow = mainViewModel.incomingShareRequests.count >= 1
+                                                    }
+                                                }
                                             // Badge to show number of incoming share requests
                                             HStack {
                                                 Spacer()
@@ -987,7 +994,7 @@ struct MainView: View {
                             self.offset = value.first ?? 0
                             
                             withAnimation(.easeInOut(duration: 0.22)) {
-                                if offset <= 145 {
+                                if hasHomeButton() ? offset <= 100 : offset <= 145 {
                                     showCollapsedNavBarDivider = true
                                 } else {
                                     showCollapsedNavBarDivider = false

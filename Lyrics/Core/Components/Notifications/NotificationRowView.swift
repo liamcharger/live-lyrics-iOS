@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NotificationRowView: View {
+    @ObservedObject var mainViewModel = MainViewModel.shared
+    
     let notification: Notification
     
     @Environment(\.colorScheme) var colorScheme
@@ -25,15 +27,16 @@ struct NotificationRowView: View {
             }
             Spacer()
             Button {
-                guard let index = MainViewModel.shared.notifications.firstIndex(where: { $0.id == notification.id }) else { return }
+                guard let index = mainViewModel.notifications.firstIndex(where: { $0.id == notification.id }) else { return }
                 
-                MainViewModel.shared.notifications.remove(at: index)
+                mainViewModel.notifications.remove(at: index)
+                mainViewModel.saveNotificationToUserDefaults()
             } label: {
                 Image(systemName: "xmark")
-                    .padding(12)
+                    .padding(10)
                     .background(Color.materialRegularGray)
                     .foregroundColor(.primary)
-                    .font(.body.weight(.medium))
+                    .font(.system(size: 16).weight(.medium))
                     .clipShape(Circle())
             }
         }

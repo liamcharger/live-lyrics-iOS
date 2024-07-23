@@ -72,9 +72,9 @@ struct ShareView: View {
                         var request: ShareRequest?
                         
                         if let song = song {
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly, notificationTokens: fcmIds)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly, notificationTokens: fcmIds, fromNotificationToken: fromUser.fcmId)
                         } else if let folder = folder {
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly, notificationTokens: fcmIds)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly, notificationTokens: fcmIds, fromNotificationToken: fromUser.fcmId)
                         } else {
                             print("Song and folder are nil")
                         }

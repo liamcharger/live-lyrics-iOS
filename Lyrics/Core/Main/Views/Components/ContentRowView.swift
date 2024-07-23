@@ -30,6 +30,9 @@ struct ContentRowView: View {
             }
             Text(title)
                 .font(.system(size: 18).weight(.semibold))
+                .frame(maxWidth: 95, alignment: .leading)
+                .multilineTextAlignment(.leading)
+                .lineLimit(3)
         }
         .padding()
         .background(Material.thin)

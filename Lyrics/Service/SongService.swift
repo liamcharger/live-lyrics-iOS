@@ -966,7 +966,9 @@ class SongService {
 			"toUsername": request.toUsername,
 			"fromUsername": request.fromUsername,
 			"songVariations": songVariations,
-			"readOnly": request.readOnly
+			"readOnly": request.readOnly,
+			"notificationTokens": request.notificationTokens,
+			"fromNotificationToken": request.fromNotificationToken
 		]
 		
 		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(id).setData(requestData) { error in
@@ -989,7 +991,7 @@ class SongService {
 			
 			dispatch.notify(queue: .main) {
 				if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song"). Tap to view.")
+					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song").")
 				}
 				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers":FieldValue.arrayUnion([request.from])])
 				completion(nil)
@@ -1046,8 +1048,8 @@ class SongService {
 		deleteRequest(request, uid: incomingReqColUid ?? uid)
 		group.leave()
 		group.notify(queue: .main) {
-			if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-				UserService().sendNotificationToFCM(tokens: tokens, title: "Request Declined", body: "\(currentUser.username) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\". Tap to view.")
+			if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
+				UserService().sendNotificationToFCM(tokens: [token], title: "Request Declined", body: "\(currentUser.username) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\".")
 			}
 			completion()
 		}
@@ -1124,8 +1126,8 @@ class SongService {
 						
 						dispatch.notify(queue: .main) {
 							self.deleteRequest(request, uid: uid)
-							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
+							if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
+								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\".")
 							}
 							completion()
 						}
@@ -1223,14 +1225,10 @@ class SongService {
 							}
 						}
 						
-						if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-							UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
-						}
-						
 						dispatch.notify(queue: .main) {
 							self.deleteRequest(request, uid: uid)
-							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\". Tap to view.")
+							if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
+								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\".")
 							}
 							completion()
 						}

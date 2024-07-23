@@ -32,6 +32,7 @@ class MainViewModel: ObservableObject {
     @Published var isLoadingSharedSongs = true
     @Published var isLoadingSharedFolders = true
     @Published var isLoadingSharedMedia = true
+    @Published var showProfileView = false
     
     @Published var systemDoc: SystemDoc?
     
@@ -81,21 +82,20 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func saveNotificationToUserDefaults(notification: Notification) {
-//        UserDefaults.standard.set(notifications., forKey: self.sortSelectionKey)
+    func saveNotificationToUserDefaults() {
+        UserDefaults.standard.setCodable(notifications, forKey: "notifications")
     }
     
     func loadNotificationFromUserDefaults() {
-//        if let notifications = UserDefaults.standard.value(forKey: "notifications") as? [Notification],
-//           self.notifications = notifications
-//        }
+        if let savedNotifications: [Notification] = UserDefaults.standard.codable(forKey: "notifications") {
+            self.notifications = savedNotifications
+        }
     }
     
     func receivedNotificationFromFirebase(_ notification: Notification) {
         DispatchQueue.main.async {
             self.notifications.append(notification)
-            self.saveNotificationToUserDefaults(notification: notification)
-            self.loadNotificationFromUserDefaults()
+            self.saveNotificationToUserDefaults()
         }
     }
     
