@@ -100,6 +100,22 @@ extension View {
         case false: self
         }
     }
+    
+    func customShadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) -> some View {
+        self.modifier(ShadowModifier(color: color, radius: radius, x: x, y: y))
+    }
+}
+
+struct VisualEffectBlur: UIViewRepresentable {
+    var blurStyle: UIBlurEffect.Style
+    
+    func makeUIView(context: Context) -> UIVisualEffectView {
+        return UIVisualEffectView(effect: UIBlurEffect(style: blurStyle))
+    }
+    
+    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+        uiView.effect = UIBlurEffect(style: blurStyle)
+    }
 }
 
 extension Song {
@@ -218,6 +234,18 @@ struct Wave: Shape {
         }
         
         return Path(path.cgPath)
+    }
+}
+
+struct ShadowModifier: ViewModifier {
+    var color: Color
+    var radius: CGFloat
+    var x: CGFloat
+    var y: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: color, radius: radius, x: x, y: y)
     }
 }
 

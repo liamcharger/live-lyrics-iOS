@@ -38,6 +38,7 @@ struct MainView: View {
     
     @State var hasFirestoreStartedListening = false
     @State var showMenu = false
+    @State var showOfflineAlert = false
     @State var showDeleteSheet = false
     @State var showAddSongSheet = false
     @State var showEditSheet = false
@@ -321,10 +322,6 @@ struct MainView: View {
             content
                 .onAppear {
                     DispatchQueue.main.async {
-                        if !networkManager.getNetworkState() {
-                            // TODO: add toast for Network State
-                        }
-                        
                         if !hasFirestoreStartedListening {
                             self.mainViewModel.fetchSongs()
                             self.mainViewModel.fetchFolders()
@@ -426,7 +423,7 @@ struct MainView: View {
                                     }) {
                                         ZStack {
                                             ContentRowView(title, icon: icon, color: color)
-                                                .shadow(color: showShareInvitesShadow && index == 1 ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
+                                                .customShadow(color: showShareInvitesShadow && index == 1 ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
                                                 .onChange(of: mainViewModel.incomingShareRequests.count >= 1) { _ in
                                                     withAnimation(.easeInOut) {
                                                         showShareInvitesShadow = mainViewModel.incomingShareRequests.count >= 1
@@ -1012,6 +1009,62 @@ struct MainView: View {
                             }
                         }
                     }
+                }
+            }
+        }
+        .overlay {
+            if !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable {
+                VStack {
+                    Spacer()
+                    ZStack {
+                        VisualEffectBlur(blurStyle: .systemMaterial)
+                            .mask(LinearGradient(
+                                gradient: Gradient(colors: [Color.white, Color.clear]),
+                                startPoint: .bottom,
+                                endPoint: .top
+                            ))
+                            .edgesIgnoringSafeArea(.all)
+                        VStack {
+                            Spacer()
+                            if !NetworkManager.shared.getNetworkState() {
+                                Button {
+                                    showOfflineAlert = true
+                                } label: {
+                                    HStack(spacing: 7) {
+                                        FAText(iconName: "wifi-slash", size: 18)
+                                        Text(NSLocalizedString("youre_offline", comment: ""))
+                                    }
+                                    .padding(15)
+                                    .background(Color.red.opacity(0.9))
+                                    .foregroundColor(.white)
+                                    .clipShape(Capsule())
+                                    .customShadow(color: .red, radius: 20, x: 6, y: 6)
+                                    .padding(14)
+                                }
+                                .alert(isPresented: $showOfflineAlert) {
+                                    Alert(title: Text("youre_offline"), message: Text("some_features_may_not_work_expectedly"), dismissButton: .cancel(Text("OK")))
+                                }
+                            } else if mainViewModel.updateAvailable {
+                                Button {
+                                    if let url = URL(string: "https://apps.apple.com/app/id6449195237") {
+                                        UIApplication.shared.open(url)
+                                    }
+                                } label: {
+                                    HStack(spacing: 7) {
+                                        FAText(iconName: "download", size: 18)
+                                        Text(NSLocalizedString("update_available", comment: ""))
+                                    }
+                                    .padding(15)
+                                    .background(Color.blue.opacity(0.9))
+                                    .foregroundColor(.white)
+                                    .clipShape(Capsule())
+                                    .customShadow(color: .blue, radius: 20, x: 6, y: 6)
+                                    .padding(14)
+                                }
+                            }
+                        }
+                    }
+                    .frame(height: 80)
                 }
             }
         }

@@ -2236,7 +2236,6 @@
       }
     },
     "some_features_may_not_work_expectedly" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2532,6 +2531,16 @@
         }
       }
     },
+    "update_available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Available"
+          }
+        }
+      }
+    },
     "Variations" : {
       "localizations" : {
         "es" : {
@@ -2670,7 +2679,6 @@
       }
     },
     "youre_offline" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2682,6 +2690,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estás desconectado"
+          }
+        }
+      }
+    },
+    "youre_offline_check_again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’re offline. Check again?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "You’re offline. Check again?"
           }
         }
       }
