@@ -913,6 +913,7 @@ struct MainView: View {
                         .id("songs")
                     }
                     .padding()
+                    .padding(.bottom, !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable ? 35 : 0)
                     .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
                         UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder, isSongFromFolder: true)
                     }
@@ -1039,7 +1040,7 @@ struct MainView: View {
                                     .foregroundColor(.white)
                                     .clipShape(Capsule())
                                     .customShadow(color: .red, radius: 20, x: 6, y: 6)
-                                    .padding(14)
+                                    .padding()
                                 }
                                 .alert(isPresented: $showOfflineAlert) {
                                     Alert(title: Text("youre_offline"), message: Text("some_features_may_not_work_expectedly"), dismissButton: .cancel(Text("OK")))
@@ -1059,7 +1060,7 @@ struct MainView: View {
                                     .foregroundColor(.white)
                                     .clipShape(Capsule())
                                     .customShadow(color: .blue, radius: 20, x: 6, y: 6)
-                                    .padding(14)
+                                    .padding()
                                 }
                             }
                         }
