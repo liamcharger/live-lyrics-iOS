@@ -45,7 +45,7 @@ struct ListRowView: View {
                         .multilineTextAlignment(.leading)
                     if sharedBadge ?? true {
                         if let song = song, let userId = viewModel.currentUser?.id, song.uid != userId {
-                            Image(systemName: "person.2.fill")
+                            Image(systemName: "person.2")
                                 .font(.system(size: 16).weight(.medium))
                         }
                     }
