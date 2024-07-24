@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LoginView: View {
+    let action: () -> Void
+    
     @State var email = ""
     @State var password = ""
     @State var errorMessage = ""
@@ -32,7 +34,7 @@ struct LoginView: View {
         VStack(spacing: 15) {
             HStack(spacing: 12) {
                 Button(action: {
-                    presMode.wrappedValue.dismiss()
+                    action()
                 }, label: {
                     Image(systemName: "chevron.left")
                         .padding()
@@ -81,11 +83,6 @@ struct LoginView: View {
                 })
                 .opacity(isEmpty ? 0.5 : 1.0)
                 .disabled(isEmpty)
-                NavigationLink {
-                    RegistrationView()
-                } label: {
-                    Text("No account? ") + Text("Sign Up").bold()
-                }
             }
         }
         .alert(isPresented: $showError, content: {
@@ -103,6 +100,6 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        LoginView(action: {})
     }
 }

@@ -1111,6 +1111,17 @@
         }
       }
     },
+    "get_you_signed_in" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now let’s get you signed in."
+          }
+        }
+      }
+    },
     "good_afternoon" : {
       "localizations" : {
         "en" : {
@@ -1423,6 +1434,7 @@
     },
     "live_lyrics" : {
       "comment" : "Live Lyrics.",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2583,6 +2595,7 @@
     },
     "welcome_to" : {
       "comment" : "Welcome to",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

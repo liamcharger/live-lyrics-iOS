@@ -45,8 +45,10 @@ struct LyricsApp: App {
                 .environmentObject(viewModel)
                 .environmentObject(storeKitManager)
                 .onOpenURL { url in
-                    if url.absoluteString == "live-lyrics://profile" {
-                        MainViewModel.shared.showProfileView = true
+                    if viewModel.currentUser != nil {
+                        if url.absoluteString == "live-lyrics://profile" {
+                            MainViewModel.shared.showProfileView = true
+                        }
                     }
                 }
                 .onChange(of: phase) { phase in

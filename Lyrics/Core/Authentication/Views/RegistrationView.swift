@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RegistrationView: View {
+    let action: () -> Void
+    
     @State var email = ""
     @State var password = ""
     @State var confirmPassword = ""
@@ -31,7 +33,7 @@ struct RegistrationView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 12) {
                     Button(action: {
-                        presMode.wrappedValue.dismiss()
+                        action()
                     }, label: {
                         Image(systemName: "chevron.left")
                             .padding()
@@ -110,12 +112,5 @@ struct RegistrationView: View {
         }
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct RegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegistrationView()
-            .environmentObject(AuthViewModel())
     }
 }
