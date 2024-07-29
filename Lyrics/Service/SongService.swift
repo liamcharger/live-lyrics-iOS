@@ -605,13 +605,13 @@ class SongService {
 			}
 	}
 	
-	func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
+	func createSong(folder: Folder, lyrics: String, artist: String, title: String, completion: @escaping(Bool, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		let id = UUID().uuidString
 		
 		Firestore.firestore().collection("users").document(uid).collection("songs").document(id)
-			.setData(["lyrics": lyrics, "timestamp": Date.now, "title": title, "order": 0, "size": 18, "uid": uid, "lineSpacing": 1]) { error in
+			.setData(["lyrics": lyrics, "timestamp": Date.now, "title": title, "artist": artist, "order": 0, "size": 18, "uid": uid, "lineSpacing": 1]) { error in
 				if let error = error {
 					print("Error creating song: \(error.localizedDescription)")
 					completion(false, error.localizedDescription)
@@ -627,12 +627,12 @@ class SongService {
 			}
 	}
 	
-	func createSong(lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
+	func createSong(lyrics: String, artist: String, title: String, completion: @escaping(Bool, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		let documentRef = Firestore.firestore().collection("users").document(uid).collection("songs").document()
 		
-		documentRef.setData(["lyrics": lyrics, "timestamp": Date.now, "title": title, "order": 0, "size": 18, "uid": uid, "lineSpacing": 1]) { error in
+		documentRef.setData(["lyrics": lyrics, "timestamp": Date.now, "title": title, "artist": artist, "order": 0, "size": 18, "uid": uid, "lineSpacing": 1]) { error in
 			if let error = error {
 				print("Error creating song: \(error.localizedDescription)")
 				completion(false, error.localizedDescription)

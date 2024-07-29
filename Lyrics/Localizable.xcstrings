@@ -393,17 +393,6 @@
         }
       }
     },
-    "Are you sure you want to delete \"%@\"?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Estás seguro de que deseas eliminar “%@”?"
-          }
-        }
-      }
-    },
     "Are you sure you want to delete %@\"?" : {
       "localizations" : {
         "es" : {
@@ -506,6 +495,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Artista"
+          }
+        }
+      }
+    },
+    "artist_optional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist (Optional)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artista (opcional)"
           }
         }
       }
@@ -1149,7 +1154,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Buenas tardes"
           }
         }
@@ -1182,7 +1187,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Buenas noches"
           }
         }
@@ -1215,7 +1220,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Buenos días"
           }
         }
@@ -1646,10 +1651,24 @@
       }
     },
     "New Folder" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva carpeta"
+          }
+        }
+      }
     },
     "New Song" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva canción"
+          }
+        }
+      }
     },
     "New Variation" : {
       "localizations" : {
@@ -2550,6 +2569,12 @@
             "state" : "translated",
             "value" : "Update Available"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualización disponible"
+          }
         }
       }
     },
@@ -2703,23 +2728,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estás desconectado"
-          }
-        }
-      }
-    },
-    "youre_offline_check_again" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You’re offline. Check again?"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "You’re offline. Check again?"
           }
         }
       }

@@ -23,7 +23,7 @@ struct NewFolderView: View {
     @FocusState var isFocused: Bool
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Enter a name for your folder.")
                     .font(.title.weight(.bold))

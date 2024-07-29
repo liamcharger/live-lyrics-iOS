@@ -146,8 +146,11 @@ struct AddSongsView: View {
             .padding()
             Divider()
             if mainViewModel.isLoadingSongs || mainViewModel.isLoadingFolderSongs {
-                LoadingView()
-                    .padding()
+                VStack {
+                    Spacer()
+                    ProgressView("Loading")
+                    Spacer()
+                }
             } else {
                 ScrollView {
                     if showSearchBar {
