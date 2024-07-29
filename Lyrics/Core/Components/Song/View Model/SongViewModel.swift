@@ -27,8 +27,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
-        service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in
+    func createSong(folder: Folder, lyrics: String, artist: String, title: String, completion: @escaping(Bool, String) -> Void) {
+        service.createSong(folder: folder, lyrics: lyrics, artist: artist, title: title) { success, errorMessage in
             if success {
                 completion(true, "Success!")
             } else {
@@ -37,8 +37,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSong(lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
-        service.createSong(lyrics: lyrics, title: title) { success, errorMessage in
+    func createSong(lyrics: String, title: String, artist: String, completion: @escaping(Bool, String) -> Void) {
+        service.createSong(lyrics: lyrics, artist: artist, title: title) { success, errorMessage in
             if success {
                 completion(true, "Success!")
             } else {

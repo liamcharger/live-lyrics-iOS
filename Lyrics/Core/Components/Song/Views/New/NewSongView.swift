@@ -11,6 +11,7 @@ struct NewSongView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
     @State var title = ""
+    @State var artist = ""
     @State var lyrics = ""
     @State var errorMessage = ""
     
@@ -37,7 +38,7 @@ struct NewSongView: View {
                 dismiss()
             }
         }
-        songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
+        songViewModel.createSong(lyrics: lyrics, title: title, artist: artist) { success, errorMessage in
             if success {
                 dismiss()
             } else {
@@ -48,7 +49,7 @@ struct NewSongView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Enter a name for your song.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -58,11 +59,14 @@ struct NewSongView: View {
             }
             .padding()
             Divider()
-            Spacer()
-            CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
-                .focused($isTitleFocused)
+            ScrollView {
+                VStack {
+                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+                        .focused($isTitleFocused)
+                    CustomTextField(text: $artist, placeholder: NSLocalizedString("artist_optional", comment: ""))
+                }
                 .padding()
-            Spacer()
+            }
             Divider()
             Button(action: {
                 view2.toggle()
