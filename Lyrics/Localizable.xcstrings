@@ -1000,11 +1000,22 @@
       }
     },
     "Enter a name for your song." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ingresa un nombre para tu canción."
+          }
+        }
+      }
+    },
+    "Enter some details for your song." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter some details for your song."
           }
         }
       }
@@ -1342,6 +1353,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clave"
+          }
+        }
+      }
+    },
+    "key_optional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key (Optional)"
           }
         }
       }
