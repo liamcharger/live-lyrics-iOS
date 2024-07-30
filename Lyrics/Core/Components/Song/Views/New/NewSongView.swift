@@ -12,6 +12,7 @@ struct NewSongView: View {
     
     @State var title = ""
     @State var artist = ""
+    @State var key = ""
     @State var lyrics = ""
     @State var errorMessage = ""
     
@@ -38,7 +39,8 @@ struct NewSongView: View {
                 dismiss()
             }
         }
-        songViewModel.createSong(lyrics: lyrics, title: title, artist: artist) { success, errorMessage in
+        
+        songViewModel.createSong(lyrics: lyrics, title: title, artist: artist, key: key) { success, errorMessage in
             if success {
                 dismiss()
             } else {
@@ -51,7 +53,7 @@ struct NewSongView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Enter a name for your song.")
+                Text("Enter some details for your song.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
@@ -64,6 +66,7 @@ struct NewSongView: View {
                     CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
                         .focused($isTitleFocused)
                     CustomTextField(text: $artist, placeholder: NSLocalizedString("artist_optional", comment: ""))
+                    CustomTextField(text: $key, placeholder: NSLocalizedString("key_optional", comment: ""))
                 }
                 .padding()
             }

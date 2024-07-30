@@ -23,3 +23,6 @@
 - Generate new screenshots of updated views
 
 > ***Note:** Screenshots are currently generated using [App Mockup (Beta)](https://beta.app-mockup.com)*
+
+## Bugs and features to fix/implement:
+- [ ] Add artist text field to NewSongView

@@ -133,7 +133,8 @@ struct MenuView: View {
                 Divider()
                 Group {
                     VStack(spacing: 10) {
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
+                        // FIXME: squishes FullscreenMessage (especially on smaller iPhones)
+//                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
                         Button(action: {
                             showWebView.toggle()
                         }, label: {
@@ -241,11 +242,5 @@ struct MenuView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
         }
-    }
-}
-
-struct MenuView_Previews: PreviewProvider {
-    static var previews: some View {
-        MenuView(showMenu: .constant(true))
     }
 }

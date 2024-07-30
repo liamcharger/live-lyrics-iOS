@@ -26,7 +26,6 @@ struct NewFolderView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Enter a name for your folder.")
-                    .font(.title.weight(.bold))
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
