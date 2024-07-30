@@ -101,7 +101,6 @@ class SongService {
 							song.variations = sharedSong.variations
 							song.readOnly = sharedSong.readOnly
 							song.pinned = sharedSong.pinned
-							song.tags = sharedSong.tags ?? ["none"]
 							song.performanceMode = sharedSong.performanceMode
 							completedSongs.append(song)
 						}
@@ -941,11 +940,7 @@ class SongService {
 		guard let uid = Auth.auth().currentUser?.uid, let songId = song.id else { return }
 		
 		let filteredTags = tags.map { $0.rawValue }
-		if uid != song.uid {
-			Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(songId).updateData(["tags": filteredTags], completion: completion)
-		} else {
-			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(songId).updateData(["tags": filteredTags], completion: completion)
-		}
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(songId).updateData(["tags": filteredTags.isEmpty ? FieldValue.delete() : filteredTags], completion: completion)
 	}
 	
 	func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
