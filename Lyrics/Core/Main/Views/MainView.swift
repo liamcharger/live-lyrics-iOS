@@ -250,12 +250,12 @@ struct MainView: View {
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
-                Button {
-                    selectedSong = song
-                    showSongMoveSheet.toggle()
-                } label: {
-                    Label("Move", systemImage: "folder")
-                }
+            }
+            Button {
+                selectedSong = song
+                showSongMoveSheet.toggle()
+            } label: {
+                Label("Move", systemImage: "folder")
             }
             Menu {
                 Button {
@@ -739,10 +739,10 @@ struct MainView: View {
                                                                                     mainViewModel.selectedFolder = folder
                                                                                     showFolderSongDeleteSheet.toggle()
                                                                                 } label: {
-                                                                                    if songViewModel.isShared(song: song) {
-                                                                                        Label("Leave", systemImage: "arrow.backward.square")
-                                                                                    } else {
+                                                                                    if folder.uid ?? "" == uid() && song.uid != uid() {
                                                                                         Label("Remove", systemImage: "trash")
+                                                                                    } else {
+                                                                                        Label("Leave", systemImage: "arrow.backward.square")
                                                                                     }
                                                                                 }
                                                                             }
@@ -751,6 +751,9 @@ struct MainView: View {
                                                                                     Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
                                                                                         if songViewModel.isShared(song: selectedSong) {
                                                                                             if let selectedFolder = mainViewModel.selectedFolder {
+                                                                                                if selectedFolder.uid ?? "" == uid() {
+                                                                                                    mainViewModel.deleteSong(folder, selectedSong)
+                                                                                                }
                                                                                                 mainViewModel.leaveCollabFolder(folder: selectedFolder)
                                                                                             } else {
                                                                                                 songViewModel.leaveSong(song: selectedSong)
@@ -759,7 +762,7 @@ struct MainView: View {
                                                                                             songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                                                                         }
                                                                                     }
-                                                                                    if !songViewModel.isShared(song: selectedSong) {
+                                                                                    if mainViewModel.selectedFolder?.uid ?? "" == uid() && selectedSong.uid != uid() {
                                                                                         Button("Remove from Folder") {
                                                                                             mainViewModel.deleteSong(folder, selectedSong)
                                                                                         }

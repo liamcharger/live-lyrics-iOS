@@ -279,7 +279,8 @@ class SongService {
 				for folderSong in folderSongs {
 					print(folderSong.id ?? "" + ", ", folderSong.order)
 					group.enter()
-					self.fetchSong(listen: false, forUser: userId, withId: folderSong.id!) { song in
+					let songUid = folderSong.uid ?? userId
+					self.fetchSong(listen: false, forUser: songUid, withId: folderSong.id!) { song in
 						if let song = song {
 							completedSongs.append(song)
 						}

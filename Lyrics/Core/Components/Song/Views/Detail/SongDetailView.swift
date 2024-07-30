@@ -817,14 +817,12 @@ struct SongDetailView: View {
             } label: {
                 Label("Move", systemImage: "folder")
             }
-            if let selectedFolder = mainViewModel.selectedFolder {
+            if let selectedFolder = mainViewModel.selectedFolder, isSongFromFolder {
                 if selectedFolder.uid ?? "" == uid() {
                     move
                 }
             } else {
-                if song.uid == uid() {
-                    move
-                }
+                move
             }
             Menu {
                 Button {
