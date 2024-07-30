@@ -279,8 +279,17 @@ struct SongDetailMenuView: View {
                 Text("Restore to Defaults")
             }
         } label: {
-            Image(systemName: "textformat.size")
-                .modifier(NavBarButtonViewModifier())
+            HStack {
+                Image(systemName: "textformat.size")
+                Image(systemName: "chevron.down")
+                    .imageScale(.small)
+                    .foregroundColor(.gray)
+            }
+            .padding(10)
+            .font(.body.weight(.semibold))
+            .background(Material.regular)
+            .foregroundColor(.primary)
+            .clipShape(Capsule())
         }
     }
 }

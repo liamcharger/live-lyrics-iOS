@@ -74,8 +74,6 @@ struct MainView: View {
     @State var sharedSongSearchText = ""
     @State var newFolder = ""
     
-    @State var offset: CGFloat = 0
-    
     @State var sortSelection: SortSelectionEnum = .noSelection
     
     var searchableFolders: [Folder] {
@@ -988,23 +986,43 @@ struct MainView: View {
                         }
                     }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
-                        DispatchQueue.main.async {
-                            self.offset = value.first ?? 0
-                            
-                            withAnimation(.easeInOut(duration: 0.22)) {
-                                if hasHomeButton() ? offset <= 100 : offset <= 145 {
+                        let animation = Animation.easeInOut(duration: 0.22)
+                        
+                        if hasHomeButton() ? value.first ?? 0 <= 100 : value.first ?? 0 <= 145 {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
                                     showCollapsedNavBarDivider = true
-                                } else {
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
                                     showCollapsedNavBarDivider = false
                                 }
-                                if offset <= 55 {
+                            }
+                        }
+                        if value.first ?? 0 <= 55 {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
                                     showCollapsedNavBarTitle = true
-                                } else {
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
                                     showCollapsedNavBarTitle = false
                                 }
-                                if offset <= -15 {
+                            }
+                        }
+                        if value.first ?? 0 <= -15 {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
                                     showCollapsedNavBar = false
-                                } else {
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
                                     showCollapsedNavBar = true
                                 }
                             }

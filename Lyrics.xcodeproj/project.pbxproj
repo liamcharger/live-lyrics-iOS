@@ -123,6 +123,7 @@
 		E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */; };
 		E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */; };
 		E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D411BD2A9FF12300859E4E /* Notification.swift */; };
+		E0D8ED252C58335800C2C9AA /* CustomTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D8ED242C58335800C2C9AA /* CustomTextEditor.swift */; };
 		E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B2082A4CC33A00A972E0 /* NotesView.swift */; };
 		E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */; };
 		E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */; };
@@ -267,6 +268,7 @@
 		E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTagView.swift; sourceTree = "<group>"; };
 		E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionEnum.swift; sourceTree = "<group>"; };
 		E0D411BD2A9FF12300859E4E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		E0D8ED242C58335800C2C9AA /* CustomTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextEditor.swift; sourceTree = "<group>"; };
 		E0E0B2082A4CC33A00A972E0 /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
 		E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -770,6 +772,7 @@
 		E0CA85242B081D5100188CD0 /* Input */ = {
 			isa = PBXGroup;
 			children = (
+				E0D8ED242C58335800C2C9AA /* CustomTextEditor.swift */,
 				E0CA851D2B081D5100188CD0 /* CustomSearchBar.swift */,
 				E0CA85252B081D5100188CD0 /* CustomTextField.swift */,
 				E0CA85262B081D5100188CD0 /* CustomPasswordField.swift */,
@@ -1190,6 +1193,7 @@
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
 				E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */,
+				E0D8ED252C58335800C2C9AA /* CustomTextEditor.swift in Sources */,
 				E04247992A02F5FB00CA48B3 /* LoginView.swift in Sources */,
 				E07C503A2C4F608F002EE9A1 /* NotificationRowView.swift in Sources */,
 				E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */,

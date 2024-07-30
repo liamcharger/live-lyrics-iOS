@@ -12,74 +12,75 @@ import FirebaseFirestore
 import TipKit
 
 struct SongDetailView: View {
-    @State var song: Song
-    @State var folder: Folder?
-    @State var restoreSong: RecentlyDeletedSong?
-    @State var selectedVariation: SongVariation?
+    @State private var song: Song
+    @State private var folder: Folder?
+    @State private var restoreSong: RecentlyDeletedSong?
+    @State private var selectedVariation: SongVariation?
     
-    @State var selectedUser: User?
+    @State private var selectedUser: User?
     
-    @State var fetchListener: ListenerRegistration?
+    @State private var fetchListener: ListenerRegistration?
     
-    @State private var currentIndex = 0
+    @State private var currentIndex: Int = 0
     @State private var value: Int
     @State private var lineSpacing: Double
     @State private var design: Font.Design
     @State private var weight: Font.Weight
     @State private var alignment: TextAlignment
     
-    @State var lyrics = ""
-    @State var lastUpdatedLyrics = ""
-    @State var key = ""
-    @State var title = ""
-    @State var artist = ""
-    @State var errorMessage = ""
-    @State var isChecked = ""
-    @State var duration = ""
-    @State var currentEditorsTitle = ""
-    @State var currentEditorsSubtitle = ""
-    @State var createdVariationId = ""
-    @State var bpm = 120
-    @State var bpb = 4
-    @State var performanceMode = true
-    @State var tags: [String] = []
+    @State private var lyrics = ""
+    @State private var lastUpdatedLyrics = ""
+    @State private var key = ""
+    @State private var title = ""
+    @State private var artist = ""
+    @State private var errorMessage = ""
+    @State private var isChecked = ""
+    @State private var duration = ""
+    @State private var currentEditorsTitle = ""
+    @State private var currentEditorsSubtitle = ""
+    @State private var createdVariationId = ""
+    @State private var bpm = 120
+    @State private var bpb = 4
+    @State private var performanceMode = true
+    @State private var tags: [String] = []
     
-    @State var songIds: [String]?
-    @State var fullUsernameString = [String]()
-    @State var initials = [String]()
-    @State var joinedUsersStrings = [String]()
-    @State var lastFetchedJoined: Date?
+    @State private var songIds: [String]?
+    @State private var fullUsernameString = [String]()
+    @State private var initials = [String]()
+    @State private var joinedUsersStrings = [String]()
+    @State private var lastFetchedJoined: Date?
     
-    @State var joinedUsers: [User]?
+    @State private var joinedUsers: [User]?
     
-    @State var songVariations = [SongVariation]()
+    @State private var songVariations = [SongVariation]()
     
-    @State var showEditView = false
-    @State var showTagSheet = false
-    @State var showMoveView = false
-    @State var showShareSheet = false
-    @State var showSettingsView = false
-    @State var wordCountBool = true
-    @State var showDeleteSheet = false
-    @State var showRestoreSongDeleteSheet = false
-    @State var showLeaveSheet = false
-    @State var showThesaurusView = false
-    @State var showAutoScrollView = false
-    @State var showNotesView = false
-    @State var showFullScreenView = false
-    @State var showSongDataView = false
-    @State var showInfo = false
-    @State var showAlert = false
-    @State var showKickedAlert = false
-    @State var showSongRepititionAlert = false
-    @State var showPlayViewInfo = false
-    @State var showNotesStatusIcon = false
-    @State var showNewVariationView = false
-    @State var showVariationsManagementSheet = false
-    @State var showUserPopover = false
-    @State var showJoinedUsers = true
+    @State private var showEditView = false
+    @State private var showTagSheet = false
+    @State private var showMoveView = false
+    @State private var showShareSheet = false
+    @State private var showSettingsView = false
+    @State private var wordCountBool = true
+    @State private var showDeleteSheet = false
+    @State private var showRestoreSongDeleteSheet = false
+    @State private var showLeaveSheet = false
+    @State private var showThesaurusView = false
+    @State private var showAutoScrollView = false
+    @State private var showNotesView = false
+    @State private var showFullScreenView = false
+    @State private var showSongDataView = false
+    @State private var showInfo = false
+    @State private var showAlert = false
+    @State private var showKickedAlert = false
+    @State private var showSongRepititionAlert = false
+    @State private var showPlayViewInfo = false
+    @State private var showNotesStatusIcon = false
+    @State private var showNewVariationView = false
+    @State private var showVariationsManagementSheet = false
+    @State private var showUserPopover = false
+    @State private var showJoinedUsers = true
+    @State private var showBackgroundBlur = false
     
-    @State var updatedLyricsTimer: Timer?
+    @State private var updatedLyricsTimer: Timer?
     
     @State private var activeAlert: ActiveAlert?
     
@@ -297,9 +298,6 @@ struct SongDetailView: View {
                                 .sheet(isPresented: $showNotesView) {
                                     NotesView(song: song)
                                 }
-                                if !readOnly() {
-                                    SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
-                                }
                                 settings
                             } else {
                                 Button(action: {
@@ -353,7 +351,7 @@ struct SongDetailView: View {
                     HStack(alignment: .center, spacing: 10) {
                         Text(title)
                             .font(.system(size: 24, design: .rounded).weight(.bold))
-                            .lineLimit(1).truncationMode(.tail)
+                            .lineLimit(1)
                         if tags.count > 0 {
                             HStack(spacing: 5) {
                                 ForEach(tags, id: \.self) { tag in
@@ -366,38 +364,80 @@ struct SongDetailView: View {
                         Spacer()
                         Text("Key: \(key == "" ? NSLocalizedString("not_set", comment: "") : key)").foregroundColor(Color.gray)
                     }
-                    .padding((((joinedUsers?.count ?? 0) > 0) && showJoinedUsers) ? [] : [.bottom])
-                    if let joinedUsers = joinedUsers, joinedUsers.count > 0 && showJoinedUsers {
-                        VStack(spacing: 0) {
-                            Divider()
-                                .padding(.horizontal, -16)
-                            ScrollView(.horizontal) {
-                                HStack(spacing: 6) {
-                                    ForEach(joinedUsers, id: \.id) { user in
-                                        Button {
-                                            selectedUser = user
-                                            showUserPopover = true
-                                        } label: {
-                                            UserPopoverRowView(user: user, song: song)
-                                        }
-                                    }
-                                }
-                                .padding(12)
-                            }
-                            .padding(.horizontal, -16)
-                        }
-                    }
+                    .padding(.bottom)
                 }
                 .padding(.top, 8)
                 .padding(.horizontal)
             }
             Divider()
-            TextEditor(text: readOnly() || songs == nil ? .constant(lyrics) : $lyrics)
-                .multilineTextAlignment(alignment)
-                .font(.system(size: CGFloat(value), weight: weight, design: design))
-                .lineSpacing(lineSpacing)
+            ZStack {
+                let showJoinedUsers = joinedUsers?.isEmpty ?? true
+                
+                CustomTextEditor(text: $lyrics,
+                                 multilineTextAlignment: .leading,
+                                 font: UIFont.systemFont(ofSize: CGFloat(value), weight: weight.uiFontWeight),
+                                 lineSpacing: lineSpacing,
+                                 padding: UIEdgeInsets(top: showJoinedUsers ? 12 : 75, left: 12, bottom: 12, right: 12),
+                                 isInputActive: $isInputActive,
+                                 showBlur: $showBackgroundBlur)
                 .focused($isInputActive)
-                .padding(.leading, 11)
+                if !readOnly() || showJoinedUsers {
+                    if !showJoinedUsers {
+                        VisualEffectBlur(blurStyle: .dark)
+                            .mask(LinearGradient(
+                                gradient: Gradient(colors: [Color.black, Color.clear]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                            .frame(height: 80)
+                            .frame(maxHeight: .infinity, alignment: .top)
+                            .opacity(showBackgroundBlur ? 1 : 0)
+                    }
+                    VStack {
+                        ZStack {
+                            if let joinedUsers = joinedUsers {
+                                ScrollView(.horizontal) {
+                                    HStack(spacing: 6) {
+                                        ForEach(joinedUsers, id: \.id) { user in
+                                            Button {
+                                                selectedUser = user
+                                                showUserPopover = true
+                                            } label: {
+                                                UserPopoverRowView(user: user, song: song)
+                                            }
+                                        }
+                                    }
+                                    .padding(10)
+                                }
+                            }
+                            if !showJoinedUsers {
+                                VisualEffectBlur(blurStyle: .dark)
+                                    .mask(LinearGradient(
+                                        gradient: Gradient(colors: [Color.clear, Color.black]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ))
+                                    .frame(width: 300)
+                                    .mask(LinearGradient(
+                                        gradient: Gradient(colors: [Color.clear, Color.black]),
+                                        startPoint: .bottom,
+                                        endPoint: .top
+                                    ))
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
+                            if !readOnly() {
+                                HStack {
+                                    Spacer()
+                                    SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                }
+                                .padding()
+                            }
+                        }
+                        .frame(height: 70)
+                        Spacer()
+                    }
+                }
+            }
             Divider()
             if restoreSong == nil {
                 VStack(spacing: 14) {
