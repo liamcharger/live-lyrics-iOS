@@ -220,7 +220,7 @@ struct SongDetailView: View {
     var playButton: some View {
         Button(action: {showFullScreenView.toggle()}, label: {
             Image(systemName: "play")
-                .padding()
+                .padding(13.5)
                 .font(.body.weight(.semibold))
                 .foregroundColor(.blue)
                 .clipShape(Circle())
@@ -248,8 +248,8 @@ struct SongDetailView: View {
         self._lastUpdatedLyrics = State(initialValue: inputSong.lyrics)
         self._title = State(initialValue: inputSong.title)
         self._currentIndex = State(initialValue: inputSong.order ?? 0)
-        self._key = State(initialValue: inputSong.key == "" ? NSLocalizedString("not_set", comment: "") : inputSong.key ?? NSLocalizedString("not_set", comment: ""))
-        self._artist = State(initialValue: inputSong.artist == "" ? NSLocalizedString("not_set", comment: "") : inputSong.artist ?? NSLocalizedString("not_set", comment: ""))
+        self._key = State(initialValue: inputSong.key ?? "")
+        self._artist = State(initialValue: inputSong.artist ?? "")
         self._duration = State(initialValue: inputSong.duration ?? "")
         self._bpm = State(initialValue: inputSong.bpm ?? 120)
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
@@ -264,16 +264,32 @@ struct SongDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack {
-                VStack(spacing: 12) {
                     HStack {
                         Button(action: {presMode.wrappedValue.dismiss()}, label: {
                             Image(systemName: "chevron.left")
-                                .padding(18)
-                                .font(.body.weight(.semibold))
-                                .background(Material.regular)
-                                .foregroundColor(.primary)
-                                .clipShape(Circle())
+                                .modifier(NavBarButtonViewModifier())
                         })
+                        VStack(alignment: .leading, spacing: 3) {
+                            HStack(alignment: .center, spacing: 6) {
+                                Text(title)
+                                    .font(.system(size: 20, design: .rounded).weight(.bold))
+                                    .lineLimit(2)
+                                if tags.count > 0 {
+                                    HStack(spacing: 5) {
+                                        ForEach(tags, id: \.self) { tag in
+                                            Circle()
+                                                .frame(width: 12, height: 12)
+                                                .foregroundColor(songViewModel.getColorForTag(tag))
+                                        }
+                                    }
+                                }
+                            }
+                            if !key.isEmpty || !artist.isEmpty {
+                                Text(key.isEmpty ? artist : "Key: \(key)")
+                                    .font(.system(size: 15))
+                                    .foregroundColor(Color.gray)
+                            }
+                        }
                         Spacer()
                         if !isInputActive {
                             if songs != nil {
@@ -338,9 +354,11 @@ struct SongDetailView: View {
                                 }
                             }
                         } else {
-                            Button(action: {isInputActive = false}, label: {
+                            Button(action: {
+                                isInputActive = false
+                            }, label: {
                                 Text("Done")
-                                    .padding()
+                                    .padding(14)
                                     .font(.body.weight(.semibold))
                                     .background(Material.regular)
                                     .foregroundColor(.primary)
@@ -348,26 +366,8 @@ struct SongDetailView: View {
                             })
                         }
                     }
-                    HStack(alignment: .center, spacing: 10) {
-                        Text(title)
-                            .font(.system(size: 24, design: .rounded).weight(.bold))
-                            .lineLimit(1)
-                        if tags.count > 0 {
-                            HStack(spacing: 5) {
-                                ForEach(tags, id: \.self) { tag in
-                                    Circle()
-                                        .frame(width: 12, height: 12)
-                                        .foregroundColor(songViewModel.getColorForTag(tag))
-                                }
-                            }
-                        }
-                        Spacer()
-                        Text("Key: \(key == "" ? NSLocalizedString("not_set", comment: "") : key)").foregroundColor(Color.gray)
-                    }
-                    .padding(.bottom)
-                }
                 .padding(.top, 8)
-                .padding(.horizontal)
+                .padding([.horizontal, .bottom])
             }
             Divider()
             ZStack {
@@ -389,9 +389,10 @@ struct SongDetailView: View {
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
-                            .frame(height: 80)
+                            .frame(height: 95)
                             .frame(maxHeight: .infinity, alignment: .top)
                             .opacity(showBackgroundBlur ? 1 : 0)
+                            .allowsHitTesting(false)
                     }
                     VStack {
                         ZStack {
@@ -424,6 +425,7 @@ struct SongDetailView: View {
                                         endPoint: .top
                                     ))
                                     .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .allowsHitTesting(false)
                             }
                             if !readOnly() {
                                 HStack {

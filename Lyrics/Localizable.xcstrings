@@ -999,17 +999,6 @@
         }
       }
     },
-    "Enter a name for your song." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa un nombre para tu canción."
-          }
-        }
-      }
-    },
     "Enter some details for your song." : {
       "localizations" : {
         "en" : {
@@ -1378,16 +1367,6 @@
         }
       }
     },
-    "Key: %@" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clave: %@"
-          }
-        }
-      }
-    },
     "Leave" : {
       "localizations" : {
         "es" : {
@@ -1454,24 +1433,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Espacio entre líneas"
-          }
-        }
-      }
-    },
-    "live_lyrics" : {
-      "comment" : "Live Lyrics.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live Lyrics."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live Lyrics."
           }
         }
       }
@@ -2635,24 +2596,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bienvenido a Live Lyrics."
-          }
-        }
-      }
-    },
-    "welcome_to" : {
-      "comment" : "Welcome to",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome to"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenido a"
           }
         }
       }
