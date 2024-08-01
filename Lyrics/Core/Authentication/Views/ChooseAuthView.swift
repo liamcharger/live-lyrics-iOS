@@ -16,9 +16,11 @@ struct ChooseAuthView: View {
     @State var scaleEffectDecor1: CGFloat = 7
     @State var scaleEffectDecor2: CGFloat = 4
     @State var scaleEffectActions: CGFloat = 3.5
+    @State var scaleEffectLogo: CGFloat = 4.5
     @State var blurDecor1: CGFloat = 70
     @State var blurDecor2: CGFloat = 70
     @State var blurActions: CGFloat = 70
+    @State var blurLogo: CGFloat = 70
     
     func dismissToAuth(login: Bool) {
         withAnimation(.bouncy(duration: 1.1)) {
@@ -27,17 +29,23 @@ struct ChooseAuthView: View {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             withAnimation(.bouncy(duration: 1.1)) {
+                scaleEffectLogo = 3.5
+                blurLogo = 70
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            withAnimation(.bouncy(duration: 1.1)) {
                 scaleEffectDecor2 = 4
                 blurDecor2 = 70
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
             withAnimation(.bouncy(duration: 1.1)) {
                 scaleEffectActions = 3.5
                 blurActions = 70
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.35) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.55) {
             withAnimation {
                 areContentsHidden = true
                 if login {
@@ -62,17 +70,23 @@ struct ChooseAuthView: View {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             withAnimation(.bouncy(duration: 1.1)) {
+                scaleEffectLogo = 1
+                blurLogo = 0
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            withAnimation(.bouncy(duration: 1.1)) {
                 scaleEffectDecor1 = 1
                 blurDecor1 = 0
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
             withAnimation(.bouncy(duration: 1.1)) {
                 scaleEffectDecor2 = 1
                 blurDecor2 = 0
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
             withAnimation(.bouncy(duration: 1.1)) {
                 scaleEffectActions = 1
                 blurActions = 0
@@ -98,66 +112,22 @@ struct ChooseAuthView: View {
                     // Offset to center blur to compensate for bottom content
                     .offset(y: -30)
                     Group {
-                        VStack {
-                            HStack(spacing: 7) {
-                                FAText(iconName: "folder-plus", size: 18)
-                                Text("New Folder")
-                            }
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .customShadow(color: .white.opacity(0.7), radius: 20, x: -10, y: 8)
-                            .offset(x: geo.size.width / 2.6)
-                        }
-                        .offset(y: -30)
-                        .scaleEffect(scaleEffectDecor2)
-                        .blur(radius: blurDecor2)
-                        VStack {
-                            HStack {
-                                Image(systemName: "play")
-                                    .padding()
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.blue)
-                                    .clipShape(Circle())
-                                    .overlay {
-                                        Circle()
-                                            .stroke(.blue, lineWidth: 2.5)
-                                    }
-                                FAText(iconName: "book", size: 18)
-                                    .frame(width: 23, height: 23)
-                                    .padding(16)
-                                    .font(.body.weight(.semibold))
-                                    .background(Color(.darkGray))
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                                Image(systemName: "textformat.size")
-                                    .frame(width: 23, height: 23)
-                                    .padding(16)
-                                    .font(.body.weight(.semibold))
-                                    .background(Color(.darkGray))
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                                FAText(iconName: "ellipsis", size: 18)
-                                    .frame(width: 23, height: 23)
-                                    .padding(16)
-                                    .font(.body.weight(.semibold))
-                                    .background(Color(.darkGray))
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                            }
-                            .padding(12)
-                            .background(Material.thin)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Material.ultraThin, lineWidth: 1)
-                            }
-                        }
-                        .scaleEffect(1.18)
-                        .offset(x: -(geo.size.width / 4.5), y: 40)
-                        .scaleEffect(scaleEffectDecor1)
-                        .blur(radius: blurDecor2)
+                        newFolder
+                            .offset(x: geo.size.width / 2.6, y: -30)
+                            .scaleEffect(scaleEffectDecor2)
+                            .blur(radius: blurDecor2)
+                        navbar
+                            .scaleEffect(1.18)
+                            .offset(x: -(geo.size.width / 4.5), y: 40)
+                            .scaleEffect(scaleEffectDecor1)
+                            .blur(radius: blurDecor2)
+                        Image("Logo")
+                            .resizable()
+                            .frame(width: 110, height: 110)
+                            .customShadow(color: .gray.opacity(0.7), radius: 30, x: -8, y: 2)
+                            .scaleEffect(scaleEffectLogo)
+                            .blur(radius: blurLogo)
+                            .offset(y: -(geo.size.height / 4))
                     }
                     .opacity(areContentsHidden ? 0 : 1)
                     ZStack {
@@ -212,6 +182,60 @@ struct ChooseAuthView: View {
             // Opening animation
             dismissFromAuth()
         }
+    }
+    
+    var navbar: some View {
+        HStack {
+            Image(systemName: "play")
+                .padding()
+                .font(.body.weight(.semibold))
+                .foregroundColor(.blue)
+                .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(.blue, lineWidth: 2.5)
+                }
+            FAText(iconName: "book", size: 18)
+                .frame(width: 23, height: 23)
+                .padding(16)
+                .font(.body.weight(.semibold))
+                .background(Color(.darkGray))
+                .foregroundColor(.primary)
+                .clipShape(Circle())
+            Image(systemName: "textformat.size")
+                .frame(width: 23, height: 23)
+                .padding(16)
+                .font(.body.weight(.semibold))
+                .background(Color(.darkGray))
+                .foregroundColor(.primary)
+                .clipShape(Circle())
+            FAText(iconName: "ellipsis", size: 18)
+                .frame(width: 23, height: 23)
+                .padding(16)
+                .font(.body.weight(.semibold))
+                .background(Color(.darkGray))
+                .foregroundColor(.primary)
+                .clipShape(Circle())
+        }
+        .padding(12)
+        .background(Material.thin)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Material.ultraThin, lineWidth: 1)
+        }
+    }
+    
+    var newFolder: some View {
+        HStack(spacing: 7) {
+            FAText(iconName: "folder-plus", size: 18)
+            Text("New Folder")
+        }
+        .padding()
+        .foregroundColor(.white)
+        .background(Color.blue)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .customShadow(color: .white.opacity(0.7), radius: 20, x: -10, y: 8)
     }
 }
 
