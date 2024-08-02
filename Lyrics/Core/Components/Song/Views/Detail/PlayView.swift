@@ -384,7 +384,6 @@ struct PlayView: View {
                                             .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
                                             .font(.system(size: CGFloat(size), weight: weight, design: design))
                                             .id(index)
-                                            .blur(radius: getBlur(for: index))
                                             .animation(.spring(dampingFraction: 1.0))
                                     } else {
                                         Button {
