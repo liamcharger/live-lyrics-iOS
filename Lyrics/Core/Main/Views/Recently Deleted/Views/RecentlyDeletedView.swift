@@ -66,12 +66,14 @@ struct RecentlyDeletedView: View {
                         HeaderView("Recently \nDeleted", icon: "trash-can", color: .red, geo: geo, counter: "\(recentlyDeletedSongs.count) song\(recentlyDeletedSongs.count == 1 ? "" : "s")".uppercased())
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                         if !recentlyDeletedViewModel.isLoadingSongs {
-                            Text("Deleted songs are stored for thirty days before being permanently removed.")
-                                .foregroundColor(Color.gray)
-                                .deleteDisabled(true)
-                                .padding(.horizontal, 10)
-                            Divider()
-                                .padding(.horizontal, -16)
+                            if !searchableSongs.contains(where: { $0.title == "noSongs" }) {
+                                Text("Deleted songs are stored for thirty days before being permanently removed.")
+                                    .foregroundColor(Color.gray)
+                                    .deleteDisabled(true)
+                                    .padding(.horizontal, 10)
+                                Divider()
+                                    .padding(.horizontal, -16)
+                            }
                             ForEach(searchableSongs, id: \.id) { song in
                                 if song.title == "noSongs" {
                                     FullscreenMessage(imageName: "circle.slash", title: "You don't have any recently deleted songs.")
@@ -89,9 +91,10 @@ struct RecentlyDeletedView: View {
                                                 Image(systemName: "chevron.right")
                                                     .foregroundColor(.gray)
                                             }
-                                            // Update to show message three days before delection with number of days left
-                                            if true {
-                                                Text("X days")
+                                            let daysLeft = 30 - Calendar.current.dateComponents([.day], from: song.deletedTimestamp, to: Date()).day!
+                                            if daysLeft <= 7 {
+                                                Text("\(daysLeft) days")
+                                                    .font(.body.weight(.semibold))
                                                     .foregroundColor(.red)
                                             }
                                             Text("\(song.deletedTimestamp.formatted())").foregroundColor(Color.gray)

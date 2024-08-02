@@ -97,6 +97,9 @@
         }
       }
     },
+    "%lld days" : {
+
+    },
     "0.0" : {
       "localizations" : {
         "es" : {
@@ -2652,9 +2655,6 @@
           }
         }
       }
-    },
-    "X days" : {
-
     },
     "You need to add lyrics to a variation to create it." : {
       "localizations" : {

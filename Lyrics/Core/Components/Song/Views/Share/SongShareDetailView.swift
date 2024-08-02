@@ -42,12 +42,12 @@ struct SongShareDetailView: View {
                             .frame(height: 0)
                             HeaderView("Share \nInvites", icon: "users", color: .blue, geo: geo, counter: "\(mainViewModel.incomingShareRequests.count) incoming, \(mainViewModel.outgoingShareRequests.count) outgoing".uppercased())
                             VStack(spacing: 18) {
-                                if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty {
-                                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_share_invites", comment: ""))
+                                if !NetworkManager.shared.getNetworkState() {
+                                    FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""))
                                         .frame(maxWidth: .infinity)
                                         .frame(height: geo.size.height / 2.2, alignment: .bottom)
-                                } else if !NetworkManager.shared.getNetworkState() {
-                                    FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""))
+                                } else if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty{
+                                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_share_invites", comment: ""))
                                         .frame(maxWidth: .infinity)
                                         .frame(height: geo.size.height / 2.2, alignment: .bottom)
                                 } else {
