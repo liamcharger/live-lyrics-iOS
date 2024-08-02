@@ -54,26 +54,12 @@ struct SongDetailView: View {
     
     @State private var songVariations = [SongVariation]()
     
-    @State private var showEditView = false
-    @State private var showTagSheet = false
-    @State private var showMoveView = false
-    @State private var showShareSheet = false
-    @State private var showSettingsView = false
     @State private var wordCountBool = true
-    @State private var showDeleteSheet = false
     @State private var showRestoreSongDeleteSheet = false
-    @State private var showLeaveSheet = false
-    @State private var showThesaurusView = false
-    @State private var showAutoScrollView = false
-    @State private var showNotesView = false
     @State private var showFullScreenView = false
-    @State private var showSongDataView = false
     @State private var showInfo = false
     @State private var showAlert = false
     @State private var showKickedAlert = false
-    @State private var showSongRepititionAlert = false
-    @State private var showPlayViewInfo = false
-    @State private var showNotesStatusIcon = false
     @State private var showNewVariationView = false
     @State private var showVariationsManagementSheet = false
     @State private var showUserPopover = false
@@ -88,6 +74,7 @@ struct SongDetailView: View {
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @ObservedObject var notesViewModel = NotesViewModel.shared
+    @ObservedObject var songDetailViewModel = SongDetailViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
     
     @Environment(\.presentationMode) var presMode
@@ -136,50 +123,6 @@ struct SongDetailView: View {
             return .leading
         }
     }
-    func getDesign(design: Int) -> Font.Design {
-        switch design {
-        case 0:
-            return .default
-        case 1:
-            return .monospaced
-        case 2:
-            return .rounded
-        case 3:
-            return .serif
-        default:
-            return .default
-        }
-    }
-    func getWeight(weight: Int) -> Font.Weight {
-        switch weight {
-        case 0:
-            return .regular
-        case 1:
-            return .black
-        case 2:
-            return .bold
-        case 3:
-            return .heavy
-        case 4:
-            return .light
-        case 5:
-            return .medium
-        case 6:
-            return .regular
-        case 7:
-            return .semibold
-        case 8:
-            return .thin
-        default:
-            return .ultraLight
-        }
-    }
-    func uid() -> String {
-        return viewModel.currentUser?.id ?? ""
-    }
-    func readOnly() -> Bool {
-        return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
-    }
     func getShowVariationCondition() -> Bool {
         if (song.variations ?? []).isEmpty && !(song.readOnly ?? false) {
             return true
@@ -190,11 +133,11 @@ struct SongDetailView: View {
     }
     func fetchUsers() {
         if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
-            if uid() != song.uid {
+            if songDetailViewModel.uid() != song.uid {
                 joinedUsersStrings.insert(song.uid, at: 0)
             }
-            if joinedUsersStrings.contains(uid()) {
-                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
+            if joinedUsersStrings.contains(songDetailViewModel.uid()) {
+                if let index = joinedUsersStrings.firstIndex(where: { $0 == songDetailViewModel.uid() }) {
                     joinedUsersStrings.remove(at: index)
                 }
             }
@@ -256,8 +199,8 @@ struct SongDetailView: View {
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
         self._tags = State(initialValue: inputSong.tags ?? ["none"])
  
-        self._design = State(initialValue: getDesign(design: Int(inputSong.design ?? 0)))
-        self._weight = State(initialValue: getWeight(weight: Int(inputSong.weight ?? 0)))
+        self._design = State(initialValue: songDetailViewModel.getDesign(design: Int(inputSong.design ?? 0)))
+        self._weight = State(initialValue: songDetailViewModel.getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: getAlignment(alignment: Int(inputSong.alignment ?? 0)))
     }
     
@@ -299,7 +242,7 @@ struct SongDetailView: View {
                                 } else {
                                     playButton
                                 }
-                                Button(action: {showNotesView.toggle()}, label: {
+                                Button(action: { songDetailViewModel.showNotesView = true }, label: {
                                     FAText(iconName: "book", size: 18)
                                         .modifier(NavBarButtonViewModifier())
                                         .overlay {
@@ -311,10 +254,10 @@ struct SongDetailView: View {
                                             }
                                         }
                                 })
-                                .sheet(isPresented: $showNotesView) {
+                                .sheet(isPresented: $songDetailViewModel.showNotesView) {
                                     NotesView(song: song)
                                 }
-                                settings
+                                songDetailViewModel.optionsButton(song, isSongFromFolder: isSongFromFolder)
                             } else {
                                 Button(action: {
                                     if let song = restoreSong {
@@ -377,67 +320,80 @@ struct SongDetailView: View {
                                  multilineTextAlignment: .leading,
                                  font: UIFont.systemFont(ofSize: CGFloat(value), weight: weight.uiFontWeight),
                                  lineSpacing: lineSpacing,
-                                 padding: UIEdgeInsets(top: showJoinedUsers ? 12 : 75, left: 12, bottom: 12, right: 12),
+                                 padding: UIEdgeInsets(top: 75, left: 12, bottom: 12, right: 12),
                                  isInputActive: $isInputActive,
                                  showBlur: $showBackgroundBlur)
                 .focused($isInputActive)
-                if !readOnly() || showJoinedUsers {
-                    if !showJoinedUsers {
-                        VisualEffectBlur(blurStyle: .dark)
-                            .mask(LinearGradient(
-                                gradient: Gradient(colors: [Color.black, Color.clear]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                            .frame(height: 95)
-                            .frame(maxHeight: .infinity, alignment: .top)
-                            .opacity(showBackgroundBlur ? 1 : 0)
-                            .allowsHitTesting(false)
-                    }
-                    VStack {
-                        ZStack {
-                            if let joinedUsers = joinedUsers {
-                                ScrollView(.horizontal) {
-                                    HStack(spacing: 6) {
-                                        ForEach(joinedUsers, id: \.id) { user in
-                                            Button {
-                                                selectedUser = user
-                                                showUserPopover = true
-                                            } label: {
-                                                UserPopoverRowView(user: user, song: song)
-                                            }
+                VisualEffectBlur(blurStyle: .dark)
+                    .mask(LinearGradient(
+                        gradient: Gradient(colors: [Color.black, Color.clear]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ))
+                    .frame(height: 95)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .opacity(showBackgroundBlur ? 1 : 0)
+                    .allowsHitTesting(false)
+                VStack {
+                    ZStack {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                if let joinedUsers = joinedUsers, !showJoinedUsers {
+                                    ForEach(joinedUsers, id: \.id) { user in
+                                        Button {
+                                            selectedUser = user
+                                            showUserPopover = true
+                                        } label: {
+                                            UserPopoverRowView(user: user, song: song)
                                         }
                                     }
+                                } else {
+                                    ForEach(songDetailViewModel.quickActions) { action in
+                                        Button {
+                                            switch action.id {
+                                            case "add_collaborators":
+                                                songDetailViewModel.showShareSheet = true
+                                            case "print":
+                                                songDetailViewModel.printSong(song)
+                                            case "edit_notes":
+                                                songDetailViewModel.showNotesView = true
+                                            default:
+                                                return
+                                            }
+                                        } label: {
+                                            HStack(spacing: 6) {
+                                                Image(systemName: action.icon)
+                                                    .foregroundColor(.gray)
+                                                Text(action.title)
+                                                    .font(.system(size: 16).weight(.semibold))
+                                            }
+                                            .padding(13)
+                                            .font(.body.weight(.semibold))
+                                            .background(Material.regular)
+                                            .foregroundColor(.primary)
+                                            .clipShape(Capsule())
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(10)
+                            .padding(.trailing, songDetailViewModel.readOnly(song) ? 0 : 115)
+                        }
+                        if !songDetailViewModel.readOnly(song) {
+                            HStack {
+                                Spacer()
+                                SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
                                     .padding(10)
-                                }
-                            }
-                            if !showJoinedUsers {
-                                VisualEffectBlur(blurStyle: .dark)
-                                    .mask(LinearGradient(
-                                        gradient: Gradient(colors: [Color.clear, Color.black]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    ))
-                                    .frame(width: 300)
-                                    .mask(LinearGradient(
-                                        gradient: Gradient(colors: [Color.clear, Color.black]),
-                                        startPoint: .bottom,
-                                        endPoint: .top
-                                    ))
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .allowsHitTesting(false)
-                            }
-                            if !readOnly() {
-                                HStack {
-                                    Spacer()
-                                    SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
-                                }
-                                .padding()
+                                    .padding(.horizontal)
+                                    .background {
+                                        Color.black
+                                            .blur(radius: 20)
+                                    }
                             }
                         }
-                        .frame(height: 70)
-                        Spacer()
                     }
+                    .frame(height: 70)
+                    Spacer()
                 }
             }
             Divider()
@@ -496,9 +452,9 @@ struct SongDetailView: View {
                                             if (song.variations ?? []).isEmpty {
                                                 `default`
                                             } else {
-                                                if song.uid == uid() {
+                                                if song.uid == songDetailViewModel.uid() {
                                                     `default`
-                                                } else if song.uid != uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                                } else if song.uid != songDetailViewModel.uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
                                                     `default`
                                                 }
                                             }
@@ -512,8 +468,8 @@ struct SongDetailView: View {
                                                     }
                                                 }
                                             }
-                                            if !readOnly() {
-                                                if song.uid == uid() || (song.variations ?? []).isEmpty {
+                                            if !songDetailViewModel.readOnly(song) {
+                                                if song.uid == songDetailViewModel.uid() || (song.variations ?? []).isEmpty {
                                                     Divider()
                                                     if songVariations.count > 0 {
                                                         Button {
@@ -624,18 +580,18 @@ struct SongDetailView: View {
                     self.artist = song.artist ?? ""
                     self.duration = song.duration ?? ""
                     self.tags = song.tags ?? []
-                    self.design = getDesign(design: Int(song.design ?? 0))
-                    self.weight = getWeight(weight: Int(song.weight ?? 0))
+                    self.design = songDetailViewModel.getDesign(design: Int(song.design ?? 0))
+                    self.weight = songDetailViewModel.getWeight(weight: Int(song.weight ?? 0))
                     self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
                     self.value = song.size ?? 18
                     self.lineSpacing = song.lineSpacing ?? 1
                     if joinedUsers == nil {
-                        if let folder = folder, folder.id! != uid() {
+                        if let folder = folder, folder.id! != songDetailViewModel.uid() {
                             self.joinedUsersStrings = folder.joinedUsers ?? []
                         } else {
                             self.joinedUsersStrings = song.joinedUsers ?? []
                         }
-                        if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
+                        if !joinedUsersStrings.contains(where: { $0 == songDetailViewModel.uid() }) && song.uid != songDetailViewModel.uid() {
                             showAlert = true
                             activeAlert = .kickedOut
                         } else {
@@ -663,7 +619,7 @@ struct SongDetailView: View {
                 UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil, isSongFromFolder: isSongFromFolder)
             }
         }
-        .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
+        .confirmationDialog("Delete Song", isPresented: $songDetailViewModel.showDeleteSheet) {
             Button("Delete", role: .destructive) {
                 self.songViewModel.moveSongToRecentlyDeleted(song)
                 self.presMode.wrappedValue.dismiss()
@@ -680,7 +636,7 @@ struct SongDetailView: View {
         } message: {
             Text("Are you sure you want to delete \(selectedVariation == nil ? "\"" + title : "the variation \"" + (selectedVariation?.title ?? ""))\"?")
         }
-        .confirmationDialog("Leave Song", isPresented: $showLeaveSheet) {
+        .confirmationDialog("Leave Song", isPresented: $songDetailViewModel.showLeaveSheet) {
             Button("Leave", role: .destructive) {
                 // Check if song is part of a shared folder
                 if let folder = mainViewModel.selectedFolder, mainViewModel.folderSongs.contains(where: { $0.id ?? "" == song.id ?? "" }) {
@@ -697,14 +653,14 @@ struct SongDetailView: View {
                 Text("Are you sure you want to leave \"\(title)\"? You will lose access immediately.")
             }
         }
-        .sheet(isPresented: $showShareSheet) {
-            ShareView(isDisplayed: $showShareSheet, song: song)
+        .sheet(isPresented: $songDetailViewModel.showShareSheet) {
+            ShareView(isDisplayed: $songDetailViewModel.showShareSheet, song: song)
         }
-        .sheet(isPresented: $showEditView) {
-            SongEditView(song: song, isDisplayed: $showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
+        .sheet(isPresented: $songDetailViewModel.showEditView) {
+            SongEditView(song: song, isDisplayed: $songDetailViewModel.showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
         }
-        .sheet(isPresented: $showMoveView) {
-            SongMoveView(song: song, showProfileView: $showMoveView, songTitle: song.title)
+        .sheet(isPresented: $songDetailViewModel.showMoveView) {
+            SongMoveView(song: song, showProfileView: $songDetailViewModel.showMoveView, songTitle: song.title)
         }
         .sheet(isPresented: $showNewVariationView, onDismiss: {
             if let index = songVariations.firstIndex(where: { $0.id == createdVariationId }) {
@@ -714,9 +670,9 @@ struct SongDetailView: View {
         }) {
             NewSongVariationView(isDisplayed: $showNewVariationView, createdId: $createdVariationId, song: song)
         }
-        .sheet(isPresented: $showTagSheet) {
+        .sheet(isPresented: $songDetailViewModel.showTagSheet) {
             let tags: [TagSelectionEnum] = tags.compactMap { TagSelectionEnum(rawValue: $0) }
-            SongTagView(isPresented: $showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
+            SongTagView(isPresented: $songDetailViewModel.showTagSheet, tagsToUpdate: $tags, tags: tags, song: song)
         }
         .sheet(isPresented: $showVariationsManagementSheet) {
             SongVariationManageView(song: song, isDisplayed: $showVariationsManagementSheet, lyrics: $lyrics, selectedVariation: $selectedVariation, songVariations: $songVariations)
@@ -738,135 +694,6 @@ struct SongDetailView: View {
                     showJoinedUsers = true
                 }
             }
-        }
-    }
-    
-    var settings: some View {
-        Menu {
-            if !readOnly() {
-                Button {
-                    showEditView.toggle()
-                } label: {
-                    Label("Edit", systemImage: "pencil")
-                }
-            }
-            if !songViewModel.isShared(song: song) {
-                Button {
-                    showShareSheet.toggle()
-                } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
-                }
-            }
-            Button {
-                let printController = UIPrintInteractionController.shared
-                
-                let printInfo = UIPrintInfo(dictionary: nil)
-                printInfo.outputType = UIPrintInfo.OutputType.general
-                printInfo.jobName = song.title
-                printController.printInfo = printInfo
-                
-                let artistString = song.artist?.isEmpty == false ? "<div style='color: gray;'>\(song.artist!)</div>" : ""
-                
-                let htmlString = """
-<html>
-<head>
-<style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        margin: 0;
-        padding: 34px;
-        box-sizing: border-box;
-    }
-    .content {
-        column-count: 2;
-        column-gap: 20px;
-        column-fill: auto; /* Ensure the columns fill equally */
-    }
-    h2 {
-        margin-bottom: 5px;
-    }
-    .gray-text {
-        color: gray;
-    }
-</style>
-</head>
-<body>
-<div>
-    <h2>\(song.title)</h2>
-    \(artistString)
-</div>
-<br/>
-<div class="content">
-    \(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
-</div>
-</body>
-</html>
-"""
-                
-                let formatter = UIMarkupTextPrintFormatter(markupText: htmlString)
-                formatter.perPageContentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                printController.printFormatter = formatter
-                
-                printController.present(animated: true, completionHandler: nil)
-            } label: {
-                Label("Print", systemImage: "printer")
-            }
-            let move = Button {
-                showMoveView.toggle()
-            } label: {
-                Label("Move", systemImage: "folder")
-            }
-            if let selectedFolder = mainViewModel.selectedFolder, isSongFromFolder {
-                if selectedFolder.uid ?? "" == uid() {
-                    move
-                }
-            } else {
-                move
-            }
-            Menu {
-                Button {
-                    self.pasteboard.string = title
-                } label: {
-                    Label("Copy Title", systemImage: "textformat")
-                }
-                Button {
-                    self.pasteboard.string = lyrics
-                } label: {
-                    Label("Copy Lyrics", systemImage: "doc.plaintext")
-                }
-                #if DEBUG
-                Button {
-                    self.pasteboard.string = song.id ?? ""
-                } label: {
-                    Label("Copy Song ID", systemImage: "doc.on.doc")
-                }
-                #endif
-            } label: {
-                Label("Copy", systemImage: "doc.on.doc")
-            }
-            if !(song.readOnly ?? false) {
-                Button {
-                    showTagSheet = true
-                } label: {
-                    Label("Tags", systemImage: "tag")
-                }
-            }
-            Button(role: .destructive, action: {
-                if !songViewModel.isShared(song: song) {
-                    showDeleteSheet = true
-                } else {
-                    showLeaveSheet = true
-                }
-            }, label: {
-                if songViewModel.isShared(song: song) {
-                    Label("Leave", systemImage: "arrow.backward.square")
-                } else {
-                    Label("Delete", systemImage: "trash")
-                }
-            })
-        } label: {
-            FAText(iconName: "ellipsis", size: 18)
-                .modifier(NavBarButtonViewModifier())
         }
     }
 }

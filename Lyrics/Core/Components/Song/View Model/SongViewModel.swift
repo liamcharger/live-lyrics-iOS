@@ -1,5 +1,5 @@
 //
-//  SongDetailViewModel.swift
+//  SongViewModel.swift
 //  Lyrics
 //
 //  Created by Liam Willey on 5/4/23.
