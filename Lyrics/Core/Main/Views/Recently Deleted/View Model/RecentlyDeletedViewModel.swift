@@ -49,4 +49,20 @@ class RecentlyDeletedViewModel: ObservableObject {
     func restoreSong(song: RecentlyDeletedSong) {
         service.restoreSong(song: song)
     }
+    
+    func deleteAllSongs() {
+        let group = DispatchGroup()
+        
+        self.isLoadingSongs = true
+        
+        for song in songs {
+            group.enter()
+            self.deleteSong(song: song)
+            group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            self.isLoadingSongs = false
+        }
+    }
 }

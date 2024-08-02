@@ -14,8 +14,9 @@ enum ShareRequestType {
 
 struct SongShareDetailView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
+    @State var collapsedTitle = false
     @State var isLoading = false
     @State var loadingId = ""
     
@@ -23,39 +24,68 @@ struct SongShareDetailView: View {
     let songService = SongService()
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true, collapsed: .constant(false), collapsedTitle: .constant(true))
-                .padding()
-            Divider()
-            if NetworkManager.shared.getNetworkState() {
+        GeometryReader { geo in
+            VStack(alignment: .leading, spacing: 0) {
+                CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true, collapsed: .constant(false), collapsedTitle: $collapsedTitle)
+                    .padding()
+                Divider()
                 if mainViewModel.isLoadingInvites {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty {
-                        FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_share_invites", comment: ""), spaceNavbar: true)
-                    } else {
-                        ScrollView {
-                            VStack(spacing: 16) {
-                                VStack {
-                                    ListHeaderView(title: NSLocalizedString("outgoing", comment: ""))
-                                    ForEach(mainViewModel.outgoingShareRequests) { request in
-                                        rowView(request: request, type: .outgoing)
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            GeometryReader { geo in
+                                Color.clear
+                                    .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
+                            }
+                            .frame(height: 0)
+                            HeaderView("Share \nInvites", icon: "users", color: .blue, geo: geo, counter: "\(mainViewModel.incomingShareRequests.count) incoming, \(mainViewModel.outgoingShareRequests.count) outgoing".uppercased())
+                            VStack(spacing: 18) {
+                                if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty {
+                                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_share_invites", comment: ""))
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                                } else if !NetworkManager.shared.getNetworkState() {
+                                    FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""))
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                                } else {
+                                    VStack {
+                                        ListHeaderView(title: NSLocalizedString("outgoing", comment: ""))
+                                        ForEach(mainViewModel.outgoingShareRequests) { request in
+                                            rowView(request: request, type: .outgoing)
+                                        }
                                     }
-                                }
-                                VStack {
-                                    ListHeaderView(title: NSLocalizedString("incoming", comment: ""))
-                                    ForEach(mainViewModel.incomingShareRequests) { request in
-                                        rowView(request: request, type: .incoming)
+                                    VStack {
+                                        ListHeaderView(title: NSLocalizedString("incoming", comment: ""))
+                                        ForEach(mainViewModel.incomingShareRequests) { request in
+                                            rowView(request: request, type: .incoming)
+                                        }
                                     }
                                 }
                             }
-                            .padding()
+                        }
+                        .padding()
+                        .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                            let animation = Animation.easeInOut(duration: 0.22)
+                            
+                            if value.first ?? 0 >= -40 {
+                                DispatchQueue.main.async {
+                                    withAnimation(animation) {
+                                        collapsedTitle = false
+                                    }
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    withAnimation(animation) {
+                                        collapsedTitle = true
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            } else {
-                FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""), spaceNavbar: true)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -173,5 +203,7 @@ struct SongShareDetailView: View {
 
 #Preview {
     SongShareDetailView()
-        .environmentObject(AuthViewModel())
+        .onAppear {
+            MainViewModel.shared.isLoadingInvites = false
+        }
 }
