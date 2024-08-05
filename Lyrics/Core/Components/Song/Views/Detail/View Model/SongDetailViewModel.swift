@@ -165,21 +165,6 @@ class SongDetailViewModel: ObservableObject {
         printController.present(animated: true, completionHandler: nil)
     }
     
-    func getDesign(design: Int) -> Font.Design {
-        switch design {
-        case 0:
-            return .default
-        case 1:
-            return .monospaced
-        case 2:
-            return .rounded
-        case 3:
-            return .serif
-        default:
-            return .default
-        }
-    }
-    
     func getWeight(weight: Int) -> Font.Weight {
         switch weight {
         case 0:

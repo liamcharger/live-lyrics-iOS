@@ -84,10 +84,6 @@ class SongViewModel: ObservableObject {
         service.updateTextProperties(song: song, weight: weight)
     }
     
-    func updateTextProperties(_ song: Song, design: Double) {
-        service.updateTextProperties(song: song, design: design)
-    }
-    
     func updateTextProperties(_ song: Song, alignment: Double) {
         service.updateTextProperties(song: song, alignment: alignment)
     }

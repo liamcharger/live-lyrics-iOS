@@ -64,7 +64,6 @@ struct PlayView: View {
     
     let size: Int
     let weight: Font.Weight
-    let design: Font.Design
     let lineSpacing: Double
     let alignment: TextAlignment
     
@@ -306,14 +305,13 @@ struct PlayView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     
-    init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
+    init(song: Song, size: Int, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
         self.songs = songs
         self._key = State(initialValue: key)
         self._currentIndex = State(initialValue: song.order ?? 0)
         self._title = State(initialValue: title)
         self.alignment = alignment
         self.lineSpacing = lineSpacing
-        self.design = design
         self.weight = weight
         self.size = size
         self._bpb = bpb
@@ -382,7 +380,7 @@ struct PlayView: View {
                                     if !performanceMode {
                                         Text(line)
                                             .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                            .font(.system(size: CGFloat(size), weight: weight, design: design))
+                                            .font(.system(size: CGFloat(size), weight: weight))
                                             .id(index)
                                             .animation(.spring(dampingFraction: 1.0))
                                     } else {

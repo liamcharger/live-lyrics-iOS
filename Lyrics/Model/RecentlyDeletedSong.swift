@@ -23,7 +23,6 @@ struct RecentlyDeletedSong: Identifiable, Codable, Equatable {
     var notes: String?
     var weight: Double?
     var alignment: Double?
-    var design: Double?
     var lineSpacing: Double?
     var artist: String?
     var bpb: Int?

@@ -24,7 +24,6 @@ struct SongDetailView: View {
     @State private var currentIndex: Int = 0
     @State private var value: Int
     @State private var lineSpacing: Double
-    @State private var design: Font.Design
     @State private var weight: Font.Weight
     @State private var alignment: TextAlignment
     
@@ -158,8 +157,11 @@ struct SongDetailView: View {
         self._isChecked = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
         self._value = State(initialValue: inputSong.size ?? 18)
-        self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
-        self._design = State(initialValue: .default)
+        
+        // Remove line spacing until supported by TextEditor
+//        self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
+        self._lineSpacing = State(initialValue: 1.0)
+        
         self._weight = State(initialValue: .regular)
         self._alignment = State(initialValue: .leading)
         self._folder = State(initialValue: folder)
@@ -176,7 +178,6 @@ struct SongDetailView: View {
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
         self._tags = State(initialValue: inputSong.tags ?? ["none"])
         
-        self._design = State(initialValue: songDetailViewModel.getDesign(design: Int(inputSong.design ?? 0)))
         self._weight = State(initialValue: songDetailViewModel.getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: songDetailViewModel.getAlignment(alignment: Int(inputSong.alignment ?? 0)))
     }
@@ -294,7 +295,7 @@ struct SongDetailView: View {
                 let showJoinedUsers = joinedUsers?.isEmpty ?? true
                 
                 CustomTextEditor(text: $lyrics,
-                                 multilineTextAlignment: .leading,
+                                 multilineTextAlignment: alignment,
                                  font: UIFont.systemFont(ofSize: CGFloat(value), weight: weight.uiFontWeight),
                                  lineSpacing: lineSpacing,
                                  padding: UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12),
@@ -333,7 +334,7 @@ struct SongDetailView: View {
                     if !songDetailViewModel.readOnly(song) {
                         HStack {
                             Spacer()
-                            SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                            SongDetailMenuView(value: $value, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
                                 .padding(12)
                                 .background {
                                     VisualEffectBlur(blurStyle: .dark)
@@ -527,7 +528,6 @@ struct SongDetailView: View {
                     self.artist = song.artist ?? ""
                     self.duration = song.duration ?? ""
                     self.tags = song.tags ?? []
-                    self.design = songDetailViewModel.getDesign(design: Int(song.design ?? 0))
                     self.weight = songDetailViewModel.getWeight(weight: Int(song.weight ?? 0))
                     self.alignment = songDetailViewModel.getAlignment(alignment: Int(song.alignment ?? 0))
                     self.value = song.size ?? 18
@@ -625,7 +625,7 @@ struct SongDetailView: View {
             SongVariationManageView(song: song, isDisplayed: $showVariationsManagementSheet, lyrics: $lyrics, selectedVariation: $selectedVariation, songVariations: $songVariations)
         }
         .fullScreenCover(isPresented: $showFullScreenView) {
-            PlayView(song: song, size: value, design: design, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
+            PlayView(song: song, size: value, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: {
                 if duration.isEmpty {
                     return .constant("")
                 } else {

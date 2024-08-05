@@ -569,15 +569,6 @@ class SongService {
 			}
 	}
 	
-	func updateTextProperties(song: Song, design: Double) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["design": design]) { error in
-				if let error = error {
-					print(error.localizedDescription)
-				}
-			}
-	}
-	
 	func updateTextProperties(song: Song, weight: Double) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 			.updateData(["weight": weight]) { error in
@@ -675,7 +666,6 @@ class SongService {
 			"notes": song.notes,
 			"weight": song.weight,
 			"alignment": song.alignment,
-			"design": song.design,
 			"lineSpacing": song.lineSpacing,
 			"artist": song.artist,
 			"bpm": song.bpm,
@@ -802,7 +792,6 @@ class SongService {
 			"notes": song.notes,
 			"weight": song.weight,
 			"alignment": song.alignment,
-			"design": song.design,
 			"lineSpacing": song.lineSpacing,
 			"artist": song.artist,
 			"bpm": song.bpm,
@@ -855,7 +844,6 @@ class SongService {
 			"notes": song.notes,
 			"weight": song.weight,
 			"alignment": song.alignment,
-			"design": song.design,
 			"lineSpacing": song.lineSpacing,
 			"artist": song.artist,
 			"bpm": song.bpm,
@@ -1185,7 +1173,6 @@ class SongService {
 						"notes": song.notes,
 						"weight": song.weight,
 						"alignment": song.alignment,
-						"design": song.design,
 						"lineSpacing": song.lineSpacing,
 						"artist": song.artist,
 						"bpm": song.bpm,
