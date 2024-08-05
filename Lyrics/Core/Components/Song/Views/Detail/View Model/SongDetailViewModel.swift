@@ -24,13 +24,6 @@ class SongDetailViewModel: ObservableObject {
     
     static let shared = SongDetailViewModel()
     
-    let quickActions: [SongQuickAction] = [
-        SongQuickAction(id: "add_collaborators", title: "Add Collaborators", icon: "person.3"),
-        SongQuickAction(id: "print", title: "Print", icon: "printer"),
-        SongQuickAction(id: "edit_notes", title: "Edit Notes", icon: "doc.text"),
-        SongQuickAction(id: "copy_lyrics", title: "Copy Lyrics", icon: "doc.on.doc"),
-    ]
-    
     func uid() -> String {
         return AuthViewModel.shared.currentUser?.id ?? ""
     }

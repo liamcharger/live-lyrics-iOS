@@ -87,7 +87,6 @@
 		E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */; };
 		E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */; };
 		E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */; };
-		E0A392EE2C5D3ACE00AB07D7 /* SongQuickAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A392ED2C5D3ACE00AB07D7 /* SongQuickAction.swift */; };
 		E0A392F02C5D3B4500AB07D7 /* SongDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A392EF2C5D3B4500AB07D7 /* SongDetailViewModel.swift */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
 		E0A8F5062BD06887009275A2 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A8F5052BD06887009275A2 /* Version.swift */; };
@@ -234,7 +233,6 @@
 		E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Regular-400.otf"; sourceTree = "<group>"; };
 		E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Thin-100.otf"; sourceTree = "<group>"; };
 		E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Solid-900.otf"; sourceTree = "<group>"; };
-		E0A392ED2C5D3ACE00AB07D7 /* SongQuickAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongQuickAction.swift; sourceTree = "<group>"; };
 		E0A392EF2C5D3B4500AB07D7 /* SongDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailViewModel.swift; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		E0A8F5052BD06887009275A2 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
@@ -442,7 +440,6 @@
 		E04247802A02EFAE00CA48B3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E0A392ED2C5D3ACE00AB07D7 /* SongQuickAction.swift */,
 				E05B9A7A2BCED9CB000292FA /* SharedFolder.swift */,
 				E05B9A792BCED9CB000292FA /* SharedSong.swift */,
 				E04247B22A02F6DF00CA48B3 /* User.swift */,
@@ -1186,7 +1183,6 @@
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
 				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,
 				E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */,
-				E0A392EE2C5D3ACE00AB07D7 /* SongQuickAction.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,

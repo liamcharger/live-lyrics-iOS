@@ -198,7 +198,7 @@ struct SongDetailView: View {
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
         self._tags = State(initialValue: inputSong.tags ?? ["none"])
- 
+        
         self._design = State(initialValue: songDetailViewModel.getDesign(design: Int(inputSong.design ?? 0)))
         self._weight = State(initialValue: songDetailViewModel.getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: getAlignment(alignment: Int(inputSong.alignment ?? 0)))
@@ -207,108 +207,108 @@ struct SongDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack {
-                    HStack {
-                        Button(action: {presMode.wrappedValue.dismiss()}, label: {
-                            Image(systemName: "chevron.left")
-                                .modifier(NavBarButtonViewModifier())
-                        })
-                        VStack(alignment: .leading, spacing: 3) {
-                            HStack(alignment: .center, spacing: 6) {
-                                Text(title)
-                                    .font(.system(size: 20, design: .rounded).weight(.bold))
-                                    .lineLimit(2)
-                                if tags.count > 0 {
-                                    HStack(spacing: 5) {
-                                        ForEach(tags, id: \.self) { tag in
-                                            Circle()
-                                                .frame(width: 12, height: 12)
-                                                .foregroundColor(songViewModel.getColorForTag(tag))
-                                        }
+                HStack {
+                    Button(action: {presMode.wrappedValue.dismiss()}, label: {
+                        Image(systemName: "chevron.left")
+                            .modifier(NavBarButtonViewModifier())
+                    })
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(alignment: .center, spacing: 6) {
+                            Text(title)
+                                .font(.system(size: 20, design: .rounded).weight(.bold))
+                                .lineLimit(2)
+                            if tags.count > 0 {
+                                HStack(spacing: 5) {
+                                    ForEach(tags, id: \.self) { tag in
+                                        Circle()
+                                            .frame(width: 12, height: 12)
+                                            .foregroundColor(songViewModel.getColorForTag(tag))
                                     }
                                 }
-                            }
-                            if !key.isEmpty || !artist.isEmpty {
-                                Text(key.isEmpty ? artist : "Key: \(key)")
-                                    .font(.system(size: 15))
-                                    .foregroundColor(Color.gray)
                             }
                         }
-                        Spacer()
-                        if !isInputActive {
-                            if songs != nil {
-                                if #available(iOS 17, *) {
-                                    playButton
-                                        .showPlayViewTip()
-                                } else {
-                                    playButton
-                                }
-                                Button(action: { songDetailViewModel.showNotesView = true }, label: {
-                                    FAText(iconName: "book", size: 18)
-                                        .modifier(NavBarButtonViewModifier())
-                                        .overlay {
-                                            if notesViewModel.notes != "" {
-                                                Circle()
-                                                    .frame(width: 11, height: 11)
-                                                    .foregroundColor(.blue)
-                                                    .offset(x: 17, y: -18)
-                                            }
-                                        }
-                                })
-                                .sheet(isPresented: $songDetailViewModel.showNotesView) {
-                                    NotesView(song: song)
-                                }
-                                songDetailViewModel.optionsButton(song, isSongFromFolder: isSongFromFolder)
+                        if !key.isEmpty || !artist.isEmpty {
+                            Text(key.isEmpty ? artist : "Key: \(key)")
+                                .font(.system(size: 15))
+                                .foregroundColor(Color.gray)
+                        }
+                    }
+                    Spacer()
+                    if !isInputActive {
+                        if songs != nil {
+                            if #available(iOS 17, *) {
+                                playButton
+                                    .showPlayViewTip()
                             } else {
-                                Button(action: {
-                                    if let song = restoreSong {
-                                        recentlyDeletedViewModel.restoreSong(song: song)
-                                    } else {
-                                        errorMessage = "There was an error restoring the song."
-                                        showAlert = true
-                                        activeAlert = .error
-                                    }
-                                    presMode.wrappedValue.dismiss()
-                                }, label: {
-                                    FAText(iconName: "rotate-left", size: 18)
-                                        .padding()
-                                        .font(.body.weight(.semibold))
-                                        .background(Material.regular)
-                                        .foregroundColor(.primary)
-                                        .clipShape(Circle())
-                                })
-                                Button(action: {
-                                    self.showRestoreSongDeleteSheet = true
-                                }, label: {
-                                    FAText(iconName: "trash-can", size: 18)
-                                        .padding()
-                                        .font(.body.weight(.semibold))
-                                        .background(Material.regular)
-                                        .foregroundColor(.primary)
-                                        .clipShape(Circle())
-                                })
-                                .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
-                                    Button("Delete", role: .destructive) {
-                                        mainViewModel.deleteSong(song: restoreSong!)
-                                        presMode.wrappedValue.dismiss()
-                                    }
-                                    Button("Cancel", role: .cancel) { }
-                                } message: {
-                                    Text("Are you sure you want to permanently delete \"\(restoreSong!.title)\"?")
-                                }
+                                playButton
                             }
+                            Button(action: { songDetailViewModel.showNotesView = true }, label: {
+                                FAText(iconName: "book", size: 18)
+                                    .modifier(NavBarButtonViewModifier())
+                                    .overlay {
+                                        if notesViewModel.notes != "" {
+                                            Circle()
+                                                .frame(width: 11, height: 11)
+                                                .foregroundColor(.blue)
+                                                .offset(x: 17, y: -18)
+                                        }
+                                    }
+                            })
+                            .sheet(isPresented: $songDetailViewModel.showNotesView) {
+                                NotesView(song: song)
+                            }
+                            songDetailViewModel.optionsButton(song, isSongFromFolder: isSongFromFolder)
                         } else {
                             Button(action: {
-                                isInputActive = false
+                                if let song = restoreSong {
+                                    recentlyDeletedViewModel.restoreSong(song: song)
+                                } else {
+                                    errorMessage = "There was an error restoring the song."
+                                    showAlert = true
+                                    activeAlert = .error
+                                }
+                                presMode.wrappedValue.dismiss()
                             }, label: {
-                                Text("Done")
-                                    .padding(14)
+                                FAText(iconName: "rotate-left", size: 18)
+                                    .padding()
                                     .font(.body.weight(.semibold))
                                     .background(Material.regular)
                                     .foregroundColor(.primary)
-                                    .clipShape(Capsule())
+                                    .clipShape(Circle())
                             })
+                            Button(action: {
+                                self.showRestoreSongDeleteSheet = true
+                            }, label: {
+                                FAText(iconName: "trash-can", size: 18)
+                                    .padding()
+                                    .font(.body.weight(.semibold))
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Circle())
+                            })
+                            .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
+                                Button("Delete", role: .destructive) {
+                                    mainViewModel.deleteSong(song: restoreSong!)
+                                    presMode.wrappedValue.dismiss()
+                                }
+                                Button("Cancel", role: .cancel) { }
+                            } message: {
+                                Text("Are you sure you want to permanently delete \"\(restoreSong!.title)\"?")
+                            }
                         }
+                    } else {
+                        Button(action: {
+                            isInputActive = false
+                        }, label: {
+                            Text("Done")
+                                .padding(14)
+                                .font(.body.weight(.semibold))
+                                .background(Material.regular)
+                                .foregroundColor(.primary)
+                                .clipShape(Capsule())
+                        })
                     }
+                }
                 .padding(.top, 8)
                 .padding([.horizontal, .bottom])
             }
@@ -320,11 +320,11 @@ struct SongDetailView: View {
                                  multilineTextAlignment: .leading,
                                  font: UIFont.systemFont(ofSize: CGFloat(value), weight: weight.uiFontWeight),
                                  lineSpacing: lineSpacing,
-                                 padding: UIEdgeInsets(top: 75, left: 12, bottom: 12, right: 12),
+                                 padding: UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12),
                                  isInputActive: $isInputActive,
                                  showBlur: $showBackgroundBlur)
                 .focused($isInputActive)
-                VisualEffectBlur(blurStyle: .dark)
+                Color.black
                     .mask(LinearGradient(
                         gradient: Gradient(colors: [Color.black, Color.clear]),
                         startPoint: .top,
@@ -332,68 +332,38 @@ struct SongDetailView: View {
                     ))
                     .frame(height: 95)
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .opacity(showBackgroundBlur ? 1 : 0)
+                    .opacity(showBackgroundBlur && !showJoinedUsers ? 1 : 0)
                     .allowsHitTesting(false)
                 VStack {
-                    ZStack {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 6) {
-                                if let joinedUsers = joinedUsers, !showJoinedUsers {
-                                    ForEach(joinedUsers, id: \.id) { user in
-                                        Button {
-                                            selectedUser = user
-                                            showUserPopover = true
-                                        } label: {
-                                            UserPopoverRowView(user: user, song: song)
-                                        }
-                                    }
-                                } else {
-                                    ForEach(songDetailViewModel.quickActions) { action in
-                                        Button {
-                                            switch action.id {
-                                            case "add_collaborators":
-                                                songDetailViewModel.showShareSheet = true
-                                            case "print":
-                                                songDetailViewModel.printSong(song)
-                                            case "edit_notes":
-                                                songDetailViewModel.showNotesView = true
-                                            default:
-                                                return
-                                            }
-                                        } label: {
-                                            HStack(spacing: 6) {
-                                                Image(systemName: action.icon)
-                                                    .foregroundColor(.gray)
-                                                Text(action.title)
-                                                    .font(.system(size: 16).weight(.semibold))
-                                            }
-                                            .padding(13)
-                                            .font(.body.weight(.semibold))
-                                            .background(Material.regular)
-                                            .foregroundColor(.primary)
-                                            .clipShape(Capsule())
-                                        }
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            if let joinedUsers = joinedUsers, !showJoinedUsers {
+                                ForEach(joinedUsers, id: \.id) { user in
+                                    Button {
+                                        selectedUser = user
+                                        showUserPopover = true
+                                    } label: {
+                                        UserPopoverRowView(user: user, song: song)
                                     }
                                 }
                             }
-                            .padding(10)
-                            .padding(.trailing, songDetailViewModel.readOnly(song) ? 0 : 115)
                         }
-                        if !songDetailViewModel.readOnly(song) {
-                            HStack {
-                                Spacer()
-                                SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
-                                    .padding(10)
-                                    .padding(.horizontal)
-                                    .background {
-                                        Color.black
-                                            .blur(radius: 20)
-                                    }
-                            }
-                        }
+                        .padding(10)
+                        .padding(.trailing, songDetailViewModel.readOnly(song) ? 0 : 115)
                     }
                     .frame(height: 70)
                     Spacer()
+                    if !songDetailViewModel.readOnly(song) {
+                        HStack {
+                            Spacer()
+                            SongDetailMenuView(value: $value, design: $design, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                .padding(12)
+                                .background {
+                                    VisualEffectBlur(blurStyle: .dark)
+                                        .blur(radius: 20)
+                                }
+                        }
+                    }
                 }
             }
             Divider()
