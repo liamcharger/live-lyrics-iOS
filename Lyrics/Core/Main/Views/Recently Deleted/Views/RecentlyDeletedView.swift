@@ -123,21 +123,6 @@ struct RecentlyDeletedView: View {
                             LoadingView()
                         }
                     }
-                    .padding()
-                    .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
-                        if let selectedSong = selectedSong {
-                            Button("Delete", role: .destructive) {
-                                print("Deleting song: \(selectedSong.title)")
-                                recentlyDeletedViewModel.deleteSong(song: selectedSong)
-                                recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
-                            }
-                            Button("Cancel", role: .cancel) { }
-                        }
-                    } message: {
-                        if let selectedSong = selectedSong {
-                            Text("Are you sure you want to permanently delete \"\(selectedSong.title)\"?")
-                        }
-                    }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
                         let animation = Animation.easeInOut(duration: 0.22)
                         
@@ -153,6 +138,21 @@ struct RecentlyDeletedView: View {
                                     collapsedTitle = true
                                 }
                             }
+                        }
+                    }
+                    .padding()
+                    .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
+                        if let selectedSong = selectedSong {
+                            Button("Delete", role: .destructive) {
+                                print("Deleting song: \(selectedSong.title)")
+                                recentlyDeletedViewModel.deleteSong(song: selectedSong)
+                                recentlyDeletedViewModel.fetchRecentlyDeletedSongs()
+                            }
+                            Button("Cancel", role: .cancel) { }
+                        }
+                    } message: {
+                        if let selectedSong = selectedSong {
+                            Text("Are you sure you want to permanently delete \"\(selectedSong.title)\"?")
                         }
                     }
                 }

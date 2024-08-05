@@ -204,4 +204,28 @@ class SongDetailViewModel: ObservableObject {
             return .ultraLight
         }
     }
+    
+    func getAlignment(alignment: Int) -> TextAlignment {
+        switch alignment {
+        case 0:
+            return .leading
+        case 1:
+            return .center
+        case 2:
+            return .trailing
+        default:
+            return .leading
+        }
+    }
+    
+    func removeFeatAndAfter(from input: String) -> String {
+        let keyword = "feat"
+        
+        if let range = input.range(of: keyword, options: .caseInsensitive) {
+            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
+            return String(substring)
+        }
+        
+        return input
+    }
 }

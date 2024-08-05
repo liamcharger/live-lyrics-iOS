@@ -82,7 +82,6 @@ struct SongDetailView: View {
     @FocusState var isInputActive: Bool
     
     var songs: [Song]?
-    let pasteboard = UIPasteboard.general
     let isSongFromFolder: Bool
     private var wordCount: Int {
         let words = lyrics.split { !$0.isLetter }
@@ -101,28 +100,6 @@ struct SongDetailView: View {
         return paragraphs.count
     }
     
-    func removeFeatAndAfter(from input: String) -> String {
-        let keyword = "feat"
-        
-        if let range = input.range(of: keyword, options: .caseInsensitive) {
-            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
-            return String(substring)
-        }
-        
-        return input
-    }
-    func getAlignment(alignment: Int) -> TextAlignment {
-        switch alignment {
-        case 0:
-            return .leading
-        case 1:
-            return .center
-        case 2:
-            return .trailing
-        default:
-            return .leading
-        }
-    }
     func getShowVariationCondition() -> Bool {
         if (song.variations ?? []).isEmpty && !(song.readOnly ?? false) {
             return true
@@ -201,7 +178,7 @@ struct SongDetailView: View {
         
         self._design = State(initialValue: songDetailViewModel.getDesign(design: Int(inputSong.design ?? 0)))
         self._weight = State(initialValue: songDetailViewModel.getWeight(weight: Int(inputSong.weight ?? 0)))
-        self._alignment = State(initialValue: getAlignment(alignment: Int(inputSong.alignment ?? 0)))
+        self._alignment = State(initialValue: songDetailViewModel.getAlignment(alignment: Int(inputSong.alignment ?? 0)))
     }
     
     var body: some View {
@@ -552,7 +529,7 @@ struct SongDetailView: View {
                     self.tags = song.tags ?? []
                     self.design = songDetailViewModel.getDesign(design: Int(song.design ?? 0))
                     self.weight = songDetailViewModel.getWeight(weight: Int(song.weight ?? 0))
-                    self.alignment = getAlignment(alignment: Int(song.alignment ?? 0))
+                    self.alignment = songDetailViewModel.getAlignment(alignment: Int(song.alignment ?? 0))
                     self.value = song.size ?? 18
                     self.lineSpacing = song.lineSpacing ?? 1
                     if joinedUsers == nil {
