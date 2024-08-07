@@ -26,6 +26,7 @@ struct MenuView: View {
     @State var showPremiumView = false
     @State var showDeleteSheet = false
     @State var showRefreshDialog = false
+    @State var showCannotPurchaseAlert = false
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     
@@ -38,7 +39,7 @@ struct MenuView: View {
     func purchaseSubscription(product: Product) async {
         do {
             if try await storeKitManager.purchase(product) != nil {
-                print("Product purchased successfully!")
+                print("\(product.id) purchased successfully")
             }
         } catch {
             print(error.localizedDescription)
@@ -85,35 +86,6 @@ struct MenuView: View {
                 }
                 .padding()
                 Divider()
-                if user.showAds ?? true, let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
-                    Button {
-                        Task {
-                            await purchaseSubscription(product: product)
-                        }
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(product.displayName)
-                                    .font(.body.weight(.semibold))
-                                HStack(alignment: .center, spacing: 8) {
-                                    Text(product.displayPrice)
-                                    Rectangle()
-                                        .frame(width: 15, height: 1.2, alignment: .center)
-                                    Text("One-Time Purchase")
-                                }
-                                .foregroundColor(.white)
-                            }
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(15)
-                    }
-                    .disabled(!isAuthorizedForPayments)
-                    .opacity(!isAuthorizedForPayments ? 0.5 : 1)
-                    .padding()
-                }
                 if mainViewModel.notifications.isEmpty {
                     // TODO: replace with envelope (slashed) and localize title
                     FullscreenMessage(imageName: "envelope", title: "Hmm, it doesn't look like you have any new messages.")
@@ -156,6 +128,39 @@ struct MenuView: View {
                         .sheet(isPresented: $showWebView) {
                             WebView()
                         } */
+                        if user.showAds ?? true, let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
+                            Button(action: {
+                                if isAuthorizedForPayments {
+                                    Task {
+                                        await purchaseSubscription(product: product)
+                                    }
+                                } else {
+                                    showCannotPurchaseAlert = true
+                                }
+                            }, label: {
+                                HStack(spacing: 7) {
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text(product.displayName)
+                                            .font(.body.weight(.semibold))
+                                        HStack(alignment: .center, spacing: 8) {
+                                            Text(product.displayPrice)
+                                            Rectangle()
+                                                .frame(width: 15, height: 1.2, alignment: .center)
+                                            Text("One-Time Purchase")
+                                        }
+                                        .foregroundColor(.white)
+                                    }
+                                    Spacer()
+                                    // Use audio-description because of label "AD"
+                                    FAText(iconName: "audio-description-slash", size: 20)
+                                        .font(.body.weight(.semibold))
+                                }
+                                .foregroundColor(Color.white)
+                                .padding()
+                                .background(Color.blue)
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                            })
+                        }
                         Button(action: {
                             showSettingsView.toggle()
                         }, label: {
@@ -238,6 +243,9 @@ struct MenuView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
+            .alert(isPresented: $showCannotPurchaseAlert) {
+                Alert(title: Text("Cannot Purchase"), message: Text("This item cannot be purchased due to device restrictions."), dismissButton: .default(Text("OK")))
+            }
         }
     }
 }
