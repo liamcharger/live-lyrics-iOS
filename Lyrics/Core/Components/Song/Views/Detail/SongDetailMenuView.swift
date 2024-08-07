@@ -142,6 +142,8 @@ struct SongDetailMenuView: View {
             } label: {
                 Text("Font Weight")
             }
+            // Remove line spacing until supported by TextEditor
+            /*
             Menu {
                 Button(action: {
                     lineSpacing = 1
@@ -195,8 +197,8 @@ struct SongDetailMenuView: View {
             } label: {
                 Text("Line Spacing")
             }
-            // Remove line spacing until supported by TextEditor
-            /* Menu {
+            */
+            Menu {
                 Button(action: {
                     alignment = .leading
                     songViewModel.updateTextProperties(song, alignment: 0)
@@ -225,7 +227,6 @@ struct SongDetailMenuView: View {
             } label: {
                 Text("Alignment")
             }
-             */
             Divider()
             Button {
                 value = 18
