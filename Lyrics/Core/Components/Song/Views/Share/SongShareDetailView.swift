@@ -41,6 +41,7 @@ struct SongShareDetailView: View {
                             }
                             .frame(height: 0)
                             HeaderView("Share \nInvites", icon: "users", color: .blue, geo: geo, counter: "\(mainViewModel.incomingShareRequests.count) incoming, \(mainViewModel.outgoingShareRequests.count) outgoing".uppercased())
+                            AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                             VStack(spacing: 18) {
                                 if !NetworkManager.shared.getNetworkState() {
                                     FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""))

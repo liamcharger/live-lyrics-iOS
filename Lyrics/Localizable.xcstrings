@@ -361,6 +361,7 @@
       }
     },
     "Alignment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -606,6 +607,7 @@
       }
     },
     "Center" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1113,6 +1115,7 @@
       }
     },
     "Font Style" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1424,6 +1427,7 @@
       }
     },
     "Left" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1575,6 +1579,7 @@
       }
     },
     "Monospaced" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2074,6 +2079,7 @@
       }
     },
     "Right" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2084,6 +2090,7 @@
       }
     },
     "Rounded" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2188,6 +2195,7 @@
       }
     },
     "Serif" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

@@ -85,37 +85,34 @@ struct MenuView: View {
                 }
                 .padding()
                 Divider()
-                if user.showAds ?? true {
-                    HStack {
-                        ForEach(storeKitManager.storeProducts, id: \.self) { product in
-                            Button {
-                                Task {
-                                    await purchaseSubscription(product: product)
-                                }
-                            } label: {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        Text(product.displayName)
-                                            .font(.body.weight(.semibold))
-                                        HStack(alignment: .center, spacing: 8) {
-                                            Text(product.displayPrice)
-                                            Rectangle()
-                                                .frame(width: 15, height: 1.2, alignment: .center)
-                                            Text("One-Time Purchase")
-                                        }
-                                        .foregroundColor(.white)
-                                    }
-                                    Spacer()
-                                }
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(15)
-                            }
-                            .disabled(!isAuthorizedForPayments)
-                            .opacity(!isAuthorizedForPayments ? 0.5 : 1)
+                if user.showAds ?? true, let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
+                    Button {
+                        Task {
+                            await purchaseSubscription(product: product)
                         }
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(product.displayName)
+                                    .font(.body.weight(.semibold))
+                                HStack(alignment: .center, spacing: 8) {
+                                    Text(product.displayPrice)
+                                    Rectangle()
+                                        .frame(width: 15, height: 1.2, alignment: .center)
+                                    Text("One-Time Purchase")
+                                }
+                                .foregroundColor(.white)
+                            }
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
                     }
+                    .disabled(!isAuthorizedForPayments)
+                    .opacity(!isAuthorizedForPayments ? 0.5 : 1)
+                    .padding()
                 }
                 if mainViewModel.notifications.isEmpty {
                     // TODO: replace with envelope (slashed) and localize title
@@ -135,7 +132,7 @@ struct MenuView: View {
                     VStack(spacing: 10) {
                         // FIXME: squishes FullscreenMessage (especially on smaller iPhones)
 //                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
-                        Button(action: {
+                        /* Button(action: {
                             showWebView.toggle()
                         }, label: {
                             HStack {
@@ -158,7 +155,7 @@ struct MenuView: View {
                         })
                         .sheet(isPresented: $showWebView) {
                             WebView()
-                        }
+                        } */
                         Button(action: {
                             showSettingsView.toggle()
                         }, label: {

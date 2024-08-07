@@ -109,12 +109,12 @@ class StoreKitManager: ObservableObject {
             }
             
             self.purchasedProducts = purchasedCourses
-            
-            if purchasedProducts.contains(where: { $0.id == "remove_ads" }) {
-                authViewModel.showAds(false)
-            } else {
-                authViewModel.showAds(true)
-            }
+        }
+        
+        if purchasedProducts.contains(where: { $0.id == "remove_ads" }) {
+            authViewModel.showAds(false)
+        } else {
+            authViewModel.showAds(true)
         }
     }
     
