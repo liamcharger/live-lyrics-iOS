@@ -150,13 +150,14 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    func fetchSharedSongs() {
+    func fetchSharedSongs(completion: @escaping() -> Void) {
         self.isLoadingSharedSongs = true
         self.service.fetchSharedSongs { songs in
             DispatchQueue.main.async {
                 self.sharedSongs = songs
                 self.isLoadingSharedSongs = false
             }
+            completion()
         }
     }
     

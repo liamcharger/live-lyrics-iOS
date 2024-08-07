@@ -476,34 +476,34 @@ struct SongDetailView: View {
         .onAppear {
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             songViewModel.fetchSongVariations(song: song) { variations in
-                if let variationIds = song.variations, !variations.isEmpty {
+                if let variationIds = song.variations, !variationIds.isEmpty {
                     var fullVariations = [SongVariation]()
-                    if variationIds.contains(where: { $0 == SongVariation.defaultId }) || (song.variations ?? []).isEmpty {
+                    
+                    if variationIds.contains(where: { $0 == SongVariation.defaultId }) || variationIds.isEmpty {
                         fullVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
                     }
                     
                     let filteredVariations = variations.filter { variation in
-                        if variationIds.isEmpty {
-                            return true
-                        } else {
-                            if let index = variations.firstIndex(where: { $0.id == variation.id ?? "" }), index == 0 {
-                                if !variationIds.contains(where: { $0 == SongVariation.defaultId }) {
-                                    selectedVariation = variation
-                                }
-                            }
-                            if let selectedVariation = selectedVariation, selectedVariation.id ?? "" == variation.id ?? "" && !isInputActive {
-                                self.lyrics = variation.lyrics
-                            } else {
-                                if !isInputActive {
-                                    self.lyrics = song.lyrics
-                                }
-                            }
-                            
-                            return variationIds.contains(variation.id ?? "")
+                        if let variationId = variation.id {
+                            return variationIds.contains(variationId)
                         }
+                        return false
                     }
                     
                     fullVariations.append(contentsOf: filteredVariations)
+                    
+                    if let firstVariation = filteredVariations.first {
+                        if !variationIds.contains(SongVariation.defaultId) {
+                            selectedVariation = firstVariation
+                            if !isInputActive {
+                                self.lyrics = firstVariation.lyrics
+                            }
+                        }
+                    } else {
+                        if !isInputActive {
+                            self.lyrics = song.lyrics
+                        }
+                    }
                     
                     self.songVariations = fullVariations
                 } else {

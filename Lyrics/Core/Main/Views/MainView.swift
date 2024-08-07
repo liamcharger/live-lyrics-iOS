@@ -68,6 +68,7 @@ struct MainView: View {
     @State var showCollapsedNavBarTitle = false
     @State var showCollapsedNavBarDivider = false
     @State var showShareInvitesShadow = false
+    @State var isUpdatingSharedSongs = false
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
@@ -233,6 +234,14 @@ struct MainView: View {
             self.isJoinedUsersLoading = false
         }
     }
+    func checkToFetchSharedSongs() {
+        if let selectedSong = selectedSong, selectedSong.uid != uid() {
+            isUpdatingSharedSongs = true
+            mainViewModel.fetchSharedSongs {
+                isUpdatingSharedSongs = false
+            }
+        }
+    }
     func songContextMenu(song: Song) -> some View {
         return VStack {
             if !(song.readOnly ?? false) {
@@ -323,7 +332,7 @@ struct MainView: View {
                         if !hasFirestoreStartedListening {
                             self.mainViewModel.fetchSongs()
                             self.mainViewModel.fetchFolders()
-                            self.mainViewModel.fetchSharedSongs()
+                            self.mainViewModel.fetchSharedSongs() {}
                             self.mainViewModel.fetchSharedFolders()
                             self.mainViewModel.fetchInvites()
                             self.mainViewModel.fetchNotificationStatus()
@@ -869,7 +878,7 @@ struct MainView: View {
                                     }
                                 }
                                 if !isSongsCollapsed {
-                                    if mainViewModel.isLoadingSongs || mainViewModel.isLoadingSharedSongs {
+                                    if mainViewModel.isLoadingSongs || (mainViewModel.isLoadingSharedSongs && !isUpdatingSharedSongs) {
                                         LoadingView()
                                     } else {
                                         ForEach(searchableSongs) { song in
@@ -881,35 +890,11 @@ struct MainView: View {
                                                     .moveDisabled(true)
                                             } else {
                                                 HStack {
-                                                    VStack(alignment: .leading, spacing: 6) {
-                                                        HStack {
-                                                            NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
-                                                                ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
-                                                                    .contextMenu {
-                                                                        songContextMenu(song: song)
-                                                                    }
+                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
+                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
+                                                            .contextMenu {
+                                                                songContextMenu(song: song)
                                                             }
-                                                            if isEditingSongs {
-                                                                Button {
-                                                                    selectedSong = song
-                                                                    showSongMoveSheet = true
-                                                                } label: {
-                                                                    ListIconButtonView(imageName: "folder", color: .purple)
-                                                                }
-                                                                Button {
-                                                                    selectedSong = song
-                                                                    showSongEditSheet.toggle()
-                                                                } label: {
-                                                                    ListIconButtonView(imageName: "pencil", color: .blue)
-                                                                }
-                                                                Button {
-                                                                    selectedSong = song
-                                                                    showSongDeleteSheet = true
-                                                                } label: {
-                                                                    ListIconButtonView(imageName: "trash", color: .red)
-                                                                }
-                                                            }
-                                                        }
                                                     }
                                                 }
                                             }
@@ -968,12 +953,12 @@ struct MainView: View {
                             SongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
                         }
                     }
-                    .sheet(isPresented: $showSongEditSheet) {
+                    .sheet(isPresented: $showSongEditSheet, onDismiss: checkToFetchSharedSongs) {
                         if let selectedSong = selectedSong {
                             SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? NSLocalizedString("not_set", comment: "")), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
                         }
                     }
-                    .sheet(isPresented: $showTagSheet) {
+                    .sheet(isPresented: $showTagSheet, onDismiss: checkToFetchSharedSongs) {
                         if let selectedSong = selectedSong {
                             let tags: [TagSelectionEnum] = selectedSong.tags?.compactMap { TagSelectionEnum(rawValue: $0) } ?? []
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)

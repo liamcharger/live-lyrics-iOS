@@ -213,7 +213,7 @@ struct AddSongsView: View {
             checkForSongs()
             
             if mainViewModel.isLoadingSharedSongs {
-                mainViewModel.fetchSharedSongs()
+                mainViewModel.fetchSharedSongs {}
             }
         }
         .onChange(of: mainViewModel.folderSongs) { _ in

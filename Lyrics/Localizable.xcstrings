@@ -101,6 +101,7 @@
 
     },
     "0.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -111,6 +112,7 @@
       }
     },
     "0.5" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -131,6 +133,7 @@
       }
     },
     "1.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -141,6 +144,7 @@
       }
     },
     "1.5" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -171,6 +175,7 @@
       }
     },
     "2.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -181,6 +186,7 @@
       }
     },
     "2.5" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -201,6 +207,7 @@
       }
     },
     "3.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -361,7 +368,6 @@
       }
     },
     "Alignment" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -606,8 +612,10 @@
         }
       }
     },
+    "Cannot Purchase" : {
+
+    },
     "Center" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1427,7 +1435,6 @@
       }
     },
     "Left" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1458,6 +1465,7 @@
       }
     },
     "Line Spacing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2079,7 +2087,6 @@
       }
     },
     "Right" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2511,6 +2518,9 @@
           }
         }
       }
+    },
+    "This item cannot be purchased due to device restrictions." : {
+
     },
     "Tip" : {
       "localizations" : {
