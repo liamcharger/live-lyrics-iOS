@@ -20,9 +20,6 @@ struct SongShareDetailView: View {
     @State var isLoading = false
     @State var loadingId = ""
     
-    let userService = UserService()
-    let songService = SongService()
-    
     var body: some View {
         GeometryReader { geo in
             VStack(alignment: .leading, spacing: 0) {

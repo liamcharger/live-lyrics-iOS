@@ -17,9 +17,6 @@ struct CustomNavBar: View {
     let navType: NavBarEnum
     let showBackButton: Bool
     
-    @State var showSheet1 = false
-    @State var showSheet2 = false
-    
     @Binding var showCollapsedNavBar: Bool
     @Binding var showCollapsedNavBarTitle: Bool
     

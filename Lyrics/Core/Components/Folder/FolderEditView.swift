@@ -10,8 +10,6 @@ import SwiftUI
 struct FolderEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
-    @Environment(\.presentationMode) var presMode
-    
     @Binding var isDisplayed: Bool
     @Binding var title: String
     

@@ -29,7 +29,6 @@ struct ProfileView: View {
     @State var showChangePasswordView = false
     @State var showDeleteSheet = false
     @State var showDeleteConfirmation = false
-    @State var showManageSubscription = false
     
     var isEmpty: Bool {
         fullname.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || email.trimmingCharacters(in: .whitespaces).isEmpty || user.fullname != fullname || user.username != username || user.email != email
@@ -191,7 +190,7 @@ struct ProfileView: View {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Success!"), message: Text("Your changes were saved."), dismissButton: .cancel(Text("Close")))
+            Alert(title: Text("Success!"), message: Text("Your changes were saved."), dismissButton: .cancel(Text("OK"), action: { presMode.wrappedValue.dismiss() }))
         }
     }
     

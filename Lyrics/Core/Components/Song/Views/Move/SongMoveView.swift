@@ -10,7 +10,6 @@ import SwiftUI
 struct SongMoveView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
-    @Environment(\.presentationMode) var presMode
     
     @Binding var showProfileView: Bool
     
@@ -18,12 +17,9 @@ struct SongMoveView: View {
     let songTitle: String
     
     @State var errorMessage = ""
-    @State var text = ""
     
     @State var showError = false
     @State var showNewFolderView = false
-    
-    @FocusState var isFocused: Bool
     
     init(song: Song, showProfileView: Binding<Bool>, songTitle: String) {
         self.song = song

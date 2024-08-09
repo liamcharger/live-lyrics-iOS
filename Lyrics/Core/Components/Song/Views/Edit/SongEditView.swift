@@ -11,7 +11,6 @@ import Combine
 struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @Environment(\.presentationMode) var presMode
     
     let song: Song
     
@@ -28,7 +27,6 @@ struct SongEditView: View {
     @State var stateDuration = ""
     
     @State var showError = false
-    @State var showNotesView = false
     
     var isEmpty: Bool {
         let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty

@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import SwiftUIIntrospect
 
-let showNotesDescKey = "showNotesDesc"
 let showNewSongKey = "showNewSongKey"
 let showNewFolderKey = "showNewFolderKey"
 
@@ -66,17 +65,6 @@ func greeting(withName: Bool? = nil) -> String {
     return greetingText
 }
 
-func completionOnConnectionState(noConnection: @escaping() -> Void, connection: @escaping() -> Void) {
-    if NetworkManager.shared.getNetworkState() {
-        // Add extra second because otherwise it seems unnaturally quick
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            connection()
-        }
-    } else {
-        noConnection()
-    }
-}
-
 extension View {
     @ViewBuilder
     func showPlayViewTip() -> some View {
@@ -91,13 +79,6 @@ extension View {
         if #available(iOS 17, *) {
             self
                 .popoverTip(AutoscrollSpeedTip(), arrowEdge: .bottom)
-        }
-    }
-    
-    @ViewBuilder public func hidden(_ shouldHide: Bool) -> some View {
-        switch shouldHide {
-        case true: self.hidden()
-        case false: self
         }
     }
     
@@ -208,35 +189,6 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
     }
 }
 
-struct Wave: Shape {
-    var strength: Double
-    var frequency: Double
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath()
-        
-        let width = Double(rect.width)
-        let height = Double(rect.height)
-        let midHeight = height / 2
-        
-        let wavelength = width / frequency
-        
-        path.move(to: CGPoint(x: 0, y: midHeight))
-        
-        for x in stride(from: 0, through: width, by: 1) {
-            let relativeX = x / wavelength
-            
-            let sin = sin(relativeX)
-            
-            let y = strength * sin + midHeight
-            
-            path.addLine(to: CGPoint(x: x, y: y))
-        }
-        
-        return Path(path.cgPath)
-    }
-}
-
 struct ShadowModifier: ViewModifier {
     var color: Color
     var radius: CGFloat
@@ -254,21 +206,6 @@ struct ScrollViewOffsetPreferenceKey: PreferenceKey {
     
     static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
         value.append(contentsOf: nextValue())
-    }
-}
-
-extension URL {
-    var isDeeplink: Bool {
-        return scheme == "live-lyrics"
-    }
-    
-    var deepLinkView: DeepLinkView? {
-        guard isDeeplink else { return nil }
-        
-        switch host {
-        case "profile": return .profile
-        default: return nil
-        }
     }
 }
 

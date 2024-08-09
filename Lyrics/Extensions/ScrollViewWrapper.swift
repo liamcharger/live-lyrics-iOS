@@ -95,17 +95,6 @@ struct ScrollableView<Content: View>: UIViewControllerRepresentable, Equatable {
         Coordinator(self.scrollViewController.scrollView, offset: self.offset)
     }
     
-    //Calcaulte max offset
-    private func newContentOffset(_ viewController: UIViewControllerType, newValue: CGPoint) -> CGPoint {
-        
-        let maxOffsetViewFrame: CGRect = viewController.view.frame
-        let maxOffsetFrame: CGRect     = viewController.hostingController.view.frame
-        let maxOffsetX: CGFloat        = maxOffsetFrame.maxX - maxOffsetViewFrame.maxX
-        let maxOffsetY: CGFloat        = maxOffsetFrame.maxY - maxOffsetViewFrame.maxY
-        
-        return CGPoint(x: min(newValue.x, maxOffsetX), y: min(newValue.y, maxOffsetY))
-    }
-    
     //Calculate animation speed
     private func duration(_ viewController: UIViewControllerType) -> TimeInterval {
         

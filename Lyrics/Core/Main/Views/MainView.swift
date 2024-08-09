@@ -19,9 +19,6 @@ struct MainView: View {
     @ObservedObject var networkManager = NetworkManager.shared
     
     @EnvironmentObject var authViewModel: AuthViewModel
-    @EnvironmentObject var storeKitManager: StoreKitManager
-    
-    @FocusState var isSearching: Bool
     
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
@@ -30,7 +27,6 @@ struct MainView: View {
     @State var selectedUser: User?
     @State var draggedSong: Song?
     @State var draggedFolder: Folder?
-    @State var notificationStatus: NotificationStatus?
     // Property allows folder to check if it should be displaying its songs or not. selectedFolder is used for external views, such as SongMoveView, SongEditView, etc..
     @State var selectedFolderForFolderUse: Folder?
     
@@ -153,7 +149,6 @@ struct MainView: View {
             }
     }
     
-    var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
     let pasteboard = UIPasteboard.general
     let columns = [
         GridItem(.flexible()),
@@ -164,18 +159,6 @@ struct MainView: View {
         return songs.sorted(by: { (song1, song2) -> Bool in
             return song1.pinned ?? false && !(song2.pinned ?? false)
         })
-    }
-    func move(from source: IndexSet, to destination: Int) {
-        mainViewModel.folders.move(fromOffsets: source, toOffset: destination)
-        mainViewModel.updateFolderOrder()
-        mainViewModel.fetchFolders()
-    }
-    func delete(at offsets: IndexSet) {
-        for index in offsets {
-            let folder = mainViewModel.folders[index]
-            mainViewModel.deleteFolder(folder)
-        }
-        mainViewModel.fetchFolders()
     }
     func clearSearch() {
         self.songSearchText = ""

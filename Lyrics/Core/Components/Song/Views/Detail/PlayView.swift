@@ -25,10 +25,8 @@ struct PlayView: View {
     @State var song: Song
     
     @State private var currentIndex = 0
-    @State private var offset: CGFloat = 0
     
     @State var lyrics = ""
-    @State var lyricsCollection = [""]
     @State var title = ""
     @State var key = ""
     @State var selectedTool = ""
@@ -36,13 +34,11 @@ struct PlayView: View {
     @State private var scrollPosition: Int = 0
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
-    @State private var linesHeight: CGFloat = 0.0
     @State private var beatCounter: Int = 0
     @State private var pressedIndexId: Int = 0
     
     @State var isPlayingMetronome = false
     @State var isPulsing = false
-    @State var isHeavyImpactPlaying = false
     @State var isScrolling = false
     @State var isUserScrolling = false
     @State var isScrollingProgrammatically = true
@@ -56,8 +52,6 @@ struct PlayView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
-    
-    @Environment(\.presentationMode) var presMode
     
     var songs: [Song]?
     @State var metronomeTimer: DispatchSourceTimer?
@@ -486,7 +480,7 @@ struct PlayView: View {
                                         .cornerRadius(8)
                                 }
                                 .onChange(of: bpb) { bpb in
-                                    songViewModel.updateBpm(for: song, with: bpb)
+                                    songViewModel.updateBpb(for: song, with: bpb)
                                 }
                                 .disabled(readOnly())
                                 Spacer()

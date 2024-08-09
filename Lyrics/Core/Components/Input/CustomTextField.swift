@@ -22,8 +22,6 @@ struct CustomTextField: View {
     }
 }
 
-struct CustomTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomTextField(text: .constant(""), placeholder: "Email")
-    }
+#Preview {
+    CustomTextField(text: .constant(""), placeholder: "Email")
 }

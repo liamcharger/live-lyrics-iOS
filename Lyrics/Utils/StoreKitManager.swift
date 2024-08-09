@@ -114,7 +114,8 @@ class StoreKitManager: ObservableObject {
         if purchasedProducts.contains(where: { $0.id == "remove_ads" }) {
             authViewModel.showAds(false)
         } else {
-            authViewModel.showAds(true)
+            // FIXME: see #38
+//            authViewModel.showAds(true)
         }
     }
     

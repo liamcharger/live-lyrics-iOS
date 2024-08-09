@@ -23,9 +23,6 @@ struct LoginView: View {
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
     }
-    var isHighlighted: Bool {
-        isHighlighted1 || isHighlighted2
-    }
     
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.presentationMode) var presMode
@@ -98,8 +95,6 @@ struct LoginView: View {
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView(action: {})
-    }
+#Preview {
+    LoginView(action: {})
 }

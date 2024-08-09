@@ -51,7 +51,7 @@ struct LyricsApp: App {
                             showNewSong = true
                             QuickAction.selectedAction = nil
                         case "new_folder":
-                            showNewSong = true
+                            showNewFolder = true
                             QuickAction.selectedAction = nil
                         case .none:
                             break
@@ -164,8 +164,4 @@ enum QuickAction {
     static func addQuickItems() {
         UIApplication.shared.shortcutItems = QuickAction.shortcutItems
     }
-}
-
-enum DeepLinkView: Hashable {
-    case profile
 }

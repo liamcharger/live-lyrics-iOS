@@ -26,8 +26,6 @@ struct NewSongView: View {
     @FocusState var isTitleFocused: Bool
     @FocusState var isLyricsFocused: Bool
     
-    let folder: Folder?
-    
     func createSong() {
         let dismiss = {
             canDismissProgrammatically = true

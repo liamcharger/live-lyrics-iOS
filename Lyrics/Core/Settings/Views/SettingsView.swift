@@ -10,15 +10,12 @@ import StoreKit
 
 struct SettingsView: View {
     @Environment(\.presentationMode) var presMode
-    @EnvironmentObject var authViewModel: AuthViewModel
     
-    var user: User
+    @State var user: User
     
     @State var errorMessage = ""
     
     @State var showError = false
-    @State var showInfo = false
-    @State var showSettings = false
     @State var toggle: Bool
     @State var enableAutoscroll: Bool
     @State var isExplicit: Bool
@@ -26,15 +23,10 @@ struct SettingsView: View {
     @State var wordCountStyle: String?
     @State var metronomeStyle: [String] = []
     
-    @ObservedObject var settingsViewModel: SettingsViewModel
-    
-    func fetchUser(withUid uid: String) {
-        settingsViewModel.fetchUser(withUid: uid)
-    }
+    @ObservedObject var settingsViewModel = SettingsViewModel.shared
     
     init(user: User) {
         self.user = user
-        self.settingsViewModel = SettingsViewModel(user: user)
         
         _toggle = State(initialValue: user.wordCount ?? true)
         _enableAutoscroll = State(initialValue: user.enableAutoscroll ?? true)
@@ -64,24 +56,6 @@ struct SettingsView: View {
             .padding()
             Divider()
             ScrollView {
-                //                if !NetworkManager.shared.getNetworkState() {
-                //                    VStack(spacing: 0) {
-                //                        Group {
-                //                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
-                //                        }
-                //                        .padding()
-                //                        .foregroundColor(.gray)
-                //                        .frame(maxWidth: .infinity, alignment: .center)
-                //                        .onTapGesture {
-                // Open Settings app without the deeplink to app settings
-                //                            guard let settingsURL = URL(string: "") else { return }
-                //                            if UIApplication.shared.canOpenURL(settingsURL) {
-                //                                UIApplication.shared.open(settingsURL)
-                //                            }
-                //                        }
-                //                        Divider()
-                //                    }
-                //                }
                 VStack(alignment: .leading) {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {

@@ -12,23 +12,6 @@ import FirebaseAuth
 import Firebase
 
 struct UserService {
-    func fetchSystemDoc(completion: @escaping (SystemDoc) -> Void) {
-        Firestore.firestore().collection("system").document("system-doc")
-            .addSnapshotListener { snapshot, error in
-                if error != nil {
-                    print("Error fetching sys doc...")
-                    return
-                }
-                
-                guard let snapshot = snapshot, let doc = try? snapshot.data(as: SystemDoc.self) else {
-                    print("Could not parse sys doc...")
-                    return
-                }
-                
-                completion(doc)
-            }
-    }
-    
     func changePassword(_ user: User, password: String, currentPassword: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
         let user = Auth.auth().currentUser
         

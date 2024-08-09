@@ -19,7 +19,6 @@ class MainViewModel: ObservableObject {
     @Published var folderSongs: [Song] = []
     @Published var sharedSongs: [Song] = []
     @Published var sharedFolders: [Folder] = []
-    @Published var recentlyDeletedSongs: [RecentlyDeletedSong] = []
     @Published var folders: [Folder] = []
     @Published var incomingShareRequests: [ShareRequest] = []
     @Published var outgoingShareRequests: [ShareRequest] = []
@@ -27,7 +26,6 @@ class MainViewModel: ObservableObject {
     @Published var isLoadingFolders = true
     @Published var isLoadingFolderSongs = true
     @Published var isLoadingSongs = true
-    @Published var isLoadingRecentlyDeletedSongs = true
     @Published var isLoadingInvites = true
     @Published var isLoadingSharedSongs = true
     @Published var isLoadingSharedFolders = true
@@ -35,51 +33,14 @@ class MainViewModel: ObservableObject {
     @Published var showProfileView = false
     @Published var updateAvailable = false
     
-    @Published var systemDoc: SystemDoc?
-    
     @Published var notifications = [Notification]()
     
     let service = SongService()
-    let userService = UserService()
     
     static let shared = MainViewModel()
     
     init() {
         loadNotificationFromUserDefaults()
-    }
-    
-    func removeSongEventListener() {
-        service.removeSongEventListener()
-    }
-    
-    func removeFolderSongEventListener() {
-        service.removeFolderSongEventListener()
-    }
-    
-    func removeFolderEventListener() {
-        service.removeFolderEventListener()
-    }
-    
-    func removeRecentSongEventListener() {
-        service.removeRecentSongEventListener()
-    }
-    
-    func removeIncomingInviteEventListener() {
-        service.removeIncomingInviteEventListener()
-    }
-    
-    func removeOutgoingInviteEventListener() {
-        service.removeOutgoingInviteEventListener()
-    }
-    
-    func removeSongVariationListener() {
-        service.removeSongVariationListener()
-    }
-    
-    func fetchSystemStatus() {
-        userService.fetchSystemDoc { systemDoc in
-            self.systemDoc = systemDoc
-        }
     }
     
     func saveNotificationToUserDefaults() {
@@ -113,15 +74,6 @@ class MainViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.songs = songs
                 self.isLoadingSongs = false
-            }
-        }
-    }
-    
-    func fetchRecentlyDeletedSongs() {
-        self.service.fetchRecentlyDeletedSongs { songs in
-            DispatchQueue.main.async {
-                self.recentlyDeletedSongs = songs
-                self.isLoadingRecentlyDeletedSongs = false
             }
         }
     }
@@ -335,9 +287,7 @@ class MainViewModel: ObservableObject {
         }
         batch.commit() { error in
             if let error = error {
-                print("Error updating order in Firestore: \(error.localizedDescription)")
-            } else {
-                print("Order updated in Firestore")
+                print("Error updating folder order: \(error.localizedDescription)")
             }
         }
     }
@@ -350,9 +300,9 @@ class MainViewModel: ObservableObject {
         service.deleteSong(song: song)
     }
     
-    func deleteSong(_ song: Song) {
-        service.deleteSong(song)
-    }
+//    func deleteSong(_ song: Song) {
+//        service.deleteSong(song)
+//    }
     
     func deleteFolder(_ folder: Folder) {
         service.deleteFolder(folder)

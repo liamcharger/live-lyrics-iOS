@@ -11,6 +11,7 @@ struct CustomTextEditor: UIViewRepresentable {
     @Binding var text: String
     var multilineTextAlignment: TextAlignment
     var font: UIFont
+    // Not yet implementing
     var lineSpacing: Double
     var padding: UIEdgeInsets
     var isInputActive: FocusState<Bool>.Binding
@@ -55,7 +56,6 @@ struct CustomTextEditor: UIViewRepresentable {
     
     class Coordinator: NSObject, UITextViewDelegate, UIScrollViewDelegate {
         var parent: CustomTextEditor
-        var offset: CGPoint = CGPoint(x: 0, y: 0)
         
         init(_ parent: CustomTextEditor) {
             self.parent = parent

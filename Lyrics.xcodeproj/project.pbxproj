@@ -62,18 +62,15 @@
 		E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A7A2BCED9CB000292FA /* SharedFolder.swift */; };
 		E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A7D2BCF2351000292FA /* FolderSong.swift */; };
 		E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B72A94BB5200ECB31F /* NotificationManager.swift */; };
-		E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B92A94C1DD00ECB31F /* SystemDoc.swift */; };
 		E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */; };
 		E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20E2B449E4500F035F7 /* SortViewModel.swift */; };
 		E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77832A17CAA50032332F /* EditPasswordView.swift */; };
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
 		E0705FD52C5C161300BC7AD6 /* CustomBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0705FD42C5C161300BC7AD6 /* CustomBackButton.swift */; };
 		E0705FD72C5C874600BC7AD6 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0705FD62C5C874600BC7AD6 /* HeaderView.swift */; };
-		E074E5062C4DEEEF00E269C8 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E074E5052C4DEEEF00E269C8 /* AlertView.swift */; };
 		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E07C50392C4F457A002EE9A1 /* ContentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07C50382C4F457A002EE9A1 /* ContentRowView.swift */; };
 		E07C503A2C4F608F002EE9A1 /* NotificationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852F2B081D5100188CD0 /* NotificationRowView.swift */; };
-		E07D4AC82C45B04D00D29396 /* PrintManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07D4AC72C45B04D00D29396 /* PrintManager.swift */; };
 		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
 		E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E0867CF02BD5989B005605CD /* BottomSheet */; };
 		E0986BE82B2B50C400CE938B /* icons.json in Resources */ = {isa = PBXBuildFile; fileRef = E0986BE72B2B50C400CE938B /* icons.json */; };
@@ -89,7 +86,6 @@
 		E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */; };
 		E0A392F02C5D3B4500AB07D7 /* SongDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A392EF2C5D3B4500AB07D7 /* SongDetailViewModel.swift */; };
 		E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */; };
-		E0A8F5062BD06887009275A2 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A8F5052BD06887009275A2 /* Version.swift */; };
 		E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B942AF572F8002E10D4 /* TipKit.swift */; };
 		E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */; };
 		E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */; };
@@ -210,17 +206,14 @@
 		E05B9A7D2BCF2351000292FA /* FolderSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSong.swift; sourceTree = "<group>"; };
 		E05F2E7B2A55CFFD005E819C /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		E06076B72A94BB5200ECB31F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		E06076B92A94C1DD00ECB31F /* SystemDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemDoc.swift; sourceTree = "<group>"; };
 		E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortSelectionEnum.swift; sourceTree = "<group>"; };
 		E065D20E2B449E4500F035F7 /* SortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewModel.swift; sourceTree = "<group>"; };
 		E06D77832A17CAA50032332F /* EditPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordView.swift; sourceTree = "<group>"; };
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E0705FD42C5C161300BC7AD6 /* CustomBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackButton.swift; sourceTree = "<group>"; };
 		E0705FD62C5C874600BC7AD6 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		E074E5052C4DEEEF00E269C8 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
 		E07C50382C4F457A002EE9A1 /* ContentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRowView.swift; sourceTree = "<group>"; };
-		E07D4AC72C45B04D00D29396 /* PrintManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintManager.swift; sourceTree = "<group>"; };
 		E0867CED2BD57812005605CD /* SongDetailMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailMenuView.swift; sourceTree = "<group>"; };
 		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
 		E0986BEA2B2B512300CE938B /* Font Awesome 6 Sharp-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Solid-900.otf"; sourceTree = "<group>"; };
@@ -235,7 +228,6 @@
 		E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Solid-900.otf"; sourceTree = "<group>"; };
 		E0A392EF2C5D3B4500AB07D7 /* SongDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailViewModel.swift; sourceTree = "<group>"; };
 		E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
-		E0A8F5052BD06887009275A2 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		E0B02B942AF572F8002E10D4 /* TipKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipKit.swift; sourceTree = "<group>"; };
 		E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowWhatsNew.swift; sourceTree = "<group>"; };
 		E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
@@ -446,10 +438,8 @@
 				E0C492E42A0BDFC6002E9EA0 /* Folder.swift */,
 				E04247812A02EFC500CA48B3 /* Song.swift */,
 				E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */,
-				E06076B92A94C1DD00ECB31F /* SystemDoc.swift */,
 				E0D411BD2A9FF12300859E4E /* Notification.swift */,
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
-				E0A8F5052BD06887009275A2 /* Version.swift */,
 				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
 				E05B9A7D2BCF2351000292FA /* FolderSong.swift */,
 			);
@@ -493,7 +483,6 @@
 				E041055E2A90029900215FB0 /* HapticManager.swift */,
 				E06076B72A94BB5200ECB31F /* NotificationManager.swift */,
 				E00E845C2B222AEB00573A9F /* StoreKitManager.swift */,
-				E07D4AC72C45B04D00D29396 /* PrintManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -751,7 +740,6 @@
 				E0BE613C2BFD373A003757A5 /* UserPopover.swift */,
 				E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */,
 				E0CA852F2B081D5100188CD0 /* NotificationRowView.swift */,
-				E074E5052C4DEEEF00E269C8 /* AlertView.swift */,
 				E0CA85232B081D5100188CD0 /* LoadingView.swift */,
 				E0CA851A2B081D5100188CD0 /* SheetCloseButton.swift */,
 				E0705FD62C5C874600BC7AD6 /* HeaderView.swift */,
@@ -1164,7 +1152,6 @@
 				E006A0592A214CAA00CE468A /* RecentlyDeletedSong.swift in Sources */,
 				E052264D2A1BB1CF00ECF255 /* FolderEditView.swift in Sources */,
 				E0FC1E222BC47618008D8549 /* FAText.swift in Sources */,
-				E074E5062C4DEEEF00E269C8 /* AlertView.swift in Sources */,
 				E0F95C832A13C2E000C2D21C /* MailView.swift in Sources */,
 				E050D15E2A030368004CC45E /* Extensions.swift in Sources */,
 				E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */,
@@ -1181,7 +1168,6 @@
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
-				E0A8F5062BD06887009275A2 /* Version.swift in Sources */,
 				E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
@@ -1194,7 +1180,6 @@
 				E04CB96E2BCB618C00F2831B /* ShareRequest.swift in Sources */,
 				E0CA85362B081D5100188CD0 /* CustomSearchBar.swift in Sources */,
 				E0CA853F2B081D5100188CD0 /* ListHeaderView.swift in Sources */,
-				E06076BA2A94C1DD00ECB31F /* SystemDoc.swift in Sources */,
 				E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */,
 				E0C078282B4463FB00F91287 /* SortView.swift in Sources */,
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
@@ -1212,7 +1197,6 @@
 				E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */,
 				E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */,
 				E0B094BD2BD220E500F92BE6 /* SongVariation.swift in Sources */,
-				E07D4AC82C45B04D00D29396 /* PrintManager.swift in Sources */,
 				E04247822A02EFC500CA48B3 /* Song.swift in Sources */,
 				E0B02B9C2AF592F2002E10D4 /* ShowWhatsNew.swift in Sources */,
 				E0239E592BE9C133007796BE /* SongVariationManageView.swift in Sources */,

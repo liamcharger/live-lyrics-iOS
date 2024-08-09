@@ -81,9 +81,7 @@ struct RowView: View {
     }
 }
 
-struct MoveRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        RowView(title: Folder.folder.title, subtitle: nil, trackId: nil, id: nil, isExplicit: 1, isLoading: .constant(false))
-            .previewLayout(.sizeThatFits)
-    }
+#Preview {
+    RowView(title: Folder.folder.title, subtitle: nil, trackId: nil, id: nil, isExplicit: 1, isLoading: .constant(false))
+        .previewLayout(.sizeThatFits)
 }

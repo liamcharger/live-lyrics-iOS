@@ -35,17 +35,12 @@ struct SongDetailView: View {
     @State private var errorMessage = ""
     @State private var isChecked = ""
     @State private var duration = ""
-    @State private var currentEditorsTitle = ""
-    @State private var currentEditorsSubtitle = ""
     @State private var createdVariationId = ""
     @State private var bpm = 120
     @State private var bpb = 4
     @State private var performanceMode = true
     @State private var tags: [String] = []
     
-    @State private var songIds: [String]?
-    @State private var fullUsernameString = [String]()
-    @State private var initials = [String]()
     @State private var joinedUsersStrings = [String]()
     @State private var lastFetchedJoined: Date?
     
@@ -56,9 +51,7 @@ struct SongDetailView: View {
     @State private var wordCountBool = true
     @State private var showRestoreSongDeleteSheet = false
     @State private var showFullScreenView = false
-    @State private var showInfo = false
     @State private var showAlert = false
-    @State private var showKickedAlert = false
     @State private var showNewVariationView = false
     @State private var showVariationsManagementSheet = false
     @State private var showUserPopover = false
@@ -79,6 +72,7 @@ struct SongDetailView: View {
     @Environment(\.presentationMode) var presMode
     
     @FocusState var isInputActive: Bool
+    @FocusState var dummyFocusState: Bool
     
     var songs: [Song]?
     let isSongFromFolder: Bool
@@ -180,6 +174,8 @@ struct SongDetailView: View {
         
         self._weight = State(initialValue: songDetailViewModel.getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: songDetailViewModel.getAlignment(alignment: Int(inputSong.alignment ?? 0)))
+        
+        self.dummyFocusState = false
     }
     
     var body: some View {
@@ -266,7 +262,7 @@ struct SongDetailView: View {
                             })
                             .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
                                 Button("Delete", role: .destructive) {
-                                    mainViewModel.deleteSong(song: restoreSong!)
+                                    recentlyDeletedViewModel.deleteSong(song: restoreSong!)
                                     presMode.wrappedValue.dismiss()
                                 }
                                 Button("Cancel", role: .cancel) { }
@@ -294,53 +290,62 @@ struct SongDetailView: View {
             ZStack {
                 let showJoinedUsers = joinedUsers?.isEmpty ?? true
                 
-                CustomTextEditor(text: $lyrics,
+                CustomTextEditor(text: restoreSong == nil ? $lyrics : .constant(lyrics),
                                  multilineTextAlignment: alignment,
                                  font: UIFont.systemFont(ofSize: CGFloat(value), weight: weight.uiFontWeight),
                                  lineSpacing: lineSpacing,
                                  padding: UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12),
                                  isInputActive: $isInputActive,
                                  showBlur: $showBackgroundBlur)
-                .focused($isInputActive)
-                Color.black
-                    .mask(LinearGradient(
-                        gradient: Gradient(colors: [Color.black, Color.clear]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ))
-                    .frame(height: 95)
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .opacity(showBackgroundBlur && !showJoinedUsers ? 1 : 0)
-                    .allowsHitTesting(false)
-                VStack {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 6) {
-                            if let joinedUsers = joinedUsers, !showJoinedUsers {
-                                ForEach(joinedUsers, id: \.id) { user in
-                                    Button {
-                                        selectedUser = user
-                                        showUserPopover = true
-                                    } label: {
-                                        UserPopoverRowView(user: user, song: song)
+                .focused(restoreSong == nil ? $isInputActive : $dummyFocusState)
+                if restoreSong == nil {
+                    Color.black
+                        .mask(LinearGradient(
+                            gradient: Gradient(colors: [Color.black, Color.clear]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ))
+                        .frame(height: 95)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                        .opacity(showBackgroundBlur && !showJoinedUsers ? 1 : 0)
+                        .allowsHitTesting(false)
+                    VStack {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                if let joinedUsers = joinedUsers, !showJoinedUsers {
+                                    ForEach(joinedUsers, id: \.id) { user in
+                                        Button {
+                                            selectedUser = user
+                                            showUserPopover = true
+                                        } label: {
+                                            UserPopoverRowView(user: user, song: song)
+                                        }
                                     }
                                 }
                             }
+                            .padding(10)
+                            .padding(.trailing, songDetailViewModel.readOnly(song) ? 0 : 115)
                         }
-                        .padding(10)
-                        .padding(.trailing, songDetailViewModel.readOnly(song) ? 0 : 115)
+                        .frame(height: 70)
+                        Spacer()
+                        if !songDetailViewModel.readOnly(song) {
+                            HStack {
+                                Spacer()
+                                SongDetailMenuView(value: $value, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                    .padding(12)
+                                    .background {
+                                        VisualEffectBlur(blurStyle: .dark)
+                                            .blur(radius: 20)
+                                    }
+                            }
+                        }
                     }
-                    .frame(height: 70)
-                    Spacer()
-                    if !songDetailViewModel.readOnly(song) {
-                        HStack {
-                            Spacer()
-                            SongDetailMenuView(value: $value, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
-                                .padding(12)
-                                .background {
-                                    VisualEffectBlur(blurStyle: .dark)
-                                        .blur(radius: 20)
-                                }
-                        }
+                } else {
+                    if lyrics.isEmpty {
+                        Text("There aren't any lyrics for this song.")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                            .frame(maxHeight: .infinity)
                     }
                 }
             }

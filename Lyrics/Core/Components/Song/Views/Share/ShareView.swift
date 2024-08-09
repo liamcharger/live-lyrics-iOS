@@ -19,7 +19,6 @@ struct ShareView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var songViewModel = SongViewModel.shared
-    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var networkManager = NetworkManager.shared
     
     @Binding var isDisplayed: Bool
@@ -41,7 +40,6 @@ struct ShareView: View {
     
     let song: Song?
     let folder: Folder?
-    let userService = UserService()
     let defaultVariationId = SongVariation.defaultId
     
     var disabled: Bool {

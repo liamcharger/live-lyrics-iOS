@@ -14,8 +14,6 @@ struct NotesView: View {
     
     @FocusState var isInputActive: Bool
     
-    @State var notes = ""
-    
     @ObservedObject var notesViewModel = NotesViewModel.shared
     
     @Environment(\.presentationMode) var presMode

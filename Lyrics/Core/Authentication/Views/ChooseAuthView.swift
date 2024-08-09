@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ChooseAuthView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-    
     @State var showLoginView = false
     @State var showRegisterView = false
     @State var areContentsHidden = true
@@ -241,5 +239,4 @@ struct ChooseAuthView: View {
 
 #Preview {
     ChooseAuthView()
-        .environmentObject(AuthViewModel())
 }

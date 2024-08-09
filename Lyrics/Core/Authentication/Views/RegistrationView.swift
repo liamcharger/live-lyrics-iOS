@@ -23,7 +23,6 @@ struct RegistrationView: View {
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
-    var attributedString: AttributedString = try! AttributedString(markdown: "[Privacy Policy](https://live-lyrics.web.app/privacypolicy.html)")
     
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.presentationMode) var presMode
