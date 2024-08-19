@@ -572,7 +572,8 @@ struct MainView: View {
                                                                     showDeleteSheet = true
                                                                     mainViewModel.selectedFolder = folder
                                                                 } label: {
-                                                                    if folder.uid ?? "" != uid() {
+                                                                    // If folder does not in fact have uid, it was created with an older version of the app, and is part of the user's library, so if uid is not found, assume it is the current user's
+                                                                    if folder.uid ?? uid() != uid() {
                                                                         Label("Leave", systemImage: "arrow.backward.square")
                                                                     } else {
                                                                         Label("Delete", systemImage: "trash")
@@ -593,6 +594,27 @@ struct MainView: View {
                                                             )
                                                         }
                                                         .disabled(isEditingFolders)
+                                                        .confirmationDialog(mainViewModel.selectedFolder?.uid ?? "" == uid() ? "Delete Folder" : "Leave Folder", isPresented: $showDeleteSheet) {
+                                                            if let selectedFolder = mainViewModel.selectedFolder {
+                                                                Button(selectedFolder.uid ?? "" == uid() ? "Delete" : "Leave", role: .destructive) {
+                                                                    if selectedFolder.uid ?? "" == uid() {
+                                                                        mainViewModel.deleteFolder(selectedFolder)
+                                                                    } else {
+                                                                        mainViewModel.leaveCollabFolder(folder: selectedFolder)
+                                                                    }
+                                                                    mainViewModel.fetchFolders()
+                                                                }
+                                                                Button("Cancel", role: .cancel) { }
+                                                            }
+                                                        } message: {
+                                                            if let selectedFolder = mainViewModel.selectedFolder {
+                                                                if selectedFolder.uid ?? "" == uid() {
+                                                                    Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"? WARNING: This action cannot be undone!")
+                                                                } else {
+                                                                    Text("Are you sure you want to leave the shared folder \"\(selectedFolder.title)\"?")
+                                                                }
+                                                            }
+                                                        }
                                                         if isEditingFolders {
                                                             Button {
                                                                 showEditSheet = true
@@ -737,10 +759,11 @@ struct MainView: View {
                                                                                         mainViewModel.selectedFolder = folder
                                                                                         showFolderSongDeleteSheet.toggle()
                                                                                     } label: {
-                                                                                        if folder.uid ?? "" == uid() && song.uid != uid() {
-                                                                                            Label("Remove", systemImage: "trash")
-                                                                                        } else {
+                                                                                        // If folder does not in fact have uid, it was created with an older version of the app, and is part of the user's library, so if uid is not found, assume it is the current user's
+                                                                                        if folder.uid ?? uid() == uid() && song.uid != uid() {
                                                                                             Label("Leave", systemImage: "arrow.backward.square")
+                                                                                        } else {
+                                                                                            Label("Remove", systemImage: "trash")
                                                                                         }
                                                                                     }
                                                                                 }
@@ -760,7 +783,7 @@ struct MainView: View {
                                                                                                 songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                                                                             }
                                                                                         }
-                                                                                        if mainViewModel.selectedFolder?.uid ?? "" == uid() && selectedSong.uid != uid() {
+                                                                                        if mainViewModel.selectedFolder?.uid ?? uid() == uid() {
                                                                                             Button("Remove from Folder") {
                                                                                                 mainViewModel.deleteSong(folder, selectedSong)
                                                                                             }
@@ -878,6 +901,22 @@ struct MainView: View {
                                                             .contextMenu {
                                                                 songContextMenu(song: song)
                                                             }
+                                                            .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
+                                                                if let selectedSong = selectedSong {
+                                                                    Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                                                        if songViewModel.isShared(song: selectedSong) {
+                                                                            songViewModel.leaveSong(song: selectedSong)
+                                                                        } else {
+                                                                            songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                                                        }
+                                                                    }
+                                                                    Button("Cancel", role: .cancel) {}
+                                                                }
+                                                            } message: {
+                                                                if let selectedSong = selectedSong {
+                                                                    Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
+                                                                }
+                                                            }
                                                     }
                                                 }
                                             }
@@ -910,27 +949,6 @@ struct MainView: View {
                             AddSongsView(folder: selectedFolder)
                         }
                     }
-                    .confirmationDialog(mainViewModel.selectedFolder?.uid ?? "" == uid() ? "Delete Folder" : "Leave Folder", isPresented: $showDeleteSheet) {
-                        if let selectedFolder = mainViewModel.selectedFolder {
-                            Button(selectedFolder.uid ?? "" == uid() ? "Delete" : "Leave", role: .destructive) {
-                                if selectedFolder.uid ?? "" == uid() {
-                                    mainViewModel.deleteFolder(selectedFolder)
-                                } else {
-                                    mainViewModel.leaveCollabFolder(folder: selectedFolder)
-                                }
-                                mainViewModel.fetchFolders()
-                            }
-                            Button("Cancel", role: .cancel) { }
-                        }
-                    } message: {
-                        if let selectedFolder = mainViewModel.selectedFolder {
-                            if selectedFolder.uid ?? "" == uid() {
-                                Text("Are you sure you want to permanently delete \"\(selectedFolder.title)\"? WARNING: This action cannot be undone!")
-                            } else {
-                                Text("Are you sure you want to leave the shared folder \"\(selectedFolder.title)\"?")
-                            }
-                        }
-                    }
                     .sheet(isPresented: $showSongMoveSheet) {
                         if let selectedSong = selectedSong {
                             SongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
@@ -945,22 +963,6 @@ struct MainView: View {
                         if let selectedSong = selectedSong {
                             let tags: [TagSelectionEnum] = selectedSong.tags?.compactMap { TagSelectionEnum(rawValue: $0) } ?? []
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
-                        }
-                    }
-                    .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
-                        if let selectedSong = selectedSong {
-                            Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
-                                if songViewModel.isShared(song: selectedSong) {
-                                    songViewModel.leaveSong(song: selectedSong)
-                                } else {
-                                    songViewModel.moveSongToRecentlyDeleted(selectedSong)
-                                }
-                            }
-                            Button("Cancel", role: .cancel) {}
-                        }
-                    } message: {
-                        if let selectedSong = selectedSong {
-                            Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                         }
                     }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
