@@ -72,7 +72,6 @@ struct SongDetailView: View {
     @Environment(\.presentationMode) var presMode
     
     @FocusState var isInputActive: Bool
-    @FocusState var dummyFocusState: Bool
     
     var songs: [Song]?
     let isSongFromFolder: Bool
@@ -151,10 +150,7 @@ struct SongDetailView: View {
         self._isChecked = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
         self._value = State(initialValue: inputSong.size ?? 18)
-        
-        // Remove line spacing until supported by TextEditor
-//        self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
-        self._lineSpacing = State(initialValue: 1.0)
+        self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
         
         self._weight = State(initialValue: .regular)
         self._alignment = State(initialValue: .leading)
@@ -174,8 +170,6 @@ struct SongDetailView: View {
         
         self._weight = State(initialValue: songDetailViewModel.getWeight(weight: Int(inputSong.weight ?? 0)))
         self._alignment = State(initialValue: songDetailViewModel.getAlignment(alignment: Int(inputSong.alignment ?? 0)))
-        
-        self.dummyFocusState = false
     }
     
     var body: some View {
@@ -290,14 +284,14 @@ struct SongDetailView: View {
             ZStack {
                 let showJoinedUsers = joinedUsers?.isEmpty ?? true
                 
-                CustomTextEditor(text: restoreSong == nil ? $lyrics : .constant(lyrics),
-                                 multilineTextAlignment: alignment,
-                                 font: UIFont.systemFont(ofSize: CGFloat(value), weight: weight.uiFontWeight),
-                                 lineSpacing: lineSpacing,
-                                 padding: UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12),
-                                 isInputActive: $isInputActive,
-                                 showBlur: $showBackgroundBlur)
-                .focused(restoreSong == nil ? $isInputActive : $dummyFocusState)
+                TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
+                    .multilineTextAlignment(alignment)
+                    .font(.system(size: CGFloat(value), weight: weight))
+                    .lineSpacing(lineSpacing)
+                    .focused($isInputActive)
+                    .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
+                        textEditor.textContainerInset = UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12)
+                    }
                 if restoreSong == nil {
                     Color.black
                         .mask(LinearGradient(
@@ -307,7 +301,7 @@ struct SongDetailView: View {
                         ))
                         .frame(height: 95)
                         .frame(maxHeight: .infinity, alignment: .top)
-                        .opacity(showBackgroundBlur && !showJoinedUsers ? 1 : 0)
+                        .opacity(!showJoinedUsers ? 1 : 0)
                         .allowsHitTesting(false)
                     VStack {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -647,5 +641,19 @@ struct SongDetailView: View {
                 }
             }
         }
+    }
+}
+
+class ScrollViewDelegate: NSObject, UIScrollViewDelegate {
+    var showBlurHandler: (Bool) -> Void
+    
+    init(showBlurHandler: @escaping (Bool) -> Void) {
+        self.showBlurHandler = showBlurHandler
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let shouldShowBlur = offsetY >= 24
+        showBlurHandler(shouldShowBlur)
     }
 }

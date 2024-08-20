@@ -490,9 +490,7 @@ struct MainView: View {
                                     if !isFoldersCollapsed {
                                         ForEach(searchableFolders) { folder  in
                                             if folder.title == "noFolders" {
-                                                Text("No Folders")
-                                                    .foregroundColor(Color.gray)
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                EmptyStateView(state: .folders)
                                             } else {
                                                 VStack {
                                                     HStack {
@@ -842,27 +840,34 @@ struct MainView: View {
                                                 .clipShape(Circle())
                                                 .font(.footnote.weight(.bold))
                                         }
-                                        Button {
-                                            showSortSheet.toggle()
-                                        } label: {
-                                            if sortSelection == .noSelection {
-                                                Image(systemName: "line.3.horizontal.decrease")
-                                                    .padding(12)
-                                                    .foregroundColor(Color.blue)
-                                                    .background(Material.regular)
-                                                    .clipShape(Circle())
-                                                    .font(.system(size: 18).weight(.bold))
-                                            } else {
-                                                Image(systemName: "line.3.horizontal.decrease")
-                                                    .padding(12)
-                                                    .foregroundColor(Color.white)
-                                                    .background(Color.blue)
-                                                    .clipShape(Circle())
-                                                    .font(.system(size: 18).weight(.bold))
+                                        if mainViewModel.songs.filter({ song in
+                                            if song.title != "noSongs" {
+                                                return true
                                             }
-                                        }
-                                        .bottomSheet(isPresented: $showSortSheet, detents: [.medium()]) {
-                                            SortView(isPresented: $showSortSheet, sortSelection: $sortSelection)
+                                            return false
+                                        }).count < 1 {
+                                            Button {
+                                                showSortSheet.toggle()
+                                            } label: {
+                                                if sortSelection == .noSelection {
+                                                    Image(systemName: "line.3.horizontal.decrease")
+                                                        .padding(12)
+                                                        .foregroundColor(Color.blue)
+                                                        .background(Material.regular)
+                                                        .clipShape(Circle())
+                                                        .font(.system(size: 18).weight(.bold))
+                                                } else {
+                                                    Image(systemName: "line.3.horizontal.decrease")
+                                                        .padding(12)
+                                                        .foregroundColor(Color.white)
+                                                        .background(Color.blue)
+                                                        .clipShape(Circle())
+                                                        .font(.system(size: 18).weight(.bold))
+                                                }
+                                            }
+                                            .bottomSheet(isPresented: $showSortSheet, detents: [.medium()]) {
+                                                SortView(isPresented: $showSortSheet, sortSelection: $sortSelection)
+                                            }
                                         }
                                         Button {
                                             withAnimation(.bouncy(extraBounce: 0.1)) {
@@ -889,10 +894,7 @@ struct MainView: View {
                                     } else {
                                         ForEach(searchableSongs) { song in
                                             if song.title == "noSongs" {
-                                                Text("No Songs")
-                                                    .foregroundColor(Color.gray)
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                    .deleteDisabled(true)
+                                                EmptyStateView(state: .songs)
                                                     .moveDisabled(true)
                                             } else {
                                                 HStack {

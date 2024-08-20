@@ -101,26 +101,10 @@
 
     },
     "0.0" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "0.0"
-          }
-        }
-      }
+
     },
     "0.5" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "0.5"
-          }
-        }
-      }
+
     },
     "1" : {
       "localizations" : {
@@ -133,26 +117,10 @@
       }
     },
     "1.0" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1.0"
-          }
-        }
-      }
+
     },
     "1.5" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1.5"
-          }
-        }
-      }
+
     },
     "2" : {
       "localizations" : {
@@ -175,26 +143,10 @@
       }
     },
     "2.0" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2.0"
-          }
-        }
-      }
+
     },
     "2.5" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2.5"
-          }
-        }
-      }
+
     },
     "3" : {
       "localizations" : {
@@ -207,15 +159,7 @@
       }
     },
     "3.0" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "3.0"
-          }
-        }
-      }
+
     },
     "4" : {
       "localizations" : {
@@ -1122,17 +1066,6 @@
         }
       }
     },
-    "Font Style" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estilo de fuente"
-          }
-        }
-      }
-    },
     "Font Weight" : {
       "localizations" : {
         "es" : {
@@ -1465,15 +1398,7 @@
       }
     },
     "Line Spacing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacio entre líneas"
-          }
-        }
-      }
+
     },
     "Loading" : {
       "localizations" : {
@@ -1582,17 +1507,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estilo metrónomo"
-          }
-        }
-      }
-    },
-    "Monospaced" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monoespaciado"
           }
         }
       }
@@ -1751,7 +1665,7 @@
       "localizations" : {
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Sin canciones"
           }
         }
@@ -2096,17 +2010,6 @@
         }
       }
     },
-    "Rounded" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redondeado"
-          }
-        }
-      }
-    },
     "Save" : {
       "localizations" : {
         "es" : {
@@ -2197,17 +2100,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enviar comentarios"
-          }
-        }
-      }
-    },
-    "Serif" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serifa"
           }
         }
       }
@@ -2693,6 +2585,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ya no tienes acceso a esta canción."
+          }
+        }
+      }
+    },
+    "you_dont_have_any_folders" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have any folders."
+          }
+        }
+      }
+    },
+    "you_dont_have_any_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have any songs. Go and create some!"
           }
         }
       }
