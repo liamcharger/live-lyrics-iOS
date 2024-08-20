@@ -928,7 +928,7 @@ struct MainView: View {
                         .id("songs")
                     }
                     .padding()
-                    .padding(.bottom, !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable ? 55 : 0)
+                    .padding(.bottom, !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable ? 75 : 0)
                     .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
                         UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder, isSongFromFolder: true)
                     }
