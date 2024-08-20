@@ -91,10 +91,19 @@ struct UserService {
         }
     }
     
-    func fetchUsers(withUsername username: String, completion: @escaping([User]) -> Void) {
+    func fetchUsers(withUsername username: String, filterCurrentUser: Bool, completion: @escaping([User]) -> Void) {
         Firestore.firestore().collection("users").whereField("username", isEqualTo: username).getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else { return }
-            let users = documents.compactMap({ try? $0.data(as: User.self) })
+            let users = documents.compactMap({ try? $0.data(as: User.self) }).filter { user in
+                if !filterCurrentUser {
+                    return true
+                } else {
+                    if user.id ?? "" != Auth.auth().currentUser?.uid {
+                        return false
+                    }
+                }
+                return true
+            }
             completion(users)
         }
     }

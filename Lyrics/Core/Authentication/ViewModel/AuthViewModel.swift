@@ -175,9 +175,9 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchUsers(username: String, completion: @escaping() -> Void) {
+    func fetchUsers(username: String, filterCurrentUser: Bool, completion: @escaping() -> Void) {
         self.isLoadingUsers = true
-        service.fetchUsers(withUsername: username) { users in
+        service.fetchUsers(withUsername: username, filterCurrentUser: filterCurrentUser) { users in
             self.users = users
             self.isLoadingUsers = false
             completion()

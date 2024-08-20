@@ -250,7 +250,7 @@ struct ShareView: View {
                             firstSearch = true
                             authViewModel.users = []
                         } else {
-                            authViewModel.fetchUsers(username: searchText) {
+                            authViewModel.fetchUsers(username: searchText, filterCurrentUser: true) {
                                 if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) && !authViewModel.users.isEmpty {
                                     recentSearches.append(",\(searchText)")
                                 }
@@ -305,7 +305,7 @@ struct ShareView: View {
                                         if !search.isEmpty {
                                             Button {
                                                 searchText = search
-                                                authViewModel.fetchUsers(username: search) {}
+                                                authViewModel.fetchUsers(username: search, filterCurrentUser: true) {}
                                             } label: {
                                                 Text(search)
                                                     .font(.body.weight(.semibold))
