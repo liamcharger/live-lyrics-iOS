@@ -104,7 +104,7 @@ struct RegistrationView: View {
             }
         }
         .sheet(isPresented: $showWebView) {
-            WebView()
+            PrivacyPolicyView()
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
