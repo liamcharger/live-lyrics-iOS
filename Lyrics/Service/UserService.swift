@@ -96,13 +96,13 @@ struct UserService {
             guard let documents = snapshot?.documents else { return }
             let users = documents.compactMap({ try? $0.data(as: User.self) }).filter { user in
                 if !filterCurrentUser {
-                    return true
+                    return false
                 } else {
                     if user.id ?? "" != Auth.auth().currentUser?.uid {
-                        return false
+                        return true
                     }
                 }
-                return true
+                return false
             }
             completion(users)
         }
@@ -119,19 +119,33 @@ struct UserService {
             }
     }
     
-    func sendNotificationToFCM(tokens: [String], title: String, body: String) {
-        let data: [String: Any] = [
+    func sendNotificationToFCM(tokens: [String], title: String, body: String, type: NotificationType) {
+        var data: [String: Any] = [
             "tokens": tokens,
             "title": title,
             "body": body
         ]
-        // Do not call notifications due to inpredictability, remove for release
-//        Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
-//            if let error = error {
-//                print("Error sending notification: \(error.localizedDescription)")
-//            } else {
-//                print("Notification sent successfully")
-//            }
-//        }
+        
+        if type == .incoming {
+            data["deep_link"] = "live-lyrics://share-invites"
+        } else if type == .accepted {
+            data["deep_link"] = "live-lyrics://profile"
+        } else if type == .declined {
+            data["deep_link"] = "live-lyrics://profile"
+        }
+        
+        Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
+            if let error = error {
+                print("Error sending notification: \(error.localizedDescription)")
+            } else {
+                print("Notification sent successfully")
+            }
+        }
     }
+}
+
+enum NotificationType {
+    case incoming
+    case accepted
+    case declined
 }

@@ -871,7 +871,7 @@ class SongService {
 			
 			dispatch.notify(queue: .main) {
 				if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song").")
+					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.fullname) has shared a \(request.contentType == "folder" ? "folder" : "song")", type: .incoming)
 				}
 				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers":FieldValue.arrayUnion([request.from])])
 				completion(nil)
@@ -919,7 +919,7 @@ class SongService {
 		}
 	}
 	
-	func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, completion: @escaping () -> Void) {
+	func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, declinedBy: String? = nil, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		let group = DispatchGroup()
@@ -929,7 +929,13 @@ class SongService {
 		group.leave()
 		group.notify(queue: .main) {
 			if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
-				UserService().sendNotificationToFCM(tokens: [token], title: "Request Declined", body: "\(currentUser.username) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\".")
+				if let declinedBy = declinedBy {
+					if declinedBy != request.from {
+						UserService().sendNotificationToFCM(tokens: [token], title: "Request Declined", body: "\(currentUser.fullname) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\"", type: .declined)
+					}
+				} else {
+					UserService().sendNotificationToFCM(tokens: [token], title: "Request Declined", body: "\(currentUser.fullname) has declined the \(request.contentType == "folder" ? "folder" : "song") \"\(request.contentName)\"", type: .declined)
+				}
 			}
 			completion()
 		}
@@ -1007,7 +1013,7 @@ class SongService {
 						dispatch.notify(queue: .main) {
 							self.deleteRequest(request, uid: uid)
 							if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
-								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\".")
+								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.fullname) has accepted the folder \"\(request.contentName)\"", type: .accepted)
 							}
 							completion()
 						}
@@ -1051,8 +1057,8 @@ class SongService {
 					
 					dispatch.notify(queue: .main) {
 						self.deleteRequest(request, uid: uid)
-						if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-							UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\". Tap to view.")
+						if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
+							UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.fullname) has accepted the song \"\(request.contentName)\"", type: .accepted)
 						}
 						completion()
 					}
@@ -1107,7 +1113,7 @@ class SongService {
 						dispatch.notify(queue: .main) {
 							self.deleteRequest(request, uid: uid)
 							if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
-								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.username) has accepted the song \"\(request.contentName)\".")
+								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.fullname) has accepted the song \"\(request.contentName)\"", type: .accepted)
 							}
 							completion()
 						}

@@ -31,6 +31,7 @@ class MainViewModel: ObservableObject {
     @Published var isLoadingSharedFolders = true
     @Published var isLoadingSharedMedia = true
     @Published var showProfileView = false
+    @Published var showShareInvites = false
     @Published var updateAvailable = false
     
     @Published var notifications = [Notification]()

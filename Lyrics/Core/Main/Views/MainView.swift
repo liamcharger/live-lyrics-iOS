@@ -378,72 +378,38 @@ struct MainView: View {
                             .padding(.top, -18)
                             VStack {
                                 LazyVGrid(columns: columns) {
-                                    ForEach(0...1, id: \.self) { index in
-                                        let title = {
-                                            switch index {
-                                            case 0:
-                                                return NSLocalizedString("recently_deleted", comment: "")
-                                            case 1:
-                                                return NSLocalizedString("share_invites", comment: "")
-                                            default:
-                                                return ""
-                                            }
-                                        }()
-                                        let icon = {
-                                            switch index {
-                                            case 0:
-                                                return "trash-can"
-                                            case 1:
-                                                return "users"
-                                            default:
-                                                return ""
-                                            }
-                                        }()
-                                        let color = {
-                                            switch index {
-                                            case 0:
-                                                return Color.red
-                                            case 1:
-                                                return Color.blue
-                                            default:
-                                                return Color.primary
-                                            }
-                                        }()
-                                        
-                                        NavigationLink(destination: {
-                                            if index == 0 {
-                                                RecentlyDeletedView()
-                                            } else if index == 1 {
-                                                SongShareDetailView()
-                                            }
-                                        }) {
-                                            ZStack {
-                                                ContentRowView(title, icon: icon, color: color)
-                                                    .customShadow(color: showShareInvitesShadow && index == 1 ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
-                                                    .onChange(of: mainViewModel.incomingShareRequests.count >= 1) { _ in
-                                                        withAnimation(.easeInOut) {
-                                                            showShareInvitesShadow = mainViewModel.incomingShareRequests.count >= 1
-                                                        }
-                                                    }
-                                                // Badge to show number of incoming share requests
-                                                HStack {
-                                                    Spacer()
-                                                    if !mainViewModel.incomingShareRequests.isEmpty && index == 1 {
-                                                        Circle()
-                                                            .frame(width: 24, height: 24)
-                                                            .foregroundColor(.blue)
-                                                            .overlay {
-                                                                Text(String(mainViewModel.incomingShareRequests.count))
-                                                                    .font(.caption.weight(.semibold))
-                                                                    .foregroundColor(.white)
-                                                            }
-                                                            .offset(x: 24, y: -38)
+                                    NavigationLink(destination: {
+                                        RecentlyDeletedView()
+                                    }) {
+                                        ContentRowView(NSLocalizedString("recently_deleted", comment: ""), icon: "trash-can", color: .red)
+                                    }
+                                    NavigationLink(destination: SongShareDetailView(), isActive: $mainViewModel.showShareInvites, label: {
+                                        ZStack {
+                                            ContentRowView(NSLocalizedString("share_invites", comment: ""), icon: "users", color: .blue)
+                                                .customShadow(color: showShareInvitesShadow ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
+                                                .onChange(of: mainViewModel.incomingShareRequests.count >= 1) { _ in
+                                                    withAnimation(.easeInOut) {
+                                                        showShareInvitesShadow = mainViewModel.incomingShareRequests.count >= 1
                                                     }
                                                 }
-                                                .padding()
+                                            // Badge to show number of incoming share requests
+                                            HStack {
+                                                Spacer()
+                                                if !mainViewModel.incomingShareRequests.isEmpty {
+                                                    Circle()
+                                                        .frame(width: 24, height: 24)
+                                                        .foregroundColor(.blue)
+                                                        .overlay {
+                                                            Text(String(mainViewModel.incomingShareRequests.count))
+                                                                .font(.caption.weight(.semibold))
+                                                                .foregroundColor(.white)
+                                                        }
+                                                        .offset(x: 24, y: -38)
+                                                }
                                             }
+                                            .padding()
                                         }
-                                    }
+                                    })
                                 }
                             }
                             VStack {
@@ -842,9 +808,9 @@ struct MainView: View {
                                         }
                                         if mainViewModel.songs.filter({ song in
                                             if song.title != "noSongs" {
-                                                return true
+                                                return false
                                             }
-                                            return false
+                                            return true
                                         }).count < 1 {
                                             Button {
                                                 showSortSheet.toggle()

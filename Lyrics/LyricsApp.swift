@@ -36,6 +36,8 @@ struct LyricsApp: App {
                     if viewModel.currentUser != nil {
                         if url.absoluteString == "live-lyrics://profile" {
                             MainViewModel.shared.showProfileView = true
+                        } else if url.absoluteString == "live-lyrics://share-invites" {
+                            MainViewModel.shared.showShareInvites = true
                         }
                     }
                 }
