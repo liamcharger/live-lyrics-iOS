@@ -78,7 +78,7 @@ struct PrivacyPolicyView: View {
         NavigationView {
             VStack(spacing: 0) {
                 ZStack {
-                    WebView(urlToDisplay: "https://live-lyrics.web.app/privacypolicy", isLoading: $isLoading, progress: $progress)
+                    WebView(urlToDisplay: "https://live-lyrics.web.app/privacypolicy?inApp=true", isLoading: $isLoading, progress: $progress)
                     if isLoading {
                         ProgressView()
                     }
