@@ -309,8 +309,8 @@ class MainViewModel: ObservableObject {
         service.deleteFolder(folder)
     }
     
-    func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, completion: @escaping() -> Void) {
-        service.declineInvite(incomingReqColUid: incomingReqColUid, request: request) {
+    func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, declinedBy: String? = nil, completion: @escaping() -> Void) {
+        service.declineInvite(incomingReqColUid: incomingReqColUid, request: request, declinedBy: declinedBy) {
             completion()
         }
     }

@@ -116,11 +116,14 @@ struct SongDetailView: View {
             }
         }
     }
+    func updateLyrics() {
+        mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
+        lastUpdatedLyrics = lyrics
+    }
     func checkForUpdatedLyrics() {
         self.updatedLyricsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if lyrics != lastUpdatedLyrics {
-                mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
-                lastUpdatedLyrics = lyrics
+                updateLyrics()
             }
         }
     }
@@ -511,6 +514,7 @@ struct SongDetailView: View {
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
                 if let song = song {
+                    self.song = song
                     self.title = song.title
                     if !isInputActive {
                         if selectedVariation == nil {

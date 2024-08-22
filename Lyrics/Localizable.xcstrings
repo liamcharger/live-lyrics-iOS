@@ -1616,6 +1616,7 @@
       }
     },
     "Next" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1970,6 +1971,9 @@
         }
       }
     },
+    "Remove Song" : {
+
+    },
     "Restore" : {
       "localizations" : {
         "es" : {
@@ -2142,6 +2146,7 @@
       }
     },
     "Shared" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

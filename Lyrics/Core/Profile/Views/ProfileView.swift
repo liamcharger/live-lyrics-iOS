@@ -48,7 +48,9 @@ struct ProfileView: View {
                 Text("Edit Profile")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton {
+                    showProfileView = false
+                }
             }
             .padding()
             Divider()
@@ -111,7 +113,7 @@ struct ProfileView: View {
                 .padding()
             }
             Divider()
-            Button(action: {
+            LiveLyricsButton("Save") {
                 viewModel.updateUser(withEmail: email, username: username, fullname: fullname) { success in
                     if success {
                         showAlert.toggle()
@@ -121,14 +123,7 @@ struct ProfileView: View {
                 } completionString: { string in
                     errorMessage = string
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Save")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            })
+            }
             .opacity(!isEmpty ? 0.5 : 1.0)
             .disabled(!isEmpty)
             .padding()
@@ -137,7 +132,9 @@ struct ProfileView: View {
             VStack(spacing: 10) {
                 HStack {
                     Spacer()
-                    SheetCloseButton(isPresented: $showDeleteSheet)
+                    SheetCloseButton {
+                        showDeleteSheet = false
+                    }
                 }
                 Spacer()
                 Image(systemName: "trash")

@@ -23,7 +23,9 @@ struct SongTagView: View {
                 Text("Tags")
                     .font(.system(size: 26, weight: .bold))
                 Spacer()
-                SheetCloseButton(isPresented: $isPresented)
+                SheetCloseButton {
+                    isPresented = false
+                }
             }
             .padding()
             Divider()

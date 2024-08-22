@@ -224,7 +224,7 @@ struct SettingsView: View {
                 .padding(.horizontal)
             }
             Divider()
-            Button {
+            LiveLyricsButton("Save", action: {
                 settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
                     if success {
                         presMode.wrappedValue.dismiss()
@@ -233,14 +233,7 @@ struct SettingsView: View {
                         self.errorMessage = errorMessage
                     }
                 }
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Save")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            }
+            })
             .padding()
         }
         .alert(isPresented: $showError) {

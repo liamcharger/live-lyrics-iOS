@@ -45,7 +45,9 @@ struct SongMoveView: View {
                 .sheet(isPresented: $showNewFolderView) {
                     NewFolderView(isDisplayed: $showNewFolderView)
                 }
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton {
+                    showProfileView = false
+                }
             }
             .padding()
             Divider()

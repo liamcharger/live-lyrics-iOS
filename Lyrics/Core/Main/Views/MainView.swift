@@ -479,13 +479,8 @@ struct MainView: View {
                                                                         .lineLimit(1)
                                                                         .multilineTextAlignment(.leading)
                                                                     if folder.uid != uid() {
-                                                                        Text("Shared")
-                                                                            .padding(6)
-                                                                            .padding(.horizontal, 1.5)
-                                                                            .font(.system(size: 13).weight(.medium))
-                                                                            .background(Material.thin)
-                                                                            .foregroundColor(.primary)
-                                                                            .clipShape(Capsule())
+                                                                        Image(systemName: "person.2")
+                                                                            .font(.system(size: 16).weight(.medium))
                                                                     }
                                                                 }
                                                                 Spacer()
@@ -637,6 +632,9 @@ struct MainView: View {
                                                                         song.readOnly = folder.readOnly
                                                                         return song
                                                                     }()
+                                                                    let isShared: Bool = {
+                                                                        return mainViewModel.selectedFolder?.uid ?? uid() != uid()
+                                                                    }()
                                                                     
                                                                     if song.title == "noSongs" {
                                                                         Text("No Songs")
@@ -659,7 +657,7 @@ struct MainView: View {
                                                                                             Label("Edit", systemImage: "pencil")
                                                                                         }
                                                                                     }
-                                                                                    if !songViewModel.isShared(song: song) {
+                                                                                    if !isShared {
                                                                                         Button {
                                                                                             selectedSong = song
                                                                                             showShareSheet.toggle()
@@ -723,42 +721,24 @@ struct MainView: View {
                                                                                         mainViewModel.selectedFolder = folder
                                                                                         showFolderSongDeleteSheet.toggle()
                                                                                     } label: {
-                                                                                        // If folder does not in fact have uid, it was created with an older version of the app, and is part of the user's library, so if uid is not found, assume it is the current user's
-                                                                                        if folder.uid ?? uid() == uid() && song.uid != uid() {
-                                                                                            Label("Leave", systemImage: "arrow.backward.square")
-                                                                                        } else {
-                                                                                            Label("Remove", systemImage: "trash")
-                                                                                        }
+                                                                                        Label("Remove", systemImage: "trash")
                                                                                     }
                                                                                 }
-                                                                                .confirmationDialog(songViewModel.isShared(song: selectedSong ?? Song.song) ? "Leave Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
+                                                                                .confirmationDialog(isShared ? "Remove Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
                                                                                     if let selectedSong = selectedSong {
-                                                                                        Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
-                                                                                            if songViewModel.isShared(song: selectedSong) {
-                                                                                                if let selectedFolder = mainViewModel.selectedFolder {
-                                                                                                    if selectedFolder.uid ?? "" == uid() {
-                                                                                                        mainViewModel.deleteSong(folder, selectedSong)
-                                                                                                    }
-                                                                                                    mainViewModel.leaveCollabFolder(folder: selectedFolder)
-                                                                                                } else {
-                                                                                                    songViewModel.leaveSong(song: selectedSong)
-                                                                                                }
-                                                                                            } else {
+                                                                                        if !isShared {
+                                                                                            Button("Delete", role: .destructive) {
                                                                                                 songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                                                                             }
                                                                                         }
-                                                                                        if mainViewModel.selectedFolder?.uid ?? uid() == uid() {
-                                                                                            Button("Remove from Folder") {
-                                                                                                mainViewModel.deleteSong(folder, selectedSong)
-                                                                                            }
+                                                                                        Button("Remove from Folder") {
+                                                                                            mainViewModel.deleteSong(folder, selectedSong)
                                                                                         }
                                                                                         Button("Cancel", role: .cancel) {}
                                                                                     }
                                                                                 } message: {
                                                                                     if let selectedSong = selectedSong {
-                                                                                        let isShared = songViewModel.isShared(song: selectedSong)
-                                                                                        
-                                                                                        Text("Are you sure you want to \(isShared ? "leave" : "delete") \"\(selectedSong.title)\"?") + Text((mainViewModel.selectedFolder != nil && isShared) ? (" " + NSLocalizedString("songs_parent_will_be_left", comment: "")) : "")
+                                                                                        Text("Are you sure you want to \(isShared ? "remove" : "delete") \"\(selectedSong.title)\"?")
                                                                                     }
                                                                                 }
                                                                         }

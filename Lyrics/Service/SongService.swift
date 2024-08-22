@@ -35,6 +35,7 @@ class SongService {
 			}
 	}
 	
+	// FIXME: group completion called before fetchSongs are finished loading, resulting in loading state changing to false when songs are not loaded
 	func fetchSharedSongs(completion: @escaping([Song]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
@@ -626,7 +627,7 @@ class SongService {
 	func deleteSong(_ folder: Folder, _ song: Song) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
-		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id!).collection("songs").document(song.id!).delete { error in
+		Firestore.firestore().collection("users").document(folder.uid ?? uid).collection("folders").document(folder.id!).collection("songs").document(song.id!).delete { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -728,7 +729,7 @@ class SongService {
 			return
 		}
 		
-		var songData: [String: Any?] = [
+		let songData: [String: Any?] = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
 			"deletedTimestamp": Date(),
@@ -751,7 +752,7 @@ class SongService {
 		]
 		
 		let firestore = Firestore.firestore()
-		let userRef = firestore.collection("users").document(uid)
+		let userRef = firestore.collection("users").document(song.uid)
 		let recentlyDeletedRef = userRef.collection("recentlydeleted").document(song.id!)
 		
 		if let folder = folder {

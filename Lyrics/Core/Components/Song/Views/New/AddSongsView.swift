@@ -89,14 +89,8 @@ struct AddSongsView: View {
                             .clipShape(Capsule())
                     }
                 }
-                Button(action: { presMode.wrappedValue.dismiss() }) {
-                    Image(systemName: "xmark")
-                        .imageScale(.medium)
-                        .padding(12)
-                        .font(.body.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .background(Material.regular)
-                        .clipShape(Capsule())
+                SheetCloseButton {
+                    presMode.wrappedValue.dismiss()
                 }
                 if !selectedSongs.isEmpty {
                     Button(action: {
@@ -135,19 +129,11 @@ struct AddSongsView: View {
                     if showSearchBar {
                         HStack(spacing: 6) {
                             CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
-                            Button(action: {
+                            SheetCloseButton {
                                 withAnimation(.bouncy(extraBounce: 0.1)) {
                                     searchText = ""
                                     showSearchBar.toggle()
                                 }
-                            }) {
-                                Image(systemName: "xmark")
-                                    .imageScale(.medium)
-                                    .padding(12)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.primary)
-                                    .background(Material.regular)
-                                    .clipShape(Capsule())
                             }
                         }
                         .padding([.horizontal, .top])

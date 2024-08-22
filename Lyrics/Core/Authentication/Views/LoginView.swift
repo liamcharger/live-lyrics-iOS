@@ -62,7 +62,7 @@ struct LoginView: View {
             }
             Spacer()
             VStack(spacing: 10) {
-                Button(action: {
+                LiveLyricsButton("Sign In") {
                     viewModel.login(withEmail: email, password: password) { success in
                         if !success {
                             showError.toggle()
@@ -70,14 +70,7 @@ struct LoginView: View {
                     } completionString: { string in
                         self.errorMessage = string
                     }
-                }, label: {
-                    HStack {
-                        Spacer()
-                        Text("Sign In")
-                        Spacer()
-                    }
-                    .modifier(NavButtonViewModifier())
-                })
+                }
                 .opacity(isEmpty ? 0.5 : 1.0)
                 .disabled(isEmpty)
             }

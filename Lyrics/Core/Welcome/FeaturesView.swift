@@ -36,7 +36,7 @@ struct FeaturesView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             }
             Spacer()
-            Button {
+            LiveLyricsButton(selectedTab < features.count - 1 ? "Next" : "Continue") {
                 if selectedTab < features.count - 1 {
                     withAnimation {
                         selectedTab += 1
@@ -45,14 +45,6 @@ struct FeaturesView: View {
                     withAnimation(Animation.bouncy(duration: 1.5)) {
                         animState = .fourth
                     }
-                }
-            } label: {
-                if selectedTab < features.count - 1 {
-                    Text("Next")
-                        .modifier(NavButtonViewModifier())
-                } else {
-                    Text("Continue")
-                        .modifier(NavButtonViewModifier())
                 }
             }
         }

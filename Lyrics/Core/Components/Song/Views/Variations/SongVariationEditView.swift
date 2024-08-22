@@ -44,7 +44,9 @@ struct SongVariationEditView: View {
                 Text("Edit Variation")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    isDisplayed = false
+                }
             }
             .padding()
             Divider()

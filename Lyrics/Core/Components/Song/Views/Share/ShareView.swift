@@ -107,7 +107,9 @@ struct ShareView: View {
                     }
                     .opacity(disabled ? 0.5 : 1.0)
                     .disabled(disabled)
-                    SheetCloseButton(isPresented: $isDisplayed)
+                    SheetCloseButton {
+                        isDisplayed = false
+                    }
                 }
                 if let userToShare = selectedUsers.first,
                 {

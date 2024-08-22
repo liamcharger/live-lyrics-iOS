@@ -92,6 +92,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         Messaging.messaging().delegate = self
         application.registerForRemoteNotifications()
         
+        if let remoteNotification = launchOptions?[.remoteNotification] as? [String: Any] {
+            handleNotification(userInfo: remoteNotification)
+        }
+        
         return true
     }
     
@@ -107,6 +111,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
+        handleNotification(userInfo: userInfo)
+        completionHandler([.badge, .banner, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        handleNotification(userInfo: userInfo)
+        completionHandler()
+    }
+    
+    private func handleNotification(userInfo: [AnyHashable: Any]) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID:", messageID)
         }
@@ -117,18 +132,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
            let subtitle = alert["body"] as? String {
             mainViewModel.receivedNotificationFromFirebase(Notification(title: title, body: subtitle))
         }
-
-        completionHandler([.badge, .banner])
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
         
         if let deepLink = userInfo["deep_link"] as? String {
             print(deepLink)
             UIApplication.shared.open(URL(string: deepLink)!)
         }
-        completionHandler()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
