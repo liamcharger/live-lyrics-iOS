@@ -111,31 +111,35 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        handleNotification(userInfo: userInfo)
+        handleNotification(userInfo: userInfo, openDeepLink: false)
         completionHandler([.badge, .banner, .sound])
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        handleNotification(userInfo: userInfo)
+        handleNotification(userInfo: userInfo, processNotification: false, openDeepLink: true)
         completionHandler()
     }
     
-    private func handleNotification(userInfo: [AnyHashable: Any]) {
+    private func handleNotification(userInfo: [AnyHashable: Any], processNotification: Bool = true, openDeepLink: Bool = false) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID:", messageID)
         }
         
-        if let aps = userInfo["aps"] as? [String: Any],
+        if processNotification, let aps = userInfo["aps"] as? [String: Any],
            let alert = aps["alert"] as? [String: Any],
            let title = alert["title"] as? String,
            let subtitle = alert["body"] as? String {
             mainViewModel.receivedNotificationFromFirebase(Notification(title: title, body: subtitle))
         }
         
-        if let deepLink = userInfo["deep_link"] as? String {
+        if openDeepLink, let deepLink = userInfo["deep_link"] as? String {
             print(deepLink)
-            UIApplication.shared.open(URL(string: deepLink)!)
+            if let url = URL(string: deepLink) {
+                UIApplication.shared.open(url)
+            }
         }
     }
     
