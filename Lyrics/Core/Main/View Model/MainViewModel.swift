@@ -103,6 +103,7 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    // FIXME: shared songs loading state changes to false before they are appended to the songs variable in MainView
     func fetchSharedSongs(completion: @escaping() -> Void) {
         self.isLoadingSharedSongs = true
         self.service.fetchSharedSongs { songs in

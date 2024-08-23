@@ -513,8 +513,18 @@ struct SongDetailView: View {
                 }
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
+                // Save shared song properties to reassign
+                let readOnly = self.song.readOnly
+                let variations = self.song.variations
+                let performanceMode = self.song.performanceMode
+                
                 if let song = song {
+                    // Assignment overwrites sharedSong properties, so reassign them
                     self.song = song
+                    self.song.readOnly = readOnly
+                    self.song.variations = variations
+                    self.song.performanceMode = performanceMode
+                    
                     self.title = song.title
                     if !isInputActive {
                         if selectedVariation == nil {
