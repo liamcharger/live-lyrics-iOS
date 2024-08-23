@@ -10,6 +10,7 @@ import SwiftUI
 struct AddSongsView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
     
     @State var errorMessage = ""
@@ -176,9 +177,9 @@ struct AddSongsView: View {
                                 .contextMenu {
                                     Button(action: {
                                         if selectedSongs.contains(where: { $0.id == song.id }) {
-                                            selectedSongs.removeAll(where: { $0.id == song.id }) // Deselect
+                                            selectedSongs.removeAll(where: { $0.id == song.id })
                                         } else {
-                                            selectedSongs.append(song) // Select
+                                            selectedSongs.append(song)
                                         }
                                     }) {
                                         if selectedSongs.contains(where: { $0.id == song.id }) {
@@ -189,6 +190,7 @@ struct AddSongsView: View {
                                     }
                                 }
                             }
+                            .disabled(isLoading)
                         }
                     }
                     .padding()

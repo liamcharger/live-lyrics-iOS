@@ -791,11 +791,19 @@ class SongService {
 		for song in songs {
 			let songDocumentRef = songsCollectionRef.document(song.id!)
 			
-			songDocumentRef.setData(["order": 0, "uid": song.uid]) { error in
-				if let error = error {
-					completion(error)
-				} else {
+			if !NetworkManager.shared.getNetworkState() {
+				songDocumentRef.setData(["order": 0, "uid": song.uid])
+				
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
 					completion(nil)
+				}
+			} else {
+				songDocumentRef.setData(["order": 0, "uid": song.uid]) { error in
+					if let error = error {
+						completion(error)
+					} else {
+						completion(nil)
+					}
 				}
 			}
 		}
