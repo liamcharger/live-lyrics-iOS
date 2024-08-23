@@ -98,13 +98,34 @@
       }
     },
     "%lld days" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld días"
+          }
+        }
+      }
     },
     "0.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0.0"
+          }
+        }
+      }
     },
     "0.5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0.5"
+          }
+        }
+      }
     },
     "1" : {
       "localizations" : {
@@ -117,10 +138,24 @@
       }
     },
     "1.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.0"
+          }
+        }
+      }
     },
     "1.5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.5"
+          }
+        }
+      }
     },
     "2" : {
       "localizations" : {
@@ -143,10 +178,24 @@
       }
     },
     "2.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2.0"
+          }
+        }
+      }
     },
     "2.5" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2.5"
+          }
+        }
+      }
     },
     "3" : {
       "localizations" : {
@@ -159,7 +208,14 @@
       }
     },
     "3.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3.0"
+          }
+        }
+      }
     },
     "4" : {
       "localizations" : {
@@ -297,6 +353,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This action is permanent cannot be undone!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción es permanente y no puede deshacerse."
           }
         }
       }
@@ -557,7 +619,14 @@
       }
     },
     "Cannot Purchase" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede comprar"
+          }
+        }
+      }
     },
     "Center" : {
       "localizations" : {
@@ -763,7 +832,14 @@
       }
     },
     "Delete All" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar todo"
+          }
+        }
+      }
     },
     "Delete Folder" : {
       "localizations" : {
@@ -828,6 +904,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to delete all recently deleted songs?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres borrar todas las canciones borradas recientemente?"
           }
         }
       }
@@ -986,6 +1068,12 @@
             "state" : "translated",
             "value" : "Enter some details for your song."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce algunos detalles de tu canción."
+          }
         }
       }
     },
@@ -1093,6 +1181,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Now let’s get you signed in."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora vamos a iniciar sesión."
           }
         }
       }
@@ -1334,6 +1428,12 @@
             "state" : "translated",
             "value" : "Key (Optional)"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llave (opcional)"
+          }
         }
       }
     },
@@ -1398,7 +1498,14 @@
       }
     },
     "Line Spacing" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacio entre líneas"
+          }
+        }
+      }
     },
     "Loading" : {
       "localizations" : {
@@ -1615,17 +1722,6 @@
         }
       }
     },
-    "Next" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Siguiente"
-          }
-        }
-      }
-    },
     "No account? " : {
       "localizations" : {
         "es" : {
@@ -1666,7 +1762,7 @@
       "localizations" : {
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Sin canciones"
           }
         }
@@ -1972,7 +2068,14 @@
       }
     },
     "Remove Song" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar canción"
+          }
+        }
+      }
     },
     "Restore" : {
       "localizations" : {
@@ -2141,17 +2244,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compartir invitaciones"
-          }
-        }
-      }
-    },
-    "Shared" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compartido"
           }
         }
       }
@@ -2397,7 +2489,14 @@
       }
     },
     "There aren't any lyrics for this song." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay letra para esta canción."
+          }
+        }
+      }
     },
     "These settings are not specific to song variations." : {
       "localizations" : {
@@ -2420,7 +2519,14 @@
       }
     },
     "This item cannot be purchased due to device restrictions." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este artículo no puede comprarse debido a restricciones del dispositivo."
+          }
+        }
+      }
     },
     "Tip" : {
       "localizations" : {
@@ -2601,6 +2707,12 @@
             "state" : "translated",
             "value" : "You don’t have any folders."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes carpetas."
+          }
         }
       }
     },
@@ -2610,6 +2722,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You don’t have any songs. Go and create some!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes canciones. Ve y crea algunas."
           }
         }
       }
