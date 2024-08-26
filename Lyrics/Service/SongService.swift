@@ -990,37 +990,32 @@ class SongService {
 					} else {
 						dispatch.enter()
 						self.createFolder(folder: folder, id: request.contentId) { error in
-							dispatch.leave()
 							if let error = error {
 								print("Error: \(error.localizedDescription)")
-								completion()
-								return
 							}
+							dispatch.leave()
 						}
+						
 						dispatch.enter()
 						self.fetchSongs(forUid: request.from, folder) { folderSongs in
-							dispatch.leave()
 							for song in folderSongs {
-								dispatch.enter()
-								self.createSong(song: song) { error in
-									dispatch.leave()
+								var songToAdd = song
+								songToAdd.uid = uid
+								
+								self.createSong(song: songToAdd) { error in
 									if let error = error {
 										print(error.localizedDescription)
-										completion()
-										return
 									}
-									songs.append(song)
+									songs.append(songToAdd)
 								}
 							}
-							dispatch.enter()
+							
 							self.moveSongsToFolder(id: folder.id!, songs: songs) { error in
-								dispatch.leave()
 								if let error = error {
 									print(error.localizedDescription)
-									completion()
-									return
 								}
 							}
+							dispatch.leave()
 						}
 						
 						dispatch.notify(queue: .main) {
