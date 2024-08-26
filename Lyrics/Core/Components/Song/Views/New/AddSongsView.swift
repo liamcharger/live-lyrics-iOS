@@ -64,9 +64,16 @@ struct AddSongsView: View {
     }
     
     func checkForSongs() {
-        selectedSongs = mainViewModel.folderSongs.filter { folderSong in
-            mainViewModel.songs.contains { $0.id == folderSong.id }
+        let songIdsSet = Set(mainViewModel.songs.map { $0.id })
+        
+        selectedSongs = mainViewModel.folderSongs.filter { song in
+            songIdsSet.contains(song.id)
         }
+        
+        let sharedSongs = mainViewModel.sharedSongs.filter { song in
+            mainViewModel.folderSongs.contains { $0.id == song.id }
+        }
+        selectedSongs += sharedSongs
     }
     
     var body: some View {
@@ -198,10 +205,12 @@ struct AddSongsView: View {
             }
         }
         .onAppear {
-            checkForSongs()
-            
             if mainViewModel.isLoadingSharedSongs {
-                mainViewModel.fetchSharedSongs {}
+                mainViewModel.fetchSharedSongs {
+                    checkForSongs()
+                }
+            } else {
+                checkForSongs()
             }
         }
         .onChange(of: mainViewModel.folderSongs) { _ in

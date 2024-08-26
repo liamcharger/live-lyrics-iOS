@@ -287,7 +287,7 @@ struct SongDetailView: View {
             ZStack {
                 let showJoinedUsers = joinedUsers?.isEmpty ?? true
                 
-                TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
+                TextEditor(text: songs == nil || (song.readOnly ?? false) ? .constant(lyrics) : $lyrics)
                     .multilineTextAlignment(alignment)
                     .font(.system(size: CGFloat(value), weight: weight))
                     .lineSpacing(lineSpacing)
