@@ -62,6 +62,7 @@
 		E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A7A2BCED9CB000292FA /* SharedFolder.swift */; };
 		E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B9A7D2BCF2351000292FA /* FolderSong.swift */; };
 		E06076B82A94BB5200ECB31F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06076B72A94BB5200ECB31F /* NotificationManager.swift */; };
+		E06133692C7B5D5A002016D3 /* TagSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06133662C7B5D5A002016D3 /* TagSelectionEnum.swift */; };
 		E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */; };
 		E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20E2B449E4500F035F7 /* SortViewModel.swift */; };
 		E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77832A17CAA50032332F /* EditPasswordView.swift */; };
@@ -121,7 +122,6 @@
 		E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF1372A181D2500DE8265 /* SongEditView.swift */; };
 		E0D21B912C1E833800476B3C /* UserPopoverRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */; };
 		E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */; };
-		E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */; };
 		E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D411BD2A9FF12300859E4E /* Notification.swift */; };
 		E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B2082A4CC33A00A972E0 /* NotesView.swift */; };
 		E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */; };
@@ -206,6 +206,7 @@
 		E05B9A7D2BCF2351000292FA /* FolderSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSong.swift; sourceTree = "<group>"; };
 		E05F2E7B2A55CFFD005E819C /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		E06076B72A94BB5200ECB31F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		E06133662C7B5D5A002016D3 /* TagSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionEnum.swift; sourceTree = "<group>"; };
 		E065D20B2B449BF900F035F7 /* SortSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortSelectionEnum.swift; sourceTree = "<group>"; };
 		E065D20E2B449E4500F035F7 /* SortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewModel.swift; sourceTree = "<group>"; };
 		E06D77832A17CAA50032332F /* EditPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordView.swift; sourceTree = "<group>"; };
@@ -265,7 +266,6 @@
 		E0CDF1372A181D2500DE8265 /* SongEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongEditView.swift; sourceTree = "<group>"; };
 		E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPopoverRowView.swift; sourceTree = "<group>"; };
 		E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTagView.swift; sourceTree = "<group>"; };
-		E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionEnum.swift; sourceTree = "<group>"; };
 		E0D411BD2A9FF12300859E4E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		E0E0B2082A4CC33A00A972E0 /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
 		E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
@@ -571,6 +571,14 @@
 			path = Move;
 			sourceTree = "<group>";
 		};
+		E06133672C7B5D5A002016D3 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				E06133662C7B5D5A002016D3 /* TagSelectionEnum.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
 		E065D20A2B449BEA00F035F7 /* Sort */ = {
 			isa = PBXGroup;
 			children = (
@@ -858,7 +866,7 @@
 		E0D3AA8C2BBC6B3B005650F5 /* Tag */ = {
 			isa = PBXGroup;
 			children = (
-				E0D3AA912BBC6B78005650F5 /* ViewModel */,
+				E06133672C7B5D5A002016D3 /* View Model */,
 				E0D3AA902BBC6B75005650F5 /* Views */,
 			);
 			path = Tag;
@@ -870,14 +878,6 @@
 				E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		E0D3AA912BBC6B78005650F5 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				E0D3AA922BBC6B86005650F5 /* TagSelectionEnum.swift */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		E0E0B2062A4CC33100A972E0 /* Notes */ = {
@@ -1146,6 +1146,7 @@
 				E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */,
 				E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */,
 				E041055F2A90029900215FB0 /* HapticManager.swift in Sources */,
+				E06133692C7B5D5A002016D3 /* TagSelectionEnum.swift in Sources */,
 				E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */,
 				E0FD46262B1F7DBD00699587 /* BannerAd.swift in Sources */,
 				E0CA853B2B081D5100188CD0 /* CustomPasswordField.swift in Sources */,
@@ -1202,7 +1203,6 @@
 				E0239E592BE9C133007796BE /* SongVariationManageView.swift in Sources */,
 				E0FC1E232BC47618008D8549 /* FontAwesome.swift in Sources */,
 				E04CB96B2BCB5FE100F2831B /* SongShareRowView.swift in Sources */,
-				E0D3AA932BBC6B86005650F5 /* TagSelectionEnum.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

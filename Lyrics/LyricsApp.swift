@@ -111,6 +111,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
+        print("Received notification: handleNotification(userInfo: userInfo, openDeepLink: false)")
         handleNotification(userInfo: userInfo, openDeepLink: false)
         completionHandler([.badge, .banner, .sound])
     }
@@ -119,6 +120,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
+        print("Received user interaction: handleNotification(userInfo: userInfo, processNotification: false, openDeepLink: true)")
         handleNotification(userInfo: userInfo, processNotification: false, openDeepLink: true)
         completionHandler()
     }

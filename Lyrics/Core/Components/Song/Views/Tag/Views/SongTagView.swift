@@ -16,6 +16,32 @@ struct SongTagView: View {
     @State var tags: [TagSelectionEnum]
     
     let song: Song
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    func rowView(_ tag: TagSelectionEnum) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "circle.fill")
+                    .foregroundColor(songViewModel.getColorForTag(tag.rawValue))
+                Spacer()
+                if tags.contains(tag) {
+                    Image(systemName: "checkmark")
+                        .font(.body.weight(.medium))
+                        .foregroundColor(.gray)
+                }
+            }
+            Text(NSLocalizedString("tag_\(tag.rawValue)", comment: ""))
+                .font(.system(size: 18).weight(.semibold))
+                .multilineTextAlignment(.leading)
+        }
+        .padding()
+        .background(Material.thin)
+        .foregroundColor(.primary)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,7 +56,7 @@ struct SongTagView: View {
             .padding()
             Divider()
             ScrollView {
-                VStack {
+                LazyVGrid(columns: columns) {
                     Button(action: {
                         tags.removeAll()
                         tagsToUpdate.removeAll()
@@ -40,18 +66,25 @@ struct SongTagView: View {
                             self.tagsToUpdate.append(tag.rawValue)
                         }
                     }) {
-                        HStack {
-                            Text("None")
-                            Spacer()
-                            if !tags.contains(.blue) && !tags.contains(.green) && !tags.contains(.orange) && !tags.contains(.red) && !tags.contains(.yellow) {
-                                Image(systemName: "checkmark")
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: "circle")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                if !tags.contains(.blue) && !tags.contains(.green) && !tags.contains(.orange) && !tags.contains(.red) && !tags.contains(.yellow) {
+                                    Image(systemName: "checkmark")
+                                        .font(.body.weight(.medium))
+                                        .foregroundColor(.gray)
+                                }
                             }
+                            Text("None")
+                                .font(.system(size: 18).weight(.semibold))
+                                .multilineTextAlignment(.leading)
                         }
                         .padding()
-                        .font(.body.weight(.semibold))
-                        .background(Material.regular)
+                        .background(Material.thin)
                         .foregroundColor(.primary)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                     }
                     ForEach(TagSelectionEnum.allTags, id: \.self) { fullTag in
                         Button(action: {
@@ -65,18 +98,7 @@ struct SongTagView: View {
                                 self.tagsToUpdate.append(tag.rawValue)
                             }
                         }) {
-                            HStack {
-                                Text(NSLocalizedString("tag_\(fullTag.rawValue)", comment: ""))
-                                Spacer()
-                                if tags.contains(fullTag) {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                            .padding()
-                            .font(.body.weight(.semibold))
-                            .background(Material.regular)
-                            .foregroundColor(songViewModel.getColorForTag(fullTag.rawValue))
-                            .clipShape(Capsule())
+                            rowView(fullTag)
                         }
                     }
                 }
