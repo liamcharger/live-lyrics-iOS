@@ -132,6 +132,8 @@ struct UserService {
             data["deep_link"] = "live-lyrics://profile"
         } else if type == .declined {
             data["deep_link"] = "live-lyrics://profile"
+        } else if type == .left {
+            data["deep_link"] = "live-lyrics://profile"
         }
         
         Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
@@ -148,4 +150,5 @@ enum NotificationType {
     case incoming
     case accepted
     case declined
+    case left
 }

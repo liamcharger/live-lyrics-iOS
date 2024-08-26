@@ -999,8 +999,11 @@ class SongService {
 						}
 						dispatch.enter()
 						self.fetchSongs(forUid: request.from, folder) { folderSongs in
+							dispatch.leave()
 							for song in folderSongs {
+								dispatch.enter()
 								self.createSong(song: song) { error in
+									dispatch.leave()
 									if let error = error {
 										print(error.localizedDescription)
 										completion()
@@ -1009,14 +1012,15 @@ class SongService {
 									songs.append(song)
 								}
 							}
+							dispatch.enter()
 							self.moveSongsToFolder(id: folder.id!, songs: songs) { error in
+								dispatch.leave()
 								if let error = error {
 									print(error.localizedDescription)
 									completion()
 									return
 								}
 							}
-							dispatch.leave()
 						}
 						
 						dispatch.notify(queue: .main) {
@@ -1149,18 +1153,32 @@ class SongService {
 	
 	func leaveCollabSong(forUid: String? = nil, song: Song, completion: @escaping() -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-
+		let dispatch = DispatchGroup()
+		
+		dispatch.enter()
 		Firestore.firestore().collection("users").document(forUid ?? uid).collection("shared-songs").document(song.id!).delete { error in
+			dispatch.leave()
 			if let error = error {
 				print(error.localizedDescription)
 			}
 		}
+		
+		dispatch.enter()
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).updateData(["joinedUsers": FieldValue.arrayRemove([forUid ?? uid])]) { error in
+			dispatch.leave()
 			if let error = error {
 				print(error.localizedDescription)
 			}
 		}
-		completion()
+		
+		dispatch.notify(queue: .main) {
+			UserService().fetchUser(withUid: forUid ?? song.uid) { user in
+				if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
+					UserService().sendNotificationToFCM(tokens: [token], title: "Song Left", body: "\(currentUser.fullname) has left the song \"\(song.title)\"", type: .left)
+				}
+				completion()
+			}
+		}
 	}
 	
 	func leaveCollabFolder(forUid: String? = nil, folder: Folder, completion: @escaping() -> Void) {
@@ -1184,7 +1202,12 @@ class SongService {
 		}
 		
 		dispatch.notify(queue: .main) {
-			completion()
+			UserService().fetchUser(withUid: forUid ?? (folder.uid ?? "")) { user in
+				if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
+					UserService().sendNotificationToFCM(tokens: [token], title: "Folder Left", body: "\(currentUser.fullname) has left the folder \"\(folder.title)\"", type: .left)
+				}
+				completion()
+			}
 		}
 	}
 }
