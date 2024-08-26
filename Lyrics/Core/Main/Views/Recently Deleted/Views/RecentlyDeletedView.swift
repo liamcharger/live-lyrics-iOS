@@ -141,6 +141,7 @@ struct RecentlyDeletedView: View {
                         }
                     }
                     .padding()
+                    .padding(.bottom, !searchableSongs.contains(where: { $0.title == "noSongs" }) ? 75 : 0)
                     .confirmationDialog("Delete Song", isPresented: $showDeleteSheet) {
                         if let selectedSong = selectedSong {
                             Button("Delete", role: .destructive) {
