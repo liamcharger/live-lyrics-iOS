@@ -691,7 +691,7 @@ struct MainView: View {
                                                                                     } label: {
                                                                                         Label("Copy", systemImage: "doc.on.doc")
                                                                                     }
-                                                                                    if !(song.readOnly ?? false) {
+                                                                                    if song.uid == uid() {
                                                                                         Button {
                                                                                             mainViewModel.selectedFolder = folder
                                                                                             selectedSong = song

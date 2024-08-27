@@ -657,17 +657,3 @@ struct SongDetailView: View {
         }
     }
 }
-
-class ScrollViewDelegate: NSObject, UIScrollViewDelegate {
-    var showBlurHandler: (Bool) -> Void
-    
-    init(showBlurHandler: @escaping (Bool) -> Void) {
-        self.showBlurHandler = showBlurHandler
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let shouldShowBlur = offsetY >= 24
-        showBlurHandler(shouldShowBlur)
-    }
-}
