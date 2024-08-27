@@ -17,7 +17,6 @@ struct SettingsView: View {
     
     @State var showError = false
     @State var toggle: Bool
-    @State var enableAutoscroll: Bool
     @State var isExplicit: Bool
     @State var selection: String?
     @State var wordCountStyle: String?
@@ -29,7 +28,6 @@ struct SettingsView: View {
         self.user = user
         
         _toggle = State(initialValue: user.wordCount ?? true)
-        _enableAutoscroll = State(initialValue: user.enableAutoscroll ?? true)
         _isExplicit = State(initialValue: user.showsExplicitSongs ?? true)
         _selection = State(initialValue: user.showDataUnderSong ?? "None")
         _wordCountStyle = State(initialValue: user.wordCountStyle ?? "Words")
@@ -63,20 +61,6 @@ struct SettingsView: View {
                                 Text("Enable\nWord Count")
                                 Spacer()
                                 Toggle(isOn: $toggle, label: {})
-                            }
-                            .foregroundColor(.primary)
-                        }
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .cornerRadius(20)
-                    .foregroundColor(.primary)
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Enable Autoscroll")
-                                Spacer()
-                                Toggle(isOn: $enableAutoscroll, label: {})
                             }
                             .foregroundColor(.primary)
                         }
@@ -225,7 +209,7 @@ struct SettingsView: View {
             }
             Divider()
             LiveLyricsButton("Save", action: {
-                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
+                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
                     if success {
                         presMode.wrappedValue.dismiss()
                     } else {
