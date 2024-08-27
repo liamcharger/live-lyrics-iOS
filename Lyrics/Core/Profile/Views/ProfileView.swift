@@ -25,7 +25,6 @@ struct ProfileView: View {
     @State var errorMessage = ""
     
     @State var showError = false
-    @State var showAlert = false
     @State var showChangePasswordView = false
     @State var showDeleteSheet = false
     @State var showDeleteConfirmation = false
@@ -116,7 +115,7 @@ struct ProfileView: View {
             LiveLyricsButton("Save") {
                 viewModel.updateUser(withEmail: email, username: username, fullname: fullname) { success in
                     if success {
-                        showAlert.toggle()
+                        showProfileView = false
                     } else {
                         showError.toggle()
                     }
@@ -185,9 +184,6 @@ struct ProfileView: View {
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Success!"), message: Text("Your changes were saved."), dismissButton: .cancel(Text("OK"), action: { presMode.wrappedValue.dismiss() }))
         }
     }
     

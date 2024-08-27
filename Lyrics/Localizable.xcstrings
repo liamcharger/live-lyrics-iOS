@@ -1031,16 +1031,6 @@
         }
       }
     },
-    "Enable Autoscroll" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Habilitar desplazamiento automático"
-          }
-        }
-      }
-    },
     "Enter a name for your folder." : {
       "localizations" : {
         "es" : {
@@ -2728,16 +2718,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No tienes canciones. Ve y crea algunas."
-          }
-        }
-      }
-    },
-    "Your changes were saved." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tus cambios se han guardado."
           }
         }
       }
