@@ -359,9 +359,13 @@
           }
         },
         "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esta acción es permanente y no puede deshacerse."
+            "stringUnit" : {
+                "state" : "translated",
+                "value" : "Esta acción es permanente y no puede deshacerse."
+            }
+        }
+      }
+    },
     "access_to_tuner" : {
       "extractionState" : "manual",
       "localizations" : {
