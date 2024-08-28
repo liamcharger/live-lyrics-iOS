@@ -21,9 +21,6 @@
         }
       }
     },
-    " plan." : {
-
-    },
     "." : {
       "localizations" : {
         "es" : {
@@ -350,22 +347,6 @@
         }
       }
     },
-    "action_cannot_be_undone" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This action is permanent cannot be undone!"
-          }
-        },
-        "es" : {
-            "stringUnit" : {
-                "state" : "translated",
-                "value" : "Esta acción es permanente y no puede deshacerse."
-            }
-        }
-      }
-    },
     "access_to_tuner" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -384,6 +365,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Access to the world’s largest lyric database, right in the app"
+          }
+        }
+      }
+    },
+    "action_cannot_be_undone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This action is permanent cannot be undone!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción es permanente y no puede deshacerse."
           }
         }
       }
@@ -1698,9 +1695,6 @@
         }
       }
     },
-    "Nah, I'll miss out" : {
-
-    },
     "Name" : {
       "localizations" : {
         "es" : {
@@ -2001,9 +1995,6 @@
           }
         }
       }
-    },
-    "pro" : {
-
     },
     "Read only:" : {
       "localizations" : {
@@ -2389,9 +2380,6 @@
         }
       }
     },
-    "Subscribe for $4.99/mo" : {
-
-    },
     "Success!" : {
       "localizations" : {
         "es" : {
@@ -2686,9 +2674,6 @@
         }
       }
     },
-    "We know, yet another subscription to pay for every month. But...with this one you get:" : {
-
-    },
     "Welcome to Live Lyrics." : {
       "localizations" : {
         "es" : {
@@ -2739,9 +2724,6 @@
           }
         }
       }
-    },
-    "Yes, there's a \n" : {
-
     },
     "You need to add lyrics to a variation to create it." : {
       "localizations" : {

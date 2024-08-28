@@ -67,11 +67,10 @@
 		E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065D20E2B449E4500F035F7 /* SortViewModel.swift */; };
 		E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77832A17CAA50032332F /* EditPasswordView.swift */; };
 		E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06D77882A17CF310032332F /* SettingsViewModel.swift */; };
-		E074E5062C4DEEEF00E269C8 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E074E5052C4DEEEF00E269C8 /* AlertView.swift */; };
-		E074E50A2C4DF05D00E269C8 /* UpgradePromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E074E5092C4DF05D00E269C8 /* UpgradePromoView.swift */; };
 		E0705FD52C5C161300BC7AD6 /* CustomBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0705FD42C5C161300BC7AD6 /* CustomBackButton.swift */; };
 		E0705FD72C5C874600BC7AD6 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0705FD62C5C874600BC7AD6 /* HeaderView.swift */; };
 		E073A99A2C77A63700BF2E9F /* NotificationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E073A9992C77A63700BF2E9F /* NotificationRowView.swift */; };
+		E075DDC52AF43CBE00AE8C9D /* ScrollViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */; };
 		E07C50392C4F457A002EE9A1 /* ContentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07C50382C4F457A002EE9A1 /* ContentRowView.swift */; };
 		E0867CEE2BD57812005605CD /* SongDetailMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0867CED2BD57812005605CD /* SongDetailMenuView.swift */; };
 		E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = E0867CF02BD5989B005605CD /* BottomSheet */; };
@@ -212,12 +211,10 @@
 		E065D20E2B449E4500F035F7 /* SortViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewModel.swift; sourceTree = "<group>"; };
 		E06D77832A17CAA50032332F /* EditPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordView.swift; sourceTree = "<group>"; };
 		E06D77882A17CF310032332F /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		E074E5052C4DEEEF00E269C8 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		E0705FD42C5C161300BC7AD6 /* CustomBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackButton.swift; sourceTree = "<group>"; };
 		E0705FD62C5C874600BC7AD6 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		E073A9992C77A63700BF2E9F /* NotificationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRowView.swift; sourceTree = "<group>"; };
-		E074E5052C4DEEEF00E269C8 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
-		E074E5092C4DF05D00E269C8 /* UpgradePromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePromoView.swift; sourceTree = "<group>"; };
+		E075DDC42AF43CBE00AE8C9D /* ScrollViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewWrapper.swift; sourceTree = "<group>"; };
 		E07C50382C4F457A002EE9A1 /* ContentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRowView.swift; sourceTree = "<group>"; };
 		E0867CED2BD57812005605CD /* SongDetailMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailMenuView.swift; sourceTree = "<group>"; };
 		E0986BE72B2B50C400CE938B /* icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = icons.json; sourceTree = "<group>"; };
@@ -412,7 +409,6 @@
 		E04247782A02EF6C00CA48B3 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				E074E5072C4DF03000E269C8 /* Pro */,
 				E0CC33172A03FF8800CC38C6 /* Main */,
 				E0CA85112B081D5100188CD0 /* Components */,
 				E06D77802A17B4240032332F /* Settings */,
@@ -653,22 +649,6 @@
 				E0867CED2BD57812005605CD /* SongDetailMenuView.swift */,
 			);
 			path = Detail;
-			sourceTree = "<group>";
-		};
-		E074E5072C4DF03000E269C8 /* Pro */ = {
-			isa = PBXGroup;
-			children = (
-				E074E5082C4DF03800E269C8 /* Paywall */,
-			);
-			path = Pro;
-			sourceTree = "<group>";
-		};
-		E074E5082C4DF03800E269C8 /* Paywall */ = {
-			isa = PBXGroup;
-			children = (
-				E074E5092C4DF05D00E269C8 /* UpgradePromoView.swift */,
-			);
-			path = Paywall;
 			sourceTree = "<group>";
 		};
 		E0986BE92B2B50FC00CE938B /* Resources */ = {
@@ -1205,7 +1185,6 @@
 				E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */,
 				E0C078282B4463FB00F91287 /* SortView.swift in Sources */,
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
-				E074E50A2C4DF05D00E269C8 /* UpgradePromoView.swift in Sources */,
 				E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */,
 				E0CA85382B081D5100188CD0 /* Modifers.swift in Sources */,
 				E0CA85372B081D5100188CD0 /* NavBarEnum.swift in Sources */,
