@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import SwiftUIIntrospect
 
-let showNotesDescKey = "showNotesDesc"
 let showNewSongKey = "showNewSongKey"
 let showNewFolderKey = "showNewFolderKey"
 
@@ -22,15 +21,48 @@ func hasHomeButton() -> Bool {
     return true
 }
 
-func completionOnConnectionState(noConnection: @escaping() -> Void, connection: @escaping() -> Void) {
-    if NetworkManager.shared.getNetworkState() {
-        // Add extra second because otherwise it seems unnaturally quick
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            connection()
+func greeting(withName: Bool? = nil) -> String {
+    let date = Date()
+    let calendar = Calendar.current
+    let currentHour = calendar.component(.hour, from: date)
+    
+    let withName = withName ?? false
+    let fullname: String? = AuthViewModel.shared.currentUser?.fullname
+    
+    var greetingText = "Hello."
+    switch currentHour {
+    case 0..<12:
+        if withName {
+            if let fullname = fullname {
+                greetingText = NSLocalizedString("good_morning_greeting", comment: "") + ", \n" + fullname + "!"
+            } else {
+                greetingText = NSLocalizedString("good_morning_greeting", comment: "") + "!"
+            }
+        } else {
+            greetingText = NSLocalizedString("good_morning", comment: "")
         }
-    } else {
-        noConnection()
+    case 12..<18:
+        if withName {
+            if let fullname = fullname {
+                greetingText = NSLocalizedString("good_afternoon_greeting", comment: "") + ", \n" + fullname + "!"
+            } else {
+                greetingText = NSLocalizedString("good_afternoon_greeting", comment: "") + "!"
+            }
+        } else {
+            greetingText = NSLocalizedString("good_afternoon", comment: "")
+        }
+    default:
+        if withName {
+            if let fullname = fullname {
+                greetingText = NSLocalizedString("good_evening_greeting", comment: "") + ", \n" + fullname + "!"
+            } else {
+                greetingText = NSLocalizedString("good_evening_greeting", comment: "") + "!"
+            }
+        } else {
+            greetingText = NSLocalizedString("good_evening", comment: "")
+        }
     }
+    return greetingText
 }
 
 extension View {
@@ -50,11 +82,20 @@ extension View {
         }
     }
     
-    @ViewBuilder public func hidden(_ shouldHide: Bool) -> some View {
-        switch shouldHide {
-        case true: self.hidden()
-        case false: self
-        }
+    func customShadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) -> some View {
+        self.modifier(ShadowModifier(color: color, radius: radius, x: x, y: y))
+    }
+}
+
+struct VisualEffectBlur: UIViewRepresentable {
+    var blurStyle: UIBlurEffect.Style
+    
+    func makeUIView(context: Context) -> UIVisualEffectView {
+        return UIVisualEffectView(effect: UIBlurEffect(style: blurStyle))
+    }
+    
+    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+        uiView.effect = UIBlurEffect(style: blurStyle)
     }
 }
 
@@ -148,31 +189,58 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
     }
 }
 
-struct Wave: Shape {
-    var strength: Double
-    var frequency: Double
+struct ShadowModifier: ViewModifier {
+    var color: Color
+    var radius: CGFloat
+    var x: CGFloat
+    var y: CGFloat
     
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath()
-        
-        let width = Double(rect.width)
-        let height = Double(rect.height)
-        let midHeight = height / 2
-        
-        let wavelength = width / frequency
-        
-        path.move(to: CGPoint(x: 0, y: midHeight))
-        
-        for x in stride(from: 0, through: width, by: 1) {
-            let relativeX = x / wavelength
-            
-            let sin = sin(relativeX)
-            
-            let y = strength * sin + midHeight
-            
-            path.addLine(to: CGPoint(x: x, y: y))
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: color, radius: radius, x: x, y: y)
+    }
+}
+
+struct ScrollViewOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: [CGFloat] = []
+    
+    static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
+        value.append(contentsOf: nextValue())
+    }
+}
+
+extension UserDefaults {
+    func setCodable<T: Codable>(_ value: T, forKey key: String) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(value) {
+            self.set(encoded, forKey: key)
         }
-        
-        return Path(path.cgPath)
+    }
+    
+    func codable<T: Codable>(forKey key: String) -> T? {
+        if let data = self.data(forKey: key) {
+            let decoder = JSONDecoder()
+            if let decoded = try? decoder.decode(T.self, from: data) {
+                return decoded
+            }
+        }
+        return nil
+    }
+}
+
+extension Font.Weight {
+    var uiFontWeight: UIFont.Weight {
+        switch self {
+        case .ultraLight: return .ultraLight
+        case .thin: return .thin
+        case .light: return .light
+        case .regular: return .regular
+        case .medium: return .medium
+        case .semibold: return .semibold
+        case .bold: return .bold
+        case .heavy: return .heavy
+        case .black: return .black
+        default: return .regular
+        }
     }
 }

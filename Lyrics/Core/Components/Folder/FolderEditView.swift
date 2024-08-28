@@ -10,8 +10,6 @@ import SwiftUI
 struct FolderEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
-    @Environment(\.presentationMode) var presMode
-    
     @Binding var isDisplayed: Bool
     @Binding var title: String
     
@@ -41,7 +39,9 @@ struct FolderEditView: View {
                 Text("Edit Folder")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    isDisplayed = false
+                }
             }
             .padding()
             Divider()
@@ -51,7 +51,7 @@ struct FolderEditView: View {
                 .padding(.horizontal)
             Spacer()
             Divider()
-            Button {
+            LiveLyricsButton("Save", action: {
                 songViewModel.updateTitle(folder, title: text) { success, errorMessage in
                     if success {
                         self.title = text
@@ -64,11 +64,7 @@ struct FolderEditView: View {
                         self.errorMessage = errorMessage
                     }
                 }
-            } label: {
-                Text("Save")
-                    .frame(maxWidth: .infinity)
-                    .modifier(NavButtonViewModifier())
-            }
+            })
             .opacity(isEmpty ? 0.5 : 1.0)
             .disabled(isEmpty)
             .padding()

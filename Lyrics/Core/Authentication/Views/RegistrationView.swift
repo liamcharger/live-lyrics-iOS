@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RegistrationView: View {
+    let action: () -> Void
+    
     @State var email = ""
     @State var password = ""
     @State var confirmPassword = ""
@@ -18,12 +20,9 @@ struct RegistrationView: View {
     @State var showWebView = false
     @State var showError = false
     
-    @AppStorage("authViewState") var authViewState = "choose"
-    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
-    var attributedString: AttributedString = try! AttributedString(markdown: "[Privacy Policy](https://live-lyrics.web.app/privacypolicy.html)")
     
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.presentationMode) var presMode
@@ -33,7 +32,7 @@ struct RegistrationView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 12) {
                     Button(action: {
-                        authViewState = "choose"
+                        action()
                     }, label: {
                         Image(systemName: "chevron.left")
                             .padding()
@@ -84,20 +83,15 @@ struct RegistrationView: View {
                     }
                     .foregroundColor(Color.gray)
                     .font(.footnote)
-                    Button(action: {viewModel.register(withEmail: email, password: password, username: username, fullname: fullname) { success in
-                        if !success {
-                            showError.toggle()
+                    LiveLyricsButton("Continue") {
+                        viewModel.register(withEmail: email, password: password, username: username, fullname: fullname) { success in
+                            if !success {
+                                showError.toggle()
+                            }
+                        } completionString: { string in
+                            self.errorMessage = string
                         }
-                    } completionString: { string in
-                        self.errorMessage = string
-                    }}, label: {
-                        HStack {
-                            Spacer()
-                            Text("Continue")
-                            Spacer()
-                        }
-                        .modifier(NavButtonViewModifier())
-                    })
+                    }
                     .disabled(isEmpty)
                     .opacity(isEmpty ? 0.5 : 1.0)
                 }
@@ -105,19 +99,12 @@ struct RegistrationView: View {
             }
         }
         .sheet(isPresented: $showWebView) {
-            WebView()
+            PrivacyPolicyView()
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct RegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegistrationView()
-            .environmentObject(AuthViewModel())
     }
 }

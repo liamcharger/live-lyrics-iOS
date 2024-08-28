@@ -32,6 +32,15 @@ struct LyricsApp: App {
             ContentView()
                 .environmentObject(viewModel)
                 .environmentObject(storeKitManager)
+                .onOpenURL { url in
+                    if viewModel.currentUser != nil {
+                        if url.absoluteString == "live-lyrics://profile" {
+                            MainViewModel.shared.showProfileView = true
+                        } else if url.absoluteString == "live-lyrics://share-invites" {
+                            MainViewModel.shared.showShareInvites = true
+                        }
+                    }
+                }
                 .onChange(of: phase) { phase in
                     switch phase {
                     case .background:
@@ -44,7 +53,7 @@ struct LyricsApp: App {
                             showNewSong = true
                             QuickAction.selectedAction = nil
                         case "new_folder":
-                            showNewSong = true
+                            showNewFolder = true
                             QuickAction.selectedAction = nil
                         case .none:
                             break
@@ -83,6 +92,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         Messaging.messaging().delegate = self
         application.registerForRemoteNotifications()
         
+        if let remoteNotification = launchOptions?[.remoteNotification] as? [String: Any] {
+            handleNotification(userInfo: remoteNotification)
+        }
+        
         return true
     }
     
@@ -98,18 +111,38 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
+        print("Received notification: handleNotification(userInfo: userInfo, openDeepLink: false)")
+        handleNotification(userInfo: userInfo, openDeepLink: false)
+        completionHandler([.badge, .banner, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        print("Received user interaction: handleNotification(userInfo: userInfo, processNotification: false, openDeepLink: true)")
+        handleNotification(userInfo: userInfo, processNotification: false, openDeepLink: true)
+        completionHandler()
+    }
+    
+    private func handleNotification(userInfo: [AnyHashable: Any], processNotification: Bool = true, openDeepLink: Bool = false) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID:", messageID)
         }
         
-        if let aps = userInfo["aps"] as? [String: Any],
+        if processNotification, let aps = userInfo["aps"] as? [String: Any],
            let alert = aps["alert"] as? [String: Any],
            let title = alert["title"] as? String,
            let subtitle = alert["body"] as? String {
-            mainViewModel.receivedNotificationFromFirebase(Notification(title: title, subtitle: subtitle, imageName: "envelope"))
+            mainViewModel.receivedNotificationFromFirebase(Notification(title: title, body: subtitle))
         }
-
-        completionHandler([.badge, .banner])
+        
+        if openDeepLink, let deepLink = userInfo["deep_link"] as? String {
+            print(deepLink)
+            if let url = URL(string: deepLink) {
+                UIApplication.shared.open(url)
+            }
+        }
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

@@ -19,7 +19,6 @@ struct ShareView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var songViewModel = SongViewModel.shared
-    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var networkManager = NetworkManager.shared
     
     @Binding var isDisplayed: Bool
@@ -41,7 +40,6 @@ struct ShareView: View {
     
     let song: Song?
     let folder: Folder?
-    let userService = UserService()
     let defaultVariationId = SongVariation.defaultId
     
     var disabled: Bool {
@@ -72,9 +70,9 @@ struct ShareView: View {
                         var request: ShareRequest?
                         
                         if let song = song {
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly, notificationTokens: fcmIds)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly, notificationTokens: fcmIds, fromNotificationToken: fromUser.fcmId)
                         } else if let folder = folder {
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly, notificationTokens: fcmIds)
+                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly, notificationTokens: fcmIds, fromNotificationToken: fromUser.fcmId)
                         } else {
                             print("Song and folder are nil")
                         }
@@ -109,7 +107,9 @@ struct ShareView: View {
                     }
                     .opacity(disabled ? 0.5 : 1.0)
                     .disabled(disabled)
-                    SheetCloseButton(isPresented: $isDisplayed)
+                    SheetCloseButton {
+                        isDisplayed = false
+                    }
                 }
                 if let userToShare = selectedUsers.first,
                 {
@@ -179,7 +179,7 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil && songVariations.count >= 1 {
+            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil {
                 HStack {
                     Text("Including variation\(selectedVariations.count > 1 || selectedVariations.isEmpty ? "s" : ""):")
                     Spacer()
@@ -252,7 +252,7 @@ struct ShareView: View {
                             firstSearch = true
                             authViewModel.users = []
                         } else {
-                            authViewModel.fetchUsers(username: searchText) {
+                            authViewModel.fetchUsers(username: searchText, filterCurrentUser: true) {
                                 if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) && !authViewModel.users.isEmpty {
                                     recentSearches.append(",\(searchText)")
                                 }
@@ -265,7 +265,7 @@ struct ShareView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) || firstSearch {
+                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) && firstSearch {
                         ScrollView {
                             VStack {
                                 if !authViewModel.users.isEmpty {
@@ -286,7 +286,7 @@ struct ShareView: View {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }
                                     }
-                                } else if !recentSearches.isEmpty || firstSearch {
+                                } else if recentSearches.contains(",") && firstSearch {
                                     HStack {
                                         ListHeaderView(title: NSLocalizedString("recently_searched", comment: ""))
                                         Spacer()
@@ -307,7 +307,7 @@ struct ShareView: View {
                                         if !search.isEmpty {
                                             Button {
                                                 searchText = search
-                                                authViewModel.fetchUsers(username: search) {}
+                                                authViewModel.fetchUsers(username: search, filterCurrentUser: true) {}
                                             } label: {
                                                 Text(search)
                                                     .font(.body.weight(.semibold))
@@ -317,6 +317,7 @@ struct ShareView: View {
                                                     .foregroundColor(.primary)
                                                     .clipShape(Capsule())
                                             }
+                                            .contentShape(.contextMenuPreview, Capsule())
                                             .contextMenu {
                                                 Button(role: .destructive) {
                                                     if let index = recentSearches.components(separatedBy: ",").firstIndex(of: search) {

@@ -49,7 +49,7 @@ struct ResetPasswordView: View {
                 .padding()
             Spacer()
             Divider()
-            Button(action: {
+            LiveLyricsButton("Continue") {
                 viewModel.resetPassword(email: text) { success, string  in
                     if success {
                         showSuccess.toggle()
@@ -58,15 +58,7 @@ struct ResetPasswordView: View {
                         showError.toggle()
                     }
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-                .padding()
-            })
+            }
             .disabled(text.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(text.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
         }

@@ -32,7 +32,7 @@ struct ShowWhatsNew: View {
                     Text("Let's hop back in.")
                         .font(.largeTitle.bold())
                     Spacer()
-                    Button {
+                    LiveLyricsButton("Continue") {
                         withAnimation(Animation.bouncy(duration: 1.5)) {
                             animState = .none
                         }
@@ -45,9 +45,6 @@ struct ShowWhatsNew: View {
                             }
                             NotificationManager.shared.updateAppVersion()
                         }
-                    } label: {
-                        Text("Continue")
-                            .modifier(NavButtonViewModifier())
                     }
                 }
                 .scaleEffect(animState == .fourth ? 1.0 : 0.2)

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LoginView: View {
+    let action: () -> Void
+    
     @State var email = ""
     @State var password = ""
     @State var errorMessage = ""
@@ -18,13 +20,8 @@ struct LoginView: View {
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
     
-    @AppStorage("authViewState") var authViewState = "choose"
-    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
-    }
-    var isHighlighted: Bool {
-        isHighlighted1 || isHighlighted2
     }
     
     @EnvironmentObject var viewModel: AuthViewModel
@@ -34,7 +31,7 @@ struct LoginView: View {
         VStack(spacing: 15) {
             HStack(spacing: 12) {
                 Button(action: {
-                    authViewState = "choose"
+                    action()
                 }, label: {
                     Image(systemName: "chevron.left")
                         .padding()
@@ -65,7 +62,7 @@ struct LoginView: View {
             }
             Spacer()
             VStack(spacing: 10) {
-                Button(action: {
+                LiveLyricsButton("Sign In") {
                     viewModel.login(withEmail: email, password: password) { success in
                         if !success {
                             showError.toggle()
@@ -73,21 +70,9 @@ struct LoginView: View {
                     } completionString: { string in
                         self.errorMessage = string
                     }
-                }, label: {
-                    HStack {
-                        Spacer()
-                        Text("Sign In")
-                        Spacer()
-                    }
-                    .modifier(NavButtonViewModifier())
-                })
+                }
                 .opacity(isEmpty ? 0.5 : 1.0)
                 .disabled(isEmpty)
-                Button(action: {
-                    authViewState = "register"
-                }, label: {
-                    Text("No account? ") + Text("Sign Up").bold()
-                })
             }
         }
         .alert(isPresented: $showError, content: {
@@ -103,8 +88,6 @@ struct LoginView: View {
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-    }
+#Preview {
+    LoginView(action: {})
 }

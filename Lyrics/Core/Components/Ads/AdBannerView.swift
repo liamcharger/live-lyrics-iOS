@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AdBannerView: View {
-    @EnvironmentObject var storeKitManager: StoreKitManager
     @EnvironmentObject var authViewModel: AuthViewModel
     
     let unitId: String

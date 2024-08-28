@@ -25,10 +25,8 @@ struct PlayView: View {
     @State var song: Song
     
     @State private var currentIndex = 0
-    @State private var offset: CGFloat = 0
     
     @State var lyrics = ""
-    @State var lyricsCollection = [""]
     @State var title = ""
     @State var key = ""
     @State var selectedTool = ""
@@ -36,13 +34,11 @@ struct PlayView: View {
     @State private var scrollPosition: Int = 0
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
-    @State private var linesHeight: CGFloat = 0.0
     @State private var beatCounter: Int = 0
     @State private var pressedIndexId: Int = 0
     
     @State var isPlayingMetronome = false
     @State var isPulsing = false
-    @State var isHeavyImpactPlaying = false
     @State var isScrolling = false
     @State var isUserScrolling = false
     @State var isScrollingProgrammatically = true
@@ -57,14 +53,11 @@ struct PlayView: View {
     @ObservedObject var songViewModel = SongViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
-    @Environment(\.presentationMode) var presMode
-    
     var songs: [Song]?
     @State var metronomeTimer: DispatchSourceTimer?
     
     let size: Int
     let weight: Font.Weight
-    let design: Font.Design
     let lineSpacing: Double
     let alignment: TextAlignment
     
@@ -306,14 +299,13 @@ struct PlayView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     
-    init(song: Song, size: Int, design: Font.Design, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
+    init(song: Song, size: Int, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
         self.songs = songs
         self._key = State(initialValue: key)
         self._currentIndex = State(initialValue: song.order ?? 0)
         self._title = State(initialValue: title)
         self.alignment = alignment
         self.lineSpacing = lineSpacing
-        self.design = design
         self.weight = weight
         self.size = size
         self._bpb = bpb
@@ -354,20 +346,12 @@ struct PlayView: View {
                                 .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
                                 .clipShape(Circle())
                         }
-                        Button(action: {
+                        SheetCloseButton {
                             if let proxy = proxy {
                                 stopAutoscroll(scrollViewProxy: proxy)
                             }
                             stopTimer()
                             dismiss = false
-                        }) {
-                            Image(systemName: "xmark")
-                                .imageScale(.medium)
-                                .padding(12)
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .background(Material.regular)
-                                .clipShape(Circle())
                         }
                     }
                     .padding(hasHomeButton() ? .top : [])
@@ -382,9 +366,8 @@ struct PlayView: View {
                                     if !performanceMode {
                                         Text(line)
                                             .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                            .font(.system(size: CGFloat(size), weight: weight, design: design))
+                                            .font(.system(size: CGFloat(size), weight: weight))
                                             .id(index)
-                                            .blur(radius: getBlur(for: index))
                                             .animation(.spring(dampingFraction: 1.0))
                                     } else {
                                         Button {
@@ -489,7 +472,7 @@ struct PlayView: View {
                                         .cornerRadius(8)
                                 }
                                 .onChange(of: bpb) { bpb in
-                                    songViewModel.updateBpm(for: song, with: bpb)
+                                    songViewModel.updateBpb(for: song, with: bpb)
                                 }
                                 .disabled(readOnly())
                                 Spacer()
@@ -519,9 +502,9 @@ struct PlayView: View {
                                     selectedTool = ""
                                 } label: {
                                     Image(systemName: "xmark")
-                                        .padding()
+                                        .padding(15)
                                         .font(.body.weight(.semibold))
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.primary)
                                         .background(Material.regular)
                                         .clipShape(Circle())
                                 }

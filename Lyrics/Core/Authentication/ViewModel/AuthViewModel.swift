@@ -54,7 +54,9 @@ class AuthViewModel: ObservableObject {
             self.userSession = user
             self.fetchUser()
             
-            print("Logged in user successfully.")
+            MainViewModel.shared.notifications = []
+            MainViewModel.shared.saveNotificationToUserDefaults()
+            
             completionBool(true)
         }
     }
@@ -70,8 +72,6 @@ class AuthViewModel: ObservableObject {
             
             guard let user = result?.user else { return }
             self.tempUserSession = user
-            
-            print("Registered user successfully.")
             
             let data = ["email": email,
                         "password": password,
@@ -175,17 +175,13 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchUsers(username: String, completion: @escaping() -> Void) {
+    func fetchUsers(username: String, filterCurrentUser: Bool, completion: @escaping() -> Void) {
         self.isLoadingUsers = true
-        service.fetchUsers(withUsername: username) { users in
+        service.fetchUsers(withUsername: username, filterCurrentUser: filterCurrentUser) { users in
             self.users = users
             self.isLoadingUsers = false
             completion()
         }
-    }
-    
-    func updateFCMId(_ user: User, id: String) {
-        service.updateFCMId(user, id: id)
     }
     
     func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {

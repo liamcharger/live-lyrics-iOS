@@ -10,20 +10,40 @@ import SwiftUI
 struct SongMoveView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
-    @Environment(\.presentationMode) var presMode
     
     @Binding var showProfileView: Bool
     
     let song: Song
     let songTitle: String
     
-    @State var errorMessage = ""
-    @State var text = ""
+    @State var selectedFolders: [Folder] = []
     
+    @State var errorMessage = ""
+    
+    @State var isLoading = false
     @State var showError = false
     @State var showNewFolderView = false
     
-    @FocusState var isFocused: Bool
+    func move() {
+        let dispatch = DispatchGroup()
+        
+        for folder in selectedFolders {
+            dispatch.enter()
+            songViewModel.moveSongsToFolder(folder: folder, songs: [song]) { error in
+                dispatch.leave()
+                if let error = error {
+                    self.errorMessage = error.localizedDescription
+                    self.showError = true
+                }
+            }
+        }
+        
+        // Show "song already in folder" alert?
+        dispatch.notify(queue: .main) {
+            self.isLoading = false
+            self.showProfileView = false
+        }
+    }
     
     init(song: Song, showProfileView: Binding<Bool>, songTitle: String) {
         self.song = song
@@ -49,7 +69,32 @@ struct SongMoveView: View {
                 .sheet(isPresented: $showNewFolderView) {
                     NewFolderView(isDisplayed: $showNewFolderView)
                 }
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton {
+                    showProfileView = false
+                }
+                if !selectedFolders.isEmpty {
+                    Button(action: {
+                        isLoading = true
+                        move()
+                    }) {
+                        Image(systemName: "checkmark")
+                            .imageScale(.medium)
+                            .padding(12)
+                            .font(.body.weight(.semibold))
+                            .foregroundColor(isLoading ? .clear : .white)
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                    }
+                    .opacity(isLoading ? 0.5 : 1.0)
+                    .disabled(isLoading)
+                    .overlay {
+                        if isLoading {
+                            ProgressView()
+                                .opacity(1)
+                                .tint(.primary)
+                        }
+                    }
+                }
             }
             .padding()
             Divider()
@@ -65,22 +110,10 @@ struct SongMoveView: View {
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             } else {
                                 Button(action: {
-                                    if mainViewModel.folderSongs.contains(where: {$0.id ?? "" == song.id ?? ""}) {
-                                        self.errorMessage = "The song is already in the specified folder."
-                                        showError = true
+                                    if selectedFolders.contains(where: { $0.id == folder.id }) {
+                                        selectedFolders.removeAll(where: { $0.id == folder.id })
                                     } else {
-                                        songViewModel.moveSongsToFolder(folder: folder, songs: [song]) { error in
-                                            if error != nil {
-                                                if errorMessage == "Failed to get document because the client is offline." {
-                                                    self.errorMessage = "Please connect to the internet to perform this action."
-                                                } else {
-                                                    self.errorMessage = errorMessage
-                                                }
-                                                showError = true
-                                            } else {
-                                                showProfileView = false
-                                            }
-                                        }
+                                        selectedFolders.append(folder)
                                     }
                                 }, label: {
                                     HStack {
@@ -89,12 +122,21 @@ struct SongMoveView: View {
                                             .lineLimit(1)
                                             .multilineTextAlignment(.leading)
                                         Spacer()
+                                        if selectedFolders.contains(where: { $0.id == folder.id }) {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.blue)
+                                                .imageScale(.large)
+                                        } else {
+                                            Image(systemName: "circle")
+                                                .imageScale(.large)
+                                        }
                                     }
                                     .padding()
                                     .background(Material.regular)
                                     .foregroundColor(.primary)
                                     .clipShape(Capsule())
                                 })
+                                .disabled(isLoading)
                             }
                         }
                         Spacer()

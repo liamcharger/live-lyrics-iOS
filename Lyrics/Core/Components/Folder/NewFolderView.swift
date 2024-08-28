@@ -23,14 +23,15 @@ struct NewFolderView: View {
     @FocusState var isFocused: Bool
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Enter a name for your folder.")
-                    .font(.title.weight(.bold))
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    isDisplayed = false
+                }
             }
             .padding()
             Divider()
@@ -40,7 +41,7 @@ struct NewFolderView: View {
                 .focused($isFocused)
             Spacer()
             Divider()
-            Button(action: {
+            LiveLyricsButton("Continue", action: {
                 songViewModel.createFolder(title: title) { error in
                     if let error = error {
                         showError = true
@@ -48,13 +49,6 @@ struct NewFolderView: View {
                     }
                     isDisplayed = false
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
             })
             .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(title.isEmpty ? 0.5 : 1)

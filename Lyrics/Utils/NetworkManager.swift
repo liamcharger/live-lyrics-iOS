@@ -16,10 +16,12 @@ class NetworkManager: ObservableObject {
     
     init() {
         monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                self.connected = true
-            } else {
-                self.connected = false
+            DispatchQueue.main.async {
+                if path.status == .satisfied {
+                    self.connected = true
+                } else {
+                    self.connected = false
+                }
             }
         }
         

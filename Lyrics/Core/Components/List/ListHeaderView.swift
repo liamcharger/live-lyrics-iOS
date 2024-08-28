@@ -13,12 +13,10 @@ struct ListHeaderView: View {
     var body: some View {
         HStack {
             Text(title)
-                .padding(12)
+                .padding(8)
                 .foregroundColor(.primary)
-                .background(Material.regular)
-                .clipShape(Capsule())
                 .textCase(.uppercase)
-                .font(.footnote.weight(.bold))
+                .font(.system(size: 16).weight(.bold))
             Spacer()
         }
         .padding(.bottom, 4)

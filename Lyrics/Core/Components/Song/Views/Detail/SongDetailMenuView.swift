@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SongDetailMenuView: View {
     @Binding var value: Int
-    @Binding var design: Font.Design
     @Binding var weight: Font.Weight
     @Binding var lineSpacing: Double
     @Binding var alignment: TextAlignment
@@ -77,40 +76,6 @@ struct SongDetailMenuView: View {
                 })
             } label: {
                 Text("Font Size")
-            }
-            Menu {
-                Button(action: {
-                    design = .default
-                    songViewModel.updateTextProperties(song, design: 0)
-                }, label: {
-                    Text("Default")
-                })
-                Divider()
-                Button(action: {
-                    design = .default
-                    songViewModel.updateTextProperties(song, design: 0)}, label: {
-                        Text("Regular")
-                    })
-                Button(action: {
-                    design = .monospaced
-                    songViewModel.updateTextProperties(song, design: 1)
-                }, label: {
-                    Text("Monospaced")
-                })
-                Button(action: {
-                    design = .rounded
-                    songViewModel.updateTextProperties(song, design: 2)
-                }, label: {
-                    Text("Rounded")
-                })
-                Button(action: {
-                    design = .serif
-                    songViewModel.updateTextProperties(song, design: 3)
-                }, label: {
-                    Text("Serif")
-                })
-            } label: {
-                Text("Font Style")
             }
             Menu {
                 Button(action: {
@@ -264,9 +229,6 @@ struct SongDetailMenuView: View {
                 value = 18
                 songViewModel.updateTextProperties(song, size: 18)
                 
-                design = .default
-                songViewModel.updateTextProperties(song, design: 0)
-                
                 weight = .regular
                 songViewModel.updateTextProperties(song, weight: 0)
                 
@@ -279,8 +241,17 @@ struct SongDetailMenuView: View {
                 Text("Restore to Defaults")
             }
         } label: {
-            Image(systemName: "textformat.size")
-                .modifier(NavBarButtonViewModifier())
+            HStack {
+                Image(systemName: "textformat.size")
+                Image(systemName: "chevron.down")
+                    .imageScale(.small)
+                    .foregroundColor(.gray)
+            }
+            .padding(10)
+            .font(.body.weight(.semibold))
+            .background(Material.regular)
+            .foregroundColor(.primary)
+            .clipShape(Capsule())
         }
     }
 }

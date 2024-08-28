@@ -100,6 +100,16 @@
         }
       }
     },
+    "%lld days" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld días"
+          }
+        }
+      }
+    },
     "0.0" : {
       "localizations" : {
         "es" : {
@@ -340,6 +350,18 @@
         }
       }
     },
+    "action_cannot_be_undone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This action is permanent cannot be undone!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción es permanente y no puede deshacerse."
     "access_to_tuner" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -535,6 +557,22 @@
         }
       }
     },
+    "artist_optional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist (Optional)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artista (opcional)"
+          }
+        }
+      }
+    },
     "Audio" : {
       "localizations" : {
         "es" : {
@@ -608,6 +646,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
+          }
+        }
+      }
+    },
+    "Cannot Purchase" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede comprar"
           }
         }
       }
@@ -815,6 +863,16 @@
         }
       }
     },
+    "Delete All" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar todo"
+          }
+        }
+      }
+    },
     "Delete Folder" : {
       "localizations" : {
         "es" : {
@@ -868,6 +926,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Estás seguro de que deseas eliminar esta cuenta?"
+          }
+        }
+      }
+    },
+    "delete_all_recently_deleted_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all recently deleted songs?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres borrar todas las canciones borradas recientemente?"
           }
         }
       }
@@ -989,16 +1063,6 @@
         }
       }
     },
-    "Enable Autoscroll" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Habilitar desplazamiento automático"
-          }
-        }
-      }
-    },
     "Enter a name for your folder." : {
       "localizations" : {
         "es" : {
@@ -1019,12 +1083,18 @@
         }
       }
     },
-    "Enter a name for your song." : {
+    "Enter some details for your song." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter some details for your song."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ingresa un nombre para tu canción."
+            "value" : "Introduce algunos detalles de tu canción."
           }
         }
       }
@@ -1106,16 +1176,6 @@
         }
       }
     },
-    "Font Style" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estilo de fuente"
-          }
-        }
-      }
-    },
     "Font Weight" : {
       "localizations" : {
         "es" : {
@@ -1136,8 +1196,24 @@
         }
       }
     },
+    "get_you_signed_in" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now let’s get you signed in."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora vamos a iniciar sesión."
+          }
+        }
+      }
+    },
     "good_afternoon" : {
-      "comment" : "Good Afternoon.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1153,8 +1229,24 @@
         }
       }
     },
+    "good_afternoon_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good afternoon"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas tardes"
+          }
+        }
+      }
+    },
     "good_evening" : {
-      "comment" : "Good Evening.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1170,8 +1262,24 @@
         }
       }
     },
+    "good_evening_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good evening"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas noches"
+          }
+        }
+      }
+    },
     "good_morning" : {
-      "comment" : "Good Morning.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1183,6 +1291,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buenos días."
+          }
+        }
+      }
+    },
+    "good_morning_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenos días"
           }
         }
       }
@@ -1318,12 +1443,18 @@
         }
       }
     },
-    "Key: %@" : {
+    "key_optional" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key (Optional)"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clave: %@"
+            "value" : "Llave (opcional)"
           }
         }
       }
@@ -1394,23 +1525,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Espacio entre líneas"
-          }
-        }
-      }
-    },
-    "live_lyrics" : {
-      "comment" : "Live Lyrics.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live Lyrics."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live Lyrics."
           }
         }
       }
@@ -1526,16 +1640,6 @@
         }
       }
     },
-    "Monospaced" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monoespaciado"
-          }
-        }
-      }
-    },
     "Move" : {
       "localizations" : {
         "es" : {
@@ -1613,22 +1717,32 @@
         }
       }
     },
+    "New Folder" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva carpeta"
+          }
+        }
+      }
+    },
+    "New Song" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva canción"
+          }
+        }
+      }
+    },
     "New Variation" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nueva variante"
-          }
-        }
-      }
-    },
-    "Next" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Siguiente"
           }
         }
       }
@@ -1981,6 +2095,16 @@
         }
       }
     },
+    "Remove Song" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar canción"
+          }
+        }
+      }
+    },
     "Restore" : {
       "localizations" : {
         "es" : {
@@ -2017,16 +2141,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Derecha"
-          }
-        }
-      }
-    },
-    "Rounded" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redondeado"
           }
         }
       }
@@ -2125,16 +2239,6 @@
         }
       }
     },
-    "Serif" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serifa"
-          }
-        }
-      }
-    },
     "Settings" : {
       "localizations" : {
         "es" : {
@@ -2168,16 +2272,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compartir invitaciones"
-          }
-        }
-      }
-    },
-    "Shared" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compartido"
           }
         }
       }
@@ -2436,6 +2530,16 @@
         }
       }
     },
+    "There aren't any lyrics for this song." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay letra para esta canción."
+          }
+        }
+      }
+    },
     "These settings are not specific to song variations." : {
       "localizations" : {
         "es" : {
@@ -2452,6 +2556,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delgado"
+          }
+        }
+      }
+    },
+    "This item cannot be purchased due to device restrictions." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este artículo no puede comprarse debido a restricciones del dispositivo."
           }
         }
       }
@@ -2522,6 +2636,22 @@
         }
       }
     },
+    "update_available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualización disponible"
+          }
+        }
+      }
+    },
     "Variations" : {
       "localizations" : {
         "es" : {
@@ -2561,23 +2691,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bienvenido a Live Lyrics."
-          }
-        }
-      }
-    },
-    "welcome_to" : {
-      "comment" : "Welcome to",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome to"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenido a"
           }
         }
       }
@@ -2646,12 +2759,34 @@
         }
       }
     },
-    "Your changes were saved." : {
+    "you_dont_have_any_folders" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have any folders."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tus cambios se han guardado."
+            "value" : "No tienes carpetas."
+          }
+        }
+      }
+    },
+    "you_dont_have_any_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have any songs. Go and create some!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes canciones. Ve y crea algunas."
           }
         }
       }

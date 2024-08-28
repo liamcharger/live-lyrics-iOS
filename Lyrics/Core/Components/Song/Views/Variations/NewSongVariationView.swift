@@ -47,7 +47,9 @@ struct NewSongVariationView: View {
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    isDisplayed = false
+                }
             }
             .padding()
             Divider()
@@ -61,27 +63,20 @@ struct NewSongVariationView: View {
                 .padding()
             Spacer()
             Divider()
-            Button(action: {view2.toggle()}, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
+            LiveLyricsButton("Continue", showProgressIndicator: false, action: { view2 = true })
+                .sheet(isPresented: $view2) {
+                    nextView
                 }
-                .modifier(NavButtonViewModifier())
-            })
-            .sheet(isPresented: $view2) {
-                nextView
-            }
-            .onChange(of: view2) { newValue in
-                if !newValue {
-                    if canDismissProgrammatically {
-                        isDisplayed = false
+                .onChange(of: view2) { newValue in
+                    if !newValue {
+                        if canDismissProgrammatically {
+                            isDisplayed = false
+                        }
                     }
                 }
-            }
-            .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-            .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
-            .padding()
+                .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+                .padding()
         }
         .onAppear {
             isFocused = true
@@ -95,7 +90,9 @@ struct NewSongVariationView: View {
                     .font(.title.weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $view2)
+                SheetCloseButton {
+                    view2 = false
+                }
             }
             .padding()
             Divider()
@@ -103,19 +100,12 @@ struct NewSongVariationView: View {
                 .padding(.horizontal)
                 .focused($isFocused)
             Divider()
-            Button(action: {
+            LiveLyricsButton("Continue", action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {
                     createVariation()
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
             })
             .padding()
         }

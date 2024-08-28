@@ -15,7 +15,7 @@ struct FeaturesView: View {
     var features: [FeaturesSection] = [
         FeaturesSection(title: "Collaboration", subtitle: "Work together on your songs and folders with fellow musicians in real-time.", imageName: "person.3"),
         FeaturesSection(title: "Song Variations", subtitle: "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.", imageName: "square.stack.3d.down.right"),
-        FeaturesSection(title: "Printing", subtitle: "Print your songs and song variations directly from the app for easy access in physical formats.", imageName: "printer"),
+        FeaturesSection(title: "Printing", subtitle: "Print your songs and their variations directly from the app for easy access in physical formats.", imageName: "printer"),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
     ]
     
@@ -36,7 +36,7 @@ struct FeaturesView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             }
             Spacer()
-            Button {
+            LiveLyricsButton(selectedTab < features.count - 1 ? "Next" : "Continue") {
                 if selectedTab < features.count - 1 {
                     withAnimation {
                         selectedTab += 1
@@ -45,14 +45,6 @@ struct FeaturesView: View {
                     withAnimation(Animation.bouncy(duration: 1.5)) {
                         animState = .fourth
                     }
-                }
-            } label: {
-                if selectedTab < features.count - 1 {
-                    Text("Next")
-                        .modifier(NavButtonViewModifier())
-                } else {
-                    Text("Continue")
-                        .modifier(NavButtonViewModifier())
                 }
             }
         }

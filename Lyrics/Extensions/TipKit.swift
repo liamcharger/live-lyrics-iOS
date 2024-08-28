@@ -18,10 +18,6 @@ struct PlayViewTip: Tip {
         Text("Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance.")
     }
     
-    var asset: Image? {
-        Image(systemName: "play")
-    }
-    
     var options: [TipOption] {
         return [
             Tips.MaxDisplayCount(1)
@@ -39,10 +35,6 @@ struct AutoscrollSpeedTip: Tip {
         Text("To adjust the scroll speed, update the song's duration field in its edit view.")
     }
     
-    var asset: Image? {
-        Image(systemName: "hare")
-    }
-    
     var options: [TipOption] {
         return [
             Tips.MaxDisplayCount(1)
@@ -58,10 +50,6 @@ struct VariationsTip: Tip {
     
     var message: Text? {
         Text("Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.")
-    }
-    
-    var asset: Image? {
-        Image(systemName: "rectangle.stack")
     }
     
     var options: [TipOption] {

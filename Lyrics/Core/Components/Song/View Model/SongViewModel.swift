@@ -1,5 +1,5 @@
 //
-//  SongDetailViewModel.swift
+//  SongViewModel.swift
 //  Lyrics
 //
 //  Created by Liam Willey on 5/4/23.
@@ -19,7 +19,6 @@ class SongViewModel: ObservableObject {
     static let shared = SongViewModel()
     
     func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
-        service.removeSongVariationListener()
         self.isLoadingVariations = true
         service.fetchSongVariations(song: song) { variations in
             completion(variations)
@@ -27,8 +26,9 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
-        service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in
+    // UNUSED: will be implemented when folder detail views are created
+    func createSong(folder: Folder, lyrics: String, artist: String, key: String, title: String, completion: @escaping(Bool, String) -> Void) {
+        service.createSong(folder: folder, lyrics: lyrics, artist: artist, title: title, key: key) { success, errorMessage in
             if success {
                 completion(true, "Success!")
             } else {
@@ -37,8 +37,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSong(lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
-        service.createSong(lyrics: lyrics, title: title) { success, errorMessage in
+    func createSong(lyrics: String, title: String, artist: String, key: String, completion: @escaping(Bool, String) -> Void) {
+        service.createSong(lyrics: lyrics, artist: artist, key: key, title: title) { success, errorMessage in
             if success {
                 completion(true, "Success!")
             } else {
@@ -68,10 +68,6 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func updateTextProperties(_ folder: Folder, _ song: Song, size: Int) {
-        service.updateTextProperties(folder: folder, song: song, size: size)
-    }
-    
     func updateTextProperties(_ song: Song, size: Int) {
         service.updateTextProperties(song: song, size: size)
     }
@@ -84,18 +80,8 @@ class SongViewModel: ObservableObject {
         service.updateTextProperties(song: song, weight: weight)
     }
     
-    func updateTextProperties(_ song: Song, design: Double) {
-        service.updateTextProperties(song: song, design: design)
-    }
-    
     func updateTextProperties(_ song: Song, alignment: Double) {
         service.updateTextProperties(song: song, alignment: alignment)
-    }
-    
-    func fetchSongDetails(_ song: Song, completion: @escaping(String, String, String, String) -> Void) {
-        service.fetchEditDetails(song) { title, key, artist, duration in
-            completion(title, key, artist, duration)
-        }
     }
     
     func fetchSong(listen: Bool? = nil, forUser: String? = nil, _ id: String, completion: @escaping(Song?) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
