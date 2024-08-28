@@ -119,7 +119,7 @@ struct SongShareDetailView: View {
                         Button {
                             self.loadingId = request.id ?? ""
                             self.isLoading = true
-                            mainViewModel.declineInvite(incomingReqColUid: request.to.first, request: request) {
+                            mainViewModel.declineInvite(incomingReqColUid: request.to.first, request: request, declinedBy: authViewModel.currentUser?.id ?? "") {
                                 self.loadingId = ""
                                 self.isLoading = false
                             }

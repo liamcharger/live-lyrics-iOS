@@ -346,20 +346,12 @@ struct PlayView: View {
                                 .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
                                 .clipShape(Circle())
                         }
-                        Button(action: {
+                        SheetCloseButton {
                             if let proxy = proxy {
                                 stopAutoscroll(scrollViewProxy: proxy)
                             }
                             stopTimer()
                             dismiss = false
-                        }) {
-                            Image(systemName: "xmark")
-                                .imageScale(.medium)
-                                .padding(12)
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .background(Material.regular)
-                                .clipShape(Circle())
                         }
                     }
                     .padding(hasHomeButton() ? .top : [])

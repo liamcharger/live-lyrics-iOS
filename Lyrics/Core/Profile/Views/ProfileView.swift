@@ -25,7 +25,6 @@ struct ProfileView: View {
     @State var errorMessage = ""
     
     @State var showError = false
-    @State var showAlert = false
     @State var showChangePasswordView = false
     @State var showDeleteSheet = false
     @State var showDeleteConfirmation = false
@@ -48,7 +47,9 @@ struct ProfileView: View {
                 Text("Edit Profile")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton {
+                    showProfileView = false
+                }
             }
             .padding()
             Divider()
@@ -111,24 +112,17 @@ struct ProfileView: View {
                 .padding()
             }
             Divider()
-            Button(action: {
+            LiveLyricsButton("Save") {
                 viewModel.updateUser(withEmail: email, username: username, fullname: fullname) { success in
                     if success {
-                        showAlert.toggle()
+                        showProfileView = false
                     } else {
                         showError.toggle()
                     }
                 } completionString: { string in
                     errorMessage = string
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Save")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            })
+            }
             .opacity(!isEmpty ? 0.5 : 1.0)
             .disabled(!isEmpty)
             .padding()
@@ -137,7 +131,9 @@ struct ProfileView: View {
             VStack(spacing: 10) {
                 HStack {
                     Spacer()
-                    SheetCloseButton(isPresented: $showDeleteSheet)
+                    SheetCloseButton {
+                        showDeleteSheet = false
+                    }
                 }
                 Spacer()
                 Image(systemName: "trash")
@@ -188,9 +184,6 @@ struct ProfileView: View {
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Success!"), message: Text("Your changes were saved."), dismissButton: .cancel(Text("OK"), action: { presMode.wrappedValue.dismiss() }))
         }
     }
     

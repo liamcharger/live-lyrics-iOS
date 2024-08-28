@@ -103,6 +103,7 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    // FIXME: shared songs loading state changes to false before they are appended to the songs variable in MainView
     func fetchSharedSongs(completion: @escaping() -> Void) {
         self.isLoadingSharedSongs = true
         self.service.fetchSharedSongs { songs in
@@ -309,8 +310,8 @@ class MainViewModel: ObservableObject {
         service.deleteFolder(folder)
     }
     
-    func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, completion: @escaping() -> Void) {
-        service.declineInvite(incomingReqColUid: incomingReqColUid, request: request) {
+    func declineInvite(incomingReqColUid: String? = nil, request: ShareRequest, declinedBy: String? = nil, completion: @escaping() -> Void) {
+        service.declineInvite(incomingReqColUid: incomingReqColUid, request: request, declinedBy: declinedBy) {
             completion()
         }
     }

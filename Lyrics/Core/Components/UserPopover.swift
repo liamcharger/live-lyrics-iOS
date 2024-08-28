@@ -38,14 +38,8 @@ struct UserPopover: View {
         VStack(spacing: 0) {
             if let user = selectedUser {
                 Group {
-                    Button(action: {dismiss()}) {
-                        Image(systemName: "xmark")
-                            .imageScale(.medium)
-                            .padding(12)
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(.primary)
-                            .background(Material.regular)
-                            .clipShape(Circle())
+                    SheetCloseButton {
+                        dismiss()
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     VStack(spacing: 10) {

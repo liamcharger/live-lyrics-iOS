@@ -82,7 +82,9 @@ struct MenuView: View {
                         ProfileView(user: user, showProfileView: $showProfileView)
                             .environmentObject(viewModel)
                     }
-                    SheetCloseButton(isPresented: $showMenu)
+                    SheetCloseButton {
+                        showMenu = false
+                    }
                 }
                 .padding()
                 Divider()
@@ -102,7 +104,7 @@ struct MenuView: View {
                 Divider()
                 Group {
                     VStack(spacing: 10) {
-                        // FIXME: squishes FullscreenMessage (especially on smaller iPhones)
+                        // FIXME: ad squishes FullscreenMessage (especially on smaller iPhones)
 //                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
                         /* Button(action: {
                             showWebView.toggle()

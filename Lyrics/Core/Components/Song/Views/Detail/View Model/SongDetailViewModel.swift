@@ -29,7 +29,7 @@ class SongDetailViewModel: ObservableObject {
     }
     
     func readOnly(_ song: Song) -> Bool {
-        return (song.readOnly ?? false) || (MainViewModel.shared.selectedFolder?.readOnly ?? false)
+        return song.readOnly ?? false
     }
     
     func optionsButton(_ song: Song, isSongFromFolder: Bool) -> some View {

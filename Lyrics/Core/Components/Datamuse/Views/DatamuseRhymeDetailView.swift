@@ -35,7 +35,9 @@ struct DatamuseRhymeDetailView: View {
                         .lineLimit(4)
                 }
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    isDisplayed = false
+                }
             }
             .padding()
             Divider()

@@ -10,6 +10,7 @@ import SwiftUI
 struct AddSongsView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
     
     @State var errorMessage = ""
@@ -63,9 +64,16 @@ struct AddSongsView: View {
     }
     
     func checkForSongs() {
-        selectedSongs = mainViewModel.folderSongs.filter { folderSong in
-            mainViewModel.songs.contains { $0.id == folderSong.id }
+        let songIdsSet = Set(mainViewModel.songs.map { $0.id })
+        
+        selectedSongs = mainViewModel.folderSongs.filter { song in
+            songIdsSet.contains(song.id)
         }
+        
+        let sharedSongs = mainViewModel.sharedSongs.filter { song in
+            mainViewModel.folderSongs.contains { $0.id == song.id }
+        }
+        selectedSongs += sharedSongs
     }
     
     var body: some View {
@@ -89,14 +97,8 @@ struct AddSongsView: View {
                             .clipShape(Capsule())
                     }
                 }
-                Button(action: { presMode.wrappedValue.dismiss() }) {
-                    Image(systemName: "xmark")
-                        .imageScale(.medium)
-                        .padding(12)
-                        .font(.body.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .background(Material.regular)
-                        .clipShape(Capsule())
+                SheetCloseButton {
+                    presMode.wrappedValue.dismiss()
                 }
                 if !selectedSongs.isEmpty {
                     Button(action: {
@@ -135,19 +137,11 @@ struct AddSongsView: View {
                     if showSearchBar {
                         HStack(spacing: 6) {
                             CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
-                            Button(action: {
+                            SheetCloseButton {
                                 withAnimation(.bouncy(extraBounce: 0.1)) {
                                     searchText = ""
                                     showSearchBar.toggle()
                                 }
-                            }) {
-                                Image(systemName: "xmark")
-                                    .imageScale(.medium)
-                                    .padding(12)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.primary)
-                                    .background(Material.regular)
-                                    .clipShape(Capsule())
                             }
                         }
                         .padding([.horizontal, .top])
@@ -190,9 +184,9 @@ struct AddSongsView: View {
                                 .contextMenu {
                                     Button(action: {
                                         if selectedSongs.contains(where: { $0.id == song.id }) {
-                                            selectedSongs.removeAll(where: { $0.id == song.id }) // Deselect
+                                            selectedSongs.removeAll(where: { $0.id == song.id })
                                         } else {
-                                            selectedSongs.append(song) // Select
+                                            selectedSongs.append(song)
                                         }
                                     }) {
                                         if selectedSongs.contains(where: { $0.id == song.id }) {
@@ -203,6 +197,7 @@ struct AddSongsView: View {
                                     }
                                 }
                             }
+                            .disabled(isLoading)
                         }
                     }
                     .padding()
@@ -210,10 +205,12 @@ struct AddSongsView: View {
             }
         }
         .onAppear {
-            checkForSongs()
-            
             if mainViewModel.isLoadingSharedSongs {
-                mainViewModel.fetchSharedSongs {}
+                mainViewModel.fetchSharedSongs {
+                    checkForSongs()
+                }
+            } else {
+                checkForSongs()
             }
         }
         .onChange(of: mainViewModel.folderSongs) { _ in

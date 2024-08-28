@@ -116,11 +116,14 @@ struct SongDetailView: View {
             }
         }
     }
+    func updateLyrics() {
+        mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
+        lastUpdatedLyrics = lyrics
+    }
     func checkForUpdatedLyrics() {
         self.updatedLyricsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if lyrics != lastUpdatedLyrics {
-                mainViewModel.updateLyrics(forVariation: selectedVariation, song, lyrics: lyrics)
-                lastUpdatedLyrics = lyrics
+                updateLyrics()
             }
         }
     }
@@ -284,7 +287,7 @@ struct SongDetailView: View {
             ZStack {
                 let showJoinedUsers = joinedUsers?.isEmpty ?? true
                 
-                TextEditor(text: songs == nil ? .constant(lyrics) : $lyrics)
+                TextEditor(text: songs == nil || (song.readOnly ?? false) ? .constant(lyrics) : $lyrics)
                     .multilineTextAlignment(alignment)
                     .font(.system(size: CGFloat(value), weight: weight))
                     .lineSpacing(lineSpacing)
@@ -510,7 +513,18 @@ struct SongDetailView: View {
                 }
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
+                // Save shared song properties to reassign
+                let readOnly = self.song.readOnly
+                let variations = self.song.variations
+                let performanceMode = self.song.performanceMode
+                
                 if let song = song {
+                    // Assignment overwrites sharedSong properties, so reassign them
+                    self.song = song
+                    self.song.readOnly = readOnly
+                    self.song.variations = variations
+                    self.song.performanceMode = performanceMode
+                    
                     self.title = song.title
                     if !isInputActive {
                         if selectedVariation == nil {
@@ -641,19 +655,5 @@ struct SongDetailView: View {
                 }
             }
         }
-    }
-}
-
-class ScrollViewDelegate: NSObject, UIScrollViewDelegate {
-    var showBlurHandler: (Bool) -> Void
-    
-    init(showBlurHandler: @escaping (Bool) -> Void) {
-        self.showBlurHandler = showBlurHandler
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let shouldShowBlur = offsetY >= 24
-        showBlurHandler(shouldShowBlur)
     }
 }

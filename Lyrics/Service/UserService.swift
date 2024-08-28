@@ -46,9 +46,9 @@ struct UserService {
         })
     }
     
-    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, showsExplicitSongs: Bool, enableAutoscroll: Bool, metronomeStyle: [String], completion: @escaping(Bool, String) -> Void) {
+    func updateSettings(_ user: User, wordCount: Bool, data: String, wordCountStyle: String, showsExplicitSongs: Bool, metronomeStyle: [String], completion: @escaping(Bool, String) -> Void) {
         Firestore.firestore().collection("users").document(user.id!)
-            .updateData(["wordCount": wordCount, "showDataUnderSong": data, "wordCountStyle": wordCountStyle, "showsExplicitSongs": showsExplicitSongs, "enableAutoscroll": enableAutoscroll, "metronomeStyle": metronomeStyle]) {
+            .updateData(["wordCount": wordCount, "showDataUnderSong": data, "wordCountStyle": wordCountStyle, "showsExplicitSongs": showsExplicitSongs, "metronomeStyle": metronomeStyle]) {
                 error in
                 if let error = error {
                     completion(false, error.localizedDescription)
@@ -132,6 +132,8 @@ struct UserService {
             data["deep_link"] = "live-lyrics://profile"
         } else if type == .declined {
             data["deep_link"] = "live-lyrics://profile"
+        } else if type == .left {
+            data["deep_link"] = "live-lyrics://profile"
         }
         
         Functions.functions().httpsCallable("sendNotification").call(data) { result, error in
@@ -148,4 +150,5 @@ enum NotificationType {
     case incoming
     case accepted
     case declined
+    case left
 }

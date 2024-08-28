@@ -83,20 +83,15 @@ struct RegistrationView: View {
                     }
                     .foregroundColor(Color.gray)
                     .font(.footnote)
-                    Button(action: {viewModel.register(withEmail: email, password: password, username: username, fullname: fullname) { success in
-                        if !success {
-                            showError.toggle()
+                    LiveLyricsButton("Continue") {
+                        viewModel.register(withEmail: email, password: password, username: username, fullname: fullname) { success in
+                            if !success {
+                                showError.toggle()
+                            }
+                        } completionString: { string in
+                            self.errorMessage = string
                         }
-                    } completionString: { string in
-                        self.errorMessage = string
-                    }}, label: {
-                        HStack {
-                            Spacer()
-                            Text("Continue")
-                            Spacer()
-                        }
-                        .modifier(NavButtonViewModifier())
-                    })
+                    }
                     .disabled(isEmpty)
                     .opacity(isEmpty ? 0.5 : 1.0)
                 }

@@ -12,6 +12,7 @@ struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var mainViewModel = MainViewModel.shared
     
+    @Environment(\.presentationMode) var presMode
     let song: Song
     
     @Binding var isDisplayed: Bool
@@ -80,7 +81,9 @@ struct SongEditView: View {
                 Text("Edit Song")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    presMode.wrappedValue.dismiss()
+                }
             }
             .padding()
             Divider()
@@ -107,13 +110,9 @@ struct SongEditView: View {
                 Text("These settings are not specific to song variations.")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.gray)
-                Button(action: update) {
-                    Text("Save")
-                        .frame(maxWidth: .infinity)
-                        .modifier(NavButtonViewModifier())
-                }
-                .opacity(isEmpty ? 0.5 : 1.0)
-                .disabled(isEmpty)
+                LiveLyricsButton("Save", action: update)
+                    .opacity(isEmpty ? 0.5 : 1.0)
+                    .disabled(isEmpty)
             }
             .padding()
         }

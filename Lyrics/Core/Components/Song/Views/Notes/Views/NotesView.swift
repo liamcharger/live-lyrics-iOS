@@ -29,14 +29,8 @@ struct NotesView: View {
                 Text("Notes")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                Button(action: {presMode.wrappedValue.dismiss()}) {
-                    Image(systemName: "xmark")
-                        .imageScale(.medium)
-                        .padding(12)
-                        .font(.body.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .background(Material.regular)
-                        .clipShape(Circle())
+                SheetCloseButton {
+                    presMode.wrappedValue.dismiss()
                 }
             }
             .padding()
