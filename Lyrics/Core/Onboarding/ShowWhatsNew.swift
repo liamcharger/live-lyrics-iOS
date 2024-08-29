@@ -32,7 +32,7 @@ struct ShowWhatsNew: View {
                     Text("Let's hop back in.")
                         .font(.largeTitle.bold())
                     Spacer()
-                    LiveLyricsButton("Continue") {
+                    LiveLyricsButton("Continue", showProgressIndicator: false) {
                         withAnimation(Animation.bouncy(duration: 1.5)) {
                             animState = .none
                         }

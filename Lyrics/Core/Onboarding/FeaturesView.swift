@@ -36,7 +36,7 @@ struct FeaturesView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             }
             Spacer()
-            LiveLyricsButton(selectedTab < features.count - 1 ? "Next" : "Continue") {
+            LiveLyricsButton(selectedTab < features.count - 1 ? "Next" : "Continue", showProgressIndicator: false) {
                 if selectedTab < features.count - 1 {
                     withAnimation {
                         selectedTab += 1
