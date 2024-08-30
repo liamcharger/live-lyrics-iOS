@@ -357,6 +357,16 @@
         }
       }
     },
+    "A mail client could not be opened." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido abrir un cliente de correo."
+          }
+        }
+      }
+    },
     "action_cannot_be_undone" : {
       "localizations" : {
         "en" : {
@@ -624,6 +634,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
+          }
+        }
+      }
+    },
+    "Cannot Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede abrir"
           }
         }
       }

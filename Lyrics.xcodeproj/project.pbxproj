@@ -420,7 +420,7 @@
 				E06D77802A17B4240032332F /* Settings */,
 				E0F95C842A13C74100C2D21C /* Profile */,
 				E050D1552A030303004CC45E /* Menu */,
-				E050D14B2A02FD3D004CC45E /* Welcome */,
+				E050D14B2A02FD3D004CC45E /* Onboarding */,
 				E04247902A02F5FA00CA48B3 /* Authentication */,
 			);
 			path = Core;
@@ -525,13 +525,13 @@
 			path = Share;
 			sourceTree = "<group>";
 		};
-		E050D14B2A02FD3D004CC45E /* Welcome */ = {
+		E050D14B2A02FD3D004CC45E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
 				E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */,
 				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
 			);
-			path = Welcome;
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		E050D1552A030303004CC45E /* Menu */ = {

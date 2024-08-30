@@ -27,6 +27,7 @@ struct MenuView: View {
     @State var showDeleteSheet = false
     @State var showRefreshDialog = false
     @State var showCannotPurchaseAlert = false
+    @State var showCannotSendFeedbackAlert = false
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     
@@ -188,7 +189,11 @@ struct MenuView: View {
                             SettingsView(user: user)
                         }
                         Button(action: {
-                            showMailView.toggle()
+                            if MFMailComposeViewController.canSendMail() {
+                                showMailView = true
+                            } else {
+                                showCannotSendFeedbackAlert = true
+                            }
                         }, label: {
                             HStack {
                                 VStack(alignment: .leading, spacing: 10) {
@@ -207,8 +212,6 @@ struct MenuView: View {
                             .background(Color.blue)
                             .clipShape(Capsule())
                         })
-                        .opacity(!MFMailComposeViewController.canSendMail() ? 0.5 : 1.0)
-                        .disabled(!MFMailComposeViewController.canSendMail())
                         .sheet(isPresented: $showMailView) {
                             MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
                         }
@@ -247,6 +250,9 @@ struct MenuView: View {
             .navigationBarHidden(true)
             .alert(isPresented: $showCannotPurchaseAlert) {
                 Alert(title: Text("Cannot Purchase"), message: Text("This item cannot be purchased due to device restrictions."), dismissButton: .default(Text("OK")))
+            }
+            .alert(isPresented: $showCannotSendFeedbackAlert) {
+                Alert(title: Text("Cannot Open"), message: Text("A mail client could not be opened."), dismissButton: .default(Text("Cancel")))
             }
         }
     }
