@@ -373,6 +373,28 @@
         }
       }
     },
+    "access_to_tuner" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A tuner—make sure your instruments sound sharp"
+          }
+        }
+      }
+    },
+    "access_to_worlds_largest_lyric_database" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to the world’s largest lyric database, right in the app"
+          }
+        }
+      }
+    },
     "action_cannot_be_undone" : {
       "localizations" : {
         "en" : {
@@ -385,6 +407,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta acción es permanente y no puede deshacerse."
+          }
+        }
+      }
+    },
+    "ad_free_experience" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove ads—get rid of distractions and focus on your songs"
           }
         }
       }
@@ -2492,42 +2525,53 @@
       }
     },
     "Success!" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Éxito!"
-          }
-        }
+  "localizations" : {
+    "es" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "¡Éxito!"
+      }
+    }
+  }
+},
+"synonym_title" : {
+  "extractionState" : "manual",
+  "localizations" : {
+    "en" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Synonyms for"
       }
     },
-    "synonym_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synonyms for"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sinónimos de"
-          }
-        }
+    "es" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Sinónimos de"
       }
-    },
-    "Synonyms for \"%@\"" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sinónimos de «%@»"
-          }
-        }
+    }
+  }
+},
+"Synonyms for \"%@\"" : {
+  "localizations" : {
+    "es" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Sinónimos de «%@»"
       }
-    },
+    }
+  }
+},
+"support_the_developers" : {
+  "extractionState" : "manual",
+  "localizations" : {
+    "en" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Support the developers—signing up helps us make the app better"
+      }
+    }
+  }
+}
     "tag_blue" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2842,35 +2886,46 @@
       }
     },
     "Words" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palabras"
-          }
-        }
+  "localizations" : {
+    "es" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Palabras"
       }
-    },
-    "Words related to \"%@\"" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palabras relacionadas con «%@»"
-          }
-        }
+    }
+  }
+},
+"Words related to \"%@\"" : {
+  "localizations" : {
+    "es" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Palabras relacionadas con «%@»"
       }
-    },
-    "Words starting with \"%@\"" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palabras que empiezan por «%@»"
-          }
-        }
+    }
+  }
+},
+"Words starting with \"%@\"" : {
+  "localizations" : {
+    "es" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Palabras que empiezan por «%@»"
       }
-    },
+    }
+  }
+},
+"world_of_worlds_at_your_fingertips" : {
+  "extractionState" : "manual",
+  "localizations" : {
+    "en" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "Rhymes, synonyms, antonyms—a world of words at your fingertips (yeah, we thought that was kind of cheesy, too.)"
+      }
+    }
+  }
+}
     "You need to add lyrics to a variation to create it." : {
       "localizations" : {
         "es" : {
