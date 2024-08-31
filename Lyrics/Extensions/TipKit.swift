@@ -75,3 +75,20 @@ struct NotesViewTip: Tip {
         ]
     }
 }
+
+@available(iOS 17, *)
+struct DatamuseRowViewTip: Tip {
+    var title: Text {
+        Text("Want to save a word?")
+    }
+    
+    var message: Text? {
+        Text("Click to copy to your clipboard.")
+    }
+    
+    var options: [TipOption] {
+        return [
+            Tips.MaxDisplayCount(1)
+        ]
+    }
+}

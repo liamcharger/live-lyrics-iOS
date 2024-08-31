@@ -50,15 +50,17 @@ struct LiveLyricsButton: View {
     
     @State var hasBeenPressed = false
     
-    init(_ title: String, showProgressIndicator: Bool? = nil, action: @escaping () -> Void) {
+    init(_ title: String, showProgressIndicator: Bool = true, action: @escaping () -> Void) {
         self.action = action
         self.title = title
-        self.showProgressIndicator = showProgressIndicator ?? true
+        self.showProgressIndicator = showProgressIndicator
     }
     
     var body: some View {
         Button {
-            hasBeenPressed = true
+            if showProgressIndicator {
+                hasBeenPressed = true
+            }
             action()
         } label: {
             if !hasBeenPressed {
