@@ -18,7 +18,7 @@ class SongDetailViewModel: ObservableObject {
     @Published var showMoveView = false
     @Published var showTagSheet = false
     
-    @Published var selectedText = "Random"
+    @Published var selectedText = ""
     
     @ObservedObject var songViewModel = SongViewModel.shared
     
