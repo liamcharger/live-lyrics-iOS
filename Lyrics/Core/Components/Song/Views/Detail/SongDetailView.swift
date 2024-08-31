@@ -54,6 +54,7 @@ struct SongDetailView: View {
     @State private var showAlert = false
     @State private var showNewVariationView = false
     @State private var showVariationsManagementSheet = false
+    @State private var showDatamuseSheet = false
     @State private var showUserPopover = false
     @State private var showJoinedUsers = true
     @State private var showBackgroundBlur = false
@@ -61,6 +62,8 @@ struct SongDetailView: View {
     @State private var updatedLyricsTimer: Timer?
     
     @State private var activeAlert: ActiveAlert?
+    
+    @State private var wordType: DatamuseWordType = .synonymn
     
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
@@ -294,6 +297,12 @@ struct SongDetailView: View {
                     .focused($isInputActive)
                     .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
                         textEditor.textContainerInset = UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12)
+                        
+                        if let textRange = textEditor.selectedTextRange {
+                            DispatchQueue.main.async {
+                                songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
+                            }
+                        }
                     }
                 if restoreSong == nil {
                     Color.black
@@ -348,115 +357,163 @@ struct SongDetailView: View {
             }
             Divider()
             if restoreSong == nil {
-                VStack(spacing: 14) {
-                    if #available(iOS 17, *) {
-                        TipView(VariationsTip())
-                    }
-                    HStack {
-                        if !getShowVariationCondition() {
-                            Spacer()
-                        }
-                        if songs != nil {
-                            if wordCountBool {
-                                Group {
-                                    if isChecked == "Words" {
-                                        Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
-                                    } else if isChecked == "Characters" {
-                                        Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
-                                    } else if isChecked == "Spaces" {
-                                        Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
-                                    } else if isChecked == "Paragraphs" {
-                                        Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
-                                    }
-                                }
-                                .foregroundColor(.primary)
-                                .font(.system(size: 16).weight(.semibold))
+                if isInputActive && !songDetailViewModel.selectedText.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            Button {
+                                wordType = .synonymn
+                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .synonymn)
+                                showDatamuseSheet = true
+                            } label: {
+                                Text("Synonyms for \"\(songDetailViewModel.selectedText)\"")
+                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                            }
+                            Button {
+                                wordType = .rhyme
+                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .rhyme)
+                                showDatamuseSheet = true
+                            } label: {
+                                Text("Rhymes for \"\(songDetailViewModel.selectedText)\"")
+                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                            }
+                            Button {
+                                wordType = .antonymn
+                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .antonymn)
+                                showDatamuseSheet = true
+                            } label: {
+                                Text("Antonyms for \"\(songDetailViewModel.selectedText)\"")
+                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                            }
+                            Button {
+                                wordType = .related
+                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .related)
+                                showDatamuseSheet = true
+                            } label: {
+                                Text("Words related to \"\(songDetailViewModel.selectedText)\"")
+                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                            }
+                            Button {
+                                wordType = .startsWith
+                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .startsWith)
+                                showDatamuseSheet = true
+                            } label: {
+                                Text("Words starting with \"\(songDetailViewModel.selectedText)\"")
+                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
                             }
                         }
-                        if getShowVariationCondition() {
-                            Spacer()
-                            Group {
-                                if songViewModel.isLoadingVariations {
-                                    ProgressView()
-                                } else {
-                                    if songVariations.isEmpty {
-                                        Button {
-                                            showNewVariationView = true
-                                        } label: {
-                                            HStack(spacing: 6) {
-                                                Image(systemName: "plus")
-                                                Text("New Variation")
-                                            }
+                        .padding(12)
+                    }
+                } else {
+                    VStack(spacing: 14) {
+                        if #available(iOS 17, *) {
+                            TipView(VariationsTip())
+                        }
+                        HStack {
+                            if !getShowVariationCondition() {
+                                Spacer()
+                            }
+                            if songs != nil {
+                                if wordCountBool {
+                                    Group {
+                                        if isChecked == "Words" {
+                                            Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
+                                        } else if isChecked == "Characters" {
+                                            Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
+                                        } else if isChecked == "Spaces" {
+                                            Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
+                                        } else if isChecked == "Paragraphs" {
+                                            Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
                                         }
+                                    }
+                                    .foregroundColor(.primary)
+                                    .font(.system(size: 16).weight(.semibold))
+                                }
+                            }
+                            if getShowVariationCondition() {
+                                Spacer()
+                                Group {
+                                    if songViewModel.isLoadingVariations {
+                                        ProgressView()
                                     } else {
-                                        Menu {
-                                            let `default` = Group {
-                                                Button {
-                                                    self.lyrics = song.lyrics
-                                                    self.selectedVariation = nil
-                                                } label: {
-                                                    Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
-                                                }
-                                                Divider()
-                                            }
-                                            if (song.variations ?? []).isEmpty {
-                                                `default`
-                                            } else {
-                                                if song.uid == songDetailViewModel.uid() {
-                                                    `default`
-                                                } else if song.uid != songDetailViewModel.uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
-                                                    `default`
+                                        if songVariations.isEmpty {
+                                            Button {
+                                                showNewVariationView = true
+                                            } label: {
+                                                HStack(spacing: 6) {
+                                                    Image(systemName: "plus")
+                                                    Text("New Variation")
                                                 }
                                             }
-                                            ForEach(songVariations, id: \.id) { variation in
-                                                if variation.title != SongVariation.defaultId {
+                                        } else {
+                                            Menu {
+                                                let `default` = Group {
                                                     Button {
-                                                        self.selectedVariation = variation
-                                                        self.lyrics = variation.lyrics
+                                                        self.lyrics = song.lyrics
+                                                        self.selectedVariation = nil
                                                     } label: {
-                                                        Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
+                                                        Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                                    }
+                                                    Divider()
+                                                }
+                                                if (song.variations ?? []).isEmpty {
+                                                    `default`
+                                                } else {
+                                                    if song.uid == songDetailViewModel.uid() {
+                                                        `default`
+                                                    } else if song.uid != songDetailViewModel.uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                                        `default`
                                                     }
                                                 }
-                                            }
-                                            if !songDetailViewModel.readOnly(song) {
-                                                if song.uid == songDetailViewModel.uid() || (song.variations ?? []).isEmpty {
-                                                    Divider()
-                                                    if songVariations.count > 0 {
+                                                ForEach(songVariations, id: \.id) { variation in
+                                                    if variation.title != SongVariation.defaultId {
                                                         Button {
-                                                            showVariationsManagementSheet = true
+                                                            self.selectedVariation = variation
+                                                            self.lyrics = variation.lyrics
                                                         } label: {
-                                                            Label("Manage", systemImage: "gear")
+                                                            Label(variation.title, systemImage: (variation.id ?? "" == selectedVariation?.id ?? "") ? "checkmark" : "")
                                                         }
                                                     }
-                                                    Button {
-                                                        showNewVariationView = true
-                                                    } label: {
-                                                        Label("New", systemImage: "square.and.pencil")
+                                                }
+                                                if !songDetailViewModel.readOnly(song) {
+                                                    if song.uid == songDetailViewModel.uid() || (song.variations ?? []).isEmpty {
+                                                        Divider()
+                                                        if songVariations.count > 0 {
+                                                            Button {
+                                                                showVariationsManagementSheet = true
+                                                            } label: {
+                                                                Label("Manage", systemImage: "gear")
+                                                            }
+                                                        }
+                                                        Button {
+                                                            showNewVariationView = true
+                                                        } label: {
+                                                            Label("New", systemImage: "square.and.pencil")
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        } label: {
-                                            HStack(spacing: 5) {
-                                                if let variation = selectedVariation {
-                                                    Text(variation.title)
-                                                } else {
-                                                    Text("Default")
+                                            } label: {
+                                                HStack(spacing: 5) {
+                                                    if let variation = selectedVariation {
+                                                        Text(variation.title)
+                                                    } else {
+                                                        Text("Default")
+                                                    }
+                                                    Image(systemName: "chevron.up.chevron.down")
                                                 }
-                                                Image(systemName: "chevron.up.chevron.down")
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                        if !wordCountBool || !getShowVariationCondition() {
-                            Spacer()
+                            if !wordCountBool || !getShowVariationCondition() {
+                                Spacer()
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 20)
+                    .padding(.horizontal)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-                .padding(.horizontal)
             }
         }
         .navigationBarBackButtonHidden()
@@ -578,6 +635,9 @@ struct SongDetailView: View {
             } else {
                 UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: song, folder: nil, isSongFromFolder: isSongFromFolder)
             }
+        }
+        .bottomSheet(isPresented: $showDatamuseSheet, detents: [.medium()]) {
+            DatamuseWordDetailView(type: wordType)
         }
         .confirmationDialog("Delete Song", isPresented: $songDetailViewModel.showDeleteSheet) {
             Button("Delete", role: .destructive) {

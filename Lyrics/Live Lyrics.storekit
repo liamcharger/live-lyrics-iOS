@@ -35,7 +35,7 @@
     "_askToBuyEnabled" : false,
     "_developerTeamID" : "Y22PRZL3N4",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 723672228.76098001,
+    "_lastSynchronizedDate" : 746812942.89614403,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -45,7 +45,10 @@
         "name" : "Load Products"
       },
       {
-        "current" : null,
+        "current" : {
+          "index" : 1,
+          "type" : "purchase"
+        },
         "enabled" : false,
         "name" : "Purchase"
       },

@@ -114,6 +114,12 @@
             "state" : "new",
             "value" : "%1$lld Syllable%2$@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld Silbe%2$@"
+          }
         }
       }
     },
@@ -423,6 +429,33 @@
         }
       }
     },
+    "antonym_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antonyms for "
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antónimos de"
+          }
+        }
+      }
+    },
+    "Antonyms for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antónimos de «%@»"
+          }
+        }
+      }
+    },
     "Are you sure you want to %@ \"%@\"?" : {
       "localizations" : {
         "en" : {
@@ -704,6 +737,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claro"
+          }
+        }
+      }
+    },
+    "Click to copy to your clipboard." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haga clic para copiar en el portapapeles."
           }
         }
       }
@@ -1973,6 +2016,16 @@
         }
       }
     },
+    "Powered by Datamuse" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Datamuse"
+          }
+        }
+      }
+    },
     "Print" : {
       "localizations" : {
         "es" : {
@@ -2057,6 +2110,23 @@
         }
       }
     },
+    "related_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words related to"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras relacionadas con"
+          }
+        }
+      }
+    },
     "Remove" : {
       "localizations" : {
         "es" : {
@@ -2127,8 +2197,32 @@
         }
       }
     },
-    "Rhymes for" : {
-
+    "rhyme_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rhymes for"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas para"
+          }
+        }
+      }
+    },
+    "Rhymes for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas para «%@»"
+          }
+        }
+      }
     },
     "Right" : {
       "localizations" : {
@@ -2380,12 +2474,56 @@
         }
       }
     },
+    "startsWith_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words starting with"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras que empiezan por"
+          }
+        }
+      }
+    },
     "Success!" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Éxito!"
+          }
+        }
+      }
+    },
+    "synonym_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synonyms for"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinónimos de"
+          }
+        }
+      }
+    },
+    "Synonyms for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinónimos de «%@»"
           }
         }
       }
@@ -2653,6 +2791,16 @@
         }
       }
     },
+    "Want to save a word?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres guardar una palabra?"
+          }
+        }
+      }
+    },
     "WARNING: This action is permanant and cannot be undone!" : {
       "localizations" : {
         "es" : {
@@ -2699,6 +2847,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Palabras"
+          }
+        }
+      }
+    },
+    "Words related to \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras relacionadas con «%@»"
+          }
+        }
+      }
+    },
+    "Words starting with \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras que empiezan por «%@»"
           }
         }
       }

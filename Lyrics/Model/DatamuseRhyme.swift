@@ -8,7 +8,7 @@
 import Foundation
 
 struct DatamuseRhyme: Identifiable, Codable {
-    let id = UUID().uuidString
+    var id = UUID().uuidString
     let word: String
     let score: Int
     let numSyllables: Int
