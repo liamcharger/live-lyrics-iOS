@@ -73,6 +73,8 @@ struct MainView: View {
     
     @State var sortSelection: SortSelectionEnum = .noSelection
     
+    @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = true
+    
     var searchableFolders: [Folder] {
         let folders = mainViewModel.sharedFolders + mainViewModel.folders
         if folderSearchText.isEmpty {
@@ -879,6 +881,9 @@ struct MainView: View {
                     .padding(.bottom, !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable ? 75 : 0)
                     .bottomSheet(isPresented: $showUserPopover, detents: [.medium()]) {
                         UserPopover(joinedUsers: $joinedUsers, selectedUser: $selectedUser, song: nil, folder: mainViewModel.selectedFolder, isSongFromFolder: true)
+                    }
+                    .fullScreenCover(isPresented: $showUpgradeSheet) {
+                        UpgradeView()
                     }
                     .sheet(isPresented: $showEditSheet) {
                         if let selectedFolder = mainViewModel.selectedFolder {
