@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct UpgradeView: View {
     @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = true
+    
+    @ObservedObject var storeKitManager = StoreKitManager.shared
+    
+    @State var showError = false
+    @State var showCannotPurchaseAlert = false
     
     let features = [
         NSLocalizedString("ad_free_experience", comment: ""),
@@ -17,6 +23,21 @@ struct UpgradeView: View {
         NSLocalizedString("world_of_worlds_at_your_fingertips", comment: ""),
         NSLocalizedString("support_the_developers", comment: "")
     ]
+    
+    var isAuthorizedForPayments: Bool {
+        return SKPaymentQueue.canMakePayments()
+    }
+    
+    func purchase(product: Product) async {
+        do {
+            if try await storeKitManager.purchase(product) != nil {
+                print("\(product.id) purchased successfully")
+                showUpgradeSheet = false
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -59,7 +80,17 @@ struct UpgradeView: View {
             }
             VStack(spacing: 12) {
                 LiveLyricsButton("Subscribe for $4.99/mo") {
-                    
+                    if let product = storeKitManager.storeProducts.first(where: { $0.id == "pro.monthly" }) {
+                        if isAuthorizedForPayments {
+                            Task {
+                                await purchase(product: product)
+                            }
+                        } else {
+                            showCannotPurchaseAlert = true
+                        }
+                    } else {
+                        showError = true
+                    }
                 }
                 Button {
                     showUpgradeSheet = false
@@ -73,6 +104,12 @@ struct UpgradeView: View {
             .background(Material.ultraThin)
         }
         .edgesIgnoringSafeArea(.bottom)
+        .alert(isPresented: $showCannotPurchaseAlert) {
+            Alert(title: Text("Cannot Purchase"), message: Text("This item cannot be purchased due to device restrictions."), dismissButton: .default(Text("OK")))
+        }
+        .alert(isPresented: $showError) {
+            Alert(title: Text("Error"), message: Text("There was an unknown error while processing your request."), dismissButton: .default(Text("Cancel")))
+        }
     }
 }
 

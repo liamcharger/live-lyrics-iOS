@@ -20,7 +20,7 @@
       "internalID" : "6473956000",
       "localizations" : [
         {
-          "description" : "In-App purchase to remove ads from the app.",
+          "description" : "Remove ads from the app",
           "displayName" : "Remove Ads",
           "locale" : "en_US"
         }
@@ -35,7 +35,7 @@
     "_askToBuyEnabled" : false,
     "_developerTeamID" : "Y22PRZL3N4",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 746812942.89614403,
+    "_lastSynchronizedDate" : 746896448.81484401,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -90,7 +90,71 @@
     ]
   },
   "subscriptionGroups" : [
+    {
+      "id" : "21532014",
+      "localizations" : [
 
+      ],
+      "name" : "Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6670368044",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly subscription to Live Lyrics Pro",
+              "displayName" : "Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21532014",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "39.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6670368078",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly subscription to Live Lyrics Pro",
+              "displayName" : "Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "pro.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly",
+          "subscriptionGroupID" : "21532014",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 4,

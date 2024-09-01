@@ -17,6 +17,7 @@ struct User: Identifiable, Codable {
     var showDataUnderSong: String?
     var wordCountStyle: String?
     var showAds: Bool?
+    var hasPro: Bool?
     var currentVersion: String?
     var showsExplicitSongs: Bool?
     var enableAutoscroll: Bool?

@@ -14,7 +14,6 @@
 		E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */; };
 		E006A0592A214CAA00CE468A /* RecentlyDeletedSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */; };
 		E00E845D2B222AEB00573A9F /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00E845C2B222AEB00573A9F /* StoreKitManager.swift */; };
-		E00E845F2B225C1000573A9F /* InAppPurchases.plist in Resources */ = {isa = PBXBuildFile; fileRef = E00E845E2B225C1000573A9F /* InAppPurchases.plist */; };
 		E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0106C832A1EA1A0007D99DF /* MoveRowView.swift */; };
 		E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01520E12A872EF4005C4F8C /* AddSongsView.swift */; };
 		E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */; };
@@ -101,6 +100,7 @@
 		E0C078282B4463FB00F91287 /* SortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C078272B4463FB00F91287 /* SortView.swift */; };
 		E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = E0C138DF2BBCAB12003C0D10 /* GoogleMobileAds */; };
 		E0C139EA2BCA30B300317A7B /* FolderSongDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */; };
+		E0C3D6C22C84CC1100A5ECDE /* InAppPurchases.plist in Resources */ = {isa = PBXBuildFile; fileRef = E0C3D6C12C84CC1100A5ECDE /* InAppPurchases.plist */; };
 		E0C492E52A0BDFC6002E9EA0 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C492E42A0BDFC6002E9EA0 /* Folder.swift */; };
 		E0CA78BC2BC5A381004CEA73 /* RecentlyDeletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */; };
 		E0CA85312B081D5100188CD0 /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA85162B081D5100188CD0 /* ListRowView.swift */; };
@@ -167,7 +167,6 @@
 		E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeletedSong.swift; sourceTree = "<group>"; };
 		E00E845B2B22290100573A9F /* Live Lyrics.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Live Lyrics.storekit"; sourceTree = "<group>"; };
 		E00E845C2B222AEB00573A9F /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitManager.swift; sourceTree = "<group>"; };
-		E00E845E2B225C1000573A9F /* InAppPurchases.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = InAppPurchases.plist; sourceTree = "<group>"; };
 		E0106C832A1EA1A0007D99DF /* MoveRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRowView.swift; sourceTree = "<group>"; };
 		E01520E12A872EF4005C4F8C /* AddSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSongsView.swift; sourceTree = "<group>"; };
 		E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -251,6 +250,7 @@
 		E0C139E92BCA30B300317A7B /* FolderSongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSongDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0C168342B59BCBF00A12C59 /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		E0C168362B59BCEA00A12C59 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
+		E0C3D6C12C84CC1100A5ECDE /* InAppPurchases.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = InAppPurchases.plist; sourceTree = "<group>"; };
 		E0C492E42A0BDFC6002E9EA0 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		E0CA78BB2BC5A380004CEA73 /* RecentlyDeletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeletedViewModel.swift; sourceTree = "<group>"; };
 		E0CA85162B081D5100188CD0 /* ListRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ListRowView.swift; path = "../Navigation & System/ListRowView.swift"; sourceTree = "<group>"; };
@@ -399,7 +399,7 @@
 				E02E674C2C191BBA00806190 /* Localizable.xcstrings */,
 				E04247512A02EF4F00CA48B3 /* Assets.xcassets */,
 				E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */,
-				E00E845E2B225C1000573A9F /* InAppPurchases.plist */,
+				E0C3D6C12C84CC1100A5ECDE /* InAppPurchases.plist */,
 				E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */,
 				E0986BE72B2B50C400CE938B /* icons.json */,
 				E00E845B2B22290100573A9F /* Live Lyrics.storekit */,
@@ -1112,8 +1112,8 @@
 				E0986BF52B2B516900CE938B /* Font Awesome 6 Pro-Solid-900.otf in Resources */,
 				E0986BFA2B2B516900CE938B /* Font Awesome 6 Pro-Regular-400.otf in Resources */,
 				E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */,
-				E00E845F2B225C1000573A9F /* InAppPurchases.plist in Resources */,
 				E01EB4452B20CA3A009C48F2 /* remote_config_defaults.plist in Resources */,
+				E0C3D6C22C84CC1100A5ECDE /* InAppPurchases.plist in Resources */,
 				E0019D282BC6E68100DABECB /* lo_click.wav in Resources */,
 				E02E674D2C191BBA00806190 /* Localizable.xcstrings in Resources */,
 				E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */,
