@@ -19,7 +19,7 @@ struct AdBannerView: View {
     var paddingRight: CGFloat
     
     var body: some View {
-        if let currentUser = authViewModel.currentUser, currentUser.showAds ?? true || !(currentUser.hasPro ?? false) {
+        if let currentUser = authViewModel.currentUser, !(currentUser.hasPro ?? false) && (currentUser.showAds ?? true) {
             ZStack {
                 HStack(spacing: 7) {
                     ProgressView()

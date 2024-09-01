@@ -65,6 +65,8 @@ struct SongDetailView: View {
     
     @State private var wordType: DatamuseWordType = .synonymn
     
+    @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = false
+    
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel()
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
@@ -128,6 +130,15 @@ struct SongDetailView: View {
             if lyrics != lastUpdatedLyrics {
                 updateLyrics()
             }
+        }
+    }
+    func fetchDatamuse(for type: DatamuseWordType) {
+        if let user = viewModel.currentUser, user.hasPro ?? false {
+            wordType = type
+            DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: type)
+            showDatamuseSheet = true
+        } else {
+            showUpgradeSheet = true
         }
     }
     
@@ -361,41 +372,31 @@ struct SongDetailView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             Button {
-                                wordType = .synonymn
-                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .synonymn)
-                                showDatamuseSheet = true
-                            } label: {
-                                Text("Synonyms for \"\(songDetailViewModel.selectedText)\"")
-                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
-                            }
-                            Button {
-                                wordType = .rhyme
-                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .rhyme)
-                                showDatamuseSheet = true
+                                fetchDatamuse(for: .rhyme)
                             } label: {
                                 Text("Rhymes for \"\(songDetailViewModel.selectedText)\"")
                                     .modifier(SongDetailViewModel.DatamuseRowViewModifier())
                             }
                             Button {
-                                wordType = .antonymn
-                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .antonymn)
-                                showDatamuseSheet = true
+                                fetchDatamuse(for: .synonymn)
+                            } label: {
+                                Text("Synonyms for \"\(songDetailViewModel.selectedText)\"")
+                                    .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                            }
+                            Button {
+                                fetchDatamuse(for: .antonymn)
                             } label: {
                                 Text("Antonyms for \"\(songDetailViewModel.selectedText)\"")
                                     .modifier(SongDetailViewModel.DatamuseRowViewModifier())
                             }
                             Button {
-                                wordType = .related
-                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .related)
-                                showDatamuseSheet = true
+                                fetchDatamuse(for: .related)
                             } label: {
                                 Text("Words related to \"\(songDetailViewModel.selectedText)\"")
                                     .modifier(SongDetailViewModel.DatamuseRowViewModifier())
                             }
                             Button {
-                                wordType = .startsWith
-                                DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: .startsWith)
-                                showDatamuseSheet = true
+                                fetchDatamuse(for: .startsWith)
                             } label: {
                                 Text("Words starting with \"\(songDetailViewModel.selectedText)\"")
                                     .modifier(SongDetailViewModel.DatamuseRowViewModifier())
