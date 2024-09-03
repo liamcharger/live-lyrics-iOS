@@ -75,7 +75,7 @@ struct SongVariationManageView: View {
                                     }
                                     .padding(12)
                                     .background(Material.regular)
-                                    .cornerRadius(18)
+                                    .clipShape(RoundedRectangle(cornerRadius: 18))
                                 }
                             }
                         }

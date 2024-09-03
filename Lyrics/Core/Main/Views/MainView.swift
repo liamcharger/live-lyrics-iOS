@@ -412,6 +412,15 @@ struct MainView: View {
                                             .padding()
                                         }
                                     })
+                                    NavigationLink(destination: {
+                                        if let user = authViewModel.currentUser, user.hasPro ?? false {
+                                            ExploreView()
+                                        } else {
+                                            UpgradeView()
+                                        }
+                                    }) {
+                                        ContentRowView(NSLocalizedString("find_songs", comment: ""), icon: "magnifying-glass", color: .gray)
+                                    }
                                 }
                             }
                             VStack {
@@ -646,7 +655,7 @@ struct MainView: View {
                                                                             .moveDisabled(true)
                                                                     } else {
                                                                         NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
-                                                                            ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
+                                                                            ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                                 .contextMenu {
                                                                                     if !(song.readOnly ?? false) {
                                                                                         Button {
@@ -847,7 +856,7 @@ struct MainView: View {
                                             } else {
                                                 HStack {
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
-                                                        ListRowView(isEditing: $isEditingFolderSongs, title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
+                                                        ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                             .contextMenu {
                                                                 songContextMenu(song: song)
                                                             }
@@ -923,13 +932,13 @@ struct MainView: View {
                         
                         if hasHomeButton() ? value.first ?? 0 <= 100 : value.first ?? 0 <= 145 {
                             DispatchQueue.main.async {
-                                withAnimation(animation) {
+                                withAnimation(.easeInOut(duration: 0.1)) {
                                     showCollapsedNavBarDivider = true
                                 }
                             }
                         } else {
                             DispatchQueue.main.async {
-                                withAnimation(animation) {
+                                withAnimation(.easeInOut(duration: 0.1)) {
                                     showCollapsedNavBarDivider = false
                                 }
                             }

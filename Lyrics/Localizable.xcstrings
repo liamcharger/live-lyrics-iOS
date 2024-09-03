@@ -1213,12 +1213,35 @@
         }
       }
     },
+    "error" : {
+
+    },
     "Error" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error"
+          }
+        }
+      }
+    },
+    "explore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        }
+      }
+    },
+    "find_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find Songs"
           }
         }
       }
@@ -2052,12 +2075,60 @@
         }
       }
     },
+    "popular_artists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Artists"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artistas populares"
+          }
+        }
+      }
+    },
+    "popular_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canciones populares"
+          }
+        }
+      }
+    },
     "Powered by Datamuse" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desarrollado por Datamuse"
+          }
+        }
+      }
+    },
+    "powered_by_musixmatch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Powered by Musixmatch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Musixmatch"
           }
         }
       }
@@ -2300,6 +2371,22 @@
         }
       }
     },
+    "search_and_add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search and add songs to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca y añade canciones a tu biblioteca."
+          }
+        }
+      }
+    },
     "search_by_username" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2477,6 +2564,22 @@
         }
       }
     },
+    "song_successfully_add_to_library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The song was successfully added to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "The song was successfully added to your library."
+          }
+        }
+      }
+    },
     "songs_parent_will_be_left" : {
       "localizations" : {
         "en" : {
@@ -2529,6 +2632,9 @@
           }
         }
       }
+    },
+    "success" : {
+
     },
     "Success!" : {
       "localizations" : {
@@ -2793,6 +2899,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ultraligero"
+          }
+        }
+      }
+    },
+    "unknown_error_adding_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There was an unknown error while adding the song to your library."
           }
         }
       }

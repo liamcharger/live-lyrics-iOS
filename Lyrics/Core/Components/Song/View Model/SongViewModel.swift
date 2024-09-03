@@ -189,4 +189,15 @@ class SongViewModel: ObservableObject {
     func isShared(song: Song) -> Bool {
         return song.uid != authViewModel.currentUser?.id
     }
+    
+    func removeFeatAndAfter(from input: String) -> String {
+        let keyword = "feat"
+        
+        if let range = input.range(of: keyword, options: .caseInsensitive) {
+            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
+            return String(substring)
+        }
+        
+        return input
+    }
 }
