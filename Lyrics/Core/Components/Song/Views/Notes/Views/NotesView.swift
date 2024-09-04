@@ -36,6 +36,7 @@ struct NotesView: View {
             .padding()
             if #available(iOS 17, *) {
                 TipView(NotesViewTip())
+                    .tipViewStyle(LiveLyricsTipStyle())
                     .padding([.bottom, .horizontal])
             }
             Divider()
