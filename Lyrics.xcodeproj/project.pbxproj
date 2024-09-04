@@ -134,6 +134,10 @@
 		E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */; };
 		E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */; };
 		E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */; };
+		E0F70B362C876344006A9867 /* SongExploreDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B352C876344006A9867 /* SongExploreDetailView.swift */; };
+		E0F70B372C876344006A9867 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B342C876344006A9867 /* ExploreView.swift */; };
+		E0F70B392C876361006A9867 /* Musixmatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B382C876361006A9867 /* Musixmatch.swift */; };
+		E0F70B3B2C876455006A9867 /* MusixmatchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B3A2C876455006A9867 /* MusixmatchService.swift */; };
 		E0F95C832A13C2E000C2D21C /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F95C822A13C2E000C2D21C /* MailView.swift */; };
 		E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F95C852A13C74C00C2D21C /* ProfileView.swift */; };
 		E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC1E1E2BC47617008D8549 /* FAIcon.swift */; };
@@ -284,6 +288,10 @@
 		E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDropViewDelegate.swift; sourceTree = "<group>"; };
+		E0F70B342C876344006A9867 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		E0F70B352C876344006A9867 /* SongExploreDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongExploreDetailView.swift; sourceTree = "<group>"; };
+		E0F70B382C876361006A9867 /* Musixmatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Musixmatch.swift; sourceTree = "<group>"; };
+		E0F70B3A2C876455006A9867 /* MusixmatchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusixmatchService.swift; sourceTree = "<group>"; };
 		E0F95C822A13C2E000C2D21C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		E0F95C852A13C74C00C2D21C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		E0FC1E1E2BC47617008D8549 /* FAIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAIcon.swift; sourceTree = "<group>"; };
@@ -437,6 +445,7 @@
 		E04247782A02EF6C00CA48B3 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				E0F70B332C876330006A9867 /* Explore */,
 				E0CC33172A03FF8800CC38C6 /* Main */,
 				E0CA85112B081D5100188CD0 /* Components */,
 				E06D77802A17B4240032332F /* Settings */,
@@ -472,6 +481,7 @@
 				E05B9A7D2BCF2351000292FA /* FolderSong.swift */,
 				E0CC166C2C752744003F3703 /* DatamuseRhyme.swift */,
 				E0258A712C82713900648582 /* DatamuseWord.swift */,
+				E0F70B382C876361006A9867 /* Musixmatch.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -522,6 +532,7 @@
 			children = (
 				E0CC33202A04064500CC38C6 /* SongService.swift */,
 				E04247AB2A02F6B500CA48B3 /* UserService.swift */,
+				E0F70B3A2C876455006A9867 /* MusixmatchService.swift */,
 				E0CC166A2C752707003F3703 /* DatamuseService.swift */,
 			);
 			path = Service;
@@ -966,6 +977,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E0F70B332C876330006A9867 /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				E0F70B342C876344006A9867 /* ExploreView.swift */,
+				E0F70B352C876344006A9867 /* SongExploreDetailView.swift */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
 		E0F95C842A13C74100C2D21C /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -1167,6 +1187,7 @@
 				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
 				E0CC166B2C752707003F3703 /* DatamuseService.swift in Sources */,
+				E0F70B3B2C876455006A9867 /* MusixmatchService.swift in Sources */,
 				E0CC33212A04064500CC38C6 /* SongService.swift in Sources */,
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
@@ -1216,6 +1237,8 @@
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
+				E0F70B362C876344006A9867 /* SongExploreDetailView.swift in Sources */,
+				E0F70B372C876344006A9867 /* ExploreView.swift in Sources */,
 				E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
@@ -1238,6 +1261,7 @@
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
 				E0705FD72C5C874600BC7AD6 /* HeaderView.swift in Sources */,
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
+				E0F70B392C876361006A9867 /* Musixmatch.swift in Sources */,
 				E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */,
 				E073A99A2C77A63700BF2E9F /* NotificationRowView.swift in Sources */,
 				E04247992A02F5FB00CA48B3 /* LoginView.swift in Sources */,

@@ -381,7 +381,7 @@ struct PlayView: View {
                                                 .padding(5)
                                                 .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
                                                 .background((isPressed && pressedIndexId == index) ? Color.materialRegularGray.opacity(0.75) : .clear)
-                                                .cornerRadius(10)
+                                                .clipShape(RoundedRectangle(cornerRadius: 10))
                                                 .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
                                                 .animation(.spring(dampingFraction: 1.0))
                                         }
@@ -415,7 +415,7 @@ struct PlayView: View {
                                         .font(.body.weight(.semibold))
                                         .foregroundColor(.primary)
                                         .background(Material.regular)
-                                        .cornerRadius(8)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
                                 .onChange(of: bpm) { bpm in
                                     stopTimer()
@@ -436,7 +436,7 @@ struct PlayView: View {
                                     Button {
                                         bpb = 3
                                     } label: {
-                                        Label("3", systemImage: bpb == 23 ? "checkmark" : "")
+                                        Label("3", systemImage: bpb == 3 ? "checkmark" : "")
                                     }
                                     Button {
                                         bpb = 4
@@ -469,7 +469,7 @@ struct PlayView: View {
                                         .font(.body.weight(.semibold))
                                         .foregroundColor(.primary)
                                         .background(Material.regular)
-                                        .cornerRadius(8)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
                                 .onChange(of: bpb) { bpb in
                                     songViewModel.updateBpb(for: song, with: bpb)

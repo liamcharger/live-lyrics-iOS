@@ -195,7 +195,7 @@ struct SongShareDetailView: View {
         .padding()
         .background(Material.regular)
         .foregroundColor(.primary)
-        .cornerRadius(20)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 

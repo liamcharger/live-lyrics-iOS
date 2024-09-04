@@ -205,18 +205,6 @@ class SongDetailViewModel: ObservableObject {
         }
     }
     
-    // UNUSED: will be implemented after Musixmatch implementation
-    func removeFeatAndAfter(from input: String) -> String {
-        let keyword = "feat"
-        
-        if let range = input.range(of: keyword, options: .caseInsensitive) {
-            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
-            return String(substring)
-        }
-        
-        return input
-    }
-    
     struct DatamuseRowViewModifier: ViewModifier {
         func body(content: Content) -> some View {
             content

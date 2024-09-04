@@ -67,7 +67,7 @@ struct SettingsView: View {
                     }
                     .padding()
                     .background(Material.regular)
-                    .cornerRadius(20)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .foregroundColor(.primary)
                     HStack(spacing: 7) {
                         Text("Word Count Style")
