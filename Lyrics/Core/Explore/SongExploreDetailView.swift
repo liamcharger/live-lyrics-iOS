@@ -7,12 +7,12 @@
 
 import SwiftUI
 import BottomSheet
+import TipKit
 
 struct SongExploreDetailView: View {
     @ObservedObject var musixmatchService = MusixmatchService.shared
     @ObservedObject var songViewModel = SongViewModel()
     
-    @State var lyrics: Lyrics?
     @State var album: Album?
     @State var hasScrolledPastTitle = false
     @State var songWasAdded = false
@@ -43,9 +43,8 @@ struct SongExploreDetailView: View {
                 Button {
                     self.isLoading = true
                     
-                    if let lyrics = lyrics {
+                    if let lyrics = musixmatchService.lyrics {
                         songViewModel.createSong(lyrics: lyrics.lyrics_body, title: track.trackName, artist: songViewModel.removeFeatAndAfter(from: track.artistName), key: "") { success, errorMessage in
-                            self.isLoading = false
                             if success {
                                 self.showAddedAlert = true
                             } else {
@@ -57,6 +56,8 @@ struct SongExploreDetailView: View {
                         self.errorMessage = NSLocalizedString("unknown_error_adding_songs", comment: "")
                         self.showErrorAlert = true
                     }
+                    
+                    self.isLoading = false
                 } label: {
                     Image(systemName: songWasAdded ? "checkmark" : "plus")
                         .padding(14)
@@ -70,11 +71,31 @@ struct SongExploreDetailView: View {
                                     .tint(.white)
                             }
                         }
+                        .showExploreDetailTip()
                 }
             }
             .padding()
+            .alert(isPresented: .constant(showAddedAlert || showErrorAlert)) {
+                if showAddedAlert {
+                    return Alert(
+                        title: Text("Success!"),
+                        message: Text("song_successfully_add_to_library"),
+                        dismissButton: .cancel(Text("OK")) {
+                            showAddedAlert = false
+                        }
+                    )
+                } else {
+                    return Alert(
+                        title: Text("Error"),
+                        message: Text(errorMessage),
+                        dismissButton: .cancel(Text("Cancel")) {
+                            showErrorAlert = false
+                        }
+                    )
+                }
+            }
             Divider()
-            if let lyrics = lyrics {
+            if let lyrics = musixmatchService.lyrics {
                 ScrollView {
                     VStack(alignment: .leading) {
                         /*
@@ -169,18 +190,10 @@ struct SongExploreDetailView: View {
                     .frame(maxHeight: .infinity)
             }
         }
-        .alert(isPresented: $showAddedAlert) {
-            Alert(title: Text("success"), message: Text("song_successfully_add_to_library"), dismissButton: .cancel(Text("OK")))
-        }
-        .alert(isPresented: $showErrorAlert) {
-            Alert(title: Text("error"), message: Text(errorMessage), dismissButton: .cancel(Text("Cancel")))
-        }
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            musixmatchService.fetchLyrics(forTrackId: track.trackId) { lyrics in
-                self.lyrics = lyrics
-            }
+            musixmatchService.fetchLyrics(forTrackId: track.trackId)
             // FIXME: album art is not present in response
             musixmatchService.fetchAlbum(forAlbumId: track.albumId) { album in
                 self.album = album

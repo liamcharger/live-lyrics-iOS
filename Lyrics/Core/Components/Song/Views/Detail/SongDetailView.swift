@@ -33,7 +33,7 @@ struct SongDetailView: View {
     @State private var title = ""
     @State private var artist = ""
     @State private var errorMessage = ""
-    @State private var isChecked = ""
+    @State private var wordCountStyle = ""
     @State private var duration = ""
     @State private var createdVariationId = ""
     @State private var bpm = 120
@@ -164,7 +164,7 @@ struct SongDetailView: View {
         self.songs = songs
         self.isSongFromFolder = isSongFromFolder ?? false
         self._joinedUsers = State(initialValue: joinedUsers)
-        self._isChecked = State(initialValue: wordCountStyle)
+        self._wordCountStyle = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
         self._value = State(initialValue: inputSong.size ?? 18)
         self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
@@ -408,6 +408,7 @@ struct SongDetailView: View {
                     VStack(spacing: 14) {
                         if #available(iOS 17, *) {
                             TipView(VariationsTip())
+                                .tipViewStyle(LiveLyricsTipStyle())
                         }
                         HStack {
                             if !getShowVariationCondition() {
@@ -416,13 +417,13 @@ struct SongDetailView: View {
                             if songs != nil {
                                 if wordCountBool {
                                     Group {
-                                        if isChecked == "Words" {
+                                        if wordCountStyle == "Words" {
                                             Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
-                                        } else if isChecked == "Characters" {
+                                        } else if wordCountStyle == "Characters" {
                                             Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
-                                        } else if isChecked == "Spaces" {
+                                        } else if wordCountStyle == "Spaces" {
                                             Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
-                                        } else if isChecked == "Paragraphs" {
+                                        } else if wordCountStyle == "Paragraphs" {
                                             Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
                                         }
                                     }

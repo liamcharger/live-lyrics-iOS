@@ -12,6 +12,7 @@ class MusixmatchService: ObservableObject {
     @Published var popularSongs = [Track]()
     @Published var searchedSongs = [Track]()
     @Published var popularArtists = [Artist]()
+    @Published var lyrics: Lyrics?
     
     @Published var isLoadingPopularSongs = true
     @Published var isLoadingPopularArtists = true
@@ -25,6 +26,13 @@ class MusixmatchService: ObservableObject {
     private static let apiKey: String = "b26ca438b52fdba4a6c276cacbf6ef43"
     
     static let shared = MusixmatchService()
+    
+    init() {
+        DispatchQueue.main.async {
+            self.requestPopularSongs()
+            self.requestPopularArtists()
+        }
+    }
     
     func requestPopularSongs() {
         var components = URLComponents(string: MusixmatchService.endpoint + "chart.tracks.get")
@@ -115,7 +123,7 @@ class MusixmatchService: ObservableObject {
         }.resume()
     }
     
-    func fetchLyrics(forTrackId trackId: Int, completion: @escaping(Lyrics) -> Void) {
+    func fetchLyrics(forTrackId trackId: Int) {
         self.isLoadingSong = true
         
         var components = URLComponents(string: MusixmatchService.endpoint + "track.lyrics.get")
@@ -143,7 +151,9 @@ class MusixmatchService: ObservableObject {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(LyricsResponse.self, from: data)
                 
-                completion(response.message.body.lyrics)
+                DispatchQueue.main.async {
+                    self.lyrics = response.message.body.lyrics
+                }
                 
                 DispatchQueue.main.async {
                     self.isLoadingSong = false
@@ -178,16 +188,16 @@ class MusixmatchService: ObservableObject {
                 return
             }
             
-            do {
-                if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-                    let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-                    if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print(jsonString)
-                    }
-                }
-            } catch {
-                print("Failed to parse JSON: \(error.localizedDescription)")
-            }
+//            do {
+//                if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
+//                    let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+//                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                        print(jsonString)
+//                    }
+//                }
+//            } catch {
+//                print("Failed to parse JSON: \(error.localizedDescription)")
+//            }
             
             do {
                 let decoder = JSONDecoder()
@@ -234,7 +244,9 @@ class MusixmatchService: ObservableObject {
                 let response = try decoder.decode(SongResponse.self, from: data)
                 
                 for track in response.message.body.trackList {
-                    self.searchedSongs.append(track.track)
+                    DispatchQueue.main.async {
+                        self.searchedSongs.append(track.track)
+                    }
                 }
                 
                 DispatchQueue.main.async {
@@ -258,7 +270,7 @@ class MusixmatchService: ObservableObject {
             return Color.green
         case "dance":
             return Color(uiColor: .systemPink)
-        case "hip hop/rap":
+        case "hip hop/rap", "rap":
             return Color.indigo
         default:
             return Color.primary

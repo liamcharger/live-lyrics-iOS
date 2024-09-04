@@ -21,7 +21,7 @@ struct ExploreView: View {
         return musixmatchService.isLoadingPopularSongs || musixmatchService.isLoadingPopularArtists || musixmatchService.isLoadingSongs
     }
     
-    @ObservedObject var musixmatchService = MusixmatchService()
+    @ObservedObject var musixmatchService = MusixmatchService.shared
     
     var body: some View {
         VStack(spacing: 0) {
@@ -183,14 +183,6 @@ struct ExploreView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            if musixmatchService.popularArtists.isEmpty || musixmatchService.popularSongs.isEmpty {
-                DispatchQueue.main.async {
-                    musixmatchService.requestPopularSongs()
-                    musixmatchService.requestPopularArtists()
-                }
-            }
-        }
     }
 }
 
