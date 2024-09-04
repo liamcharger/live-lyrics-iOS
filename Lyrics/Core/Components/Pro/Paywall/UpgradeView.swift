@@ -9,6 +9,8 @@ import SwiftUI
 import StoreKit
 
 struct UpgradeView: View {
+    @Environment(\.presentationMode) var presMode
+    
     @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = true
     
     @ObservedObject var storeKitManager = StoreKitManager.shared
@@ -94,6 +96,7 @@ struct UpgradeView: View {
                 }
                 Button {
                     showUpgradeSheet = false
+                    presMode.wrappedValue.dismiss()
                 } label: {
                     Text("Nah, I'll miss out")
                 }
