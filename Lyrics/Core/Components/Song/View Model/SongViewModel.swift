@@ -10,12 +10,35 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
+struct SongProvider: Identifiable {
+    var id = UUID()
+    let title: String
+    let icon: String
+    let color: Color
+}
+
 class SongViewModel: ObservableObject {
     @ObservedObject var authViewModel = AuthViewModel.shared
     
     @Published var isLoadingVariations = false
     
     let service = SongService()
+    let providerKeywords: [(provider: String, keyword: String, icon: String, color: Color)] = [
+        ("Spotify", "spotify", "spotify", Color.green),
+        ("Apple Music", "apple", "apple_music", Color.red),
+        ("YouTube", "youtube", "youtube", Color.red),
+        ("YouTube Music", "music.youtube", "youtube_music", Color.red),
+        ("SoundCloud", "soundcloud", "soundcloud", Color.red),
+        ("Tidal", "tidal", "tidal", Color.primary),
+        ("Bandcamp", "bandcamp", "bandcamp", Color.indigo),
+        ("Deezer", "deezer", "deezer", Color.orange),
+        ("Amazon Music", "amazon", "youtube", Color.indigo),
+        ("Pandora", "pandora", "youtube", Color.purple),
+        ("Audiomack", "audiomack", "youtube", Color.orange),
+        ("Napster", "napster", "youtube", Color.primary),
+        ("Anghami", "anghami", "youtube", Color.yellow)
+    ]
+    
     static let shared = SongViewModel()
     
     func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
@@ -184,6 +207,15 @@ class SongViewModel: ObservableObject {
         default:
             return .gray
         }
+    }
+    
+    func getProvider(from urlString: String) -> SongProvider {
+        for (provider, keyword, icon, color) in providerKeywords {
+            if urlString.lowercased().contains(keyword) {
+                return SongProvider(title: provider, icon: icon, color: color)
+            }
+        }
+        return SongProvider(title: urlString, icon: "", color: Color.primary)
     }
     
     func isShared(song: Song) -> Bool {

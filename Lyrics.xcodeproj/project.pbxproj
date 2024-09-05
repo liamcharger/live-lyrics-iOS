@@ -48,6 +48,7 @@
 		E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04247AB2A02F6B500CA48B3 /* UserService.swift */; };
 		E04247B32A02F6DF00CA48B3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04247B22A02F6DF00CA48B3 /* User.swift */; };
 		E045BE232AF992FE00FC3EF1 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E045BE222AF992FE00FC3EF1 /* ToolsView.swift */; };
+		E04B27372C8A436A00EB5724 /* NewDemoAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04B27362C8A436A00EB5724 /* NewDemoAttachmentView.swift */; };
 		E04CB96A2BCB5FE100F2831B /* SongShareDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04CB9662BCB5FE100F2831B /* SongShareDetailView.swift */; };
 		E04CB96B2BCB5FE100F2831B /* SongShareRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04CB9672BCB5FE100F2831B /* SongShareRowView.swift */; };
 		E04CB96C2BCB5FE100F2831B /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04CB9682BCB5FE100F2831B /* ShareView.swift */; };
@@ -191,6 +192,7 @@
 		E04247AB2A02F6B500CA48B3 /* UserService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		E04247B22A02F6DF00CA48B3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E045BE222AF992FE00FC3EF1 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
+		E04B27362C8A436A00EB5724 /* NewDemoAttachmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDemoAttachmentView.swift; sourceTree = "<group>"; };
 		E04CB9662BCB5FE100F2831B /* SongShareDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongShareDetailView.swift; sourceTree = "<group>"; };
 		E04CB9672BCB5FE100F2831B /* SongShareRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongShareRowView.swift; sourceTree = "<group>"; };
 		E04CB9682BCB5FE100F2831B /* ShareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
@@ -550,6 +552,7 @@
 			children = (
 				E0CC33222A040BB700CC38C6 /* NewSongView.swift */,
 				E01520E12A872EF4005C4F8C /* AddSongsView.swift */,
+				E04B27362C8A436A00EB5724 /* NewDemoAttachmentView.swift */,
 			);
 			path = New;
 			sourceTree = "<group>";
@@ -1171,6 +1174,7 @@
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
 				E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */,
+				E04B27372C8A436A00EB5724 /* NewDemoAttachmentView.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
 				E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */,
 				E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */,

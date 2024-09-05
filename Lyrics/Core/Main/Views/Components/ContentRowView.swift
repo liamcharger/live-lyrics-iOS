@@ -21,8 +21,14 @@ struct ContentRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                FAText(iconName: icon, size: 20)
-                    .foregroundColor(color)
+                if icon == "apple_music" {
+                    Image(icon)
+                        .resizable()
+                        .frame(width: 22, height: 22)
+                } else {
+                    FAText(iconName: icon, size: 20)
+                        .foregroundColor(color)
+                }
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.body.weight(.medium))

@@ -1320,6 +1320,9 @@
         }
       }
     },
+    "Hello, World!" : {
+
+    },
     "home" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2646,6 +2649,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ADVERTENCIA: Esta acción es permanente y no se puede deshacer."
+          }
+        }
+      }
+    },
+    "Welcome back to Live Lyrics." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido de nuevo a Live Lyrics."
           }
         }
       }

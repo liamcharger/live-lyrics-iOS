@@ -16,6 +16,10 @@ struct SongEditView: View {
     @Environment(\.openURL) var openURL
     
     let song: Song
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     @Binding var isDisplayed: Bool
     @Binding var title: String
@@ -116,23 +120,19 @@ struct SongEditView: View {
                                         .clipShape(Circle())
                                 }
                             }
-//                            Text("Need to provide a way for a collaborator to hear the song you want them to learn? Demo attachements are an easy way to add resources to your song, like a link to a song on Spotify or a video on YouTube.")
-//                                .foregroundColor(.gray)
-//                                .font(.system(size: 13))
                         }
                         if let demoAttachments = song.demoAttachments {
-                            ForEach(demoAttachments, id: \.self) { attachment in
-                                Button {
-                                    guard let url = URL(string: attachment) else { return }
+                            LazyVGrid(columns: columns) {
+                                ForEach(demoAttachments, id: \.self) { attachment in
+                                    let provider = songViewModel.getProvider(from: attachment)
                                     
-                                    openURL(url)
-                                } label: {
-                                    // TODO: add icon and title based on URL
-                                    Text(attachment)
-                                        .padding()
-                                        .frame(maxWidth: .infinity)
-                                        .background(Material.regular)
-                                        .clipShape(Capsule())
+                                    Button {
+                                        guard let url = URL(string: attachment) else { return }
+                                        
+                                        openURL(url)
+                                    } label: {
+                                        ContentRowView(NSLocalizedString(provider.title, comment: ""), icon: provider.icon, color: provider.color)
+                                    }
                                 }
                             }
                         }

@@ -53,10 +53,17 @@ struct ShowWhatsNew: View {
                 FeaturesView(animState: $animState)
                     .scaleEffect(animState == .third ? 1.0 : 0.2)
                     .blur(radius: animState == .third ? 0 : 20)
-                Text("Welcome to Live Lyrics.")
+                Text({
+                    if UserDefaults.standard.string(forKey: "savedVersion") != nil {
+                        return NSLocalizedString("Welcome back to Live Lyrics.", comment: "")
+                    } else {
+                        return NSLocalizedString("Welcome to Live Lyrics.", comment: "")
+                    }
+                }())
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .second ? 1.0 : 0.2)
                     .blur(radius: animState == .second ? 0 : 20)
+                    .multilineTextAlignment(.center)
                 Text("Hello")
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .first ? 1.0 : 0.2)
