@@ -13,6 +13,8 @@ struct SongEditView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     
     @Environment(\.presentationMode) var presMode
+    @Environment(\.openURL) var openURL
+    
     let song: Song
     
     @Binding var isDisplayed: Bool
@@ -88,11 +90,53 @@ struct SongEditView: View {
             .padding()
             Divider()
             ScrollView {
-                VStack(alignment: .leading) {
-                    CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
-                    CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
-                    CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
-                    CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
+                VStack(alignment: .leading, spacing: 22) {
+                    VStack {
+                        CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
+                        CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
+                        CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
+                        CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
+                    }
+                    VStack {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 8) {
+                                Text("Demo Attachments".uppercased())
+                                    .font(.system(size: 16).weight(.bold))
+                                Image(systemName: "info.circle")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.blue)
+                                Spacer()
+                                Button {
+                                    
+                                } label: {
+                                    Image(systemName: "plus")
+                                        .padding(10)
+                                        .background(Color.accentColor)
+                                        .foregroundColor(.white)
+                                        .clipShape(Circle())
+                                }
+                            }
+//                            Text("Need to provide a way for a collaborator to hear the song you want them to learn? Demo attachements are an easy way to add resources to your song, like a link to a song on Spotify or a video on YouTube.")
+//                                .foregroundColor(.gray)
+//                                .font(.system(size: 13))
+                        }
+                        if let demoAttachments = song.demoAttachments {
+                            ForEach(demoAttachments, id: \.self) { attachment in
+                                Button {
+                                    guard let url = URL(string: attachment) else { return }
+                                    
+                                    openURL(url)
+                                } label: {
+                                    // TODO: add icon and title based on URL
+                                    Text(attachment)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Material.regular)
+                                        .clipShape(Capsule())
+                                }
+                            }
+                        }
+                    }
                     if isInvalidFormat(stateDuration) {
                         Group {
                             Text("The duration is not formatted correctly. Correct formatting, e.g., ") +
