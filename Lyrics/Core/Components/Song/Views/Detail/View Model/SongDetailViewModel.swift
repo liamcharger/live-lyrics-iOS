@@ -18,6 +18,8 @@ class SongDetailViewModel: ObservableObject {
     @Published var showMoveView = false
     @Published var showTagSheet = false
     
+    @Published var selectedText = ""
+    
     @ObservedObject var songViewModel = SongViewModel.shared
     
     let pasteboard = UIPasteboard.general
@@ -203,15 +205,15 @@ class SongDetailViewModel: ObservableObject {
         }
     }
     
-    // UNUSED: will be implemented after Musixmatch implementation
-    func removeFeatAndAfter(from input: String) -> String {
-        let keyword = "feat"
-        
-        if let range = input.range(of: keyword, options: .caseInsensitive) {
-            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
-            return String(substring)
+    struct DatamuseRowViewModifier: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .padding(8)
+                .padding(.horizontal, 4)
+                .background(Material.thin)
+                .foregroundColor(.primary)
+                .clipShape(Capsule())
+                .lineLimit(1)
         }
-        
-        return input
     }
 }

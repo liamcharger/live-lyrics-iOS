@@ -138,7 +138,7 @@ struct ShareView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Material.regular)
                     .foregroundColor(.primary)
-                    .cornerRadius(20)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay {
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.yellow, lineWidth: 2.5)
@@ -377,9 +377,9 @@ struct ShareView: View {
 struct FullscreenMessage: View {
     let imageName: String
     let title: String
-    let spaceNavbar: Bool?
+    let spaceNavbar: Bool
     
-    init(imageName: String, title: String, spaceNavbar: Bool? = nil) {
+    init(imageName: String, title: String, spaceNavbar: Bool = false) {
         self.imageName = imageName
         self.title = title
         self.spaceNavbar = spaceNavbar
@@ -390,11 +390,11 @@ struct FullscreenMessage: View {
             Spacer()
             Image(systemName: imageName)
                 .font(.system(size: 35).weight(.semibold))
-            Text(title)
+            Text(NSLocalizedString(title, comment: ""))
                 .font(.title2.weight(.semibold))
                 .multilineTextAlignment(.center)
             Spacer()
-            if spaceNavbar != nil {
+            if spaceNavbar {
                 Spacer()
                     .frame(height: 35)
             }

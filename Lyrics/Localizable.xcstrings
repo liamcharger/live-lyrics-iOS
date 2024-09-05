@@ -21,6 +21,9 @@
         }
       }
     },
+    " plan." : {
+
+    },
     "." : {
       "localizations" : {
         "es" : {
@@ -103,6 +106,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld días"
+          }
+        }
+      }
+    },
+    "%lld Syllable%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld Syllable%2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld Silbe%2$@"
           }
         }
       }
@@ -357,6 +376,38 @@
         }
       }
     },
+    "access_to_tuner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A tuner—make sure your instruments sound sharp"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un afinador: asegúrate de que tus instrumentos suenen nítidos"
+          }
+        }
+      }
+    },
+    "access_to_worlds_largest_lyric_database" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to the world’s largest lyric database, right in the app"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso a la mayor base de datos de letras de canciones del mundo, directamente en la aplicación"
+          }
+        }
+      }
+    },
     "action_cannot_be_undone" : {
       "localizations" : {
         "en" : {
@@ -369,6 +420,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta acción es permanente y no puede deshacerse."
+          }
+        }
+      }
+    },
+    "ad_free_experience" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove ads—get rid of distractions and focus on your songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina los anuncios: deshazte de las distracciones y céntrate en tus canciones"
           }
         }
       }
@@ -409,6 +476,33 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se ha producido un error desconocido."
+          }
+        }
+      }
+    },
+    "antonym_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antonyms for "
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antónimos de"
+          }
+        }
+      }
+    },
+    "Antonyms for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antónimos de «%@»"
           }
         }
       }
@@ -694,6 +788,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claro"
+          }
+        }
+      }
+    },
+    "Click to add to your library." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic para añadirlo a tu biblioteca."
+          }
+        }
+      }
+    },
+    "Click to copy to your clipboard." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haga clic para copiar en el portapapeles."
           }
         }
       }
@@ -1133,6 +1247,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error"
+          }
+        }
+      }
+    },
+    "explore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        }
+      }
+    },
+    "find_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find\nSongs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentre\nCanciones"
           }
         }
       }
@@ -1685,6 +1825,16 @@
         }
       }
     },
+    "Nah, I'll miss out" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No, me lo perderé"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "es" : {
@@ -1956,12 +2106,70 @@
         }
       }
     },
-    "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance." : {
+    "Play View keeps musicians focused by removing distractions during gigs." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play View proporciona a los músicos un espacio libre de distracciones durante los conciertos, evitando que pulsen botones accidentalmente y permitiéndoles mantenerse totalmente concentrados en su actuación."
+            "value" : "Play View mantiene a los músicos concentrados eliminando las distracciones durante los conciertos."
+          }
+        }
+      }
+    },
+    "popular_artists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Artists"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artistas populares"
+          }
+        }
+      }
+    },
+    "popular_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canciones populares"
+          }
+        }
+      }
+    },
+    "Powered by Datamuse" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Datamuse"
+          }
+        }
+      }
+    },
+    "powered_by_musixmatch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Powered by Musixmatch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Musixmatch"
           }
         }
       }
@@ -1985,6 +2193,9 @@
           }
         }
       }
+    },
+    "pro" : {
+
     },
     "Read only:" : {
       "localizations" : {
@@ -2046,6 +2257,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Regular"
+          }
+        }
+      }
+    },
+    "related_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words related to"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras relacionadas con"
           }
         }
       }
@@ -2120,6 +2348,33 @@
         }
       }
     },
+    "rhyme_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rhymes for"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas para"
+          }
+        }
+      }
+    },
+    "Rhymes for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas para «%@»"
+          }
+        }
+      }
+    },
     "Right" : {
       "localizations" : {
         "es" : {
@@ -2153,6 +2408,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscar en"
+          }
+        }
+      }
+    },
+    "search_and_add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search and add songs to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca y añade canciones a tu biblioteca."
           }
         }
       }
@@ -2334,6 +2605,22 @@
         }
       }
     },
+    "song_successfully_add_to_library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The song was successfully added to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La canción se ha añadido correctamente a tu biblioteca."
+          }
+        }
+      }
+    },
     "songs_parent_will_be_left" : {
       "localizations" : {
         "en" : {
@@ -2370,12 +2657,72 @@
         }
       }
     },
+    "startsWith_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words starting with"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras que empiezan por"
+          }
+        }
+      }
+    },
     "Success!" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Éxito!"
+          }
+        }
+      }
+    },
+    "support_the_developers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support the developer—signing up helps us make the app better"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apoye al desarrollador: inscribirse nos ayuda a mejorar la aplicación."
+          }
+        }
+      }
+    },
+    "synonym_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synonyms for"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinónimos de"
+          }
+        }
+      }
+    },
+    "Synonyms for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinónimos de «%@»"
           }
         }
       }
@@ -2511,6 +2858,16 @@
         }
       }
     },
+    "There was an unknown error while processing your request." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido al procesar su solicitud."
+          }
+        }
+      }
+    },
     "These settings are not specific to song variations." : {
       "localizations" : {
         "es" : {
@@ -2597,6 +2954,22 @@
         }
       }
     },
+    "unknown_error_adding_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There was an unknown error while adding the song to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido al añadir la canción a tu biblioteca."
+          }
+        }
+      }
+    },
     "Unpin" : {
       "localizations" : {
         "es" : {
@@ -2643,6 +3016,26 @@
         }
       }
     },
+    "Want to save a word?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres guardar una palabra?"
+          }
+        }
+      }
+    },
+    "Want to save this song?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres salvar esta canción?"
+          }
+        }
+      }
+    },
     "WARNING: This action is permanant and cannot be undone!" : {
       "localizations" : {
         "es" : {
@@ -2653,15 +3046,25 @@
         }
       }
     },
-    "Welcome back to Live Lyrics." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenido de nuevo a Live Lyrics."
-          }
+    "We know, yet another subscription to pay for every month. But...with this one you get:" : {
+        "localizations" : {
+            "es" : {
+                "stringUnit" : {
+                    "state" : "translated",
+                    "value" : "Lo sabemos, otra suscripción que pagar cada mes. Pero... con esta tienes:"
+                }
+            }
         }
-      }
+    },
+    "Welcome back to Live Lyrics." : {
+        "localizations" : {
+            "es" : {
+                "stringUnit" : {
+                    "state" : "translated",
+                    "value" : "Bienvenido de nuevo a Live Lyrics."
+                }
+            }
+        }
     },
     "Welcome to Live Lyrics." : {
       "localizations" : {
@@ -2699,6 +3102,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Palabras"
+          }
+        }
+      }
+    },
+    "Words related to \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras relacionadas con «%@»"
+          }
+        }
+      }
+    },
+    "Words starting with \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras que empiezan por «%@»"
+          }
+        }
+      }
+    },
+    "world_of_worlds_at_your_fingertips" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rhymes, synonyms, antynoms—a world of words at your fingertips (yeah, we thought that was kind of cheesy, too.)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas, sinónimos, antónimos: un mundo de palabras al alcance de tu mano (sí, a nosotros también nos ha parecido un poco cursi)."
+          }
+        }
+      }
+    },
+    "Yes, there's a \n" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí, hay un "
           }
         }
       }

@@ -30,19 +30,6 @@ struct NavBarButtonViewModifier: ViewModifier {
     }
 }
 
-struct NavButtonViewModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .padding()
-            .frame(maxHeight: 50)
-            .frame(maxWidth: .infinity)
-            .font(.body.weight(.semibold))
-            .background(.blue)
-            .foregroundColor(.white)
-            .clipShape(Capsule())
-    }
-}
-
 struct LiveLyricsButton: View {
     var action: () -> Void
     let title: String
@@ -73,5 +60,18 @@ struct LiveLyricsButton: View {
             }
         }
         .disabled(hasBeenPressed)
+    }
+}
+
+struct NavButtonViewModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .frame(maxHeight: 50)
+            .frame(maxWidth: .infinity)
+            .font(.body.weight(.semibold))
+            .background(.blue)
+            .foregroundColor(.white)
+            .clipShape(Capsule())
     }
 }
