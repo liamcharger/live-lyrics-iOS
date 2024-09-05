@@ -2213,13 +2213,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recently Deleted"
+            "value" : "Recently\nDeleted"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Borrados recientemente"
+            "value" : "Borrados\nrecientemente"
           }
         }
       }
@@ -2521,13 +2521,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Invites"
+            "value" : "Share\nInvites"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Compartir invitaciones"
+            "value" : "Compartir\ninvitaciones"
           }
         }
       }
@@ -3047,24 +3047,24 @@
       }
     },
     "We know, yet another subscription to pay for every month. But...with this one you get:" : {
-        "localizations" : {
-            "es" : {
-                "stringUnit" : {
-                    "state" : "translated",
-                    "value" : "Lo sabemos, otra suscripción que pagar cada mes. Pero... con esta tienes:"
-                }
-            }
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo sabemos, otra suscripción que pagar cada mes. Pero... con esta tienes:"
+          }
         }
+      }
     },
     "Welcome back to Live Lyrics." : {
-        "localizations" : {
-            "es" : {
-                "stringUnit" : {
-                    "state" : "translated",
-                    "value" : "Bienvenido de nuevo a Live Lyrics."
-                }
-            }
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido de nuevo a Live Lyrics."
+          }
         }
+      }
     },
     "Welcome to Live Lyrics." : {
       "localizations" : {

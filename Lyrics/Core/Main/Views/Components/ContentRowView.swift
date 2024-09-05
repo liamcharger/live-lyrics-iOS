@@ -19,8 +19,8 @@ struct ContentRowView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
+        ZStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 12) {
                 if icon == "apple_music" {
                     Image(icon)
                         .resizable()
@@ -29,18 +29,20 @@ struct ContentRowView: View {
                     FAText(iconName: icon, size: 20)
                         .foregroundColor(color)
                 }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.body.weight(.medium))
-                    .foregroundColor(.gray)
+                Text(title)
+                    .font(.system(size: 18).weight(.semibold))
+                    .frame(maxWidth: 95, alignment: .leading)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
             }
-            Text(title)
-                .font(.system(size: 18).weight(.semibold))
-                .frame(maxWidth: 95, alignment: .leading)
-                .multilineTextAlignment(.leading)
-                .lineLimit(3)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            Image(systemName: "chevron.right")
+                .font(.body.weight(.medium))
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
         .padding()
+        .frame(minHeight: 115)
         .background(Material.thin)
         .foregroundColor(.primary)
         .clipShape(RoundedRectangle(cornerRadius: 20))
