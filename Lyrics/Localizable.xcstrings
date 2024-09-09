@@ -1943,6 +1943,16 @@
         }
       }
     },
+    "no_demo_attachments" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There aren’t demo attachments for this song."
+          }
+        }
+      }
+    },
     "no_recently_deleted_songs" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2060,6 +2070,9 @@
           }
         }
       }
+    },
+    "Open" : {
+
     },
     "outgoing" : {
       "extractionState" : "manual",

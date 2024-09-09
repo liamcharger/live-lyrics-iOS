@@ -34,11 +34,10 @@ struct SongEditView: View {
     @State var stateTitle = ""
     @State var stateDuration = ""
     
-    @State var selectedDemoAttachment: DemoAttachment?
-    
     @State var showError = false
     @State var showDemoEditSheet = false
     @State var showNewDemoSheet = false
+    @State var showDeleteConfirmation = false
     
     var isEmpty: Bool {
         let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -107,64 +106,94 @@ struct SongEditView: View {
                         CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
                     }
                     if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
-                        VStack {
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack(spacing: 8) {
-                                    Text("Demo Attachments".uppercased())
-                                        .font(.system(size: 16).weight(.bold))
-                                    Spacer()
-                                    if user.hasPro ?? false {
-                                        Button {
-                                            showNewDemoSheet = true
-                                        } label: {
-                                            Image(systemName: "plus")
-                                                .padding(10)
-                                                .font(.body.weight(.medium))
-                                                .background(Color.accentColor)
-                                                .foregroundColor(.white)
-                                                .clipShape(Circle())
-                                        }
-                                        .sheet(isPresented: $showNewDemoSheet) {
-                                            NewDemoAttachmentView(song: song)
-                                        }
-                                    }
-                                }
-                            }
-                            if let demoAttachments = song.demoAttachments {
-                                LazyVGrid(columns: columns) {
-                                    ForEach(demoAttachments, id: \.self) { attachment in
-                                        let demo = songViewModel.getDemo(from: attachment)
-                                        
-                                        Button {
-                                            selectedDemoAttachment = demo
-                                            showDemoEditSheet = true
-                                        } label: {
-                                            VStack(alignment: .leading, spacing: 12) {
-                                                songViewModel.getDemoIcon(from: demo.icon, size: 22)
-                                                    .foregroundColor(demo.color)
-                                                Text(NSLocalizedString(demo.title, comment: ""))
-                                                    .font(.system(size: 18).weight(.semibold))
-                                                    .frame(maxWidth: 95, alignment: .leading)
-                                                    .multilineTextAlignment(.leading)
-                                                    .lineLimit(2)
+                            VStack {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(spacing: 8) {
+                                        Text("Demo Attachments".uppercased())
+                                            .font(.system(size: 16).weight(.bold))
+                                        Spacer()
+                                        if user.hasPro ?? false {
+                                            Button {
+                                                showNewDemoSheet = true
+                                            } label: {
+                                                Image(systemName: "plus")
+                                                    .padding(10)
+                                                    .font(.body.weight(.medium))
+                                                    .background(Color.accentColor)
+                                                    .foregroundColor(.white)
+                                                    .clipShape(Circle())
                                             }
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                                            .frame(minHeight: 80)
-                                            .padding()
-                                            .frame(maxHeight: .infinity)
-                                            .background(Material.thin)
-                                            .foregroundColor(.primary)
-                                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                                        }
-                                        .sheet(isPresented: $showDemoEditSheet) {
-                                            if let demo = selectedDemoAttachment {
-                                                DemoAttachmentEditView(demo: demo, song: song)
+                                            .sheet(isPresented: $showNewDemoSheet) {
+                                                NewDemoAttachmentView(song: song)
                                             }
                                         }
                                     }
                                 }
+                                if (song.demoAttachments ?? []).isEmpty {
+                                    EmptyStateView(state: .demoAttachments)
+                                } else {
+                                    if let demoAttachments = song.demoAttachments {
+                                        LazyVGrid(columns: columns) {
+                                            ForEach(demoAttachments, id: \.self) { attachment in
+                                                let demo = songViewModel.getDemo(from: attachment)
+                                                
+                                                Button {
+                                                    showDemoEditSheet = true
+                                                } label: {
+                                                    VStack(alignment: .leading, spacing: 12) {
+                                                        songViewModel.getDemoIcon(from: demo.icon, size: 22)
+                                                            .foregroundColor(demo.color)
+                                                        Text(NSLocalizedString(demo.title, comment: ""))
+                                                            .font(.system(size: 18).weight(.semibold))
+                                                            .frame(maxWidth: 95, alignment: .leading)
+                                                            .multilineTextAlignment(.leading)
+                                                            .lineLimit(2)
+                                                    }
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                                    .frame(minHeight: 80)
+                                                    .padding()
+                                                    .frame(maxHeight: .infinity)
+                                                    .background(Material.thin)
+                                                    .foregroundColor(.primary)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                                                }
+                                                .contextMenu {
+                                                    Button {
+                                                        guard let url = URL(string: demo.url) else { return }
+                                                        
+                                                        openURL(url)
+                                                     } label: {
+                                                        Label("Open", systemImage: "arrow.up.right.square")
+                                                    }
+                                                    Button {
+                                                        showDemoEditSheet = true
+                                                    } label: {
+                                                        Label("Edit", systemImage: "pencil")
+                                                    }
+                                                    Button(role: .destructive) {
+                                                        showDeleteConfirmation = true
+                                                    } label: {
+                                                        Label("Delete", systemImage: "trash")
+                                                    }
+                                                }
+                                                .sheet(isPresented: $showDemoEditSheet) {
+                                                    DemoAttachmentEditView(demo: demo, song: song)
+                                                }
+                                                .confirmationDialog("Delete Demo", isPresented: $showDeleteConfirmation) {
+                                                    Button("Delete", role: .destructive) {
+                                                        self.songViewModel.deleteDemoAttachment(demo: demo, for: song) {}
+                                                    }
+                                                    Button("Cancel", role: .cancel) {
+                                                        self.showDeleteConfirmation = false
+                                                    }
+                                                } message: {
+                                                    Text("Are you sure you want to delete this demo?")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        }
                     }
                     if isInvalidFormat(stateDuration) {
                         Group {

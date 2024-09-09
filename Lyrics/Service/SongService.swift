@@ -1111,7 +1111,7 @@ class SongService {
 						completion()
 					}
 				} else {
-					let songData: [String: Any?] = [
+					var songData: [String: Any?] = [
 						"uid": uid,
 						"timestamp": Date(),
 						"deletedTimestamp": Date(),
@@ -1130,6 +1130,10 @@ class SongService {
 						"performanceMode": song.performanceMode,
 						"duration": song.duration
 					]
+					
+					if let hasPro = AuthViewModel.shared.currentUser?.hasPro {
+						songData["demoAttachments"] = song.demoAttachments ?? []
+					}
 					
 					let id = UUID().uuidString
 					
