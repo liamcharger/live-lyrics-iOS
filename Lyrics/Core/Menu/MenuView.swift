@@ -99,7 +99,7 @@ struct MenuView: View {
                 .padding()
                 Divider()
                 if mainViewModel.notifications.isEmpty {
-                    // TODO: replace with envelope (slashed) and localize title
+                    // TODO: replace with envelope (slashed)
                     FullscreenMessage(imageName: "envelope", title: "Hmm, it doesn't look like you have any new messages.")
                 } else {
                     ScrollView {

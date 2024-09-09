@@ -135,6 +135,27 @@ struct ExploreDetailViewTip: Tip {
 }
 
 @available(iOS 17, *)
+struct DemoAttachmentTip: Tip {
+    var title: Text {
+        Text("Want to save this song?")
+    }
+    
+    var message: Text? {
+        Text("Click to add to your library.")
+    }
+    
+    var image: Image? {
+        Image(systemName: "doc.badge.plus")
+    }
+    
+    var options: [TipOption] {
+        return [
+            Tips.MaxDisplayCount(1)
+        ]
+    }
+}
+
+@available(iOS 17, *)
 struct LiveLyricsTipStyle: TipViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack {

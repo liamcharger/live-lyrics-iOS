@@ -42,7 +42,8 @@ struct ContentRowView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
         .padding()
-        .frame(minHeight: 115)
+        .frame(maxHeight: .infinity)
+        .frame(minHeight: 105)
         .background(Material.thin)
         .foregroundColor(.primary)
         .clipShape(RoundedRectangle(cornerRadius: 20))

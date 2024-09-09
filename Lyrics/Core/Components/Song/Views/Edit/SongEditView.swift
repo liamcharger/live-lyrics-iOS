@@ -11,6 +11,7 @@ import Combine
 struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @Environment(\.presentationMode) var presMode
     @Environment(\.openURL) var openURL
@@ -33,7 +34,11 @@ struct SongEditView: View {
     @State var stateTitle = ""
     @State var stateDuration = ""
     
+    @State var selectedDemoAttachment: DemoAttachment?
+    
     @State var showError = false
+    @State var showDemoEditSheet = false
+    @State var showNewDemoSheet = false
     
     var isEmpty: Bool {
         let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -101,37 +106,67 @@ struct SongEditView: View {
                         CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
                         CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
                     }
-                    VStack {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack(spacing: 8) {
-                                Text("Demo Attachments".uppercased())
-                                    .font(.system(size: 16).weight(.bold))
-                                Image(systemName: "info.circle")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.blue)
-                                Spacer()
-                                Button {
-                                    
-                                } label: {
-                                    Image(systemName: "plus")
-                                        .padding(10)
-                                        .background(Color.accentColor)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
+                    if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
+                        VStack {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(spacing: 8) {
+                                    Text("Demo Attachments".uppercased())
+                                        .font(.system(size: 16).weight(.bold))
+                                    Spacer()
+                                    if user.hasPro ?? false {
+                                        Button {
+                                            showNewDemoSheet = true
+                                        } label: {
+                                            Image(systemName: "plus")
+                                                .padding(10)
+                                                .font(.body.weight(.medium))
+                                                .background(Color.accentColor)
+                                                .foregroundColor(.white)
+                                                .clipShape(Circle())
+                                        }
+                                        .sheet(isPresented: $showNewDemoSheet) {
+                                            NewDemoAttachmentView(song: song)
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        if let demoAttachments = song.demoAttachments {
-                            LazyVGrid(columns: columns) {
-                                ForEach(demoAttachments, id: \.self) { attachment in
-                                    let provider = songViewModel.getProvider(from: attachment)
-                                    
-                                    Button {
-                                        guard let url = URL(string: attachment) else { return }
+                            if let demoAttachments = song.demoAttachments {
+                                LazyVGrid(columns: columns) {
+                                    ForEach(demoAttachments, id: \.self) { attachment in
+                                        let demo = songViewModel.getDemo(from: attachment)
                                         
-                                        openURL(url)
-                                    } label: {
-                                        ContentRowView(NSLocalizedString(provider.title, comment: ""), icon: provider.icon, color: provider.color)
+                                        Button {
+                                            selectedDemoAttachment = demo
+                                            showDemoEditSheet = true
+                                        } label: {
+                                            VStack(alignment: .leading, spacing: 12) {
+                                                if demo.icon == "apple_music" {
+                                                    Image(demo.icon)
+                                                        .resizable()
+                                                        .frame(width: 22, height: 22)
+                                                } else {
+                                                    FAText(iconName: demo.icon, size: 20)
+                                                        .foregroundColor(demo.color)
+                                                }
+                                                Text(NSLocalizedString(demo.title, comment: ""))
+                                                    .font(.system(size: 18).weight(.semibold))
+                                                    .frame(maxWidth: 95, alignment: .leading)
+                                                    .multilineTextAlignment(.leading)
+                                                    .lineLimit(2)
+                                            }
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                            .frame(minHeight: 80)
+                                            .padding()
+                                            .frame(maxHeight: .infinity)
+                                            .background(Material.thin)
+                                            .foregroundColor(.primary)
+                                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        }
+                                        .sheet(isPresented: $showDemoEditSheet) {
+                                            if let demo = selectedDemoAttachment {
+                                                DemoAttachmentEditView(demo: demo, song: song)
+                                            }
+                                        }
                                     }
                                 }
                             }

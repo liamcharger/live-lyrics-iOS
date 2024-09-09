@@ -68,13 +68,14 @@ struct SongDetailView: View {
     @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = false
     
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @ObservedObject var notesViewModel = NotesViewModel.shared
     @ObservedObject var songDetailViewModel = SongDetailViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
     
     @Environment(\.presentationMode) var presMode
+    @Environment(\.openURL) var openURL
     
     @FocusState var isInputActive: Bool
     
@@ -409,6 +410,37 @@ struct SongDetailView: View {
                         if #available(iOS 17, *) {
                             TipView(VariationsTip())
                                 .tipViewStyle(LiveLyricsTipStyle())
+                        }
+                        if !isInputActive, let demoAttachments = song.demoAttachments {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    ForEach(demoAttachments, id: \.self) { attachment in
+                                        let provider = songViewModel.getDemo(from: attachment)
+                                        
+                                        Button {
+                                            guard let url = URL(string: attachment) else { return }
+                                            
+                                            openURL(url)
+                                        } label: {
+                                            HStack(spacing: 7) {
+                                                if provider.icon == "apple_music" {
+                                                    Image(provider.icon)
+                                                        .resizable()
+                                                        .frame(width: 20, height: 20)
+                                                } else {
+                                                    FAText(iconName: provider.icon, size: 20)
+                                                }
+                                                Text(provider.title)
+                                                    .lineLimit(1)
+                                            }
+                                            .foregroundColor(provider.color)
+                                            .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            .padding(.horizontal, -16)
                         }
                         HStack {
                             if !getShowVariationCondition() {

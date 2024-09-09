@@ -33,6 +33,8 @@
 		E03541012BC05A3400273830 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E03541002BC05A3400273830 /* FirebaseMessaging */; };
 		E03541032BC05A3400273830 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = E03541022BC05A3400273830 /* FirebaseRemoteConfig */; };
 		E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */; };
+		E03A6F0A2C8CE14F00CA16D0 /* DemoAttachmentEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A6F092C8CE14F00CA16D0 /* DemoAttachmentEditView.swift */; };
+		E03A6F0F2C8E24F600CA16D0 /* DemoAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */; };
 		E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BC0922B5C232B004261AF /* ChooseAuthView.swift */; };
 		E041055F2A90029900215FB0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* HapticManager.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
@@ -183,6 +185,8 @@
 		E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E02E674C2C191BBA00806190 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
+		E03A6F092C8CE14F00CA16D0 /* DemoAttachmentEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAttachmentEditView.swift; sourceTree = "<group>"; };
+		E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAttachment.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
 		E041055E2A90029900215FB0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		E042474A2A02EF4E00CA48B3 /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -373,6 +377,31 @@
 			path = Pro;
 			sourceTree = "<group>";
 		};
+		E03A6F0B2C8CE15A00CA16D0 /* Demo Attachments */ = {
+			isa = PBXGroup;
+			children = (
+				E03A6F0D2C8CE16900CA16D0 /* Edit */,
+				E03A6F0C2C8CE16500CA16D0 /* New */,
+			);
+			path = "Demo Attachments";
+			sourceTree = "<group>";
+		};
+		E03A6F0C2C8CE16500CA16D0 /* New */ = {
+			isa = PBXGroup;
+			children = (
+				E04B27362C8A436A00EB5724 /* NewDemoAttachmentView.swift */,
+			);
+			path = New;
+			sourceTree = "<group>";
+		};
+		E03A6F0D2C8CE16900CA16D0 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				E03A6F092C8CE14F00CA16D0 /* DemoAttachmentEditView.swift */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
 		E04247412A02EF4E00CA48B3 = {
 			isa = PBXGroup;
 			children = (
@@ -484,6 +513,7 @@
 				E0CC166C2C752744003F3703 /* DatamuseRhyme.swift */,
 				E0258A712C82713900648582 /* DatamuseWord.swift */,
 				E0F70B382C876361006A9867 /* Musixmatch.swift */,
+				E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -594,7 +624,6 @@
 			children = (
 				E0CC33222A040BB700CC38C6 /* NewSongView.swift */,
 				E01520E12A872EF4005C4F8C /* AddSongsView.swift */,
-				E04B27362C8A436A00EB5724 /* NewDemoAttachmentView.swift */,
 			);
 			path = New;
 			sourceTree = "<group>";
@@ -785,6 +814,7 @@
 		E0CA85112B081D5100188CD0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				E03A6F0B2C8CE15A00CA16D0 /* Demo Attachments */,
 				E01F39D02C83A08E0019F1C6 /* Pro */,
 				E0CC166E2C7527E4003F3703 /* Datamuse */,
 				E0CA851B2B081D5100188CD0 /* Navbar */,
@@ -1176,6 +1206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */,
+				E03A6F0F2C8E24F600CA16D0 /* DemoAttachment.swift in Sources */,
 				E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */,
 				E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */,
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
@@ -1260,6 +1291,7 @@
 				E0C078282B4463FB00F91287 /* SortView.swift in Sources */,
 				E0B02B9F2AF5A389002E10D4 /* FeaturesView.swift in Sources */,
 				E04247AF2A02F6B500CA48B3 /* UserService.swift in Sources */,
+				E03A6F0A2C8CE14F00CA16D0 /* DemoAttachmentEditView.swift in Sources */,
 				E0CA85382B081D5100188CD0 /* Modifers.swift in Sources */,
 				E0CA85372B081D5100188CD0 /* NavBarEnum.swift in Sources */,
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,

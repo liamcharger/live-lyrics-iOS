@@ -10,13 +10,6 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-struct SongProvider: Identifiable {
-    var id = UUID()
-    let title: String
-    let icon: String
-    let color: Color
-}
-
 class SongViewModel: ObservableObject {
     @ObservedObject var authViewModel = AuthViewModel.shared
     
@@ -24,6 +17,7 @@ class SongViewModel: ObservableObject {
     
     let service = SongService()
     let providerKeywords: [(provider: String, keyword: String, icon: String, color: Color)] = [
+        // TODO: add images for providers without logos in icon catalog
         ("Spotify", "spotify", "spotify", Color.green),
         ("Apple Music", "apple", "apple_music", Color.red),
         ("YouTube", "youtube", "youtube", Color.red),
@@ -209,13 +203,25 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func getProvider(from urlString: String) -> SongProvider {
+    func createDemoAttachment(for song: Song, from urlString: String, completion: @escaping() -> Void) {
+        service.createNewDemoAttachment(from: urlString, for: song, completion: completion)
+    }
+    
+    func deleteDemoAttachment(demo: DemoAttachment, for song: Song, completion: @escaping() -> Void) {
+        service.deleteDemoAttachment(demo: demo, for: song, completion: completion)
+    }
+    
+    func updateDemo(for song: Song, url: String, completion: @escaping() -> Void) {
+        service.updateDemo(for: song, url: url, completion: completion)
+    }
+    
+    func getDemo(from urlString: String) -> DemoAttachment {
         for (provider, keyword, icon, color) in providerKeywords {
             if urlString.lowercased().contains(keyword) {
-                return SongProvider(title: provider, icon: icon, color: color)
+                return DemoAttachment(title: provider, icon: icon, color: color, url: urlString)
             }
         }
-        return SongProvider(title: urlString, icon: "", color: Color.primary)
+        return DemoAttachment(title: urlString, icon: "", color: Color.primary, url: urlString)
     }
     
     func isShared(song: Song) -> Bool {

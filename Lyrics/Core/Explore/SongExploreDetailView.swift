@@ -11,7 +11,7 @@ import TipKit
 
 struct SongExploreDetailView: View {
     @ObservedObject var musixmatchService = MusixmatchService.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     
     @State var album: Album?
     @State var hasScrolledPastTitle = false

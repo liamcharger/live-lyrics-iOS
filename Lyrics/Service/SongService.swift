@@ -569,6 +569,19 @@ class SongService {
 		}
 	}
 	
+	func createNewDemoAttachment(from url: String, for song: Song, completion: @escaping() -> Void) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
+			.updateData(["demoAttachments": FieldValue.arrayUnion([url])]) { error in
+			if let error = error {
+				print("Error creating song demo attachment: \(error.localizedDescription)")
+				completion()
+				return
+			}
+			
+			completion()
+		}
+	}
+	
 	func createSong(withUid: String? = nil, song: Song, completion: @escaping(Error?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
@@ -634,6 +647,16 @@ class SongService {
 		}
 	}
 	
+	func deleteDemoAttachment(demo: DemoAttachment, for song: Song, completion: @escaping() -> Void) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
+			.updateData(["demoAttachments": FieldValue.arrayRemove([demo.url])]) { error in
+			if let error = error {
+				print(error.localizedDescription)
+			}
+			completion()
+		}
+	}
+	
 	func deleteVariation(song: Song, variation: SongVariation) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).delete { error in
 			if let error = error {
@@ -648,6 +671,23 @@ class SongService {
 				print(error.localizedDescription)
 			}
 		}
+	}
+	
+	func updateDemo(for song: Song, url: String, completion: @escaping() -> Void) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
+			.updateData(["demoAttachments": FieldValue.arrayRemove([url])]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
+			.updateData(["demoAttachments": FieldValue.arrayUnion([url])]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+		
+		completion()
 	}
 	
 	func deleteSong(song: RecentlyDeletedSong) {
