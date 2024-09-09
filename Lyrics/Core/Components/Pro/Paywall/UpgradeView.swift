@@ -14,6 +14,7 @@ struct UpgradeView: View {
     @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = true
     
     @ObservedObject var storeKitManager = StoreKitManager.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @State var showError = false
     @State var showCannotPurchaseAlert = false
@@ -43,7 +44,7 @@ struct UpgradeView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 VStack(spacing: 34) {
                     Group {
                         Text("Yes, there's a \n") + Text("pro").fontWeight(.black) + Text(" plan.")
@@ -65,20 +66,25 @@ struct UpgradeView: View {
                         .font(.system(size: 25).weight(.semibold))
                     VStack(spacing: 10) {
                         ForEach(features, id: \.self) { feature in
-                            HStack(spacing: 12) {
-                                FAText(iconName: "circle-check", size: 20)
-                                    .foregroundColor(.blue)
-                                Text(feature)
+                            let showAds = authViewModel.currentUser?.showAds ?? true
+                            
+                            // Show the feature if it's not "ad-free" or if ads are still shown
+                            if feature != NSLocalizedString("ad_free_experience", comment: "") || showAds {
+                                HStack(spacing: 12) {
+                                    FAText(iconName: "circle-check", size: 20)
+                                        .foregroundColor(.blue)
+                                    Text(feature)
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Material.thin)
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
                             }
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Material.thin)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
                     }
                 }
                 .padding()
-                .padding(.bottom, 125)
+                .padding(.bottom, 145)
             }
             VStack(spacing: 12) {
                 LiveLyricsButton("Subscribe for $4.99/mo") {

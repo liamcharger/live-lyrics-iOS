@@ -50,7 +50,7 @@ struct PlayView: View {
     @State var accentAudioPlayer: AVAudioPlayer?
     
     @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel()
+    @ObservedObject var songViewModel = SongViewModel.shared
     @EnvironmentObject var viewModel: AuthViewModel
     
     var songs: [Song]?
