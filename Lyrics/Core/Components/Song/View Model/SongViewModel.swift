@@ -17,20 +17,16 @@ class SongViewModel: ObservableObject {
     
     let service = SongService()
     let providerKeywords: [(provider: String, keyword: String, icon: String, color: Color)] = [
-        // TODO: add images for providers without logos in icon catalog
         ("Spotify", "spotify", "spotify", Color.green),
-        ("Apple Music", "apple", "apple_music", Color.red),
+        ("Apple Music", "music.apple", "apple_music", Color.red),
         ("YouTube", "youtube", "youtube", Color.red),
         ("YouTube Music", "music.youtube", "youtube_music", Color.red),
         ("SoundCloud", "soundcloud", "soundcloud", Color.red),
         ("Tidal", "tidal", "tidal", Color.primary),
         ("Bandcamp", "bandcamp", "bandcamp", Color.indigo),
         ("Deezer", "deezer", "deezer", Color.orange),
-        ("Amazon Music", "amazon", "youtube", Color.indigo),
-        ("Pandora", "pandora", "youtube", Color.purple),
-        ("Audiomack", "audiomack", "youtube", Color.orange),
-        ("Napster", "napster", "youtube", Color.primary),
-        ("Anghami", "anghami", "youtube", Color.yellow)
+        ("Amazon Music", "music.amazon", "amazon_music", Color.teal),
+        ("Pandora", "pandora", "pandora", Color.primary)
     ]
     
     static let shared = SongViewModel()
@@ -221,7 +217,20 @@ class SongViewModel: ObservableObject {
                 return DemoAttachment(title: provider, icon: icon, color: color, url: urlString)
             }
         }
-        return DemoAttachment(title: urlString, icon: "", color: Color.primary, url: urlString)
+        return DemoAttachment(title: urlString, icon: "square", color: Color.primary, url: urlString)
+    }
+    
+    func getDemoIcon(from icon: String, size: CGFloat = 22) -> some View {
+        return Group {
+            if icon == "apple_music" || icon == "amazon_music" || icon == "tidal" || icon == "pandora" {
+                Image(icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+            } else {
+                FAText(iconName: icon, size: size)
+            }
+        }
     }
     
     func isShared(song: Song) -> Bool {

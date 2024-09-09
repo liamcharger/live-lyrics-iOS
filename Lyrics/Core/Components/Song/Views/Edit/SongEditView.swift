@@ -140,14 +140,8 @@ struct SongEditView: View {
                                             showDemoEditSheet = true
                                         } label: {
                                             VStack(alignment: .leading, spacing: 12) {
-                                                if demo.icon == "apple_music" {
-                                                    Image(demo.icon)
-                                                        .resizable()
-                                                        .frame(width: 22, height: 22)
-                                                } else {
-                                                    FAText(iconName: demo.icon, size: 20)
-                                                        .foregroundColor(demo.color)
-                                                }
+                                                songViewModel.getDemoIcon(from: demo.icon, size: 22)
+                                                    .foregroundColor(demo.color)
                                                 Text(NSLocalizedString(demo.title, comment: ""))
                                                     .font(.system(size: 18).weight(.semibold))
                                                     .frame(maxWidth: 95, alignment: .leading)

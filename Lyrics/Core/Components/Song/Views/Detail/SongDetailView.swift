@@ -415,25 +415,19 @@ struct SongDetailView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     ForEach(demoAttachments, id: \.self) { attachment in
-                                        let provider = songViewModel.getDemo(from: attachment)
+                                        let demo = songViewModel.getDemo(from: attachment)
                                         
                                         Button {
                                             guard let url = URL(string: attachment) else { return }
                                             
                                             openURL(url)
                                         } label: {
-                                            HStack(spacing: 7) {
-                                                if provider.icon == "apple_music" {
-                                                    Image(provider.icon)
-                                                        .resizable()
-                                                        .frame(width: 20, height: 20)
-                                                } else {
-                                                    FAText(iconName: provider.icon, size: 20)
-                                                }
-                                                Text(provider.title)
+                                            HStack(spacing: 8) {
+                                                songViewModel.getDemoIcon(from: demo.icon)
+                                                Text(demo.title)
                                                     .lineLimit(1)
                                             }
-                                            .foregroundColor(provider.color)
+                                            .foregroundColor(demo.color)
                                             .modifier(SongDetailViewModel.DatamuseRowViewModifier())
                                         }
                                     }
