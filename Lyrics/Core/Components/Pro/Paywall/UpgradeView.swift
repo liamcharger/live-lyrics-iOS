@@ -22,8 +22,9 @@ struct UpgradeView: View {
     let features = [
         NSLocalizedString("ad_free_experience", comment: ""),
         NSLocalizedString("access_to_worlds_largest_lyric_database", comment: ""),
-        NSLocalizedString("access_to_tuner", comment: ""),
+        NSLocalizedString("access_to_demo_attachments", comment: ""),
         NSLocalizedString("world_of_worlds_at_your_fingertips", comment: ""),
+        NSLocalizedString("access_to_tuner", comment: ""),
         NSLocalizedString("support_the_developers", comment: "")
     ]
     

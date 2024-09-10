@@ -1,5 +1,5 @@
 //
-//  DatamuseService.swift
+//  WordService.swift
 //  Lyrics
 //
 //  Created by Liam Willey on 8/20/24.
@@ -7,14 +7,15 @@
 
 import Foundation
 
-class DatamuseService: ObservableObject {
-    @Published var rhymes = [DatamuseRhyme]()
+class WordService: ObservableObject {
+    @Published var rhymes = [Rhyme]()
     @Published var words = [DatamuseWord]()
     @Published var isLoadingWords = false
     
-    let endpoint = "https://api.datamuse.com"
+    let datamuseEndpoint = "https://api.datamuse.com"
+    let rhymeBrainEndpoint = "https://rhymebrain.com"
     
-    static let shared = DatamuseService()
+    static let shared = WordService()
     
     func fetchWords(for word: String, type: DatamuseWordType) {
         switch type {
@@ -33,43 +34,38 @@ class DatamuseService: ObservableObject {
     
     func fetchRhymes(for word: String) {
         let words = word.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: endpoint + "/words?sl=\(words)") else { return }
+        guard let url = URL(string: rhymeBrainEndpoint + "/talk?function=getRhymes&word=\(words)") else { return }
         
         self.isLoadingWords = true
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Failed to fetch rhymes: \(error)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No data received")
                 return
             }
             
-            var rhymes = [DatamuseRhyme]()
-            
             do {
-                if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
-                    for item in jsonResponse {
-                        if let word = item["word"] as? String,
-                           let score = item["score"] as? Int,
-                           let numSyllables = item["numSyllables"] as? Int {
-                            rhymes.append(DatamuseRhyme(word: word, score: score, numSyllables: numSyllables))
-                        } else {
-                            print("Error parsing item: \(item)")
-                        }
-                    }
-                } else {
-                    print("Invalid JSON format")
+                let rhymes = try JSONDecoder().decode([RhymebrainRhyme].self, from: data)
+                var completedRhymes = [Rhyme]()
+                let group = DispatchGroup()
+                
+                group.enter()
+                for rhyme in rhymes {
+                    completedRhymes.append(Rhyme(word: rhyme.word, score: rhyme.score, syllables: Int(rhyme.syllables) ?? 1))
                 }
-            } catch let parsingError {
-                print("Error decoding JSON for rhymes: \(parsingError.localizedDescription)")
-            }
-            
-            DispatchQueue.main.async {
-                self.rhymes = rhymes
+                group.leave()
+                
+                group.notify(queue: .main) {
+                    self.rhymes = completedRhymes
+                    self.isLoadingWords = false
+                }
+            } catch {
+                print("Failed to decode JSON: \(error)")
                 self.isLoadingWords = false
             }
         }.resume()
@@ -77,7 +73,7 @@ class DatamuseService: ObservableObject {
     
     func fetchSynonyms(for word: String) {
         let words = word.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: endpoint + "/words?rel_syn=\(words)") else { return }
+        guard let url = URL(string: datamuseEndpoint + "/words?rel_syn=\(words)") else { return }
         
         self.isLoadingWords = true
         
@@ -120,7 +116,7 @@ class DatamuseService: ObservableObject {
     
     func fetchAntonyms(for word: String) {
         let words = word.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: endpoint + "/rel_ant=\(words)") else { return }
+        guard let url = URL(string: datamuseEndpoint + "/rel_ant=\(words)") else { return }
         
         self.isLoadingWords = true
         
@@ -163,7 +159,7 @@ class DatamuseService: ObservableObject {
     
     func fetchRelated(for word: String) {
         let words = word.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: endpoint + "/words?ml=\(words)") else { return }
+        guard let url = URL(string: datamuseEndpoint + "/words?ml=\(words)") else { return }
         
         self.isLoadingWords = true
         
@@ -206,7 +202,7 @@ class DatamuseService: ObservableObject {
     
     func fetchWordsStartingWith(for word: String) {
         let words = word.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: endpoint + "/sug?s=\(words)") else { return }
+        guard let url = URL(string: datamuseEndpoint + "/sug?s=\(words)") else { return }
         
         self.isLoadingWords = true
         

@@ -119,8 +119,8 @@
 		E0CA853E2B081D5100188CD0 /* ListEditButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852A2B081D5100188CD0 /* ListEditButtonView.swift */; };
 		E0CA853F2B081D5100188CD0 /* ListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA852B2B081D5100188CD0 /* ListHeaderView.swift */; };
 		E0CC16692C74CDA1003F3703 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC16682C74CDA1003F3703 /* EmptyStateView.swift */; };
-		E0CC166B2C752707003F3703 /* DatamuseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC166A2C752707003F3703 /* DatamuseService.swift */; };
-		E0CC166D2C752744003F3703 /* DatamuseRhyme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC166C2C752744003F3703 /* DatamuseRhyme.swift */; };
+		E0CC166B2C752707003F3703 /* WordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC166A2C752707003F3703 /* WordService.swift */; };
+		E0CC166D2C752744003F3703 /* Rhyme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC166C2C752744003F3703 /* Rhyme.swift */; };
 		E0CC16712C7527F6003F3703 /* DatamuseWordDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC16702C7527F6003F3703 /* DatamuseWordDetailView.swift */; };
 		E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC33182A03FF8F00CC38C6 /* MainView.swift */; };
 		E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC331C2A0405CE00CC38C6 /* MainViewModel.swift */; };
@@ -276,8 +276,8 @@
 		E0CA852A2B081D5100188CD0 /* ListEditButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListEditButtonView.swift; sourceTree = "<group>"; };
 		E0CA852B2B081D5100188CD0 /* ListHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListHeaderView.swift; sourceTree = "<group>"; };
 		E0CC16682C74CDA1003F3703 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
-		E0CC166A2C752707003F3703 /* DatamuseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatamuseService.swift; sourceTree = "<group>"; };
-		E0CC166C2C752744003F3703 /* DatamuseRhyme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatamuseRhyme.swift; sourceTree = "<group>"; };
+		E0CC166A2C752707003F3703 /* WordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordService.swift; sourceTree = "<group>"; };
+		E0CC166C2C752744003F3703 /* Rhyme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rhyme.swift; sourceTree = "<group>"; };
 		E0CC16702C7527F6003F3703 /* DatamuseWordDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatamuseWordDetailView.swift; sourceTree = "<group>"; };
 		E0CC33182A03FF8F00CC38C6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		E0CC331C2A0405CE00CC38C6 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -510,7 +510,7 @@
 				E04CB96D2BCB618C00F2831B /* ShareRequest.swift */,
 				E0B094BC2BD220E500F92BE6 /* SongVariation.swift */,
 				E05B9A7D2BCF2351000292FA /* FolderSong.swift */,
-				E0CC166C2C752744003F3703 /* DatamuseRhyme.swift */,
+				E0CC166C2C752744003F3703 /* Rhyme.swift */,
 				E0258A712C82713900648582 /* DatamuseWord.swift */,
 				E0F70B382C876361006A9867 /* Musixmatch.swift */,
 				E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */,
@@ -565,7 +565,7 @@
 				E0CC33202A04064500CC38C6 /* SongService.swift */,
 				E04247AB2A02F6B500CA48B3 /* UserService.swift */,
 				E0F70B3A2C876455006A9867 /* MusixmatchService.swift */,
-				E0CC166A2C752707003F3703 /* DatamuseService.swift */,
+				E0CC166A2C752707003F3703 /* WordService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -814,8 +814,8 @@
 		E0CA85112B081D5100188CD0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				E03A6F0B2C8CE15A00CA16D0 /* Demo Attachments */,
 				E01F39D02C83A08E0019F1C6 /* Pro */,
+				E03A6F0B2C8CE15A00CA16D0 /* Demo Attachments */,
 				E0CC166E2C7527E4003F3703 /* Datamuse */,
 				E0CA851B2B081D5100188CD0 /* Navbar */,
 				E04247792A02EF6E00CA48B3 /* Song */,
@@ -1214,13 +1214,13 @@
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
 				E0705FD52C5C161300BC7AD6 /* CustomBackButton.swift in Sources */,
 				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
-				E0CC166D2C752744003F3703 /* DatamuseRhyme.swift in Sources */,
+				E0CC166D2C752744003F3703 /* Rhyme.swift in Sources */,
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,
 				E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */,
 				E04247B32A02F6DF00CA48B3 /* User.swift in Sources */,
 				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
-				E0CC166B2C752707003F3703 /* DatamuseService.swift in Sources */,
+				E0CC166B2C752707003F3703 /* WordService.swift in Sources */,
 				E0F70B3B2C876455006A9867 /* MusixmatchService.swift in Sources */,
 				E0CC33212A04064500CC38C6 /* SongService.swift in Sources */,
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,

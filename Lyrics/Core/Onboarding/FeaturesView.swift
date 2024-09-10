@@ -13,10 +13,11 @@ struct FeaturesView: View {
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
-        FeaturesSection(title: "Collaboration", subtitle: "Work together on your songs and folders with fellow musicians in real-time.", imageName: "person.3"),
-        FeaturesSection(title: "Song Variations", subtitle: "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.", imageName: "square.stack.3d.down.right"),
-        FeaturesSection(title: "Printing", subtitle: "Print your songs and their variations directly from the app for easy access in physical formats.", imageName: "printer"),
-        FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
+        FeaturesSection(title: "Song Catalog", subtitle: "access_to_worlds_largest_lyric_database", imageName: "music-magnifying-glass", pro: true),
+        FeaturesSection(title: "Demo Attachments", subtitle: "access_to_demo_attachments", imageName: "file-audio", pro: true),
+        FeaturesSection(title: "Word Assistant", subtitle: "world_of_worlds_at_your_fingertips", imageName: "hand-pointer", pro: true),
+        FeaturesSection(title: "Tuner", subtitle: "access_to_tuner", imageName: "sliders", pro: true),
+        FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "circle-ellipsis", pro: false)
     ]
     
     var body: some View {
@@ -52,16 +53,26 @@ struct FeaturesView: View {
     
     func featureCard(_ feature: FeaturesSection) -> some View {
         VStack(spacing: 9) {
-            Image(systemName: feature.imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 90, height: 90)
+            ZStack(alignment: .topLeading) {
+                FAText(iconName: feature.imageName, size: 90, style: .regular)
+            }
             Spacer()
                 .frame(height: 5)
-            Text(feature.title)
-                .font(.title)
-                .fontWeight(.bold)
-            Text(feature.subtitle)
+            HStack(alignment: .center) {
+                Text(NSLocalizedString(feature.title, comment: ""))
+                    .font(.title)
+                    .fontWeight(.bold)
+                if feature.pro {
+                    Text("Pro")
+                        .font(.system(size: 12).weight(.medium))
+                        .padding(5)
+                        .padding(.horizontal, 2)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                }
+            }
+            Text(NSLocalizedString(feature.subtitle, comment: ""))
                 .foregroundColor(.gray)
         }
         .padding()
@@ -72,6 +83,7 @@ struct FeaturesSection {
     var title: String
     var subtitle: String
     var imageName: String
+    var pro: Bool
 }
 
 #Preview {

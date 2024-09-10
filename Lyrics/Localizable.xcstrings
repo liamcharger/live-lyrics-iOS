@@ -22,7 +22,14 @@
       }
     },
     " plan." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " plan."
+          }
+        }
+      }
     },
     "." : {
       "localizations" : {
@@ -376,18 +383,34 @@
         }
       }
     },
-    "access_to_tuner" : {
+    "access_to_demo_attachments" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A tuner—make sure your instruments sound sharp"
+            "value" : "Give your band members a reference song, or a link to a cover on YouTube you want them to learn."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un afinador: asegúrate de que tus instrumentos suenen nítidos"
+            "value" : "Da a los miembros de tu banda una canción de referencia, o un enlace a una versión en YouTube que quieras que se aprendan."
+          }
+        }
+      }
+    },
+    "access_to_tuner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A tuner—make sure your instruments sound sharp."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un afinador: asegúrate de que tus instrumentos suenen nítidos."
           }
         }
       }
@@ -544,7 +567,14 @@
       }
     },
     "Are you sure you want to delete this demo?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres borrar esta demo?"
+          }
+        }
+      }
     },
     "Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!" : {
       "localizations" : {
@@ -979,7 +1009,14 @@
       }
     },
     "Delete Demo" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar demostración"
+          }
+        }
+      }
     },
     "Delete Folder" : {
       "localizations" : {
@@ -1122,7 +1159,14 @@
       }
     },
     "Edit Demo" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar demostración"
+          }
+        }
+      }
     },
     "Edit Folder" : {
       "localizations" : {
@@ -1263,6 +1307,12 @@
     "explore" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Explore"
@@ -1544,7 +1594,14 @@
       }
     },
     "Invalid URL." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL no válida."
+          }
+        }
+      }
     },
     "issue_deleting_account" : {
       "extractionState" : "manual",
@@ -1865,7 +1922,14 @@
       }
     },
     "New Demo" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva demostración"
+          }
+        }
+      }
     },
     "New Folder" : {
       "localizations" : {
@@ -1949,6 +2013,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "There aren’t demo attachments for this song."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay demos adjuntas para esta canción."
           }
         }
       }
@@ -2072,7 +2142,14 @@
       }
     },
     "Open" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto"
+          }
+        }
+      }
     },
     "outgoing" : {
       "extractionState" : "manual",
@@ -2220,7 +2297,24 @@
       }
     },
     "pro" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pro"
+          }
+        }
+      }
+    },
+    "Pro" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        }
+      }
     },
     "Read only:" : {
       "localizations" : {
@@ -2955,6 +3049,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para ajustar la velocidad de desplazamiento, actualice el campo de duración de la canción en su vista de edición."
+          }
+        }
+      }
+    },
+    "Top Results" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los mejores resultados"
           }
         }
       }

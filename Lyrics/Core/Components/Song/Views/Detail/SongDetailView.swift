@@ -136,7 +136,7 @@ struct SongDetailView: View {
     func fetchDatamuse(for type: DatamuseWordType) {
         if let user = viewModel.currentUser, user.hasPro ?? false {
             wordType = type
-            DatamuseService.shared.fetchWords(for: songDetailViewModel.selectedText, type: type)
+            WordService.shared.fetchWords(for: songDetailViewModel.selectedText, type: type)
             showDatamuseSheet = true
         } else {
             showUpgradeSheet = true

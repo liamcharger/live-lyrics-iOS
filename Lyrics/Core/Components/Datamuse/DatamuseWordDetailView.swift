@@ -17,7 +17,7 @@ enum DatamuseWordType: String {
 }
 
 struct DatamuseWordDetailView: View {
-    @ObservedObject var datamuseService = DatamuseService.shared
+    @ObservedObject var datamuseService = WordService.shared
     
     @Environment(\.presentationMode) var presMode
     
@@ -32,8 +32,21 @@ struct DatamuseWordDetailView: View {
         GridItem(.flexible())
     ]
     
-    var groupedWords: [Int: [DatamuseRhyme]] {
-        Dictionary(grouping: datamuseService.rhymes, by: { $0.numSyllables })
+    var groupedWords: [Int: [Rhyme]] {
+        Dictionary(grouping: datamuseService.rhymes, by: { $0.syllables })
+    }
+    var topResults: [Rhyme] {
+        datamuseService.rhymes.filter { $0.score >= 300 }.sorted(by: { $0.score > $1.score })
+    }
+    
+    func wordRowView(word: String, score: Int) -> some View {
+        return Button {
+            pasteboard.string = word
+            wordToCopy = DatamuseWord(word: word, score: score)
+        } label: {
+            DatamuseWordRowView(word: word, selectedWord: $wordToCopy)
+        }
+        .showDatamuseCopyTip()
     }
     
     var body: some View {
@@ -59,23 +72,26 @@ struct DatamuseWordDetailView: View {
                 ProgressView("Loading")
                 Spacer()
             } else {
-                if datamuseService.words.isEmpty || datamuseService.rhymes.isEmpty {
+                if type == .rhyme ? (datamuseService.rhymes.isEmpty) : (datamuseService.words.isEmpty) {
                     FullscreenMessage(imageName: "circle.slash", title: "Hmm, we couldn't find any results for that word.")
                 } else {
                     ScrollView {
                         VStack(alignment: .leading) {
                             if type == .rhyme {
-                                ForEach(Array(groupedWords.keys.sorted()), id: \.self) { syllables in
-                                    Section(header: Text("\(syllables) Syllable\(syllables == 1 ? "" : "s")").font(.headline).padding(syllables == 1 ? [] : [.top])) {
+                                if !topResults.isEmpty {
+                                    Section(header: Text("Top Results").font(.headline)) {
                                         LazyVGrid(columns: columns) {
-                                            ForEach(groupedWords[syllables]!.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord })) { rhyme in
-                                                Button {
-                                                    pasteboard.string = rhyme.word
-                                                    wordToCopy = DatamuseWord(word: rhyme.word, score: rhyme.score)
-                                                } label: {
-                                                    DatamuseWordRowView(word: rhyme.word, selectedWord: $wordToCopy)
-                                                }
-                                                .showDatamuseCopyTip()
+                                            ForEach(topResults.filter({ $0.word != selectedWord }), id: \.word) { rhyme in
+                                                wordRowView(word: rhyme.word, score: rhyme.score)
+                                            }
+                                        }
+                                    }
+                                }
+                                ForEach(Array(groupedWords.keys.sorted()), id: \.self) { syllables in
+                                    Section(header: Text("\(syllables) Syllable\(syllables == 1 ? "" : "s")").font(.headline).padding(topResults.isEmpty ? [] : [.top])) {
+                                        LazyVGrid(columns: columns) {
+                                            ForEach(groupedWords[syllables]!.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord }), id: \.word) { rhyme in
+                                                wordRowView(word: rhyme.word, score: rhyme.score)
                                             }
                                         }
                                     }
@@ -83,13 +99,7 @@ struct DatamuseWordDetailView: View {
                             } else {
                                 LazyVGrid(columns: columns) {
                                     ForEach(datamuseService.words.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord })) { word in
-                                        Button {
-                                            pasteboard.string = word.word
-                                            wordToCopy = word
-                                        } label: {
-                                            DatamuseWordRowView(word: word.word, selectedWord: $wordToCopy)
-                                                .showDatamuseCopyTip()
-                                        }
+                                        wordRowView(word: word.word, score: word.score)
                                     }
                                 }
                             }
