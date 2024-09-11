@@ -19,11 +19,14 @@ class StoreKitManager: ObservableObject {
     @Published var purchasedProducts: [Product] = []
     @Published var activeSubscriptions: [Product] = []
     
+    @AppStorage("StoreKitManager.lastTimeFunctionsCalled") private var lastTimeFunctionsCalled: Double = 0
+    
     @ObservedObject var authViewModel = AuthViewModel.shared
     
     var updateListenerTask: Task<Void, Error>? = nil
     
     private let productDict: [String : String]
+    private let threeDaysInSeconds: TimeInterval = 3 * 24 * 60 * 60
     
     static let shared = StoreKitManager()
     
@@ -110,7 +113,9 @@ class StoreKitManager: ObservableObject {
         if !activeSubscriptions.isEmpty {
             authViewModel.updateProStatus(true)
         } else {
-            validateReceipt()
+            if shouldCallFunctions() {
+                validateReceipt()
+            }
         }
     }
     
@@ -162,15 +167,24 @@ class StoreKitManager: ObservableObject {
         
         functions.httpsCallable("validateReceipt").call(parameters) { result, error in
             if let error = error {
+                print(error.localizedDescription)
                 return
             }
             
             if let data = result?.data as? [String: Any], let isSubscribed = data["isSubscribed"] as? Bool {
                 self.authViewModel.updateProStatus(isSubscribed)
+                self.lastTimeFunctionsCalled = Date().timeIntervalSince1970
             } else {
                 let error = NSError(domain: "FirebaseFunctions", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result format"])
             }
         }
+    }
+    
+    private func shouldCallFunctions() -> Bool {
+        let now = Date().timeIntervalSince1970
+        let lastCalledDate = Date(timeIntervalSince1970: lastTimeFunctionsCalled)
+        let timeIntervalSinceLastCall = now - lastCalledDate.timeIntervalSince1970
+        return timeIntervalSinceLastCall < threeDaysInSeconds
     }
     
     // MARK: - Purchasing
