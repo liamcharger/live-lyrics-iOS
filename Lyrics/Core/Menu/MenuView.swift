@@ -140,7 +140,7 @@ struct MenuView: View {
                         .sheet(isPresented: $showWebView) {
                             WebView()
                         } */
-                        if user.showAds ?? true, let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
+                        if user.showAds ?? true, !(user.hasPro ?? false), let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
                             Button(action: {
                                 if isAuthorizedForPayments {
                                     Task {

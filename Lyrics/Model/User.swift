@@ -23,4 +23,5 @@ struct User: Identifiable, Codable {
     var enableAutoscroll: Bool?
     var metronomeStyle: [String]?
     var fcmId: String?
+    var purchaseReceipt: String?
 }

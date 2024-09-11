@@ -36,7 +36,8 @@ struct UpgradeView: View {
         do {
             if try await storeKitManager.purchase(product) != nil {
                 print("\(product.id) purchased successfully")
-                showUpgradeSheet = false
+                self.showUpgradeSheet = false
+                await StoreKitManager.shared.saveReceiptToFirestore()
             }
         } catch {
             print(error.localizedDescription)

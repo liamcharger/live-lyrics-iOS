@@ -18,6 +18,7 @@ struct NewSongVariationView: View {
     @State var showError = false
     @State var showInfo = false
     @State var canDismissProgrammatically = false
+    @State var showProgressButton = false
     
     @Binding var isDisplayed: Bool
     @Binding var createdId: String
@@ -62,7 +63,7 @@ struct NewSongVariationView: View {
                 .padding()
             Spacer()
             Divider()
-            LiveLyricsButton("Continue", showProgressIndicator: false, action: { view2 = true })
+            LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { view2 = true })
                 .sheet(isPresented: $view2) {
                     nextView
                 }
@@ -99,10 +100,11 @@ struct NewSongVariationView: View {
                 .padding(.horizontal)
                 .focused($isFocused)
             Divider()
-            LiveLyricsButton("Continue", action: {
+            LiveLyricsButton("Continue", showProgressIndicator: $showProgressButton, action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {
+                    showProgressButton = true
                     createVariation()
                 }
             })

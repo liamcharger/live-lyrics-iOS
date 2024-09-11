@@ -22,6 +22,7 @@ struct MainView: View {
     
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
+    @AppStorage("showUpgradeSheet") var showUpgradeSheet = false
     
     @State var selectedSong: Song?
     @State var selectedUser: User?
@@ -72,8 +73,6 @@ struct MainView: View {
     @State var newFolder = ""
     
     @State var sortSelection: SortSelectionEnum = .noSelection
-    
-    @AppStorage("showUpgradeSheet") var showUpgradeSheet: Bool = true
     
     var searchableFolders: [Folder] {
         let folders = mainViewModel.sharedFolders + mainViewModel.folders

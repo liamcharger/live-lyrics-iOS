@@ -200,4 +200,14 @@ class AuthViewModel: ObservableObject {
             completion(error)
         }
     }
+    
+    func saveReceiptToFirestore(_ receipt: String) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Firestore.firestore().collection("users").document(uid).updateData(["purchaseReceipt": receipt]) { error in
+            if let error = error {
+                print("Error:", error.localizedDescription)
+            }
+        }
+    }
 }

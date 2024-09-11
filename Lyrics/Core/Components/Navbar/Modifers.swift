@@ -33,33 +33,31 @@ struct NavBarButtonViewModifier: ViewModifier {
 struct LiveLyricsButton: View {
     var action: () -> Void
     let title: String
-    let showProgressIndicator: Bool
+    @Binding var showProgressIndicator: Bool
     
     @State var hasBeenPressed = false
     
-    init(_ title: String, showProgressIndicator: Bool = true, action: @escaping () -> Void) {
+    init(_ title: String, showProgressIndicator: Binding<Bool> = .constant(true), action: @escaping () -> Void) {
         self.action = action
         self.title = title
-        self.showProgressIndicator = showProgressIndicator
+        self._showProgressIndicator = showProgressIndicator
     }
     
     var body: some View {
         Button {
-            if showProgressIndicator {
-                hasBeenPressed = true
-            }
+            hasBeenPressed = true
             action()
         } label: {
-            if !hasBeenPressed {
-                Text(NSLocalizedString(title, comment: ""))
-                    .modifier(NavButtonViewModifier())
-            } else {
+            if hasBeenPressed && showProgressIndicator {
                 ProgressView()
                     .tint(.white)
                     .modifier(NavButtonViewModifier())
+            } else {
+                Text(NSLocalizedString(title, comment: ""))
+                    .modifier(NavButtonViewModifier())
             }
         }
-        .disabled(hasBeenPressed)
+        .disabled(hasBeenPressed && showProgressIndicator)
     }
 }
 
