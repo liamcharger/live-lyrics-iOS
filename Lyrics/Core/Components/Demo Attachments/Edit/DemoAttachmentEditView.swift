@@ -19,14 +19,6 @@ struct DemoAttachmentEditView: View {
     let demo: DemoAttachment
     let song: Song
     
-    func verifyUrl(_ urlString: String?) -> Bool {
-        guard let urlString = urlString,
-              let url = URL(string: urlString) else {
-            return false
-        }
-        
-        return UIApplication.shared.canOpenURL(url)
-    }
     var processedUrl: String {
         if url.lowercased().hasPrefix("http://") || url.lowercased().hasPrefix("https://") {
             return url
@@ -63,15 +55,6 @@ struct DemoAttachmentEditView: View {
                             .background(Material.regular)
                             .clipShape(Circle())
                     }
-                    .disabled(!verifyUrl(processedUrl))
-                    .opacity(!verifyUrl(processedUrl) ? 0.5 : 1.0)
-                }
-                if !verifyUrl(processedUrl) {
-                    Text("Invalid URL.")
-                        .foregroundColor(.red)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 Spacer()
             }
@@ -102,8 +85,6 @@ struct DemoAttachmentEditView: View {
                         presMode.wrappedValue.dismiss()
                     }
                 }
-                .disabled(!verifyUrl(processedUrl))
-                .opacity(!verifyUrl(processedUrl) ? 0.5 : 1.0)
             }
             .padding()
         }

@@ -1593,16 +1593,6 @@
         }
       }
     },
-    "Invalid URL." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "URL no válida."
-          }
-        }
-      }
-    },
     "issue_deleting_account" : {
       "extractionState" : "manual",
       "localizations" : {

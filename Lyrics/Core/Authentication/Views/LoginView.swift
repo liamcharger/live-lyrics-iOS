@@ -16,6 +16,7 @@ struct LoginView: View {
     
     @State var showResetPassword = false
     @State var showError = false
+    @State var isButtonLoading = false
     
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
@@ -59,10 +60,12 @@ struct LoginView: View {
                 })
             }
             Spacer()
-            LiveLyricsButton("Sign In") {
+            LiveLyricsButton("Sign In", showProgressIndicator: $isButtonLoading) {
+                isButtonLoading = true
                 viewModel.login(withEmail: email, password: password) { success in
                     if !success {
                         showError.toggle()
+                        isButtonLoading = false
                     }
                 } completionString: { string in
                     self.errorMessage = string

@@ -39,6 +39,8 @@ struct SongEditView: View {
     @State var showNewDemoSheet = false
     @State var showDeleteConfirmation = false
     
+    @State var selectedDemo: DemoAttachment?
+    
     var isEmpty: Bool {
         let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty
         let isDurationInvalid = !stateDuration.isEmpty && isInvalidFormat(stateDuration)
@@ -138,6 +140,7 @@ struct SongEditView: View {
                                                 let demo = songViewModel.getDemo(from: attachment)
                                                 
                                                 Button {
+                                                    selectedDemo = demo
                                                     showDemoEditSheet = true
                                                 } label: {
                                                     VStack(alignment: .leading, spacing: 12) {
@@ -159,13 +162,22 @@ struct SongEditView: View {
                                                 }
                                                 .contextMenu {
                                                     Button {
-                                                        guard let url = URL(string: demo.url) else { return }
+                                                        let demoURL = songViewModel.getDemo(from: attachment).url
+                                                        var processedUrl: String {
+                                                            if demoURL.lowercased().hasPrefix("http://") || demoURL.lowercased().hasPrefix("https://") {
+                                                                return demoURL
+                                                            } else {
+                                                                return "https://\(demoURL)"
+                                                            }
+                                                        }
+                                                        guard let url = URL(string: processedUrl) else { return }
                                                         
                                                         openURL(url)
                                                      } label: {
                                                         Label("Open", systemImage: "arrow.up.right.square")
                                                     }
                                                     Button {
+                                                        selectedDemo = songViewModel.getDemo(from: attachment)
                                                         showDemoEditSheet = true
                                                     } label: {
                                                         Label("Edit", systemImage: "pencil")
@@ -177,7 +189,9 @@ struct SongEditView: View {
                                                     }
                                                 }
                                                 .sheet(isPresented: $showDemoEditSheet) {
-                                                    DemoAttachmentEditView(demo: demo, song: song)
+                                                    if let demo = selectedDemo {
+                                                        DemoAttachmentEditView(demo: demo, song: song)
+                                                    }
                                                 }
                                                 .confirmationDialog("Delete Demo", isPresented: $showDeleteConfirmation) {
                                                     Button("Delete", role: .destructive) {

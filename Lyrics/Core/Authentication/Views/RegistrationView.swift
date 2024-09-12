@@ -20,6 +20,8 @@ struct RegistrationView: View {
     @State var showWebView = false
     @State var showError = false
     
+    @State var isButtonLoading = false
+    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || fullname.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }
@@ -83,10 +85,13 @@ struct RegistrationView: View {
                     }
                     .foregroundColor(Color.gray)
                     .font(.footnote)
-                    LiveLyricsButton("Continue") {
+                    LiveLyricsButton("Continue", showProgressIndicator: $isButtonLoading) {
+                        isButtonLoading = true
+                        
                         viewModel.register(withEmail: email, password: password, username: username, fullname: fullname) { success in
                             if !success {
                                 showError.toggle()
+                                isButtonLoading = false
                             }
                         } completionString: { string in
                             self.errorMessage = string

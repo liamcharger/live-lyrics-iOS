@@ -25,15 +25,6 @@ struct NewDemoAttachmentView: View {
         }
     }
     
-    func verifyUrl(_ urlString: String?) -> Bool {
-        guard let urlString = urlString,
-              let url = URL(string: urlString) else {
-            return false
-        }
-        
-        return UIApplication.shared.canOpenURL(url)
-    }
-    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
@@ -53,13 +44,6 @@ struct NewDemoAttachmentView: View {
                         .autocorrectionDisabled()
                         .autocapitalization(.none)
                         .focused($isFocused)
-                    if !verifyUrl(processedUrl) {
-                        Text("Invalid URL.")
-                            .foregroundColor(.red)
-                            .padding(.horizontal, 8)
-                            .padding(.bottom, 5)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
                 }
                 .padding()
                 Spacer()
@@ -69,8 +53,6 @@ struct NewDemoAttachmentView: View {
                         presMode.wrappedValue.dismiss()
                     }
                 }
-                .disabled(!verifyUrl(processedUrl))
-                .opacity(!verifyUrl(processedUrl) ? 0.5 : 1.0)
                 .padding()
             }
         }
