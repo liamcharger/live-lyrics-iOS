@@ -3115,6 +3115,22 @@
         }
       }
     },
+    "url_cant_be_opened" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The URL could not be opened."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido abrir la URL."
+          }
+        }
+      }
+    },
     "Variations" : {
       "localizations" : {
         "es" : {

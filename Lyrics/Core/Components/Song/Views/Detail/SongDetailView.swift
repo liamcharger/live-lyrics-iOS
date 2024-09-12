@@ -420,7 +420,12 @@ struct SongDetailView: View {
                                         Button {
                                             guard let url = URL(string: attachment) else { return }
                                             
-                                            openURL(url)
+                                            if UIApplication.shared.canOpenURL(url) {
+                                                openURL(url)
+                                            } else {
+                                                activeAlert = .error
+                                                errorMessage = NSLocalizedString("url_cant_be_opened", comment: "")
+                                            }
                                         } label: {
                                             HStack(spacing: 8) {
                                                 songViewModel.getDemoIcon(from: demo.icon)
