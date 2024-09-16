@@ -7,9 +7,7 @@
 
 import SwiftUI
 import MobileCoreServices
-#if os(iOS)
 import BottomSheet
-#endif
 
 struct MainView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
@@ -412,9 +410,9 @@ struct MainView: View {
                                         }
                                     })
                                     NavigationLink(destination: {
-                                      BandsView()
+                                        BandsView()
                                     }) {
-                                      ContentRowView(NSLocalizedString("bands", comment: ""), icon: "guitar", color: .blue)
+                                        ContentRowView(NSLocalizedString("bands", comment: ""), icon: "guitar", color: .blue)
                                     }
                                     NavigationLink(destination: {
                                         if let user = authViewModel.currentUser, user.hasPro ?? false {
@@ -943,6 +941,7 @@ struct MainView: View {
                                 }
                             }
                         }
+                    }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
                         let animation = Animation.easeInOut(duration: 0.22)
                         

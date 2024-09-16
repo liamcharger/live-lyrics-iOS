@@ -26,7 +26,9 @@ struct NewBandView: View {
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $isPresented)
+                SheetCloseButton {
+                    isPresented = false
+                }
             }
             .padding()
             Divider()

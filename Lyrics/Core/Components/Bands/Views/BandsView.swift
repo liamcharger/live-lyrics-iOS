@@ -23,7 +23,7 @@ struct BandsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true)
+            CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: .constant(true))
                 .padding()
             Divider()
             if !NetworkManager.shared.getNetworkState() {

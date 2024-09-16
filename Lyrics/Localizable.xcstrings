@@ -107,9 +107,6 @@
         }
       }
     },
-<<<<<< bands
-    "%lld member%@" : {
-======
     "%lld days" : {
       "localizations" : {
         "es" : {
@@ -120,27 +117,34 @@
         }
       }
     },
-    "%lld Syllable%@" : {
->>>>>> main
+    "%lld member%@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-<<<< bands
             "value" : "%1$lld member%2$@"
-====
-            "value" : "%1$lld Syllable%2$@"
->>>>> main
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-<<<< bands
-            "value" : "%lld miembro%@"
-=====
-            "value" : "%1$lld Silbe%2$@"
->>>>> main
+            "value" : "%1$lld miembro%2$@"
+          }
+        }
+      }
+    },
+    "%lld Syllable%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld Syllable%2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld Sílaba%2$@"
           }
         }
       }
@@ -385,18 +389,11 @@
         }
       }
     },
-< bands
-    "Add Role" : {
-=
     "A mail client could not be opened." : {
-> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-< bands
-            "value" : "Añadir función"
-=
             "value" : "No se ha podido abrir un cliente de correo."
           }
         }
@@ -478,7 +475,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elimina los anuncios: deshazte de las distracciones y céntrate en tus canciones"
-> main
+          }
+        }
+      }
+    },
+    "Add Role" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir función"
           }
         }
       }
@@ -514,6 +520,10 @@
       }
     },
     "An unknown error has occured." : {
+
+    },
+    "An unknown error has occurred." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -540,8 +550,6 @@
         }
       }
     },
-< bands
-=
     "Antonyms for \"%@\"" : {
       "localizations" : {
         "es" : {
@@ -568,7 +576,6 @@
         }
       }
     },
-> main
     "Are you sure you want to delete %@\"?" : {
       "localizations" : {
         "es" : {
@@ -605,17 +612,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Estás seguro de que deseas eliminar esta cuenta de usuario? ¡ADVERTENCIA: ESTA ACCIÓN ES PERMANENTE Y NO SE PUEDE DESHACER!"
-          }
-        }
-      }
-    },
-    "Are you sure you want to leave \"%@\"? You will lose access immediately." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Estás seguro de que deseas salir de “%@”? Perderás el acceso de inmediato."
           }
         }
       }
@@ -1388,6 +1384,7 @@
       }
     },
     "Enter a name for your song." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1397,11 +1394,10 @@
         }
       }
     },
-< bands
     "Enter some details for your new variation." : {
-=
+
+    },
     "Enter some details for your song." : {
-> main
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1412,11 +1408,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-< bands
-            "value" : "Introduzca algunos datos para su nueva variación."
-=
             "value" : "Introduce algunos detalles de tu canción."
-> main
           }
         }
       }
@@ -1540,25 +1532,27 @@
         }
       }
     },
-< bands
-    "Get Join Code" : {
-=
     "Forgot Password?" : {
-> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-< bands
-            "value" : "Obtener código de afiliación"
-=
             "value" : "¿Olvidaste tu contraseña?"
           }
         }
       }
     },
+    "Get Join Code" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener código de afiliación"
+          }
+        }
+      }
+    },
     "get_you_signed_in" : {
-      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1570,23 +1564,13 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ahora vamos a iniciar sesión."
-> main
           }
         }
       }
     },
-    "good_afternoon" : {
-< bands
-      "comment" : "Good Afternoon.",
-=
-> main
+    "Good Afternoon." : {
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Good Afternoon."
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1595,8 +1579,10 @@
         }
       }
     },
+    "good_afternoon" : {
+
+    },
     "good_afternoon_greeting" : {
-      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2357,9 +2343,17 @@
         }
       }
     },
-< bands
+    "Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto"
+          }
+        }
+      }
+    },
     "or_choose_band" : {
-      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2371,27 +2365,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "o elija una banda"
-=
-    "Open" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abierto"
-> main
           }
         }
       }
     },
     "outgoing" : {
-      "extractionState" : "manual",
+
+    },
+    "Outgoing" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Outgoing"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2736,7 +2719,16 @@
         }
       }
     },
-< bands
+    "Right" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derecha"
+          }
+        }
+      }
+    },
     "Role Name" : {
       "localizations" : {
         "es" : {
@@ -2748,14 +2740,12 @@
       }
     },
     "Rounded" : {
-=
-    "Right" : {
-> main
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Derecha"
+            "value" : "Redondeado"
           }
         }
       }
@@ -3233,17 +3223,6 @@
         }
       }
     },
-    "There aren't any lyrics for this song." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay letra para esta canción."
-          }
-        }
-      }
-    },
     "There was an unknown error while processing your request." : {
       "localizations" : {
         "es" : {
@@ -3320,20 +3299,22 @@
         }
       }
     },
-< bands
     "To join a band, enter the six digit code from a band administrator." : {
-=
-    "Top Results" : {
-> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-< bands
             "value" : "Para unirse a una banda, introduzca el código de seis dígitos de un administrador de banda."
-=
+          }
+        }
+      }
+    },
+    "Top Results" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Los mejores resultados"
-> main
           }
         }
       }

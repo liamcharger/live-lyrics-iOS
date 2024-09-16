@@ -973,7 +973,7 @@ class SongService {
 			"fromUsername": request.fromUsername,
 			"songVariations": songVariations,
 			"readOnly": request.readOnly,
-			"bandId": request.bandId
+			"bandId": request.bandId,
 			"notificationTokens": request.notificationTokens,
 			"fromNotificationToken": request.fromNotificationToken
 		]
@@ -1009,7 +1009,7 @@ class SongService {
 					}
 					dispatch.leave()
 					if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
-						UserService().sendNotificationToFCM(tokens: [token], title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song"). Tap to view.")
+						UserService().sendNotificationToFCM(tokens: [token], title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song").", type: .incoming)
 					}
 				}
 			}
@@ -1160,7 +1160,7 @@ class SongService {
 						
 						dispatch.notify(queue: .main) {
 							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
-								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\". Tap to view.")
+								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\".", type: .accepted)
 								if request.to.count > 1 {
 									for toUser in request.to {
 										Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in
