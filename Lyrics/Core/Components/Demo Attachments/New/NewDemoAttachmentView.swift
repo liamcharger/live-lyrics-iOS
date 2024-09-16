@@ -17,13 +17,6 @@ struct NewDemoAttachmentView: View {
     @FocusState var isFocused: Bool
     
     let song: Song
-    var processedUrl: String {
-        if url.lowercased().hasPrefix("http://") || url.lowercased().hasPrefix("https://") {
-            return url
-        } else {
-            return "https://\(url)"
-        }
-    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -49,7 +42,7 @@ struct NewDemoAttachmentView: View {
                 Spacer()
                 Divider()
                 LiveLyricsButton("Save") {
-                    songViewModel.createDemoAttachment(for: song, from: url) {
+                    songViewModel.createDemoAttachment(for: song, from: songViewModel.appendPrefix(url)) {
                         presMode.wrappedValue.dismiss()
                     }
                 }

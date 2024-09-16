@@ -163,14 +163,8 @@ struct SongEditView: View {
                                                 .contextMenu {
                                                     Button {
                                                         let demoURL = songViewModel.getDemo(from: attachment).url
-                                                        var processedUrl: String {
-                                                            if demoURL.lowercased().hasPrefix("http://") || demoURL.lowercased().hasPrefix("https://") {
-                                                                return demoURL
-                                                            } else {
-                                                                return "https://\(demoURL)"
-                                                            }
-                                                        }
-                                                        guard let url = URL(string: processedUrl) else { return }
+                                                        
+                                                        guard let url = URL(string: demoURL) else { return }
                                                         
                                                         openURL(url)
                                                      } label: {
@@ -183,6 +177,7 @@ struct SongEditView: View {
                                                         Label("Edit", systemImage: "pencil")
                                                     }
                                                     Button(role: .destructive) {
+                                                        selectedDemo = songViewModel.getDemo(from: attachment)
                                                         showDeleteConfirmation = true
                                                     } label: {
                                                         Label("Delete", systemImage: "trash")
@@ -194,11 +189,13 @@ struct SongEditView: View {
                                                     }
                                                 }
                                                 .confirmationDialog("Delete Demo", isPresented: $showDeleteConfirmation) {
-                                                    Button("Delete", role: .destructive) {
-                                                        self.songViewModel.deleteDemoAttachment(demo: demo, for: song) {}
-                                                    }
-                                                    Button("Cancel", role: .cancel) {
-                                                        self.showDeleteConfirmation = false
+                                                    if let demo = selectedDemo {
+                                                        Button("Delete", role: .destructive) {
+                                                            self.songViewModel.deleteDemoAttachment(demo: demo, for: song) {}
+                                                        }
+                                                        Button("Cancel", role: .cancel) {
+                                                            self.showDeleteConfirmation = false
+                                                        }
                                                     }
                                                 } message: {
                                                     Text("Are you sure you want to delete this demo?")
@@ -234,6 +231,12 @@ struct SongEditView: View {
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
+        }
+        .onAppear {
+            if let demoToEdit = SongDetailViewModel.shared.demoToEdit {
+                selectedDemo = demoToEdit
+                showDemoEditSheet = true
+            }
         }
     }
 }

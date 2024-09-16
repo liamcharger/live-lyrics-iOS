@@ -207,8 +207,8 @@ class SongViewModel: ObservableObject {
         service.deleteDemoAttachment(demo: demo, for: song, completion: completion)
     }
     
-    func updateDemo(for song: Song, url: String, completion: @escaping() -> Void) {
-        service.updateDemo(for: song, url: url, completion: completion)
+    func updateDemo(for song: Song, oldUrl: String, url: String, completion: @escaping() -> Void) {
+        service.updateDemo(for: song, oldUrl: oldUrl, url: url, completion: completion)
     }
     
     func getDemo(from urlString: String) -> DemoAttachment {
@@ -231,6 +231,21 @@ class SongViewModel: ObservableObject {
                 FAText(iconName: icon, size: size)
             }
         }
+    }
+    
+    func appendPrefix(_ url: String) -> String {
+        if url.lowercased().hasPrefix("http://") || url.lowercased().hasPrefix("https://") {
+            return url
+        } else {
+            return "https://\(url)"
+        }
+    }
+    
+    func removePrefix(_ url: String) -> String {
+        let http = "http://"
+        let https = "https://"
+        
+        return url.replacingOccurrences(of: https, with: "").replacingOccurrences(of: http, with: "")
     }
     
     func isShared(song: Song) -> Bool {

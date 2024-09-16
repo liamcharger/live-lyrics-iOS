@@ -673,20 +673,21 @@ class SongService {
 		}
 	}
 	
-	func updateDemo(for song: Song, url: String, completion: @escaping() -> Void) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["demoAttachments": FieldValue.arrayRemove([url])]) { error in
-				if let error = error {
-					print(error.localizedDescription)
+	func updateDemo(for song: Song, oldUrl: String, url: String, completion: @escaping() -> Void) {
+		if let demoAttachments = song.demoAttachments, demoAttachments.contains(oldUrl) {
+			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
+				.updateData(["demoAttachments": FieldValue.arrayRemove([oldUrl])]) { error in
+					if let error = error {
+						print(error.localizedDescription)
+					}
 				}
-			}
+		}
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 			.updateData(["demoAttachments": FieldValue.arrayUnion([url])]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
 			}
-		
 		completion()
 	}
 	

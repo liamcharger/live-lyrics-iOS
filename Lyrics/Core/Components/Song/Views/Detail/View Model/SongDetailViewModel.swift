@@ -18,6 +18,8 @@ class SongDetailViewModel: ObservableObject {
     @Published var showMoveView = false
     @Published var showTagSheet = false
     
+    @Published var demoToEdit: DemoAttachment?
+    
     @Published var selectedText = ""
     
     @ObservedObject var songViewModel = SongViewModel.shared

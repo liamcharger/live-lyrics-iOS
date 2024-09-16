@@ -19,14 +19,6 @@ struct DemoAttachmentEditView: View {
     let demo: DemoAttachment
     let song: Song
     
-    var processedUrl: String {
-        if url.lowercased().hasPrefix("http://") || url.lowercased().hasPrefix("https://") {
-            return url
-        } else {
-            return "https://\(url)"
-        }
-    }
-    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
@@ -46,7 +38,7 @@ struct DemoAttachmentEditView: View {
                         .autocorrectionDisabled()
                         .autocapitalization(.none)
                     Button {
-                        guard let url = URL(string: processedUrl) else { return }
+                        guard let url = URL(string: songViewModel.appendPrefix(url)) else { return }
                         
                         openURL(url)
                     } label: {
@@ -64,24 +56,16 @@ struct DemoAttachmentEditView: View {
                 Button {
                     showDeleteConfirmation = true
                 } label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Spacer()
-                                Text("Delete")
-                                Spacer()
-//                                Image(systemName: "trash")
-                            }
-                            .font(.body.weight(.semibold))
-                        }
-                    }
-                    .padding()
-                    .foregroundColor(.red)
-                    .background(Material.regular)
-                    .clipShape(Capsule())
+                    Text("Delete")
+                        .frame(maxWidth: .infinity)
+                        .font(.body.weight(.semibold))
+                        .padding()
+                        .foregroundColor(.red)
+                        .background(Material.regular)
+                        .clipShape(Capsule())
                 }
                 LiveLyricsButton("Save") {
-                    songViewModel.updateDemo(for: song, url: processedUrl) {
+                    songViewModel.updateDemo(for: song, oldUrl: demo.url, url: songViewModel.appendPrefix(url)) {
                         presMode.wrappedValue.dismiss()
                     }
                 }
@@ -101,7 +85,11 @@ struct DemoAttachmentEditView: View {
             Text("Are you sure you want to delete this demo?")
         }
         .onAppear {
-            url = demo.url
+            url = songViewModel.removePrefix(demo.url)
+        }
+        .onDisappear {
+            // Change demo back to nil to avoid a sheet appearing when the song edit view is presented
+            SongDetailViewModel.shared.demoToEdit = nil
         }
     }
 }

@@ -418,14 +418,13 @@ struct SongDetailView: View {
                                         let demo = songViewModel.getDemo(from: attachment)
                                         
                                         Button {
-                                            guard let url = URL(string: attachment) else { return }
-                                            
-                                            if UIApplication.shared.canOpenURL(url) {
-                                                openURL(url)
-                                            } else {
+                                            guard let url = URL(string: attachment) else {
                                                 activeAlert = .error
                                                 errorMessage = NSLocalizedString("url_cant_be_opened", comment: "")
+                                                return
                                             }
+                                            
+                                            openURL(url)
                                         } label: {
                                             HStack(spacing: 8) {
                                                 songViewModel.getDemoIcon(from: demo.icon)
@@ -434,6 +433,10 @@ struct SongDetailView: View {
                                             }
                                             .foregroundColor(demo.color)
                                             .modifier(SongDetailViewModel.DatamuseRowViewModifier())
+                                            .onLongPressGesture(minimumDuration: 1, maximumDistance: 10) {
+                                                songDetailViewModel.showEditView = true
+                                                songDetailViewModel.demoToEdit = demo
+                                            }
                                         }
                                     }
                                 }
