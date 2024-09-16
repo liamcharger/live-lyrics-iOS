@@ -374,36 +374,6 @@ struct ShareView: View {
     }
 }
 
-struct FullscreenMessage: View {
-    let imageName: String
-    let title: String
-    let spaceNavbar: Bool
-    
-    init(imageName: String, title: String, spaceNavbar: Bool = false) {
-        self.imageName = imageName
-        self.title = title
-        self.spaceNavbar = spaceNavbar
-    }
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            Spacer()
-            Image(systemName: imageName)
-                .font(.system(size: 35).weight(.semibold))
-            Text(NSLocalizedString(title, comment: ""))
-                .font(.title2.weight(.semibold))
-                .multilineTextAlignment(.center)
-            Spacer()
-            if spaceNavbar {
-                Spacer()
-                    .frame(height: 35)
-            }
-        }
-        .padding()
-        .foregroundColor(.gray)
-    }
-}
-
 #Preview {
     ShareView(isDisplayed: .constant(true), song: Song.song)
 }

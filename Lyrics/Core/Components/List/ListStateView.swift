@@ -1,12 +1,44 @@
 //
-//  EmptyStateView.swift
+//  ListStateView.swift
 //  Lyrics
 //
-//  Created by Liam Willey on 8/20/24.
+//  Created by Liam Willey on 9/15/24.
 //
 
 import SwiftUI
 
+// MARK: - FullscreenMessage: used in views without ScrollViews
+struct FullscreenMessage: View {
+    let imageName: String
+    let title: String
+    let spaceNavbar: Bool
+    
+    init(imageName: String, title: String, spaceNavbar: Bool = false) {
+        self.imageName = imageName
+        self.title = title
+        self.spaceNavbar = spaceNavbar
+    }
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Spacer()
+            Image(systemName: imageName)
+                .font(.system(size: 32).weight(.semibold))
+            Text(NSLocalizedString(title, comment: ""))
+                .font(.title2.weight(.semibold))
+                .multilineTextAlignment(.center)
+            Spacer()
+            if spaceNavbar {
+                Spacer()
+                    .frame(height: 35)
+            }
+        }
+        .padding()
+        .foregroundColor(.gray)
+    }
+}
+
+// MARK: - EmptyStateView: used in views with ScrollViews
 enum EmptyState {
     case songs
     case folders
@@ -38,9 +70,9 @@ struct EmptyStateView: View {
     }
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 12) {
             Spacer()
-            FAText(iconName: icon, size: 26)
+            FAText(iconName: icon, size: 35)
             Text(subtitle)
                 .font(.title3.weight(.semibold))
                 .multilineTextAlignment(.center)
@@ -50,8 +82,4 @@ struct EmptyStateView: View {
         .frame(maxWidth: .infinity)
         .frame(minHeight: 160)
     }
-}
-
-#Preview {
-    EmptyStateView(state: .songs)
 }

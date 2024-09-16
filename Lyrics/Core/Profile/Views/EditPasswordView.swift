@@ -41,9 +41,7 @@ struct EditPasswordView: View {
     
     var body: some View {
         VStack {
-            // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
-                // MARK: User info
                 Text("Change Password")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
