@@ -51,7 +51,7 @@ struct SongVariationEditView: View {
             .padding()
             Divider()
             ScrollView {
-                CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+                CustomTextField(text: $title, placeholder: "title")
                     .padding()
             }
             Divider()

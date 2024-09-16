@@ -30,6 +30,37 @@ struct NavBarButtonViewModifier: ViewModifier {
     }
 }
 
+struct LiveLyricsButton: View {
+    var action: () -> Void
+    let title: String
+    @Binding var showProgressIndicator: Bool
+    
+    @State var hasBeenPressed = false
+    
+    init(_ title: String, showProgressIndicator: Binding<Bool> = .constant(true), action: @escaping () -> Void) {
+        self.action = action
+        self.title = title
+        self._showProgressIndicator = showProgressIndicator
+    }
+    
+    var body: some View {
+        Button {
+            hasBeenPressed = true
+            action()
+        } label: {
+            if hasBeenPressed && showProgressIndicator {
+                ProgressView()
+                    .tint(.white)
+                    .modifier(NavButtonViewModifier())
+            } else {
+                Text(NSLocalizedString(title, comment: ""))
+                    .modifier(NavButtonViewModifier())
+            }
+        }
+        .disabled(hasBeenPressed && showProgressIndicator)
+    }
+}
+
 struct NavButtonViewModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -40,38 +71,5 @@ struct NavButtonViewModifier: ViewModifier {
             .background(.blue)
             .foregroundColor(.white)
             .clipShape(Capsule())
-    }
-}
-
-struct LiveLyricsButton: View {
-    var action: () -> Void
-    let title: String
-    let showProgressIndicator: Bool
-    
-    @State var hasBeenPressed = false
-    
-    init(_ title: String, showProgressIndicator: Bool = true, action: @escaping () -> Void) {
-        self.action = action
-        self.title = title
-        self.showProgressIndicator = showProgressIndicator
-    }
-    
-    var body: some View {
-        Button {
-            if showProgressIndicator {
-                hasBeenPressed = true
-            }
-            action()
-        } label: {
-            if !hasBeenPressed {
-                Text(NSLocalizedString(title, comment: ""))
-                    .modifier(NavButtonViewModifier())
-            } else {
-                ProgressView()
-                    .tint(.white)
-                    .modifier(NavButtonViewModifier())
-            }
-        }
-        .disabled(hasBeenPressed)
     }
 }

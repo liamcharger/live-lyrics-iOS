@@ -16,6 +16,7 @@ struct LoginView: View {
     
     @State var showResetPassword = false
     @State var showError = false
+    @State var isButtonLoading = false
     
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
@@ -46,11 +47,9 @@ struct LoginView: View {
                 Spacer()
             }
             Spacer()
-            VStack(alignment: .leading, spacing: 15) {
+            VStack(alignment: .leading) {
                 CustomTextField(text: $email, placeholder: "Email")
-#if os(iOS)
                     .autocapitalization(.none)
-#endif
                     .autocorrectionDisabled()
                     .focused($isHighlighted1)
                 CustomPasswordField(text: $password, placeholder: "Password")
@@ -61,19 +60,19 @@ struct LoginView: View {
                 })
             }
             Spacer()
-            VStack(spacing: 10) {
-                LiveLyricsButton("Sign In") {
-                    viewModel.login(withEmail: email, password: password) { success in
-                        if !success {
-                            showError.toggle()
-                        }
-                    } completionString: { string in
-                        self.errorMessage = string
+            LiveLyricsButton("Sign In", showProgressIndicator: $isButtonLoading) {
+                isButtonLoading = true
+                viewModel.login(withEmail: email, password: password) { success in
+                    if !success {
+                        showError.toggle()
+                        isButtonLoading = false
                     }
+                } completionString: { string in
+                    self.errorMessage = string
                 }
-                .opacity(isEmpty ? 0.5 : 1.0)
-                .disabled(isEmpty)
             }
+            .opacity(isEmpty ? 0.5 : 1.0)
+            .disabled(isEmpty)
         }
         .alert(isPresented: $showError, content: {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())

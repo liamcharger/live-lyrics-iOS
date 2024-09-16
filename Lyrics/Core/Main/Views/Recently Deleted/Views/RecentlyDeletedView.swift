@@ -102,7 +102,7 @@ struct RecentlyDeletedView: View {
                                         .padding()
                                         .background(Material.regular)
                                         .foregroundColor(.primary)
-                                        .cornerRadius(20)
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
                                         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
                                         .contextMenu {
                                             Button {

@@ -23,7 +23,7 @@ struct CustomNavBar: View {
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
     
-    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool, collapsed: Binding<Bool>, collapsedTitle: Binding<Bool>) {
+    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool = true, collapsed: Binding<Bool>, collapsedTitle: Binding<Bool>) {
         self.title = title
         self.navType = navType ?? .detail
         self.showBackButton = showBackButton

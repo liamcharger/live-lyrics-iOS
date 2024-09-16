@@ -20,6 +20,7 @@ struct NewSongView: View {
     @State var showError = false
     @State var showInfo = false
     @State var canDismissProgrammatically = false
+    @State var showProgressButton = false
     
     @Binding var isDisplayed: Bool
     
@@ -27,6 +28,8 @@ struct NewSongView: View {
     @FocusState var isLyricsFocused: Bool
     
     func createSong() {
+        showProgressButton = true
+        
         let dismiss = {
             canDismissProgrammatically = true
             view2 = false
@@ -71,7 +74,7 @@ struct NewSongView: View {
                 .padding()
             }
             Divider()
-            LiveLyricsButton("Continue", action: { view2 = true })
+            LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { view2 = true })
                 .padding()
                 .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
@@ -108,7 +111,7 @@ struct NewSongView: View {
                 .padding(.horizontal)
                 .focused($isLyricsFocused)
             Divider()
-            LiveLyricsButton("Continue", action: {
+            LiveLyricsButton("Continue", showProgressIndicator: $showProgressButton, action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {

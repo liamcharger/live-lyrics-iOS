@@ -7,60 +7,55 @@
 
 import SwiftUI
 import StoreKit
+import FirebaseFunctions
 
 public enum StoreError: Error {
     case failedVerification
+    case missingReceipt
 }
 
 class StoreKitManager: ObservableObject {
-    // if there are multiple product types - create multiple variable for each .consumable, .nonconsumable, .autoRenewable, .nonRenewable.
     @Published var storeProducts: [Product] = []
     @Published var purchasedProducts: [Product] = []
+    @Published var activeSubscriptions: [Product] = []
+    
+    @AppStorage("StoreKitManager.lastTimeFunctionsCalled") private var lastTimeFunctionsCalled: Double = 0
     
     @ObservedObject var authViewModel = AuthViewModel.shared
     
     var updateListenerTask: Task<Void, Error>? = nil
     
-    //maintain a plist of products
     private let productDict: [String : String]
+    private let threeDaysInSeconds: TimeInterval = 3 * 24 * 60 * 60
+    
+    static let shared = StoreKitManager()
+    
     init() {
         if let plistPath = Bundle.main.path(forResource: "InAppPurchases", ofType: "plist"),
-           //get the list of products
            let plist = FileManager.default.contents(atPath: plistPath) {
             productDict = (try? PropertyListSerialization.propertyList(from: plist, format: nil) as? [String : String]) ?? [:]
         } else {
             productDict = [:]
         }
         
-        //Start a transaction listener as close to the app launch as possible so you don't miss any transaction
         updateListenerTask = listenForTransactions()
         
-        //create async operation
         Task {
             await requestProducts()
-            
-            //deliver the products that the customer purchased
             await updateCustomerProductStatus()
         }
     }
     
-    //denit transaction listener on exit or app close
     deinit {
         updateListenerTask?.cancel()
     }
     
-    //listen for transactions - start this early in the app
     func listenForTransactions() -> Task<Void, Error> {
         return Task.detached {
-            //iterate through any transactions that don't come from a direct call to 'purchase()'
             for await result in Transaction.updates {
                 do {
                     let transaction = try await self.checkVerified(result)
-                    
-                    //the transaction is verified, deliver the content to the user
                     await self.updateCustomerProductStatus()
-                    
-                    //Always finish a transaction
                     await transaction.finish()
                 } catch {
                     print("Transaction failed verification")
@@ -69,84 +64,153 @@ class StoreKitManager: ObservableObject {
         }
     }
     
-    // request the products in the background
     @MainActor
     func requestProducts() async {
         do {
-            //using the Product static method products to retrieve the list of products
             storeProducts = try await Product.products(for: productDict.values)
-            
-            // iterate the "type" if there are multiple product types.
         } catch {
             print("Failed - error retrieving products \(error)")
         }
     }
     
     func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
-        //check if JWS passes the StoreKit verification
         switch result {
         case .unverified:
             throw StoreError.failedVerification
         case .verified(let signedType):
-            //the result is verified, return the unwrapped value
             return signedType
         }
     }
     
     @MainActor
     func updateCustomerProductStatus() async {
-        var purchasedCourses: [Product] = []
+        var purchasedIaps: [Product] = []
+        var activeSubscriptions: [Product] = []
         
         for await result in Transaction.currentEntitlements {
             do {
                 let transaction = try checkVerified(result)
-                // since we only have one type of producttype - .nonconsumables -- check if any storeProducts matches the transaction.productID then add to the purchasedCourses
-                if let course = storeProducts.first(where: { $0.id == transaction.productID}) {
-                    purchasedCourses.append(course)
+                
+                if let product = storeProducts.first(where: { $0.id == transaction.productID }) {
+                    if product.type == .nonConsumable {
+                        purchasedIaps.append(product)
+                    } else if product.type == .autoRenewable {
+                        activeSubscriptions.append(product)
+                    }
                 }
             } catch {
                 print("Transaction failed verification")
             }
-            
-            self.purchasedProducts = purchasedCourses
         }
+        
+        self.purchasedProducts = purchasedIaps
+        self.activeSubscriptions = activeSubscriptions
         
         if purchasedProducts.contains(where: { $0.id == "remove_ads" }) {
             authViewModel.showAds(false)
+        }
+        
+        if !activeSubscriptions.isEmpty {
+            authViewModel.updateProStatus(true)
         } else {
-            // FIXME: see #38
-//            authViewModel.showAds(true)
+            if shouldCallFunctions() {
+                validateReceipt()
+            }
         }
     }
     
+    // MARK: - Receipt Fetching and Apple Validation
+    
+    func fetchReceipt() -> Data? {
+        if let receiptURL = Bundle.main.appStoreReceiptURL {
+            do {
+                let receiptData = try Data(contentsOf: receiptURL)
+                return receiptData
+            } catch {
+                print("Error fetching receipt: \(error.localizedDescription)")
+            }
+            return getReceiptFromFirestore()
+        }
+        authViewModel.updateProStatus(false)
+        return nil
+    }
+    
+    func getReceiptFromFirestore() -> Data? {
+        if let receipt = authViewModel.currentUser?.purchaseReceipt, let data = receipt.data(using: .utf8) {
+            return Data(data)
+        }
+        return nil
+    }
+    
+    func base64EncodedReceipt() -> String? {
+        if let receiptData = fetchReceipt() {
+            return receiptData.base64EncodedString(options: [])
+        }
+        return nil
+    }
+    
+    func saveReceiptToFirestore() async {
+        guard let encodedReceipt = base64EncodedReceipt() else {
+            print("No receipt available or user not authenticated")
+            return
+        }
+        
+        authViewModel.saveReceiptToFirestore(encodedReceipt)
+    }
+    
+    func validateReceipt() {
+        let functions = Functions.functions()
+        
+        let parameters: [String: Any?] = [
+            "receipt-data": base64EncodedReceipt()
+        ]
+        
+        functions.httpsCallable("validateReceipt").call(parameters) { result, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let data = result?.data as? [String: Any], let isSubscribed = data["isSubscribed"] as? Bool {
+                self.authViewModel.updateProStatus(isSubscribed)
+            } else {
+                _ = NSError(domain: "FirebaseFunctions", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result format"])
+            }
+            self.lastTimeFunctionsCalled = Date().timeIntervalSince1970
+        }
+    }
+    
+    private func shouldCallFunctions() -> Bool {
+        let now = Date().timeIntervalSince1970
+        let lastCalledDate = Date(timeIntervalSince1970: lastTimeFunctionsCalled)
+        let timeIntervalSinceLastCall = now - lastCalledDate.timeIntervalSince1970
+        return timeIntervalSinceLastCall < threeDaysInSeconds
+    }
+    
+    // MARK: - Purchasing
+    
     func purchase(_ product: Product) async throws -> StoreKit.Transaction? {
-        //make a purchase request - optional parameters available
         let result = try await product.purchase()
         
-        // check the results
         switch result {
         case .success(let verificationResult):
-            //Transaction will be verified for automatically using JWT(jwsRepresentation) - we can check the result
             let transaction = try checkVerified(verificationResult)
-            
-            //the transaction is verified, deliver the content to the user
             await updateCustomerProductStatus()
-            
-            //always finish a transaction - performance
             await transaction.finish()
-            
             return transaction
         case .userCancelled, .pending:
             return nil
         default:
             return nil
         }
-        
     }
     
-    //check if product has already been purchased
     func isPurchased(_ product: Product) async throws -> Bool {
-        //as we only have one product type grouping .nonconsumable - we check if it belongs to the purchasedCourses which ran init()
-        return purchasedProducts.contains(product)
+        if product.type == .nonConsumable {
+            return purchasedProducts.contains(product)
+        } else if product.type == .autoRenewable {
+            return activeSubscriptions.contains(product)
+        }
+        return false
     }
 }

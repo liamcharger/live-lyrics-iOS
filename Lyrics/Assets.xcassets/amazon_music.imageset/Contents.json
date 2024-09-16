@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Stacked_Amazon_Music_CharcoalOnCyan_Rounded_RGB.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

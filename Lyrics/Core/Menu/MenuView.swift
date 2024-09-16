@@ -37,7 +37,10 @@ struct MenuView: View {
         return SKPaymentQueue.canMakePayments()
     }
     
-    func purchaseSubscription(product: Product) async {
+    func hasPro(_ user: User) -> Bool {
+        return user.hasPro ?? false
+    }
+    func purchase(product: Product) async {
         do {
             if try await storeKitManager.purchase(product) != nil {
                 print("\(product.id) purchased successfully")
@@ -52,8 +55,14 @@ struct MenuView: View {
             VStack(spacing: 0) {
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(user.fullname)
-                            .font(.title2.weight(.semibold))
+                        HStack {
+                            Text(user.fullname)
+                                .font(.title2.weight(.semibold))
+                            if hasPro(user) {
+                                FAText(iconName: "crown", size: 15)
+                                    .foregroundColor(.yellow)
+                            }
+                        }
                         HStack(spacing: 4) {
                             Text(user.username)
                             Text("#" + viewModel.uniqueUserID)
@@ -90,7 +99,7 @@ struct MenuView: View {
                 .padding()
                 Divider()
                 if mainViewModel.notifications.isEmpty {
-                    // TODO: replace with envelope (slashed) and localize title
+                    // TODO: replace with envelope (slashed)
                     FullscreenMessage(imageName: "envelope", title: "Hmm, it doesn't look like you have any new messages.")
                 } else {
                     ScrollView {
@@ -131,11 +140,11 @@ struct MenuView: View {
                         .sheet(isPresented: $showWebView) {
                             WebView()
                         } */
-                        if user.showAds ?? true, let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
+                        if user.showAds ?? true, !(user.hasPro ?? false), let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
                             Button(action: {
                                 if isAuthorizedForPayments {
                                     Task {
-                                        await purchaseSubscription(product: product)
+                                        await purchase(product: product)
                                     }
                                 } else {
                                     showCannotPurchaseAlert = true
