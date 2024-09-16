@@ -10,34 +10,24 @@ import StoreKit
 
 struct SettingsView: View {
     @Environment(\.presentationMode) var presMode
-    @EnvironmentObject var authViewModel: AuthViewModel
     
-    var user: User
+    @State var user: User
     
     @State var errorMessage = ""
     
     @State var showError = false
-    @State var showInfo = false
-    @State var showSettings = false
     @State var toggle: Bool
-    @State var enableAutoscroll: Bool
     @State var isExplicit: Bool
     @State var selection: String?
     @State var wordCountStyle: String?
     @State var metronomeStyle: [String] = []
     
-    @ObservedObject var settingsViewModel: SettingsViewModel
-    
-    func fetchUser(withUid uid: String) {
-        settingsViewModel.fetchUser(withUid: uid)
-    }
+    @ObservedObject var settingsViewModel = SettingsViewModel.shared
     
     init(user: User) {
         self.user = user
-        self.settingsViewModel = SettingsViewModel(user: user)
         
         _toggle = State(initialValue: user.wordCount ?? true)
-        _enableAutoscroll = State(initialValue: user.enableAutoscroll ?? true)
         _isExplicit = State(initialValue: user.showsExplicitSongs ?? true)
         _selection = State(initialValue: user.showDataUnderSong ?? "None")
         _wordCountStyle = State(initialValue: user.wordCountStyle ?? "Words")
@@ -64,24 +54,6 @@ struct SettingsView: View {
             .padding()
             Divider()
             ScrollView {
-                //                if !NetworkManager.shared.getNetworkState() {
-                //                    VStack(spacing: 0) {
-                //                        Group {
-                //                            Text("You're offline. Please connect to the internet to update settings. ") + Text("Open Settings?").foregroundColor(.blue)
-                //                        }
-                //                        .padding()
-                //                        .foregroundColor(.gray)
-                //                        .frame(maxWidth: .infinity, alignment: .center)
-                //                        .onTapGesture {
-                // Open Settings app without the deeplink to app settings
-                //                            guard let settingsURL = URL(string: "") else { return }
-                //                            if UIApplication.shared.canOpenURL(settingsURL) {
-                //                                UIApplication.shared.open(settingsURL)
-                //                            }
-                //                        }
-                //                        Divider()
-                //                    }
-                //                }
                 VStack(alignment: .leading) {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
@@ -95,21 +67,7 @@ struct SettingsView: View {
                     }
                     .padding()
                     .background(Material.regular)
-                    .cornerRadius(20)
-                    .foregroundColor(.primary)
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Enable Autoscroll")
-                                Spacer()
-                                Toggle(isOn: $enableAutoscroll, label: {})
-                            }
-                            .foregroundColor(.primary)
-                        }
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .cornerRadius(20)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .foregroundColor(.primary)
                     HStack(spacing: 7) {
                         Text("Word Count Style")
@@ -250,8 +208,8 @@ struct SettingsView: View {
                 .padding(.horizontal)
             }
             Divider()
-            Button {
-                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", enableAutoscroll: enableAutoscroll, showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
+            LiveLyricsButton("Save", action: {
+                settingsViewModel.updateSettings(user, wordCount: toggle, data: selection ?? "None", wordCountStyle: wordCountStyle ?? "Words", showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
                     if success {
                         presMode.wrappedValue.dismiss()
                     } else {
@@ -259,14 +217,7 @@ struct SettingsView: View {
                         self.errorMessage = errorMessage
                     }
                 }
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Save")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            }
+            })
             .padding()
         }
         .alert(isPresented: $showError) {

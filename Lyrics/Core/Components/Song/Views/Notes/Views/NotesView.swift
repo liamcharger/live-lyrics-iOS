@@ -14,8 +14,6 @@ struct NotesView: View {
     
     @FocusState var isInputActive: Bool
     
-    @State var notes = ""
-    
     @ObservedObject var notesViewModel = NotesViewModel.shared
     
     @Environment(\.presentationMode) var presMode
@@ -31,19 +29,14 @@ struct NotesView: View {
                 Text("Notes")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                Button(action: {presMode.wrappedValue.dismiss()}) {
-                    Image(systemName: "xmark")
-                        .imageScale(.medium)
-                        .padding(12)
-                        .font(.body.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .background(Material.regular)
-                        .clipShape(Circle())
+                SheetCloseButton {
+                    presMode.wrappedValue.dismiss()
                 }
             }
             .padding()
             if #available(iOS 17, *) {
                 TipView(NotesViewTip())
+                    .tipViewStyle(LiveLyricsTipStyle())
                     .padding([.bottom, .horizontal])
             }
             Divider()

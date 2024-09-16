@@ -43,7 +43,6 @@ struct ShareView: View {
     
     let song: Song?
     let folder: Folder?
-    let userService = UserService()
     let defaultVariationId = SongVariation.defaultId
     
     var disabled: Bool {
@@ -155,7 +154,9 @@ struct ShareView: View {
                     }
                     .opacity(disabled ? 0.5 : 1.0)
                     .disabled(disabled)
-                    SheetCloseButton(isPresented: $isDisplayed)
+                    SheetCloseButton {
+                        isDisplayed = false
+                    }
                 }
                 if let userToShare = selectedUsers.first,
                 {
@@ -184,7 +185,7 @@ struct ShareView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Material.regular)
                     .foregroundColor(.primary)
-                    .cornerRadius(20)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay {
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.yellow, lineWidth: 2.5)
@@ -313,7 +314,7 @@ struct ShareView: View {
                             firstSearch = true
                             authViewModel.users = []
                         } else {
-                            authViewModel.fetchUsers(username: searchText) {
+                            authViewModel.fetchUsers(username: searchText, filterCurrentUser: true) {
                                 if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) && !authViewModel.users.isEmpty {
                                     recentSearches.append(",\(searchText)")
                                 }
@@ -326,7 +327,7 @@ struct ShareView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) || firstSearch {
+                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) && firstSearch {
                         ScrollView {
                             VStack {
                                 if !bandsViewModel.bands.isEmpty && authViewModel.users.isEmpty {
@@ -388,7 +389,7 @@ struct ShareView: View {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }
                                     }
-                                } else if !recentSearches.isEmpty || firstSearch {
+                                } else if recentSearches.contains(",") && firstSearch {
                                     HStack {
                                         ListHeaderView(title: NSLocalizedString("recently_searched", comment: ""))
                                         Spacer()
@@ -409,7 +410,7 @@ struct ShareView: View {
                                         if !search.isEmpty {
                                             Button {
                                                 searchText = search
-                                                authViewModel.fetchUsers(username: search) {}
+                                                authViewModel.fetchUsers(username: search, filterCurrentUser: true) {}
                                             } label: {
                                                 Text(search)
                                                     .font(.body.weight(.semibold))
@@ -419,6 +420,7 @@ struct ShareView: View {
                                                     .foregroundColor(.primary)
                                                     .clipShape(Capsule())
                                             }
+                                            .contentShape(.contextMenuPreview, Capsule())
                                             .contextMenu {
                                                 Button(role: .destructive) {
                                                     if let index = recentSearches.components(separatedBy: ",").firstIndex(of: search) {
@@ -475,36 +477,6 @@ struct ShareView: View {
             }
             bandsViewModel.fetchBands()
         }
-    }
-}
-
-struct FullscreenMessage: View {
-    let imageName: String
-    let title: String
-    let spaceNavbar: Bool?
-    
-    init(imageName: String, title: String, spaceNavbar: Bool? = nil) {
-        self.imageName = imageName
-        self.title = title
-        self.spaceNavbar = spaceNavbar
-    }
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            Spacer()
-            Image(systemName: imageName)
-                .font(.system(size: 35).weight(.semibold))
-            Text(title)
-                .font(.title2.weight(.semibold))
-                .multilineTextAlignment(.center)
-            Spacer()
-            if spaceNavbar != nil {
-                Spacer()
-                    .frame(height: 35)
-            }
-        }
-        .padding()
-        .foregroundColor(.gray)
     }
 }
 

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AdBannerView: View {
-    @EnvironmentObject var storeKitManager: StoreKitManager
     @EnvironmentObject var authViewModel: AuthViewModel
     
     let unitId: String
@@ -20,7 +19,7 @@ struct AdBannerView: View {
     var paddingRight: CGFloat
     
     var body: some View {
-        if let currentUser = authViewModel.currentUser, currentUser.showAds ?? true {
+        if let currentUser = authViewModel.currentUser, !(currentUser.hasPro ?? false) && (currentUser.showAds ?? true) {
             ZStack {
                 HStack(spacing: 7) {
                     ProgressView()

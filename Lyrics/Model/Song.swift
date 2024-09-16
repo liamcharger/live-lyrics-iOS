@@ -11,7 +11,7 @@ import FirebaseFirestore
 
 struct Song: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
-    let uid: String
+    var uid: String
     let timestamp: Date
     var title: String
     var lyrics: String
@@ -21,7 +21,6 @@ struct Song: Identifiable, Codable, Equatable {
     var notes: String?
     var weight: Double?
     var alignment: Double?
-    var design: Double?
     var lineSpacing: Double?
     var artist: String?
     var bpm: Int?
@@ -30,6 +29,7 @@ struct Song: Identifiable, Codable, Equatable {
     var performanceMode: Bool?
     var duration: String?
     var tags: [String]?
+    var demoAttachments: [String]?
     
     var joinedUsers: [String]?
     var variations: [String]?

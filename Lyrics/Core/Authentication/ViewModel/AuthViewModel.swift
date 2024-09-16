@@ -54,7 +54,9 @@ class AuthViewModel: ObservableObject {
             self.userSession = user
             self.fetchUser()
             
-            print("Logged in user successfully.")
+            MainViewModel.shared.notifications = []
+            MainViewModel.shared.saveNotificationToUserDefaults()
+            
             completionBool(true)
         }
     }
@@ -70,8 +72,6 @@ class AuthViewModel: ObservableObject {
             
             guard let user = result?.user else { return }
             self.tempUserSession = user
-            
-            print("Registered user successfully.")
             
             let data = ["email": email,
                         "password": password,
@@ -160,7 +160,18 @@ class AuthViewModel: ObservableObject {
                 if let error = error {
                     print("Error:", error.localizedDescription)
                 }
-                self.fetchUser()
+            }
+        }
+    }
+    
+    func updateProStatus(_ hasPro: Bool) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        if (currentUser?.hasPro ?? false) != hasPro {
+            Firestore.firestore().collection("users").document(uid).updateData(["hasPro": hasPro]) { error in
+                if let error = error {
+                    print("Error:", error.localizedDescription)
+                }
             }
         }
     }
@@ -175,9 +186,9 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchUsers(username: String, completion: @escaping() -> Void) {
+    func fetchUsers(username: String, filterCurrentUser: Bool, completion: @escaping() -> Void) {
         self.isLoadingUsers = true
-        service.fetchUsers(withUsername: username) { users in
+        service.fetchUsers(withUsername: username, filterCurrentUser: filterCurrentUser) { users in
             self.users = users
             self.isLoadingUsers = false
             completion()
@@ -191,6 +202,16 @@ class AuthViewModel: ObservableObject {
     func sendInviteToUser(request: ShareRequest, users: [ShareUser], includeDefault: Bool, completion: @escaping(Error?) -> Void) {
         songService.sendInviteToUser(request: request, users: users, includeDefault: includeDefault) { error in
             completion(error)
+        }
+    }
+    
+    func saveReceiptToFirestore(_ receipt: String) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Firestore.firestore().collection("users").document(uid).updateData(["purchaseReceipt": receipt]) { error in
+            if let error = error {
+                print("Error:", error.localizedDescription)
+            }
         }
     }
 }

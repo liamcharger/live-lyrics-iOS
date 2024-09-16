@@ -21,6 +21,16 @@
         }
       }
     },
+    " plan." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " plan."
+          }
+        }
+      }
+    },
     "." : {
       "localizations" : {
         "es" : {
@@ -97,18 +107,40 @@
         }
       }
     },
+<<<<<< bands
     "%lld member%@" : {
+======
+    "%lld days" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld días"
+          }
+        }
+      }
+    },
+    "%lld Syllable%@" : {
+>>>>>> main
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
+<<<< bands
             "value" : "%1$lld member%2$@"
+====
+            "value" : "%1$lld Syllable%2$@"
+>>>>> main
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+<<<< bands
             "value" : "%lld miembro%@"
+=====
+            "value" : "%1$lld Silbe%2$@"
+>>>>> main
           }
         }
       }
@@ -353,12 +385,100 @@
         }
       }
     },
+< bands
     "Add Role" : {
+=
+    "A mail client could not be opened." : {
+> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+< bands
             "value" : "Añadir función"
+=
+            "value" : "No se ha podido abrir un cliente de correo."
+          }
+        }
+      }
+    },
+    "access_to_demo_attachments" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give your band members a reference song, or a link to a cover on YouTube you want them to learn."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da a los miembros de tu banda una canción de referencia, o un enlace a una versión en YouTube que quieras que se aprendan."
+          }
+        }
+      }
+    },
+    "access_to_tuner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A tuner—make sure your instruments sound sharp."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un afinador: asegúrate de que tus instrumentos suenen nítidos."
+          }
+        }
+      }
+    },
+    "access_to_worlds_largest_lyric_database" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to the world’s largest lyric database, right in the app"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso a la mayor base de datos de letras de canciones del mundo, directamente en la aplicación"
+          }
+        }
+      }
+    },
+    "action_cannot_be_undone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This action is permanent cannot be undone!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción es permanente y no puede deshacerse."
+          }
+        }
+      }
+    },
+    "ad_free_experience" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove ads—get rid of distractions and focus on your songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina los anuncios: deshazte de las distracciones y céntrate en tus canciones"
+> main
           }
         }
       }
@@ -403,6 +523,35 @@
         }
       }
     },
+    "antonym_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antonyms for "
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antónimos de"
+          }
+        }
+      }
+    },
+< bands
+=
+    "Antonyms for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antónimos de «%@»"
+          }
+        }
+      }
+    },
     "Are you sure you want to %@ \"%@\"?" : {
       "localizations" : {
         "en" : {
@@ -419,6 +568,7 @@
         }
       }
     },
+> main
     "Are you sure you want to delete %@\"?" : {
       "localizations" : {
         "es" : {
@@ -439,6 +589,16 @@
         }
       }
     },
+    "Are you sure you want to delete this demo?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres borrar esta demo?"
+          }
+        }
+      }
+    },
     "Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!" : {
       "localizations" : {
         "es" : {
@@ -450,6 +610,7 @@
       }
     },
     "Are you sure you want to leave \"%@\"? You will lose access immediately." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -531,6 +692,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Artista"
+          }
+        }
+      }
+    },
+    "artist_optional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist (Optional)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artista (opcional)"
           }
         }
       }
@@ -650,6 +827,26 @@
         }
       }
     },
+    "Cannot Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede abrir"
+          }
+        }
+      }
+    },
+    "Cannot Purchase" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede comprar"
+          }
+        }
+      }
+    },
     "Center" : {
       "localizations" : {
         "es" : {
@@ -716,6 +913,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claro"
+          }
+        }
+      }
+    },
+    "Click to add to your library." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic para añadirlo a tu biblioteca."
+          }
+        }
+      }
+    },
+    "Click to copy to your clipboard." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haga clic para copiar en el portapapeles."
           }
         }
       }
@@ -940,6 +1157,26 @@
         }
       }
     },
+    "Delete All" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar todo"
+          }
+        }
+      }
+    },
+    "Delete Demo" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar demostración"
+          }
+        }
+      }
+    },
     "Delete Folder" : {
       "localizations" : {
         "es" : {
@@ -993,6 +1230,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Estás seguro de que deseas eliminar esta cuenta?"
+          }
+        }
+      }
+    },
+    "delete_all_recently_deleted_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all recently deleted songs?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que quieres borrar todas las canciones borradas recientemente?"
           }
         }
       }
@@ -1064,6 +1317,16 @@
         }
       }
     },
+    "Edit Demo" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar demostración"
+          }
+        }
+      }
+    },
     "Edit Folder" : {
       "localizations" : {
         "es" : {
@@ -1114,16 +1377,6 @@
         }
       }
     },
-    "Enable Autoscroll" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Habilitar desplazamiento automático"
-          }
-        }
-      }
-    },
     "Enter a name for your folder." : {
       "localizations" : {
         "es" : {
@@ -1144,12 +1397,26 @@
         }
       }
     },
+< bands
     "Enter some details for your new variation." : {
+=
+    "Enter some details for your song." : {
+> main
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter some details for your song."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+< bands
             "value" : "Introduzca algunos datos para su nueva variación."
+=
+            "value" : "Introduce algunos detalles de tu canción."
+> main
           }
         }
       }
@@ -1204,6 +1471,38 @@
         }
       }
     },
+    "explore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore"
+          }
+        }
+      }
+    },
+    "find_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find\nSongs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentre\nCanciones"
+          }
+        }
+      }
+    },
     "folders" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1231,16 +1530,6 @@
         }
       }
     },
-    "Font Style" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estilo de fuente"
-          }
-        }
-      }
-    },
     "Font Weight" : {
       "localizations" : {
         "es" : {
@@ -1251,28 +1540,46 @@
         }
       }
     },
+< bands
+    "Get Join Code" : {
+=
     "Forgot Password?" : {
+> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+< bands
+            "value" : "Obtener código de afiliación"
+=
             "value" : "¿Olvidaste tu contraseña?"
           }
         }
       }
     },
-    "Get Join Code" : {
+    "get_you_signed_in" : {
+      "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now let’s get you signed in."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtener código de afiliación"
+            "value" : "Ahora vamos a iniciar sesión."
+> main
           }
         }
       }
     },
     "good_afternoon" : {
+< bands
       "comment" : "Good Afternoon.",
+=
+> main
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1288,8 +1595,24 @@
         }
       }
     },
+    "good_afternoon_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good afternoon"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas tardes"
+          }
+        }
+      }
+    },
     "good_evening" : {
-      "comment" : "Good Evening.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1305,8 +1628,24 @@
         }
       }
     },
+    "good_evening_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good evening"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenas noches"
+          }
+        }
+      }
+    },
     "good_morning" : {
-      "comment" : "Good Morning.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1318,6 +1657,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buenos días."
+          }
+        }
+      }
+    },
+    "good_morning_greeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good morning"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buenos días"
           }
         }
       }
@@ -1473,12 +1829,18 @@
         }
       }
     },
-    "Key: %@" : {
+    "key_optional" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key (Optional)"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clave: %@"
+            "value" : "Llave (opcional)"
           }
         }
       }
@@ -1549,23 +1911,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Espacio entre líneas"
-          }
-        }
-      }
-    },
-    "live_lyrics" : {
-      "comment" : "Live Lyrics.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live Lyrics."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live Lyrics."
           }
         }
       }
@@ -1691,16 +2036,6 @@
         }
       }
     },
-    "Monospaced" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monoespaciado"
-          }
-        }
-      }
-    },
     "Move" : {
       "localizations" : {
         "es" : {
@@ -1755,6 +2090,16 @@
         }
       }
     },
+    "Nah, I'll miss out" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No, me lo perderé"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "es" : {
@@ -1775,22 +2120,42 @@
         }
       }
     },
+    "New Demo" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva demostración"
+          }
+        }
+      }
+    },
+    "New Folder" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva carpeta"
+          }
+        }
+      }
+    },
+    "New Song" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva canción"
+          }
+        }
+      }
+    },
     "New Variation" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nueva variante"
-          }
-        }
-      }
-    },
-    "Next" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Siguiente"
           }
         }
       }
@@ -1837,6 +2202,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin canciones"
+          }
+        }
+      }
+    },
+    "no_demo_attachments" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There aren’t demo attachments for this song."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay demos adjuntas para esta canción."
           }
         }
       }
@@ -1976,6 +2357,7 @@
         }
       }
     },
+< bands
     "or_choose_band" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1989,6 +2371,14 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "o elija una banda"
+=
+    "Open" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto"
+> main
           }
         }
       }
@@ -2050,12 +2440,70 @@
         }
       }
     },
-    "Play View provides musicians with a distraction-free space during gigs, preventing accidental button presses and allowing them to stay fully engaged in their performance." : {
+    "Play View keeps musicians focused by removing distractions during gigs." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play View proporciona a los músicos un espacio libre de distracciones durante los conciertos, evitando que pulsen botones accidentalmente y permitiéndoles mantenerse totalmente concentrados en su actuación."
+            "value" : "Play View mantiene a los músicos concentrados eliminando las distracciones durante los conciertos."
+          }
+        }
+      }
+    },
+    "popular_artists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Artists"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artistas populares"
+          }
+        }
+      }
+    },
+    "popular_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular Songs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canciones populares"
+          }
+        }
+      }
+    },
+    "Powered by Datamuse" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Datamuse"
+          }
+        }
+      }
+    },
+    "powered_by_musixmatch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Powered by Musixmatch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollado por Musixmatch"
           }
         }
       }
@@ -2080,6 +2528,26 @@
         }
       }
     },
+    "pro" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pro"
+          }
+        }
+      }
+    },
+    "Pro" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        }
+      }
+    },
     "Read only:" : {
       "localizations" : {
         "es" : {
@@ -2096,13 +2564,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recently Deleted"
+            "value" : "Recently\nDeleted"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Borrados recientemente"
+            "value" : "Borrados\nrecientemente"
           }
         }
       }
@@ -2140,6 +2608,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Regular"
+          }
+        }
+      }
+    },
+    "related_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words related to"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras relacionadas con"
           }
         }
       }
@@ -2184,6 +2669,16 @@
         }
       }
     },
+    "Remove Song" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar canción"
+          }
+        }
+      }
+    },
     "Restore" : {
       "localizations" : {
         "es" : {
@@ -2214,16 +2709,34 @@
         }
       }
     },
-    "Right" : {
+    "rhyme_title" : {
+      "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rhymes for"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Derecha"
+            "value" : "Rimas para"
           }
         }
       }
     },
+    "Rhymes for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas para «%@»"
+          }
+        }
+      }
+    },
+< bands
     "Role Name" : {
       "localizations" : {
         "es" : {
@@ -2235,11 +2748,14 @@
       }
     },
     "Rounded" : {
+=
+    "Right" : {
+> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Redondeado"
+            "value" : "Derecha"
           }
         }
       }
@@ -2267,6 +2783,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscar en"
+          }
+        }
+      }
+    },
+    "search_and_add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search and add songs to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca y añade canciones a tu biblioteca."
           }
         }
       }
@@ -2338,16 +2870,6 @@
         }
       }
     },
-    "Serif" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serifa"
-          }
-        }
-      }
-    },
     "Settings" : {
       "localizations" : {
         "es" : {
@@ -2374,23 +2896,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Invites"
+            "value" : "Share\nInvites"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Compartir invitaciones"
-          }
-        }
-      }
-    },
-    "Shared" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compartido"
+            "value" : "Compartir\ninvitaciones"
           }
         }
       }
@@ -2468,6 +2980,22 @@
         }
       }
     },
+    "song_successfully_add_to_library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The song was successfully added to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La canción se ha añadido correctamente a tu biblioteca."
+          }
+        }
+      }
+    },
     "songs_parent_will_be_left" : {
       "localizations" : {
         "en" : {
@@ -2504,12 +3032,72 @@
         }
       }
     },
+    "startsWith_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words starting with"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras que empiezan por"
+          }
+        }
+      }
+    },
     "Success!" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Éxito!"
+          }
+        }
+      }
+    },
+    "support_the_developers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support the developer—signing up helps us make the app better"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apoye al desarrollador: inscribirse nos ayuda a mejorar la aplicación."
+          }
+        }
+      }
+    },
+    "synonym_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synonyms for"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinónimos de"
+          }
+        }
+      }
+    },
+    "Synonyms for \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinónimos de «%@»"
           }
         }
       }
@@ -2645,6 +3233,27 @@
         }
       }
     },
+    "There aren't any lyrics for this song." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay letra para esta canción."
+          }
+        }
+      }
+    },
+    "There was an unknown error while processing your request." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido al procesar su solicitud."
+          }
+        }
+      }
+    },
     "These settings are not specific to song variations." : {
       "localizations" : {
         "es" : {
@@ -2661,6 +3270,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delgado"
+          }
+        }
+      }
+    },
+    "This item cannot be purchased due to device restrictions." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este artículo no puede comprarse debido a restricciones del dispositivo."
           }
         }
       }
@@ -2701,12 +3320,20 @@
         }
       }
     },
+< bands
     "To join a band, enter the six digit code from a band administrator." : {
+=
+    "Top Results" : {
+> main
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+< bands
             "value" : "Para unirse a una banda, introduzca el código de seis dígitos de un administrador de banda."
+=
+            "value" : "Los mejores resultados"
+> main
           }
         }
       }
@@ -2731,12 +3358,60 @@
         }
       }
     },
+    "unknown_error_adding_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There was an unknown error while adding the song to your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error desconocido al añadir la canción a tu biblioteca."
+          }
+        }
+      }
+    },
     "Unpin" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desenganche"
+          }
+        }
+      }
+    },
+    "update_available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualización disponible"
+          }
+        }
+      }
+    },
+    "url_cant_be_opened" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The URL could not be opened."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido abrir la URL."
           }
         }
       }
@@ -2761,6 +3436,26 @@
         }
       }
     },
+    "Want to save a word?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres guardar una palabra?"
+          }
+        }
+      }
+    },
+    "Want to save this song?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres salvar esta canción?"
+          }
+        }
+      }
+    },
     "WARNING: This action is permanant and cannot be undone!" : {
       "localizations" : {
         "es" : {
@@ -2771,29 +3466,32 @@
         }
       }
     },
+    "We know, yet another subscription to pay for every month. But...with this one you get:" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo sabemos, otra suscripción que pagar cada mes. Pero... con esta tienes:"
+          }
+        }
+      }
+    },
+    "Welcome back to Live Lyrics." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido de nuevo a Live Lyrics."
+          }
+        }
+      }
+    },
     "Welcome to Live Lyrics." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bienvenido a Live Lyrics."
-          }
-        }
-      }
-    },
-    "welcome_to" : {
-      "comment" : "Welcome to",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome to"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bienvenido a"
           }
         }
       }
@@ -2828,6 +3526,52 @@
         }
       }
     },
+    "Words related to \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras relacionadas con «%@»"
+          }
+        }
+      }
+    },
+    "Words starting with \"%@\"" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras que empiezan por «%@»"
+          }
+        }
+      }
+    },
+    "world_of_worlds_at_your_fingertips" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rhymes, synonyms, antynoms—a world of words at your fingertips (yeah, we thought that was kind of cheesy, too.)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimas, sinónimos, antónimos: un mundo de palabras al alcance de tu mano (sí, a nosotros también nos ha parecido un poco cursi)."
+          }
+        }
+      }
+    },
+    "Yes, there's a \n" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí, hay un "
+          }
+        }
+      }
+    },
     "You need to add lyrics to a variation to create it." : {
       "localizations" : {
         "es" : {
@@ -2848,12 +3592,34 @@
         }
       }
     },
-    "Your changes were saved." : {
+    "you_dont_have_any_folders" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have any folders."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tus cambios se han guardado."
+            "value" : "No tienes carpetas."
+          }
+        }
+      }
+    },
+    "you_dont_have_any_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have any songs. Go and create some!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes canciones. Ve y crea algunas."
           }
         }
       }

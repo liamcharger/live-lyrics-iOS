@@ -9,21 +9,17 @@ import SwiftUI
 
 struct CustomTextField: View {
     @Binding var text: String
+    
     let placeholder: String
     
     var body: some View {
-        HStack {
-            TextField(placeholder, text: $text)
-                .padding(14)
-                .background(Material.regular)
-                .clipShape(Capsule())
-        }
-        .cornerRadius(10)
+        TextField(NSLocalizedString(placeholder, comment: ""), text: $text)
+            .padding(14)
+            .background(Material.regular)
+            .clipShape(Capsule())
     }
 }
 
-struct CustomTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomTextField(text: .constant(""), placeholder: "Email")
-    }
+#Preview {
+    CustomTextField(text: .constant(""), placeholder: "Email")
 }

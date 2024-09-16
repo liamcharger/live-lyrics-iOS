@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct Notification {
-    let id = UUID()
+struct Notification: Identifiable, Codable {
+    var id = UUID()
     var title: String
-    var subtitle: String
-    var imageName: String
+    var body: String
+    var imageName: String?
 }

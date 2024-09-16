@@ -15,6 +15,8 @@ struct MenuView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
     
+    @ObservedObject var mainViewModel = MainViewModel.shared
+    
     @State var showLogoutMenu = false
     @State var showNewSong = false
     @State var showMailView = false
@@ -24,6 +26,8 @@ struct MenuView: View {
     @State var showPremiumView = false
     @State var showDeleteSheet = false
     @State var showRefreshDialog = false
+    @State var showCannotPurchaseAlert = false
+    @State var showCannotSendFeedbackAlert = false
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     
@@ -33,10 +37,13 @@ struct MenuView: View {
         return SKPaymentQueue.canMakePayments()
     }
     
-    func purchaseSubscription(product: Product) async {
+    func hasPro(_ user: User) -> Bool {
+        return user.hasPro ?? false
+    }
+    func purchase(product: Product) async {
         do {
             if try await storeKitManager.purchase(product) != nil {
-                print("Product purchased successfully!")
+                print("\(product.id) purchased successfully")
             }
         } catch {
             print(error.localizedDescription)
@@ -45,11 +52,17 @@ struct MenuView: View {
     
     var body: some View {
         if let user = viewModel.currentUser {
-            VStack(spacing: 10) {
+            VStack(spacing: 0) {
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(user.fullname)
-                            .font(.title2.weight(.semibold))
+                        HStack {
+                            Text(user.fullname)
+                                .font(.title2.weight(.semibold))
+                            if hasPro(user) {
+                                FAText(iconName: "crown", size: 15)
+                                    .foregroundColor(.yellow)
+                            }
+                        }
                         HStack(spacing: 4) {
                             Text(user.username)
                             Text("#" + viewModel.uniqueUserID)
@@ -58,11 +71,11 @@ struct MenuView: View {
                         .foregroundColor(Color.gray)
                     }
                     .onTapGesture {
-                        #if DEBUG
+#if DEBUG
                         if let id = user.id {
                             UIPasteboard.general.string = id
                         }
-                        #endif
+#endif
                     }
                     .padding([.top, .bottom, .trailing])
                     Spacer()
@@ -79,21 +92,66 @@ struct MenuView: View {
                         ProfileView(user: user, showProfileView: $showProfileView)
                             .environmentObject(viewModel)
                     }
-                    SheetCloseButton(isPresented: $showMenu)
+                    SheetCloseButton {
+                        showMenu = false
+                    }
+                }
+                .padding()
+                Divider()
+                if mainViewModel.notifications.isEmpty {
+                    // TODO: replace with envelope (slashed)
+                    FullscreenMessage(imageName: "envelope", title: "Hmm, it doesn't look like you have any new messages.")
+                } else {
+                    ScrollView {
+                        VStack {
+                            ForEach(mainViewModel.notifications) { notif in
+                                NotificationRowView(notification: notif)
+                            }
+                        }
+                        .padding()
+                    }
                 }
                 Divider()
-                    .padding(.horizontal, -16)
-                    .padding(.bottom, 12)
-                if user.showAds ?? true {
-                    HStack {
-                        ForEach(storeKitManager.storeProducts, id: \.self) { product in
-                            Button {
-                                Task {
-                                    await purchaseSubscription(product: product)
+                Group {
+                    VStack(spacing: 10) {
+                        // FIXME: ad squishes FullscreenMessage (especially on smaller iPhones)
+//                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
+                        /* Button(action: {
+                            showWebView.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Privacy Policy")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "files", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(.primary)
                                 }
-                            } label: {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 6) {
+                                Spacer()
+                            }
+                            .padding()
+                            .background(Material.regular)
+                            .foregroundColor(.primary)
+                            .clipShape(Capsule())
+                        })
+                        .sheet(isPresented: $showWebView) {
+                            WebView()
+                        } */
+                        if user.showAds ?? true, !(user.hasPro ?? false), let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
+                            Button(action: {
+                                if isAuthorizedForPayments {
+                                    Task {
+                                        await purchase(product: product)
+                                    }
+                                } else {
+                                    showCannotPurchaseAlert = true
+                                }
+                            }, label: {
+                                HStack(spacing: 7) {
+                                    VStack(alignment: .leading, spacing: 5) {
                                         Text(product.displayName)
                                             .font(.body.weight(.semibold))
                                         HStack(alignment: .center, spacing: 8) {
@@ -105,132 +163,106 @@ struct MenuView: View {
                                         .foregroundColor(.white)
                                     }
                                     Spacer()
+                                    // Use audio-description because of label "AD"
+                                    FAText(iconName: "audio-description-slash", size: 20)
+                                        .font(.body.weight(.semibold))
                                 }
+                                .foregroundColor(Color.white)
                                 .padding()
                                 .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(15)
-                            }
-                            .disabled(!isAuthorizedForPayments)
-                            .opacity(!isAuthorizedForPayments ? 0.5 : 1)
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                            })
                         }
-                    }
-                }
-                Spacer()
-                Divider()
-                    .padding(.horizontal, -16)
-                    .padding(.bottom, 12)
-                AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
-                Button(action: {
-                    showWebView.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Privacy Policy")
-                                    .fontWeight(.semibold)
+                        Button(action: {
+                            showSettingsView.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Settings")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "gear", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(.primary)
+                                }
                                 Spacer()
-                                FAText(iconName: "files", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
+                            .padding()
+                            .background(Material.regular)
                             .foregroundColor(.primary)
+                            .clipShape(Capsule())
+                        })
+                        .sheet(isPresented: $showSettingsView) {
+                            SettingsView(user: user)
                         }
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .foregroundColor(.primary)
-                    .clipShape(Capsule())
-                })
-                .sheet(isPresented: $showWebView) {
-                    WebView()
-                }
-                Button(action: {
-                    showSettingsView.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Settings")
-                                    .fontWeight(.semibold)
-                                Spacer()
-                                FAText(iconName: "gear", size: 20)
-                                    .font(.body.weight(.semibold))
+                        Button(action: {
+                            if MFMailComposeViewController.canSendMail() {
+                                showMailView = true
+                            } else {
+                                showCannotSendFeedbackAlert = true
                             }
-                            .foregroundColor(.primary)
-                        }
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Material.regular)
-                    .foregroundColor(.primary)
-                    .clipShape(Capsule())
-                })
-                .sheet(isPresented: $showSettingsView) {
-                    SettingsView(user: user)
-                }
-                Button(action: {
-                    showMailView.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Send Feeback")
-                                    .fontWeight(.semibold)
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Send Feeback")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "envelope", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(Color.white)
+                                }
                                 Spacer()
-                                FAText(iconName: "envelope", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
-                            .foregroundColor(Color.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Capsule())
+                        })
+                        .sheet(isPresented: $showMailView) {
+                            MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
                         }
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Color.blue)
-                    .clipShape(Capsule())
-                })
-                .opacity(!MFMailComposeViewController.canSendMail() ? 0.5 : 1.0)
-                .disabled(!MFMailComposeViewController.canSendMail())
-                .sheet(isPresented: $showMailView) {
-                    MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
-                }
-                Button(action: {
-                    showDeleteSheet.toggle()
-                }, label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Logout")
-                                    .fontWeight(.semibold)
+                        Button(action: {
+                            showDeleteSheet.toggle()
+                        }, label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 7) {
+                                        Text("Logout")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "square-arrow-right", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .foregroundColor(Color.white)
+                                }
                                 Spacer()
-                                FAText(iconName: "square-arrow-right", size: 20)
-                                    .font(.body.weight(.semibold))
                             }
-                            .foregroundColor(Color.white)
+                            .padding()
+                            .background(Color.red)
+                            .clipShape(Capsule())
+                        })
+                        .confirmationDialog("Are you sure you want to log out? This action cannot be undone.", isPresented: $showDeleteSheet, titleVisibility: .visible) {
+                            Button("Logout", role: .destructive) {
+                                viewModel.signOut()
+                                showMenu = false
+                            }
+                            Button("Cancel", role: .cancel) { }
                         }
-                        Spacer()
                     }
-                    .padding()
-                    .background(Color.red)
-                    .clipShape(Capsule())
-                })
-                .confirmationDialog("Are you sure you want to log out? This action cannot be undone.", isPresented: $showDeleteSheet, titleVisibility: .visible) {
-                    Button("Logout", role: .destructive) {
-                        viewModel.signOut()
-                        showMenu = false
-                    }
-                    Button("Cancel", role: .cancel) { }
                 }
+                .padding()
             }
-            .padding()
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
+            .alert(isPresented: $showCannotPurchaseAlert) {
+                Alert(title: Text("Cannot Purchase"), message: Text("This item cannot be purchased due to device restrictions."), dismissButton: .default(Text("OK")))
+            }
+            .alert(isPresented: $showCannotSendFeedbackAlert) {
+                Alert(title: Text("Cannot Open"), message: Text("A mail client could not be opened."), dismissButton: .default(Text("Cancel")))
+            }
         }
-    }
-}
-
-struct MenuView_Previews: PreviewProvider {
-    static var previews: some View {
-        MenuView(showMenu: .constant(true))
     }
 }

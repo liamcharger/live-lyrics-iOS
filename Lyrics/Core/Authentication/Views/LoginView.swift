@@ -8,23 +8,21 @@
 import SwiftUI
 
 struct LoginView: View {
+    let action: () -> Void
+    
     @State var email = ""
     @State var password = ""
     @State var errorMessage = ""
     
     @State var showResetPassword = false
     @State var showError = false
+    @State var isButtonLoading = false
     
     @FocusState var isHighlighted1: Bool
     @FocusState var isHighlighted2: Bool
     
-    @AppStorage("authViewState") var authViewState = "choose"
-    
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
-    }
-    var isHighlighted: Bool {
-        isHighlighted1 || isHighlighted2
     }
     
     @EnvironmentObject var viewModel: AuthViewModel
@@ -34,7 +32,7 @@ struct LoginView: View {
         VStack(spacing: 15) {
             HStack(spacing: 12) {
                 Button(action: {
-                    authViewState = "choose"
+                    action()
                 }, label: {
                     Image(systemName: "chevron.left")
                         .padding()
@@ -49,11 +47,9 @@ struct LoginView: View {
                 Spacer()
             }
             Spacer()
-            VStack(alignment: .leading, spacing: 15) {
+            VStack(alignment: .leading) {
                 CustomTextField(text: $email, placeholder: "Email")
-#if os(iOS)
                     .autocapitalization(.none)
-#endif
                     .autocorrectionDisabled()
                     .focused($isHighlighted1)
                 CustomPasswordField(text: $password, placeholder: "Password")
@@ -64,31 +60,19 @@ struct LoginView: View {
                 })
             }
             Spacer()
-            VStack(spacing: 10) {
-                Button(action: {
-                    viewModel.login(withEmail: email, password: password) { success in
-                        if !success {
-                            showError.toggle()
-                        }
-                    } completionString: { string in
-                        self.errorMessage = string
+            LiveLyricsButton("Sign In", showProgressIndicator: $isButtonLoading) {
+                isButtonLoading = true
+                viewModel.login(withEmail: email, password: password) { success in
+                    if !success {
+                        showError.toggle()
+                        isButtonLoading = false
                     }
-                }, label: {
-                    HStack {
-                        Spacer()
-                        Text("Sign In")
-                        Spacer()
-                    }
-                    .modifier(NavButtonViewModifier())
-                })
-                .opacity(isEmpty ? 0.5 : 1.0)
-                .disabled(isEmpty)
-                Button(action: {
-                    authViewState = "register"
-                }, label: {
-                    Text("No account? ") + Text("Sign Up").bold()
-                })
+                } completionString: { string in
+                    self.errorMessage = string
+                }
             }
+            .opacity(isEmpty ? 0.5 : 1.0)
+            .disabled(isEmpty)
         }
         .alert(isPresented: $showError, content: {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
@@ -103,8 +87,6 @@ struct LoginView: View {
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-    }
+#Preview {
+    LoginView(action: {})
 }

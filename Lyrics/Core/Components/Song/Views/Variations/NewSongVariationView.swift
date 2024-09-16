@@ -20,8 +20,8 @@ struct NewSongVariationView: View {
     @State var showInfo = false
     @State var canDismissProgrammatically = false
     @State var showAddRoleSheet = false
-    
     @State var selectedRole: BandRole?
+    @State var showProgressButton = false
     
     @Binding var isDisplayed: Bool
     @Binding var createdId: String
@@ -51,7 +51,9 @@ struct NewSongVariationView: View {
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
+                SheetCloseButton {
+                    isDisplayed = false
+                }
             }
             .padding()
             Divider()
@@ -80,27 +82,20 @@ struct NewSongVariationView: View {
             .padding()
             Spacer()
             Divider()
-            Button(action: {view2.toggle()}, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
+            LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { view2 = true })
+                .sheet(isPresented: $view2) {
+                    nextView
                 }
-                .modifier(NavButtonViewModifier())
-            })
-            .sheet(isPresented: $view2) {
-                nextView
-            }
-            .onChange(of: view2) { newValue in
-                if !newValue {
-                    if canDismissProgrammatically {
-                        isDisplayed = false
+                .onChange(of: view2) { newValue in
+                    if !newValue {
+                        if canDismissProgrammatically {
+                            isDisplayed = false
+                        }
                     }
                 }
-            }
-            .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-            .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
-            .padding()
+                .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+                .padding()
         }
         .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium()]) {
             BandMemberAddRoleView(member: nil, band: nil, selectedRole: $selectedRole)
@@ -117,7 +112,9 @@ struct NewSongVariationView: View {
                     .font(.title.weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $view2)
+                SheetCloseButton {
+                    view2 = false
+                }
             }
             .padding()
             Divider()
@@ -125,19 +122,13 @@ struct NewSongVariationView: View {
                 .padding(.horizontal)
                 .focused($isFocused)
             Divider()
-            Button(action: {
+            LiveLyricsButton("Continue", showProgressIndicator: $showProgressButton, action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {
+                    showProgressButton = true
                     createVariation()
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
             })
             .padding()
         }

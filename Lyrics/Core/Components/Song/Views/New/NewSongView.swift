@@ -11,6 +11,8 @@ struct NewSongView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
     @State var title = ""
+    @State var artist = ""
+    @State var key = ""
     @State var lyrics = ""
     @State var errorMessage = ""
     
@@ -18,15 +20,16 @@ struct NewSongView: View {
     @State var showError = false
     @State var showInfo = false
     @State var canDismissProgrammatically = false
+    @State var showProgressButton = false
     
     @Binding var isDisplayed: Bool
     
     @FocusState var isTitleFocused: Bool
     @FocusState var isLyricsFocused: Bool
     
-    let folder: Folder?
-    
     func createSong() {
+        showProgressButton = true
+        
         let dismiss = {
             canDismissProgrammatically = true
             view2 = false
@@ -37,7 +40,8 @@ struct NewSongView: View {
                 dismiss()
             }
         }
-        songViewModel.createSong(lyrics: lyrics, title: title) { success, errorMessage in
+        
+        songViewModel.createSong(lyrics: lyrics, title: title, artist: artist, key: key) { success, errorMessage in
             if success {
                 dismiss()
             } else {
@@ -48,45 +52,42 @@ struct NewSongView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
-                Text("Enter a name for your song.")
+                Text("Enter some details for your song.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $isDisplayed)
-            }
-            .padding()
-            Divider()
-            Spacer()
-            CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
-                .focused($isTitleFocused)
-                .padding()
-            Spacer()
-            Divider()
-            Button(action: {
-                view2.toggle()
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Continue")
-                    Spacer()
+                SheetCloseButton {
+                    isDisplayed = false
                 }
-                .modifier(NavButtonViewModifier())
-            })
-            .padding()
-            .sheet(isPresented: $view2) {
-                nextView
             }
-            .onChange(of: view2) { newValue in
-                if !newValue {
-                    if canDismissProgrammatically {
-                        isDisplayed = false
+            .padding()
+            Divider()
+            ScrollView {
+                VStack {
+                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+                        .focused($isTitleFocused)
+                    CustomTextField(text: $artist, placeholder: NSLocalizedString("artist_optional", comment: ""))
+                    CustomTextField(text: $key, placeholder: NSLocalizedString("key_optional", comment: ""))
+                }
+                .padding()
+            }
+            Divider()
+            LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { view2 = true })
+                .padding()
+                .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+                .sheet(isPresented: $view2) {
+                    nextView
+                }
+                .onChange(of: view2) { newValue in
+                    if !newValue {
+                        if canDismissProgrammatically {
+                            isDisplayed = false
+                        }
                     }
                 }
-            }
-            .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
-            .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
         }
         .onAppear {
             isTitleFocused = true
@@ -100,7 +101,9 @@ struct NewSongView: View {
                     .font(.title.weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton(isPresented: $view2)
+                SheetCloseButton {
+                    view2 = false
+                }
             }
             .padding()
             Divider()
@@ -108,16 +111,13 @@ struct NewSongView: View {
                 .padding(.horizontal)
                 .focused($isLyricsFocused)
             Divider()
-            Button {
+            LiveLyricsButton("Continue", showProgressIndicator: $showProgressButton, action: {
                 if lyrics.isEmpty {
                     showInfo.toggle()
                 } else {
                     createSong()
                 }
-            } label: {
-                Text("Continue")
-                    .modifier(NavButtonViewModifier())
-            }
+            })
             .padding()
         }
         .alert(isPresented: $showError) {

@@ -44,7 +44,7 @@ struct RowView: View {
                 .padding()
                 .background(Material.regular)
                 .foregroundColor(.primary)
-                .cornerRadius(20)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
             } else {
                 HStack {
                     VStack(alignment: .leading, spacing: 7) {
@@ -62,7 +62,7 @@ struct RowView: View {
                 .padding()
                 .background(Material.regular)
                 .foregroundColor(.primary)
-                .cornerRadius(20)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
             }
         } else {
             HStack {
@@ -76,14 +76,12 @@ struct RowView: View {
             .padding()
             .background(Material.regular)
             .foregroundColor(.primary)
-            .cornerRadius(20)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
         }
     }
 }
 
-struct MoveRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        RowView(title: Folder.folder.title, subtitle: nil, trackId: nil, id: nil, isExplicit: 1, isLoading: .constant(false))
-            .previewLayout(.sizeThatFits)
-    }
+#Preview {
+    RowView(title: Folder.folder.title, subtitle: nil, trackId: nil, id: nil, isExplicit: 1, isLoading: .constant(false))
+        .previewLayout(.sizeThatFits)
 }

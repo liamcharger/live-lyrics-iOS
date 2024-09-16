@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SheetCloseButton: View {
-    @Binding var isPresented: Bool
+    let action: () -> Void
     
     var body: some View {
-        Button(action: {isPresented = false}) {
+        Button(action: action) {
             Image(systemName: "xmark")
                 .imageScale(.medium)
                 .padding(12)
@@ -24,5 +24,5 @@ struct SheetCloseButton: View {
 }
 
 #Preview {
-    SheetCloseButton(isPresented: .constant(true))
+    SheetCloseButton(action: {})
 }

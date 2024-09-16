@@ -22,8 +22,6 @@ struct CustomPasswordField: View {
     }
 }
 
-struct CustomPasswordField_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomPasswordField(text: .constant(""), placeholder: "Password")
-    }
+#Preview {
+    CustomPasswordField(text: .constant(""), placeholder: "Password")
 }

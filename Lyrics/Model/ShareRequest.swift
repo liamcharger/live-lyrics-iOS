@@ -23,4 +23,5 @@ struct ShareRequest: Codable, Identifiable {
     var readOnly: Bool?
     var notificationTokens: [String]?
     var bandId: String?
+    var fromNotificationToken: String?
 }

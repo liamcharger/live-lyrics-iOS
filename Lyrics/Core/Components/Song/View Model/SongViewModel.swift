@@ -1,5 +1,5 @@
 //
-//  SongDetailViewModel.swift
+//  SongViewModel.swift
 //  Lyrics
 //
 //  Created by Liam Willey on 5/4/23.
@@ -16,10 +16,22 @@ class SongViewModel: ObservableObject {
     @Published var isLoadingVariations = false
     
     let service = SongService()
+    let providerKeywords: [(provider: String, keyword: String, icon: String, color: Color)] = [
+        ("Spotify", "spotify", "spotify", Color.green),
+        ("Apple Music", "music.apple", "apple_music", Color.red),
+        ("YouTube", "youtube", "youtube", Color.red),
+        ("YouTube Music", "music.youtube", "youtube_music", Color.red),
+        ("SoundCloud", "soundcloud", "soundcloud", Color.red),
+        ("Tidal", "tidal", "tidal", Color.primary),
+        ("Bandcamp", "bandcamp", "bandcamp", Color.indigo),
+        ("Deezer", "deezer", "deezer", Color.orange),
+        ("Amazon Music", "music.amazon", "amazon_music", Color.teal),
+        ("Pandora", "pandora", "pandora", Color.primary)
+    ]
+    
     static let shared = SongViewModel()
     
     func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
-        service.removeSongVariationListener()
         self.isLoadingVariations = true
         service.fetchSongVariations(song: song) { variations in
             completion(variations)
@@ -27,8 +39,9 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSong(folder: Folder, lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
-        service.createSong(folder: folder, lyrics: lyrics, title: title) { success, errorMessage in
+    // UNUSED: will be implemented when folder detail views are created
+    func createSong(folder: Folder, lyrics: String, artist: String, key: String, title: String, completion: @escaping(Bool, String) -> Void) {
+        service.createSong(folder: folder, lyrics: lyrics, artist: artist, title: title, key: key) { success, errorMessage in
             if success {
                 completion(true, "Success!")
             } else {
@@ -37,8 +50,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func createSong(lyrics: String, title: String, completion: @escaping(Bool, String) -> Void) {
-        service.createSong(lyrics: lyrics, title: title) { success, errorMessage in
+    func createSong(lyrics: String, title: String, artist: String, key: String, completion: @escaping(Bool, String) -> Void) {
+        service.createSong(lyrics: lyrics, artist: artist, key: key, title: title) { success, errorMessage in
             if success {
                 completion(true, "Success!")
             } else {
@@ -68,10 +81,6 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func updateTextProperties(_ folder: Folder, _ song: Song, size: Int) {
-        service.updateTextProperties(folder: folder, song: song, size: size)
-    }
-    
     func updateTextProperties(_ song: Song, size: Int) {
         service.updateTextProperties(song: song, size: size)
     }
@@ -84,18 +93,8 @@ class SongViewModel: ObservableObject {
         service.updateTextProperties(song: song, weight: weight)
     }
     
-    func updateTextProperties(_ song: Song, design: Double) {
-        service.updateTextProperties(song: song, design: design)
-    }
-    
     func updateTextProperties(_ song: Song, alignment: Double) {
         service.updateTextProperties(song: song, alignment: alignment)
-    }
-    
-    func fetchSongDetails(_ song: Song, completion: @escaping(String, String, String, String) -> Void) {
-        service.fetchEditDetails(song) { title, key, artist, duration in
-            completion(title, key, artist, duration)
-        }
     }
     
     func fetchSong(listen: Bool? = nil, forUser: String? = nil, _ id: String, completion: @escaping(Song?) -> Void, regCompletion: @escaping(ListenerRegistration?) -> Void) {
@@ -200,7 +199,67 @@ class SongViewModel: ObservableObject {
         }
     }
     
+    func createDemoAttachment(for song: Song, from urlString: String, completion: @escaping() -> Void) {
+        service.createNewDemoAttachment(from: urlString, for: song, completion: completion)
+    }
+    
+    func deleteDemoAttachment(demo: DemoAttachment, for song: Song, completion: @escaping() -> Void) {
+        service.deleteDemoAttachment(demo: demo, for: song, completion: completion)
+    }
+    
+    func updateDemo(for song: Song, oldUrl: String, url: String, completion: @escaping() -> Void) {
+        service.updateDemo(for: song, oldUrl: oldUrl, url: url, completion: completion)
+    }
+    
+    func getDemo(from urlString: String) -> DemoAttachment {
+        for (provider, keyword, icon, color) in providerKeywords {
+            if urlString.lowercased().contains(keyword) {
+                return DemoAttachment(title: provider, icon: icon, color: color, url: urlString)
+            }
+        }
+        return DemoAttachment(title: urlString, icon: "square", color: Color.primary, url: urlString)
+    }
+    
+    func getDemoIcon(from icon: String, size: CGFloat = 22) -> some View {
+        return Group {
+            if icon == "apple_music" || icon == "amazon_music" || icon == "tidal" || icon == "pandora" {
+                Image(icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+            } else {
+                FAText(iconName: icon, size: size)
+            }
+        }
+    }
+    
+    func appendPrefix(_ url: String) -> String {
+        if url.lowercased().hasPrefix("http://") || url.lowercased().hasPrefix("https://") {
+            return url
+        } else {
+            return "https://\(url)"
+        }
+    }
+    
+    func removePrefix(_ url: String) -> String {
+        let http = "http://"
+        let https = "https://"
+        
+        return url.replacingOccurrences(of: https, with: "").replacingOccurrences(of: http, with: "")
+    }
+    
     func isShared(song: Song) -> Bool {
         return song.uid != authViewModel.currentUser?.id
+    }
+    
+    func removeFeatAndAfter(from input: String) -> String {
+        let keyword = "feat"
+        
+        if let range = input.range(of: keyword, options: .caseInsensitive) {
+            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
+            return String(substring)
+        }
+        
+        return input
     }
 }

@@ -41,13 +41,13 @@ struct EditPasswordView: View {
     
     var body: some View {
         VStack {
-            // MARK: Navbar
             HStack(alignment: .center, spacing: 10) {
-                // MARK: User info
                 Text("Change Password")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton(isPresented: $showProfileView)
+                SheetCloseButton {
+                    showProfileView = false
+                }
             }
             .padding()
             ScrollView {
@@ -70,7 +70,7 @@ struct EditPasswordView: View {
 #endif
                 .padding(.horizontal)
             }
-            Button(action: {
+            LiveLyricsButton("Change Password") {
                 if password.count < 6 {
                     showError.toggle()
                 } else {
@@ -84,14 +84,7 @@ struct EditPasswordView: View {
                         errorMessage = string
                     }
                 }
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Change Password")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
-            })
+            }
             .opacity(isEmpty ? 0.5 : 1.0)
             .disabled(isEmpty)
             .padding()
