@@ -587,6 +587,7 @@
       }
     },
     "Are you sure you want to leave \"%@\"? You will lose access immediately." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2958,6 +2959,7 @@
       }
     },
     "There aren't any lyrics for this song." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

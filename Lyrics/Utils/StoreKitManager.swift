@@ -173,10 +173,10 @@ class StoreKitManager: ObservableObject {
             
             if let data = result?.data as? [String: Any], let isSubscribed = data["isSubscribed"] as? Bool {
                 self.authViewModel.updateProStatus(isSubscribed)
-                self.lastTimeFunctionsCalled = Date().timeIntervalSince1970
             } else {
-                let error = NSError(domain: "FirebaseFunctions", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result format"])
+                _ = NSError(domain: "FirebaseFunctions", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result format"])
             }
+            self.lastTimeFunctionsCalled = Date().timeIntervalSince1970
         }
     }
     

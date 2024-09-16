@@ -41,11 +41,11 @@ struct SongShareDetailView: View {
                             AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                             VStack(spacing: 18) {
                                 if !NetworkManager.shared.getNetworkState() {
-                                    FullscreenMessage(imageName: "wifi.slash", title: NSLocalizedString("connect_to_internet_to_view_share_invites", comment: ""))
+                                    FullscreenMessage(imageName: "wifi.slash", title: "connect_to_internet_to_view_share_invites")
                                         .frame(maxWidth: .infinity)
                                         .frame(height: geo.size.height / 2.2, alignment: .bottom)
                                 } else if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty{
-                                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_share_invites", comment: ""))
+                                    FullscreenMessage(imageName: "circle.slash", title: "no_share_invites")
                                         .frame(maxWidth: .infinity)
                                         .frame(height: geo.size.height / 2.2, alignment: .bottom)
                                 } else {
