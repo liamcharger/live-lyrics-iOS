@@ -350,28 +350,14 @@ struct MainView: View {
                             VStack(alignment: .leading) {
                                 Text(greeting(withName: true))
                                     .font(.largeTitle.weight(.bold))
-                                HStack(spacing: 10) {
-                                    ForEach(0...1, id: \.self) { index in
-                                        Button {
-                                            if index == 0 {
-                                                showNewSong = true
-                                            } else {
-                                                showNewFolder = true
-                                            }
-                                        } label: {
-                                            HStack(spacing: 7) {
-                                                FAText(iconName: index == 0 ? "pen-to-square" : "folder-plus", size: 18)
-                                                Text(index == 0 ? "New Song" : "New Folder")
-                                                    .font(.body.weight(.semibold))
-                                            }
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(Color.blue)
-                                            .foregroundColor(.white)
-                                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                                        }
-                                    }
-                                }
+                                HeaderActionsView([
+                                    .init(title: NSLocalizedString("New Song", comment: ""), icon: "pen-to-square", scheme: .primary, action: {
+                                        showNewSong = true
+                                    }),
+                                    .init(title: NSLocalizedString("New Folder", comment: ""), icon: "folder-plus", scheme: .primary, action: {
+                                        showNewFolder = true
+                                    })
+                                ])
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, -18)
@@ -425,8 +411,6 @@ struct MainView: View {
                                     }
                                 }
                             }
-                        }
-                        VStack {
                             VStack {
                                 VStack {
                                     HStack {

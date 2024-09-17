@@ -20,7 +20,7 @@ struct NewBandView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Create a New Band")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -41,17 +41,10 @@ struct NewBandView: View {
             .padding()
             Spacer()
             Divider()
-            Button {
+            LiveLyricsButton("Create") {
                 bandsViewModel.createBand(name) {
                     isPresented = false
                 }
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Create Band")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
             }
             .padding()
             .disabled(isEmpty)

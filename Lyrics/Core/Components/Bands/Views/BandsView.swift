@@ -14,92 +14,97 @@ struct BandsView: View {
     
     @State var showNewBandSheet = false
     @State var showJoinBandSheet = false
-    @State var showUserPopover = false
-    @State var showToast = false
+    @State var collapsedNavbarTitle = false
     
-    @State var selectedMember: BandMember?
     @State var selectedBand: Band?
-    @State var isSheetPresented = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: .constant(true))
-                .padding()
-            Divider()
-            if !NetworkManager.shared.getNetworkState() {
-                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
-            } else if bandsViewModel.isLoadingUserBands {
-                Spacer()
-                HStack {
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: $collapsedNavbarTitle)
+                    .padding()
+                Divider()
+                if !NetworkManager.shared.getNetworkState() {
+                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
+                } else if bandsViewModel.isLoadingUserBands {
                     Spacer()
-                    ProgressView("Loading")
+                    HStack {
+                        Spacer()
+                        ProgressView("Loading")
+                        Spacer()
+                    }
+                    .padding()
                     Spacer()
-                }
-                .padding()
-                Spacer()
-            } else if bandsViewModel.userBands.isEmpty {
-                // TODO: add "what are bands?" button
-                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
-            } else {
-                ScrollView {
-                    VStack {
-                        ForEach(bandsViewModel.userBands) { band in
-                            BandRowView(band: band, selectedMember: $selectedMember, selectedBand: $selectedBand, showToast: $showToast, showUserPopover: $showUserPopover, isSheetPresented: $isSheetPresented)
+                } else if bandsViewModel.userBands.isEmpty {
+                    // TODO: add "what are bands?" button
+                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            GeometryReader { geo in
+                                Color.clear
+                                    .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
+                            }
+                            .frame(height: 0)
+                            HeaderView(NSLocalizedString("Bands", comment: ""), icon: "guitar", color: .blue, geo: geo, counter: "\(bandsViewModel.userBands.count) band\(bandsViewModel.userBands.count == 1 ? "" : "s")".uppercased())
+                            VStack(spacing: 22) {
+                                HeaderActionsView([
+                                    .init(title: NSLocalizedString("Join Band", comment: ""), icon: "link", scheme: .primary, action: {
+                                        showJoinBandSheet = true
+                                    }),
+                                    .init(title: NSLocalizedString("Create Band", comment: ""), icon: "plus", scheme: .secondary, action: {
+                                        showNewBandSheet = true
+                                    })
+                                ])
+                                VStack {
+                                    ForEach(bandsViewModel.userBands) { band in
+                                        Button {
+                                            selectedBand = band
+                                        } label: {
+                                            BandRowView(band: band, selectedBand: $selectedBand)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                        .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                            let animation = Animation.easeInOut(duration: 0.22)
+                            
+                            if value.first ?? 0 >= -20 {
+                                DispatchQueue.main.async {
+                                    withAnimation(animation) {
+                                        collapsedNavbarTitle = false
+                                    }
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    withAnimation(animation) {
+                                        collapsedNavbarTitle = true
+                                    }
+                                }
+                            }
                         }
                     }
-                    .padding()
                 }
             }
-            Divider()
-            VStack(spacing: 12) {
-                Button {
-                    showJoinBandSheet = true
-                } label: {
-                    HStack(spacing: 5) {
-                        FAText(iconName: "plus", size: 20)
-                        Text("Join a Band")
-                            .font(.body.weight(.semibold))
-                    }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .clipShape(Capsule())
-                }
-                Button {
-                    showNewBandSheet = true
-                } label: {
-                    Text("Create a Band")
-                }
+            .sheet(isPresented: $showNewBandSheet) {
+                NewBandView(isPresented: $showNewBandSheet)
             }
-            .padding()
-        }
-        .sheet(isPresented: $showNewBandSheet) {
-            NewBandView(isPresented: $showNewBandSheet)
-        }
-        .sheet(isPresented: $showJoinBandSheet) {
-            BandJoinView(isPresented: $showJoinBandSheet)
-        }
-        .simpleToast(isPresented: $showToast, options: SimpleToastOptions(
-            alignment: .top,
-            hideAfter: 5,
-            animation: Animation.bouncy(extraBounce: 0.15),
-            modifierType: .slide
-        )) {
-            Label("The band join code has been copied to the clipboard.", systemImage: "info.circle")
-                .padding()
-                .background(Color.blue.opacity(0.9))
-                .foregroundColor(Color.white)
-                .cornerRadius(15)
-                .padding()
-        }
-        .navigationBarBackButtonHidden()
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            bandsViewModel.fetchUserBands {}
-        }
-        .bottomSheet(isPresented: $showUserPopover, detents: [.medium()], onDismiss: { isSheetPresented = false }) {
-            if let member = selectedMember, let band = selectedBand {
-                BandMemberPopover(member: member, band: band)
+            .sheet(isPresented: $showJoinBandSheet) {
+                BandJoinView(isPresented: $showJoinBandSheet)
+            }
+            .sheet(item: $selectedBand) { band in
+                BandDetailView(band: Binding(get: {
+                    band
+                }, set: { band in
+                    selectedBand = band
+                }))
+            }
+            .navigationBarBackButtonHidden()
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                bandsViewModel.fetchUserBands {}
             }
         }
     }

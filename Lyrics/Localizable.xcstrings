@@ -133,6 +133,16 @@
         }
       }
     },
+    "%lld members%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld members%2$@"
+          }
+        }
+      }
+    },
     "%lld Syllable%@" : {
       "localizations" : {
         "en" : {
@@ -735,6 +745,16 @@
         }
       }
     },
+    "band_members" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Band Members"
+          }
+        }
+      }
+    },
     "band_with_code_not_found" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -762,6 +782,9 @@
           }
         }
       }
+    },
+    "Bands" : {
+
     },
     "Black" : {
       "localizations" : {
@@ -1059,16 +1082,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copiar título"
-          }
-        }
-      }
-    },
-    "Create a Band" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crear una banda"
           }
         }
       }
@@ -1900,6 +1913,9 @@
           }
         }
       }
+    },
+    "loading" : {
+
     },
     "Loading" : {
       "localizations" : {
@@ -2907,6 +2923,16 @@
         }
       }
     },
+    "shared_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared Songs"
+          }
+        }
+      }
+    },
     "Sign In" : {
       "localizations" : {
         "es" : {
@@ -3204,6 +3230,7 @@
       }
     },
     "The band join code has been copied to the clipboard." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

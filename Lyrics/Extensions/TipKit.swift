@@ -159,24 +159,24 @@ struct DemoAttachmentTip: Tip {
 struct LiveLyricsTipStyle: TipViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack {
-            HStack(alignment: .top, spacing: 12) {
-                configuration.image?
-                    .font(.system(size: 30))
-                VStack(alignment: .leading, spacing: 7) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .center, spacing: 12) {
+                    configuration.image?
+                        .font(.system(size: 26))
                     configuration.title?
                         .font(.title3.weight(.bold))
-                    configuration.message?
-                        .font(.system(size: 16))
-                        .foregroundStyle(.secondary)
+                    Button(action: {
+                        configuration.tip.invalidate(reason: .tipClosed)
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
+                    })
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                Spacer()
-                Button(action: {
-                    configuration.tip.invalidate(reason: .tipClosed)
-                }, label: {
-                    Image(systemName: "xmark")
-                        .fontWeight(.semibold)
-                        .foregroundColor(.gray)
-                })
+                configuration.message?
+                    .font(.system(size: 16))
+                    .foregroundStyle(.secondary)
             }
             ForEach(configuration.actions) { action in
                 Button(action: action.handler, label: {

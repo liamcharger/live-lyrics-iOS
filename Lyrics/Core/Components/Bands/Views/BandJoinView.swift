@@ -12,6 +12,7 @@ struct BandJoinView: View {
     
     @State var code = ""
     @State var showAlert = false
+    @State var isButtonLoading = false
     
     @Binding var isPresented: Bool
     @FocusState var isCodeFocused: Bool
@@ -47,21 +48,16 @@ struct BandJoinView: View {
                 .padding()
             Spacer()
             Divider()
-            Button {
+            LiveLyricsButton("Create", showProgressIndicator: $isButtonLoading) {
+                isButtonLoading = true
                 bandsViewModel.joinBand(code) { success in
                     if success {
                         isPresented = false
                     } else {
                         showAlert = true
                     }
+                    isButtonLoading = false
                 }
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Join Band")
-                    Spacer()
-                }
-                .modifier(NavButtonViewModifier())
             }
             .padding()
             .disabled(isEmpty)
