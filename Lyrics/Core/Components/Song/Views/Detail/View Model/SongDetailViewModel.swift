@@ -214,6 +214,8 @@ class SongDetailViewModel: ObservableObject {
             let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
             return String(substring)
         }
+        
+        return input
     }
   
     struct DatamuseRowViewModifier: ViewModifier {

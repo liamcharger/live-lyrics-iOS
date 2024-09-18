@@ -13,7 +13,7 @@ struct FeaturesView: View {
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
-        FeaturesSection(title: "General Improvements", subtitle: "This update includes several bug fixes and other improvements.", imageName: "ellipsis.circle")
+        FeaturesSection(title: "General Improvements", subtitle: "This update includes several bug fixes and other improvements.", imageName: "ellipsis.circle", pro: false)
     ]
     
     var body: some View {

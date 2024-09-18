@@ -548,22 +548,23 @@ struct SongDetailView: View {
                                                         }
                                                     }
                                                 }
-                                            }
-                                        } label: {
-                                            HStack(spacing: 5) {
-                                                if let variation = selectedVariation {
-                                                    Text(variation.title)
-                                                } else {
-                                                    Text("Main")
+                                            } label: {
+                                                HStack(spacing: 5) {
+                                                    if let variation = selectedVariation {
+                                                        Text(variation.title)
+                                                    } else {
+                                                        Text("Main")
+                                                    }
+                                                    Image(systemName: "chevron.up.chevron.down")
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
-                            // Don't push elements left unless the word count and variation picker are absent
-                            if !wordCountBool || !getShowVariationCondition() {
-                                Spacer()
+                                // Don't push elements left unless the word count and variation picker are absent
+                                if !wordCountBool || !getShowVariationCondition() {
+                                    Spacer()
+                                }
                             }
                         }
                     }
