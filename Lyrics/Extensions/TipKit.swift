@@ -175,7 +175,7 @@ struct LiveLyricsTipStyle: TipViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack {
             ZStack(alignment: .topTrailing) {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     HStack(alignment: .center, spacing: 8) {
                         configuration.image?
                             .font(.system(size: 26))

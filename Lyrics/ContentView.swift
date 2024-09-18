@@ -10,7 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var notificationManager = NotificationManager.shared
-    @ObservedObject var mainViewModel = MainViewModel()
     
     @State private var showWhatsNew = false
     
@@ -27,14 +26,14 @@ struct ContentView: View {
                 } else {
                     MainView()
                         .environmentObject(viewModel)
+                        .sheet(isPresented: $showNewFolder) {
+                            NewFolderView(isDisplayed: $showNewFolder)
+                        }
+                        .sheet(isPresented: $showNewSong) {
+                            NewSongView(isDisplayed: $showNewSong)
+                        }
                 }
             }
-        }
-        .sheet(isPresented: $showNewFolder) {
-            NewFolderView(isDisplayed: $showNewFolder)
-        }
-        .sheet(isPresented: $showNewSong) {
-            NewSongView(isDisplayed: $showNewSong)
         }
         .onAppear {
             notificationManager.checkForUpdate { isNewVersion in
