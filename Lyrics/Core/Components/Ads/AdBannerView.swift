@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AdBannerView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     let unitId: String
     let height: CGFloat

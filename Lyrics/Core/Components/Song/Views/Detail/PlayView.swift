@@ -51,7 +51,7 @@ struct PlayView: View {
     
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
     
     var songs: [Song]?
     @State var metronomeTimer: DispatchSourceTimer?

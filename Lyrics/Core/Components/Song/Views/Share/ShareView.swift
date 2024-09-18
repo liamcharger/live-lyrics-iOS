@@ -17,7 +17,7 @@ struct UserToShare: Codable {
 struct ShareView: View {
     @Environment(\.presentationMode) var presMode
     
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var authViewModel = AuthViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var bandsViewModel = BandsViewModel.shared
     @ObservedObject var mainViewModel = MainViewModel.shared

@@ -72,7 +72,7 @@ struct SongDetailView: View {
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @ObservedObject var notesViewModel = NotesViewModel.shared
     @ObservedObject var songDetailViewModel = SongDetailViewModel.shared
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
     
     @Environment(\.presentationMode) var presMode
     @Environment(\.openURL) var openURL

@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ListRowView: View {
-    @EnvironmentObject var viewModel: AuthViewModel
-    
+    @ObservedObject var viewModel = AuthViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     
     let title: String

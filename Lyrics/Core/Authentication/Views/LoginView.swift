@@ -25,7 +25,8 @@ struct LoginView: View {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
     }
     
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
     
     var body: some View {
@@ -82,7 +83,6 @@ struct LoginView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showResetPassword) {
             ResetPasswordView(text: $email)
-                .environmentObject(viewModel)
         }
     }
 }

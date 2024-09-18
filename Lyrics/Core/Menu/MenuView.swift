@@ -12,10 +12,10 @@ import BottomSheet
 
 struct MenuView: View {
     @Environment(\.presentationMode) var presMode
-    @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
     
     @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var viewModel = AuthViewModel.shared
     
     @State var showLogoutMenu = false
     @State var showNewSong = false
@@ -90,7 +90,6 @@ struct MenuView: View {
                     }
                     .sheet(isPresented: $showProfileView) {
                         ProfileView(user: user, showProfileView: $showProfileView)
-                            .environmentObject(viewModel)
                     }
                     SheetCloseButton {
                         showMenu = false

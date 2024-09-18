@@ -15,8 +15,7 @@ struct MainView: View {
     @ObservedObject var sortViewModel = SortViewModel.shared
     @ObservedObject var notificationManager = NotificationManager.shared
     @ObservedObject var networkManager = NetworkManager.shared
-    
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
@@ -1044,5 +1043,4 @@ struct MainView: View {
 
 #Preview {
     MainView()
-        .environmentObject(AuthViewModel())
 }

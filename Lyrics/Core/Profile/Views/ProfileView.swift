@@ -12,7 +12,8 @@ import BottomSheet
 
 
 struct ProfileView: View {
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
     
     @Binding var showProfileView: Bool
@@ -84,7 +85,6 @@ struct ProfileView: View {
                     })
                     .sheet(isPresented: $showChangePasswordView) {
                         ResetPasswordView(text: $email)
-                            .environmentObject(viewModel)
                     }
                     .padding(.top)
                     Button(role: .destructive) {

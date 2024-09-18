@@ -204,7 +204,6 @@ struct RecentlyDeletedView: View {
 #Preview {
     NavigationView {
         RecentlyDeletedView()
-            .environmentObject(AuthViewModel())
             .onAppear {
                 RecentlyDeletedViewModel.shared.isLoadingSongs = false
                 RecentlyDeletedViewModel.shared.songs.append(RecentlyDeletedSong(uid: "", timestamp: Date.distantPast, folderIds: [], deletedTimestamp: Date.distantFuture, title: "Test", lyrics: ""))
