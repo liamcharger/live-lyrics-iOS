@@ -35,38 +35,38 @@ struct BandsView: View {
                         // TODO: add banner ad for BandsView in AdMob
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                         Group {
-//                            if !NetworkManager.shared.getNetworkState() {
-//                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
-//                                    .frame(maxWidth: .infinity)
-//                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
-//                            } else if bandsViewModel.isLoadingUserBands {
-//                                ProgressView("Loading")
-//                            } else if bandsViewModel.userBands.isEmpty {
-//                                // TODO: add "what are bands?" button
-//                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
-//                                    .frame(maxWidth: .infinity)
-//                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
-//                            } else {
-                            VStack(spacing: 18) {
-                                HeaderActionsView([
-                                    .init(title: NSLocalizedString("Join Band", comment: ""), icon: "link", scheme: .primary, action: {
-                                        showJoinBandSheet = true
-                                    }),
-                                    .init(title: NSLocalizedString("Create Band", comment: ""), icon: "plus", scheme: .secondary, action: {
-                                        showNewBandSheet = true
-                                    })
-                                ])
-                                VStack {
-                                    ForEach(bandsViewModel.userBands) { band in
-                                        Button {
-                                            selectedBand = band
-                                        } label: {
-                                            BandRowView(band: band, selectedBand: $selectedBand)
+                            if !NetworkManager.shared.getNetworkState() {
+                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                            } else if bandsViewModel.isLoadingUserBands {
+                                ProgressView("Loading")
+                            } else if bandsViewModel.userBands.isEmpty {
+                                // TODO: add "what are bands?" button
+                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                            } else {
+                                VStack(spacing: 18) {
+                                    HeaderActionsView([
+                                        .init(title: NSLocalizedString("Join Band", comment: ""), icon: "link", scheme: .primary, action: {
+                                            showJoinBandSheet = true
+                                        }),
+                                        .init(title: NSLocalizedString("Create Band", comment: ""), icon: "plus", scheme: .secondary, action: {
+                                            showNewBandSheet = true
+                                        })
+                                    ])
+                                    VStack {
+                                        ForEach(bandsViewModel.userBands) { band in
+                                            Button {
+                                                selectedBand = band
+                                            } label: {
+                                                BandRowView(band: band, selectedBand: $selectedBand)
+                                            }
                                         }
                                     }
                                 }
                             }
-//                            }
                         }
                     }
                     .padding()
