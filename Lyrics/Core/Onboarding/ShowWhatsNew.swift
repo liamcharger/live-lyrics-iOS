@@ -32,7 +32,7 @@ struct ShowWhatsNew: View {
                     Text(UserDefaults.standard.string(forKey: "savedVersion") == nil ? "Let's hop right in." : "Let's hop back in.")
                         .font(.largeTitle.bold())
                     Spacer()
-                    LiveLyricsButton("Continue", showProgressIndicator: false) {
+                    LiveLyricsButton("Continue", showProgressIndicator: .constant(false)) {
                         withAnimation(Animation.bouncy(duration: 1.5)) {
                             animState = .none
                         }
@@ -57,6 +57,7 @@ struct ShowWhatsNew: View {
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .second ? 1.0 : 0.2)
                     .blur(radius: animState == .second ? 0 : 20)
+                    .multilineTextAlignment(.center)
                 Text("Hello")
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .first ? 1.0 : 0.2)

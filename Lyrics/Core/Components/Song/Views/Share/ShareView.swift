@@ -138,7 +138,7 @@ struct ShareView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Material.regular)
                     .foregroundColor(.primary)
-                    .cornerRadius(20)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay {
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(Color.yellow, lineWidth: 2.5)
@@ -371,36 +371,6 @@ struct ShareView: View {
                 }
             }
         }
-    }
-}
-
-struct FullscreenMessage: View {
-    let imageName: String
-    let title: String
-    let spaceNavbar: Bool?
-    
-    init(imageName: String, title: String, spaceNavbar: Bool? = nil) {
-        self.imageName = imageName
-        self.title = title
-        self.spaceNavbar = spaceNavbar
-    }
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            Spacer()
-            Image(systemName: imageName)
-                .font(.system(size: 35).weight(.semibold))
-            Text(title)
-                .font(.title2.weight(.semibold))
-                .multilineTextAlignment(.center)
-            Spacer()
-            if spaceNavbar != nil {
-                Spacer()
-                    .frame(height: 35)
-            }
-        }
-        .padding()
-        .foregroundColor(.gray)
     }
 }
 

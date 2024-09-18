@@ -18,6 +18,10 @@ class SongDetailViewModel: ObservableObject {
     @Published var showMoveView = false
     @Published var showTagSheet = false
     
+    @Published var demoToEdit: DemoAttachment?
+    
+    @Published var selectedText = ""
+    
     @ObservedObject var songViewModel = SongViewModel.shared
     
     let pasteboard = UIPasteboard.general
@@ -210,7 +214,17 @@ class SongDetailViewModel: ObservableObject {
             let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
             return String(substring)
         }
-        
-        return input
+    }
+  
+    struct DatamuseRowViewModifier: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .padding(8)
+                .padding(.horizontal, 4)
+                .background(Material.thin)
+                .foregroundColor(.primary)
+                .clipShape(Capsule())
+                .lineLimit(1)
+        }
     }
 }

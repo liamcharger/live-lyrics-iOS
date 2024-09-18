@@ -160,7 +160,18 @@ class AuthViewModel: ObservableObject {
                 if let error = error {
                     print("Error:", error.localizedDescription)
                 }
-                self.fetchUser()
+            }
+        }
+    }
+    
+    func updateProStatus(_ hasPro: Bool) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        if (currentUser?.hasPro ?? false) != hasPro {
+            Firestore.firestore().collection("users").document(uid).updateData(["hasPro": hasPro]) { error in
+                if let error = error {
+                    print("Error:", error.localizedDescription)
+                }
             }
         }
     }
@@ -187,6 +198,16 @@ class AuthViewModel: ObservableObject {
     func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
         songService.sendInviteToUser(request: request, includeDefault: includeDefault) { error in
             completion(error)
+        }
+    }
+    
+    func saveReceiptToFirestore(_ receipt: String) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Firestore.firestore().collection("users").document(uid).updateData(["purchaseReceipt": receipt]) { error in
+            if let error = error {
+                print("Error:", error.localizedDescription)
+            }
         }
     }
 }

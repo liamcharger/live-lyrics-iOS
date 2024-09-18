@@ -33,7 +33,7 @@ struct FeaturesView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             }
             Spacer()
-            LiveLyricsButton(selectedTab < features.count - 1 ? "Next" : "Continue", showProgressIndicator: false) {
+            LiveLyricsButton(selectedTab < features.count - 1 ? "Next" : "Continue", showProgressIndicator: .constant(false)) {
                 if selectedTab < features.count - 1 {
                     withAnimation {
                         selectedTab += 1
@@ -49,16 +49,26 @@ struct FeaturesView: View {
     
     func featureCard(_ feature: FeaturesSection) -> some View {
         VStack(spacing: 9) {
-            Image(systemName: feature.imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 90, height: 90)
+            ZStack(alignment: .topLeading) {
+                FAText(iconName: feature.imageName, size: 90, style: .regular)
+            }
             Spacer()
                 .frame(height: 5)
-            Text(feature.title)
-                .font(.title)
-                .fontWeight(.bold)
-            Text(feature.subtitle)
+            HStack(alignment: .center) {
+                Text(NSLocalizedString(feature.title, comment: ""))
+                    .font(.title)
+                    .fontWeight(.bold)
+                if feature.pro {
+                    Text("Pro")
+                        .font(.system(size: 12).weight(.medium))
+                        .padding(5)
+                        .padding(.horizontal, 2)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                }
+            }
+            Text(NSLocalizedString(feature.subtitle, comment: ""))
                 .foregroundColor(.gray)
         }
         .padding()
@@ -69,6 +79,7 @@ struct FeaturesSection {
     var title: String
     var subtitle: String
     var imageName: String
+    var pro: Bool
 }
 
 #Preview {

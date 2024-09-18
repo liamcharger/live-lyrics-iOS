@@ -11,9 +11,16 @@ import Combine
 struct SongEditView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @Environment(\.presentationMode) var presMode
+    @Environment(\.openURL) var openURL
+    
     let song: Song
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     @Binding var isDisplayed: Bool
     @Binding var title: String
@@ -28,6 +35,11 @@ struct SongEditView: View {
     @State var stateDuration = ""
     
     @State var showError = false
+    @State var showDemoEditSheet = false
+    @State var showNewDemoSheet = false
+    @State var showDeleteConfirmation = false
+    
+    @State var selectedDemo: DemoAttachment?
     
     var isEmpty: Bool {
         let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty
@@ -88,11 +100,112 @@ struct SongEditView: View {
             .padding()
             Divider()
             ScrollView {
-                VStack(alignment: .leading) {
-                    CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
-                    CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
-                    CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
-                    CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
+                VStack(alignment: .leading, spacing: 22) {
+                    VStack {
+                        CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
+                        CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
+                        CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
+                        CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
+                    }
+                    if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
+                            VStack {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(spacing: 8) {
+                                        Text("Demo Attachments".uppercased())
+                                            .font(.system(size: 16).weight(.bold))
+                                        Spacer()
+                                        if user.hasPro ?? false {
+                                            Button {
+                                                showNewDemoSheet = true
+                                            } label: {
+                                                Image(systemName: "plus")
+                                                    .padding(10)
+                                                    .font(.body.weight(.medium))
+                                                    .background(Color.accentColor)
+                                                    .foregroundColor(.white)
+                                                    .clipShape(Circle())
+                                            }
+                                            .sheet(isPresented: $showNewDemoSheet) {
+                                                NewDemoAttachmentView(song: song)
+                                            }
+                                        }
+                                    }
+                                }
+                                if (song.demoAttachments ?? []).isEmpty {
+                                    EmptyStateView(state: .demoAttachments)
+                                } else {
+                                    if let demoAttachments = song.demoAttachments {
+                                        LazyVGrid(columns: columns) {
+                                            ForEach(demoAttachments, id: \.self) { attachment in
+                                                let demo = songViewModel.getDemo(from: attachment)
+                                                
+                                                Button {
+                                                    selectedDemo = demo
+                                                    showDemoEditSheet = true
+                                                } label: {
+                                                    VStack(alignment: .leading, spacing: 12) {
+                                                        songViewModel.getDemoIcon(from: demo.icon, size: 22)
+                                                            .foregroundColor(demo.color)
+                                                        Text(NSLocalizedString(demo.title, comment: ""))
+                                                            .font(.system(size: 18).weight(.semibold))
+                                                            .frame(maxWidth: 95, alignment: .leading)
+                                                            .multilineTextAlignment(.leading)
+                                                            .lineLimit(2)
+                                                    }
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                                    .frame(minHeight: 80)
+                                                    .padding()
+                                                    .frame(maxHeight: .infinity)
+                                                    .background(Material.thin)
+                                                    .foregroundColor(.primary)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                                                }
+                                                .contextMenu {
+                                                    Button {
+                                                        let demoURL = songViewModel.getDemo(from: attachment).url
+                                                        
+                                                        guard let url = URL(string: demoURL) else { return }
+                                                        
+                                                        openURL(url)
+                                                     } label: {
+                                                        Label("Open", systemImage: "arrow.up.right.square")
+                                                    }
+                                                    Button {
+                                                        selectedDemo = songViewModel.getDemo(from: attachment)
+                                                        showDemoEditSheet = true
+                                                    } label: {
+                                                        Label("Edit", systemImage: "pencil")
+                                                    }
+                                                    Button(role: .destructive) {
+                                                        selectedDemo = songViewModel.getDemo(from: attachment)
+                                                        showDeleteConfirmation = true
+                                                    } label: {
+                                                        Label("Delete", systemImage: "trash")
+                                                    }
+                                                }
+                                                .sheet(isPresented: $showDemoEditSheet) {
+                                                    if let demo = selectedDemo {
+                                                        DemoAttachmentEditView(demo: demo, song: song)
+                                                    }
+                                                }
+                                                .confirmationDialog("Delete Demo", isPresented: $showDeleteConfirmation) {
+                                                    if let demo = selectedDemo {
+                                                        Button("Delete", role: .destructive) {
+                                                            self.songViewModel.deleteDemoAttachment(demo: demo, for: song) {}
+                                                        }
+                                                        Button("Cancel", role: .cancel) {
+                                                            self.showDeleteConfirmation = false
+                                                        }
+                                                    }
+                                                } message: {
+                                                    Text("Are you sure you want to delete this demo?")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                    }
                     if isInvalidFormat(stateDuration) {
                         Group {
                             Text("The duration is not formatted correctly. Correct formatting, e.g., ") +
@@ -118,6 +231,12 @@ struct SongEditView: View {
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
+        }
+        .onAppear {
+            if let demoToEdit = SongDetailViewModel.shared.demoToEdit {
+                selectedDemo = demoToEdit
+                showDemoEditSheet = true
+            }
         }
     }
 }

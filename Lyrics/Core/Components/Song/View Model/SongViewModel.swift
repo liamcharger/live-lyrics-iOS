@@ -16,6 +16,19 @@ class SongViewModel: ObservableObject {
     @Published var isLoadingVariations = false
     
     let service = SongService()
+    let providerKeywords: [(provider: String, keyword: String, icon: String, color: Color)] = [
+        ("Spotify", "spotify", "spotify", Color.green),
+        ("Apple Music", "music.apple", "apple_music", Color.red),
+        ("YouTube", "youtube", "youtube", Color.red),
+        ("YouTube Music", "music.youtube", "youtube_music", Color.red),
+        ("SoundCloud", "soundcloud", "soundcloud", Color.red),
+        ("Tidal", "tidal", "tidal", Color.primary),
+        ("Bandcamp", "bandcamp", "bandcamp", Color.indigo),
+        ("Deezer", "deezer", "deezer", Color.orange),
+        ("Amazon Music", "music.amazon", "amazon_music", Color.teal),
+        ("Pandora", "pandora", "pandora", Color.primary)
+    ]
+    
     static let shared = SongViewModel()
     
     func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
@@ -186,7 +199,67 @@ class SongViewModel: ObservableObject {
         }
     }
     
+    func createDemoAttachment(for song: Song, from urlString: String, completion: @escaping() -> Void) {
+        service.createNewDemoAttachment(from: urlString, for: song, completion: completion)
+    }
+    
+    func deleteDemoAttachment(demo: DemoAttachment, for song: Song, completion: @escaping() -> Void) {
+        service.deleteDemoAttachment(demo: demo, for: song, completion: completion)
+    }
+    
+    func updateDemo(for song: Song, oldUrl: String, url: String, completion: @escaping() -> Void) {
+        service.updateDemo(for: song, oldUrl: oldUrl, url: url, completion: completion)
+    }
+    
+    func getDemo(from urlString: String) -> DemoAttachment {
+        for (provider, keyword, icon, color) in providerKeywords {
+            if urlString.lowercased().contains(keyword) {
+                return DemoAttachment(title: provider, icon: icon, color: color, url: urlString)
+            }
+        }
+        return DemoAttachment(title: urlString, icon: "square", color: Color.primary, url: urlString)
+    }
+    
+    func getDemoIcon(from icon: String, size: CGFloat = 22) -> some View {
+        return Group {
+            if icon == "apple_music" || icon == "amazon_music" || icon == "tidal" || icon == "pandora" {
+                Image(icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+            } else {
+                FAText(iconName: icon, size: size)
+            }
+        }
+    }
+    
+    func appendPrefix(_ url: String) -> String {
+        if url.lowercased().hasPrefix("http://") || url.lowercased().hasPrefix("https://") {
+            return url
+        } else {
+            return "https://\(url)"
+        }
+    }
+    
+    func removePrefix(_ url: String) -> String {
+        let http = "http://"
+        let https = "https://"
+        
+        return url.replacingOccurrences(of: https, with: "").replacingOccurrences(of: http, with: "")
+    }
+    
     func isShared(song: Song) -> Bool {
         return song.uid != authViewModel.currentUser?.id
+    }
+    
+    func removeFeatAndAfter(from input: String) -> String {
+        let keyword = "feat"
+        
+        if let range = input.range(of: keyword, options: .caseInsensitive) {
+            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
+            return String(substring)
+        }
+        
+        return input
     }
 }

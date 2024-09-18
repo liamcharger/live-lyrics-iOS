@@ -36,7 +36,7 @@ struct NewFolderView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+            CustomTextField(text: $title, placeholder: "title")
                 .padding()
                 .focused($isFocused)
             Spacer()
