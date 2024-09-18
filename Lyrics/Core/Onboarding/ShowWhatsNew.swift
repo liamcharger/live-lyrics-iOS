@@ -29,7 +29,7 @@ struct ShowWhatsNew: View {
             ZStack {
                 VStack {
                     Spacer()
-                    Text("Let's hop back in.")
+                    Text(UserDefaults.standard.string(forKey: "savedVersion") == nil ? "Let's hop right in." : "Let's hop back in.")
                         .font(.largeTitle.bold())
                     Spacer()
                     LiveLyricsButton("Continue", showProgressIndicator: .constant(false)) {
@@ -53,13 +53,7 @@ struct ShowWhatsNew: View {
                 FeaturesView(animState: $animState)
                     .scaleEffect(animState == .third ? 1.0 : 0.2)
                     .blur(radius: animState == .third ? 0 : 20)
-                Text({
-                    if UserDefaults.standard.string(forKey: "savedVersion") != nil {
-                        return NSLocalizedString("Welcome back to Live Lyrics.", comment: "")
-                    } else {
-                        return NSLocalizedString("Welcome to Live Lyrics.", comment: "")
-                    }
-                }())
+                Text(UserDefaults.standard.string(forKey: "savedVersion") == nil ? "Welcome to Live Lyrics." : "Welcome back to Live Lyrics.")
                     .font(.largeTitle.bold())
                     .scaleEffect(animState == .second ? 1.0 : 0.2)
                     .blur(radius: animState == .second ? 0 : 20)

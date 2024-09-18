@@ -36,7 +36,7 @@ class SongDetailViewModel: ObservableObject {
         return song.readOnly ?? false
     }
     
-    func optionsButton(_ song: Song, isSongFromFolder: Bool) -> some View {
+    func optionsButton(_ song: Song, lyrics: String, isSongFromFolder: Bool) -> some View {
         Menu {
             if !readOnly(song) {
                 Button {
@@ -53,7 +53,7 @@ class SongDetailViewModel: ObservableObject {
                 }
             }
             Button {
-                self.printSong(song)
+                self.printSong(song, lyrics)
             } label: {
                 Label("Print", systemImage: "printer")
             }
@@ -116,7 +116,7 @@ class SongDetailViewModel: ObservableObject {
         }
     }
     
-    func printSong(_ song: Song) {
+    func printSong(_ song: Song, _ lyrics: String) {
         let printController = UIPrintInteractionController.shared
         
         let printInfo = UIPrintInfo(dictionary: nil)
@@ -139,7 +139,7 @@ class SongDetailViewModel: ObservableObject {
     .content {
         column-count: 2;
         column-gap: 20px;
-        column-fill: auto; /* Ensure the columns fill equally */
+        column-fill: auto;
     }
     h2 {
         margin-bottom: 5px;
@@ -156,7 +156,7 @@ class SongDetailViewModel: ObservableObject {
 </div>
 <br/>
 <div class="content">
-    \(song.lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
+    \(lyrics.replacingOccurrences(of: "\n", with: "<br/>"))
 </div>
 </body>
 </html>
@@ -207,6 +207,17 @@ class SongDetailViewModel: ObservableObject {
         }
     }
     
+    func removeFeatAndAfter(from input: String) -> String {
+        let keyword = "feat"
+        
+        if let range = input.range(of: keyword, options: .caseInsensitive) {
+            let substring = input[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
+            return String(substring)
+        }
+        
+        return input
+    }
+  
     struct DatamuseRowViewModifier: ViewModifier {
         func body(content: Content) -> some View {
             content
