@@ -312,6 +312,7 @@ struct MainView: View {
             content
                 .onAppear {
                     DispatchQueue.main.async {
+                        // Only allow fetches to occur once
                         if !hasFirestoreStartedListening {
                             self.mainViewModel.fetchSongs()
                             self.mainViewModel.fetchFolders()
@@ -322,6 +323,12 @@ struct MainView: View {
                             self.hasFirestoreStartedListening = true
                         }
                     }
+                    // Show alert instead of displaying badge on bottom edge of the display when the device is not in portrait mode to save space
+                    // FIXME: alert does not show
+                    if !NetworkManager.shared.getNetworkState() && UIDevice.current.orientation != .portrait && UIDevice.current.orientation != .portraitUpsideDown {
+                        showOfflineAlert = true
+                    }
+                    // Load user-set sort settings
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
                     }
@@ -961,19 +968,23 @@ struct MainView: View {
         }
         .overlay {
             if !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable {
+                let notConnectedAndInLandscape = !NetworkManager.shared.getNetworkState() && (UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown)
+                
                 VStack {
                     Spacer()
                     ZStack {
-                        VisualEffectBlur(blurStyle: .systemMaterial)
-                            .mask(LinearGradient(
-                                gradient: Gradient(colors: [Color.white, Color.clear]),
-                                startPoint: .bottom,
-                                endPoint: .top
-                            ))
-                            .edgesIgnoringSafeArea(.all)
+                        if notConnectedAndInLandscape {
+                            VisualEffectBlur(blurStyle: .systemMaterial)
+                                .mask(LinearGradient(
+                                    gradient: Gradient(colors: [Color.white, Color.clear]),
+                                    startPoint: .bottom,
+                                    endPoint: .top
+                                ))
+                                .edgesIgnoringSafeArea(.all)
+                        }
                         VStack {
                             Spacer()
-                            if !NetworkManager.shared.getNetworkState() {
+                            if notConnectedAndInLandscape {
                                 Button {
                                     showOfflineAlert = true
                                 } label: {
@@ -987,9 +998,6 @@ struct MainView: View {
                                     .clipShape(Capsule())
                                     .customShadow(color: .red, radius: 20, x: 6, y: 6)
                                     .padding()
-                                }
-                                .alert(isPresented: $showOfflineAlert) {
-                                    Alert(title: Text("youre_offline"), message: Text("some_features_may_not_work_expectedly"), dismissButton: .cancel(Text("OK")))
                                 }
                             } else if mainViewModel.updateAvailable {
                                 Button {
@@ -1014,6 +1022,9 @@ struct MainView: View {
                     .frame(height: 80)
                 }
             }
+        }
+        .alert(isPresented: $showOfflineAlert) {
+            Alert(title: Text("youre_offline"), message: Text("some_features_may_not_work_expectedly"), dismissButton: .cancel(Text("OK")))
         }
     }
 }
