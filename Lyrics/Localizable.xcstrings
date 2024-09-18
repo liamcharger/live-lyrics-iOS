@@ -1697,6 +1697,9 @@
         }
       }
     },
+    "Let's hop right in." : {
+
+    },
     "Light" : {
       "localizations" : {
         "es" : {
@@ -1776,6 +1779,9 @@
           }
         }
       }
+    },
+    "Main" : {
+
     },
     "Make sure that " : {
       "comment" : "Used in ShareView \"Make sure that (username is using version _._._ or higher)\"",

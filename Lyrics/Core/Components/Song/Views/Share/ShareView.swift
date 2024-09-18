@@ -198,7 +198,7 @@ struct ShareView: View {
                                 self.selectedVariations.append(SongVariation(title: defaultVariationId, lyrics: "", songUid: "", songId: ""))
                             }
                         } label: {
-                            Label(NSLocalizedString("Default", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
+                            Label(NSLocalizedString("Main", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
                         }
                         Divider()
                         ForEach(songVariations, id: \.id) { variation in
@@ -224,7 +224,7 @@ struct ShareView: View {
                                         let title = selectedVariations.first?.title ?? ""
                                         
                                         if title == defaultVariationId {
-                                            return NSLocalizedString("Default", comment: "")
+                                            return NSLocalizedString("Main", comment: "")
                                         } else {
                                             return title
                                         }

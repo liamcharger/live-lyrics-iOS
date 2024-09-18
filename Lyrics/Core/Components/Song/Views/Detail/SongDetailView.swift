@@ -252,7 +252,7 @@ struct SongDetailView: View {
                                 NotesView(song: song)
                             }
                             // Fetch ellipsis/actions button from view model to cut down on file size
-                            songDetailViewModel.optionsButton(song, isSongFromFolder: isSongFromFolder)
+                            songDetailViewModel.optionsButton(song, lyrics: lyrics, isSongFromFolder: isSongFromFolder)
                         } else {
                             Button(action: {
                                 if let song = restoreSong {
@@ -505,7 +505,7 @@ struct SongDetailView: View {
                                                         self.lyrics = song.lyrics
                                                         self.selectedVariation = nil
                                                     } label: {
-                                                        Label("Default", systemImage: selectedVariation == nil ? "checkmark" : "")
+                                                        Label("Main", systemImage: selectedVariation == nil ? "checkmark" : "")
                                                     }
                                                     Divider()
                                                 }
@@ -553,7 +553,7 @@ struct SongDetailView: View {
                                                     if let variation = selectedVariation {
                                                         Text(variation.title)
                                                     } else {
-                                                        Text("Default")
+                                                        Text("Main")
                                                     }
                                                     Image(systemName: "chevron.up.chevron.down")
                                                 }
@@ -561,10 +561,10 @@ struct SongDetailView: View {
                                         }
                                     }
                                 }
-                            }
-                            // Don't push elements left unless the word count and variation picker are absent
-                            if !wordCountBool || !getShowVariationCondition() {
-                                Spacer()
+                                // Don't push elements left unless the word count and variation picker are absent
+                                if !wordCountBool || !getShowVariationCondition() {
+                                    Spacer()
+                                }
                             }
                         }
                     }
