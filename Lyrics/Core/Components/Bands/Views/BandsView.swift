@@ -24,30 +24,30 @@ struct BandsView: View {
                 CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: $collapsedNavbarTitle)
                     .padding()
                 Divider()
-                if !NetworkManager.shared.getNetworkState() {
-                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
-                } else if bandsViewModel.isLoadingUserBands {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        ProgressView("Loading")
-                        Spacer()
-                    }
-                    .padding()
-                    Spacer()
-                } else if bandsViewModel.userBands.isEmpty {
-                    // TODO: add "what are bands?" button
-                    FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            GeometryReader { geo in
-                                Color.clear
-                                    .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
-                            }
-                            .frame(height: 0)
-                            HeaderView(NSLocalizedString("Bands", comment: ""), icon: "guitar", color: .blue, geo: geo, counter: "\(bandsViewModel.userBands.count) band\(bandsViewModel.userBands.count == 1 ? "" : "s")".uppercased())
-                            VStack(spacing: 22) {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        GeometryReader { geo in
+                            Color.clear
+                                .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
+                        }
+                        .frame(height: 0)
+                        HeaderView(NSLocalizedString("Bands", comment: ""), icon: "guitar", color: .blue, geo: geo, counter: "\(bandsViewModel.userBands.count) band\(bandsViewModel.userBands.count == 1 ? "" : "s")".uppercased())
+                        // TODO: add banner ad for BandsView in AdMob
+                        AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
+                        Group {
+//                            if !NetworkManager.shared.getNetworkState() {
+//                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
+//                                    .frame(maxWidth: .infinity)
+//                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+//                            } else if bandsViewModel.isLoadingUserBands {
+//                                ProgressView("Loading")
+//                            } else if bandsViewModel.userBands.isEmpty {
+//                                // TODO: add "what are bands?" button
+//                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
+//                                    .frame(maxWidth: .infinity)
+//                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+//                            } else {
+                            VStack(spacing: 18) {
                                 HeaderActionsView([
                                     .init(title: NSLocalizedString("Join Band", comment: ""), icon: "link", scheme: .primary, action: {
                                         showJoinBandSheet = true
@@ -66,22 +66,23 @@ struct BandsView: View {
                                     }
                                 }
                             }
+//                            }
                         }
-                        .padding()
-                        .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
-                            let animation = Animation.easeInOut(duration: 0.22)
-                            
-                            if value.first ?? 0 >= -20 {
-                                DispatchQueue.main.async {
-                                    withAnimation(animation) {
-                                        collapsedNavbarTitle = false
-                                    }
+                    }
+                    .padding()
+                    .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                        let animation = Animation.easeInOut(duration: 0.22)
+                        
+                        if value.first ?? 0 >= -20 {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
+                                    collapsedNavbarTitle = false
                                 }
-                            } else {
-                                DispatchQueue.main.async {
-                                    withAnimation(animation) {
-                                        collapsedNavbarTitle = true
-                                    }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
+                                    collapsedNavbarTitle = true
                                 }
                             }
                         }

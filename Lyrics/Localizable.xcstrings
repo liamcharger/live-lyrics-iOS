@@ -133,16 +133,6 @@
         }
       }
     },
-    "%lld members%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld members%2$@"
-          }
-        }
-      }
-    },
     "%lld Syllable%@" : {
       "localizations" : {
         "en" : {
@@ -718,6 +708,9 @@
         }
       }
     },
+    "Ask the band member to click the \"Join a Band\" button in previous view and enter the code you receive when clicking the button above." : {
+
+    },
     "Audio" : {
       "localizations" : {
         "es" : {
@@ -741,6 +734,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desplazamiento automático"
+          }
+        }
+      }
+    },
+    "band_join_code_copied" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The band join code has been copied to the clipboard."
           }
         }
       }
@@ -3229,17 +3232,6 @@
         }
       }
     },
-    "The band join code has been copied to the clipboard." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El código de unión de banda se ha copiado en el portapapeles."
-          }
-        }
-      }
-    },
     "The duration is not formatted correctly. Correct formatting, e.g., " : {
       "localizations" : {
         "es" : {
@@ -3443,6 +3435,9 @@
           }
         }
       }
+    },
+    "Want to add members to your band?" : {
+
     },
     "Want to save a word?" : {
       "localizations" : {

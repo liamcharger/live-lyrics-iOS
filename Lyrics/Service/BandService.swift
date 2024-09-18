@@ -95,7 +95,7 @@ struct BandService {
         
         let id = UUID().uuidString
         
-        Firestore.firestore().collection("bands").document(id).setData(["name": name, "joinId": generateBandJoinCode(), "admins": FieldValue.arrayUnion([uid]), "members": FieldValue.arrayUnion([uid])]) { error in
+        Firestore.firestore().collection("bands").document(id).setData(["name": name, "createdBy": uid, "joinId": generateBandJoinCode(), "admins": FieldValue.arrayUnion([uid]), "members": FieldValue.arrayUnion([uid])]) { error in
             if let error = error {
                 print(error.localizedDescription)
                 return

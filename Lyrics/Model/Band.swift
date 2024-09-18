@@ -11,6 +11,7 @@ import FirebaseFirestoreSwift
 struct Band: Identifiable, Codable {
     @DocumentID var id: String?
     let name: String
+    let createdBy: String
     let joinId: String
     let members: [String]
     let admins: [String]

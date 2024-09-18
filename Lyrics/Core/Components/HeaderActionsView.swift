@@ -9,6 +9,7 @@ import SwiftUI
 
 enum HeaderAction {
     case primary
+    case primaryAlt
     case secondary
     case destructive
 }
@@ -50,6 +51,8 @@ struct HeaderActionsView: View {
                         switch button.scheme {
                         case .primary:
                             return .white
+                        case .primaryAlt:
+                            return .blue
                         case .secondary:
                             return .primary
                         case .destructive:
