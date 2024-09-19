@@ -1,5 +1,5 @@
 {
-  "originHash" : "273087207dac160cae1acc170a1ad9df283b262ad49a7f5477ad3c34e9432f57",
+  "originHash" : "d1d2645338e6d65e01cc36dc0d1f106d40d171095ee7fb99213041202e59ed39",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -116,15 +116,6 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
-      }
-    },
-    {
-      "identity" : "simpletoast",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sanzaru/SimpleToast.git",
-      "state" : {
-        "revision" : "8dbc2e7c33cda25c0b2efafd59716cb9820c83eb",
-        "version" : "0.8.1"
       }
     },
     {

@@ -37,7 +37,6 @@ struct BandService {
         Firestore.firestore().collection("bands").whereField("members", arrayContains: uid).addSnapshotListener { snapshot, error in
             if let error = error {
                 print(error.localizedDescription)
-                return
             }
             guard let documents = snapshot?.documents else { return }
             
@@ -61,17 +60,33 @@ struct BandService {
         }
     }
     
-    func fetchBandMembers(band: Band, completion: @escaping([BandMember]) -> Void) {
-        Firestore.firestore().collection("bands").document(band.id!).collection("members").addSnapshotListener { snapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
+    func fetchBandMembers(band: Band, withListener: Bool = true, completion: @escaping([BandMember]) -> Void) {
+        let ref = Firestore.firestore().collection("bands").document(band.id!).collection("members")
+        
+        if withListener {
+            ref.addSnapshotListener { snapshot, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                guard let documents = snapshot?.documents else { return }
+                
+                let members = documents.compactMap({ try? $0.data(as: BandMember.self) })
+                
+                completion(members)
             }
-            guard let documents = snapshot?.documents else { return }
-            
-            let members = documents.compactMap({ try? $0.data(as: BandMember.self) })
-            
-            completion(members)
+        } else {
+            ref.getDocuments { snapshot, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                guard let documents = snapshot?.documents else { return }
+                
+                let members = documents.compactMap({ try? $0.data(as: BandMember.self) })
+                
+                completion(members)
+            }
         }
     }
     

@@ -18,4 +18,5 @@ struct SharedSong: Identifiable, Codable, Equatable {
     var readOnly: Bool?
     var pinned: Bool?
     var performanceMode: Bool?
+    var bandId: String?
 }

@@ -149,6 +149,9 @@ struct SongDetailView: View {
             showUpgradeSheet = true
         }
     }
+    func handleRoleVariations(completion: @escaping([SongVariation]) -> Void) {
+//        let band = 
+    }
     
     // Use one alert modifer (because more than one alert cannot be applied to the same view) and differentiate show content based on a set var from the enum
     enum ActiveAlert {
@@ -600,6 +603,23 @@ struct SongDetailView: View {
                 if let variationIds = song.variations, !variationIds.isEmpty {
                     // Initialize a variable to assign parsed variations to
                     var parsedVariations = [SongVariation]()
+                    
+                    // The song variations should be allowed based on band member status
+                    if variationIds.contains(where: { $0 == "byRole" }) {
+                        if BandsViewModel.shared.isLoadingUserBands {
+                            BandsViewModel.shared.fetchUserBands {
+                                handleRoleVariations { variations in
+                                    self.songVariations = variations
+                                }
+                            }
+                        } else {
+                            handleRoleVariations { variations in
+                                self.songVariations = variations
+                            }
+                        }
+                        
+                        return
+                    }
                     
                     // Default variation is allowed, add it to the array
                     if variationIds.contains(where: { $0 == SongVariation.defaultId }) || variationIds.isEmpty {

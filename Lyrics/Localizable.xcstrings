@@ -2376,7 +2376,6 @@
       }
     },
     "or_choose_band" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -45,8 +45,8 @@ class BandsViewModel: ObservableObject {
         }
     }
     
-    func fetchBandMembers(_ band: Band, completion: @escaping([BandMember]) -> Void) {
-        service.fetchBandMembers(band: band) { members in
+    func fetchBandMembers(_ band: Band, withListener: Bool = true, completion: @escaping([BandMember]) -> Void) {
+        service.fetchBandMembers(band: band, withListener: withListener) { members in
             completion(members)
         }
     }

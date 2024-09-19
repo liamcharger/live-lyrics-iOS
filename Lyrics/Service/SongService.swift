@@ -245,36 +245,31 @@ class SongService {
 				for folderSong in folderSongs {
 					group.enter()
 					self.fetchSong(listen: false, forUser: userId, withId: folderSong.id!) { song in
-						group.leave()
 						if var song = song {
 							if let variations = folder.songVariations {
 								if let bandId = folder.bandId, variations.contains(where: { $0 == "byRole" }) {
-									if BandsViewModel.shared.isLoadingUserBands || BandsViewModel.shared.userBands.isEmpty {
-										group.enter()
-										BandsViewModel.shared.fetchUserBands {
-											group.leave()
-											group.enter()
-											self.handleVariations(song, bandId: bandId) { songVariations in
-												print(song.title, ", ", songVariations)
-												song.variations = songVariations
-												group.leave()
-											}
-										}
-									} else {
-										group.enter()
-										self.handleVariations(song, bandId: bandId) { songVariations in
-											print(song.title, ", ", songVariations)
-											song.variations = songVariations
-											group.leave()
-										}
+									// Fetch variations based on band roles
+									self.handleVariations(song, bandId: bandId) { songVariations in
+										print(song.title, ", ", songVariations)
+										song.variations = songVariations.compactMap({ $0.id })
+										completedSongs.append(song) // Ensure song is appended after variations are set
+										group.leave()
 									}
 								} else if variations.contains(where: { $0 == SongVariation.defaultId }){
 									song.variations?.append(SongVariation.defaultId)
+									completedSongs.append(song)
+									group.leave()
 								} else if variations.isEmpty {
 									song.variations = []
+									completedSongs.append(song)
+									group.leave()
 								}
+							} else {
+								completedSongs.append(song)
+								group.leave()
 							}
-							completedSongs.append(song)
+						} else {
+							group.leave()
 						}
 					} registrationCompletion: { _ in }
 				}
@@ -289,38 +284,64 @@ class SongService {
 			}
 	}
 	
-	func handleVariations(_ song: Song, bandId: String, completion: @escaping([String]) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
+	func handleVariations(_ song: Song, bandId: String, completion: @escaping ([SongVariation]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else {
+			completion([]) // Early exit with empty variations
+			return
+		}
 		
 		let group = DispatchGroup()
 		var filteredVariations = [SongVariation]()
 		
-		if let band = BandsViewModel.shared.userBands.first(where: { $0.id ?? "" == bandId }) {
+		group.enter()
+		BandsViewModel.shared.fetchUserBands {
+			guard let band = BandsViewModel.shared.userBands.first(where: { $0.id == bandId }) else {
+				print("Band not found")
+				// If the band isn't found, return empty variations
+				completion([])
+				return
+			}
+			
 			print("BAND: ", band)
 			group.enter()
+			
+			// Fetch band members
 			BandsViewModel.shared.fetchBandMembers(band) { members in
 				group.leave()
-				guard let member = members.first(where: { $0.uid == uid }) else { return }
-				print("MEMBER: ", member)
+				guard let member = members.first(where: { $0.uid == uid }) else {
+					print("Member not found")
+					// If the member isn't found, return
+					completion([])
+					return
+				}
+				
 				group.enter()
+				// FIXME: with event listeners, if they're fired in another part of the app, a crash will occur due to the group.leave() method being called without .enter() being called first
 				BandsViewModel.shared.fetchMemberRoles(band) { roles in
 					group.leave()
-					guard let memberRoleId = roles.first(where: { $0.id ?? "" == member.roleId })?.id else { return }
-					print("MEMBER ROLE ID: ", member)
+					guard let memberRoleId = roles.first(where: { $0.id == member.roleId })?.id else {
+						print("Role not found")
+						completion([]) // If the role isn't found, return
+						return
+					}
+					
+					print(memberRoleId)
 					
 					group.enter()
+					// Fetch song variations
 					SongViewModel.shared.fetchSongVariations(song: song) { songVariations in
-						print("SONG VARIATIONS: ", songVariations)
-						filteredVariations = songVariations.filter { variation in
+						// Filter variations based on the role
+						print("songVariations: \(songVariations)")
+						
+						for variation in songVariations {
 							if let roleId = variation.roleId {
-								print("VARIATION: ", variation, "ROLE ID: ", roleId)
 								if roleId == memberRoleId {
-									return true
+									filteredVariations.append(variation)
 								}
 							}
-							return false
 						}
 						
+						// If no variations match, add a default variation
 						if filteredVariations.isEmpty {
 							filteredVariations.append(SongVariation(id: SongVariation.defaultId, title: "", lyrics: "", songUid: "", songId: "", roleId: ""))
 						}
@@ -328,13 +349,12 @@ class SongService {
 						group.leave()
 					}
 				}
+				group.leave()
 			}
-		} else {
-			print("Band is nil")
 		}
 		
 		group.notify(queue: .main) {
-			completion(filteredVariations.compactMap({ $0.id ?? "" }))
+			completion(filteredVariations)
 		}
 	}
 	
@@ -1173,7 +1193,7 @@ class SongService {
 								} else {
 									self.deleteRequest(request, uid: uid)
 								}
-              }
+							}
 							self.deleteRequest(request, uid: uid)
 							if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
 								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.fullname) has accepted the folder \"\(request.contentName)\"", type: .accepted)
@@ -1195,12 +1215,13 @@ class SongService {
 				}
 				
 				if request.type == "collaborate" {
-					let sharedSong: [String: Any?] = [
+					var sharedSong: [String: Any?] = [
 						"from": request.from,
 						"songId": request.contentId,
 						"order": 0,
+						"readOnly": request.readOnly,
 						"variations": request.songVariations,
-						"readOnly": request.readOnly
+						"bandId": request.bandId
 					]
 					
 					dispatch.enter()

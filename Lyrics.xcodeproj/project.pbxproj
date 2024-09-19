@@ -147,7 +147,6 @@
 		E0D21B912C1E833800476B3C /* UserPopoverRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */; };
 		E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */; };
 		E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D411BD2A9FF12300859E4E /* Notification.swift */; };
-		E0D991C12C4862BA00DE57DF /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = E0D991C02C4862BA00DE57DF /* SimpleToast */; };
 		E0E0B2092A4CC33A00A972E0 /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B2082A4CC33A00A972E0 /* NotesView.swift */; };
 		E0E0B20C2A4CC48A00A972E0 /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E0B20B2A4CC48A00A972E0 /* NotesViewModel.swift */; };
 		E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0E1AE782B23B6EC0085B8CC /* StoreKit.framework */; };
@@ -350,7 +349,6 @@
 				E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */,
 				E03541012BC05A3400273830 /* FirebaseMessaging in Frameworks */,
 				E02A0AF22C339DE300105365 /* FirebaseFunctions in Frameworks */,
-				E0D991C12C4862BA00DE57DF /* SimpleToast in Frameworks */,
 				E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */,
 				E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */,
 				E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */,
@@ -1167,7 +1165,6 @@
 				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
 				E0867CF02BD5989B005605CD /* BottomSheet */,
 				E02A0AF12C339DE300105365 /* FirebaseFunctions */,
-				E0D991C02C4862BA00DE57DF /* SimpleToast */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1247,7 +1244,6 @@
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */,
-				E0D991BF2C4862BA00DE57DF /* XCRemoteSwiftPackageReference "SimpleToast" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1854,14 +1850,6 @@
 				minimumVersion = 11.2.0;
 			};
 		};
-		E0D991BF2C4862BA00DE57DF /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sanzaru/SimpleToast.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1919,11 +1907,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
-		};
-		E0D991C02C4862BA00DE57DF /* SimpleToast */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E0D991BF2C4862BA00DE57DF /* XCRemoteSwiftPackageReference "SimpleToast" */;
-			productName = SimpleToast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
