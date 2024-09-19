@@ -72,7 +72,7 @@ struct BandDetailView: View {
                         }
                         .padding(.top)
                         .padding(.bottom, 6)
-                        if #available(iOS 17, *) {
+                        if #available(iOS 17, *), band.createdBy == SongDetailViewModel.shared.uid() {
                             TipView(JoinBandTip())
                                 .tipViewStyle(LiveLyricsTipStyle())
                         }

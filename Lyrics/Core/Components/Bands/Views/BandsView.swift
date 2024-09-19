@@ -41,11 +41,8 @@ struct BandsView: View {
                                     .frame(height: geo.size.height / 2.2, alignment: .bottom)
                             } else if bandsViewModel.isLoadingUserBands {
                                 ProgressView("Loading")
-                            } else if bandsViewModel.userBands.isEmpty {
-                                // TODO: add "what are bands?" button
-                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
                                     .frame(maxWidth: .infinity)
-                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                                    .padding()
                             } else {
                                 VStack(spacing: 18) {
                                     HeaderActionsView([
@@ -56,12 +53,19 @@ struct BandsView: View {
                                             showNewBandSheet = true
                                         })
                                     ])
-                                    VStack {
-                                        ForEach(bandsViewModel.userBands) { band in
-                                            Button {
-                                                selectedBand = band
-                                            } label: {
-                                                BandRowView(band: band, selectedBand: $selectedBand)
+                                    if bandsViewModel.userBands.isEmpty {
+                                        // TODO: add "what are bands?" button
+                                        FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                                    } else {
+                                        VStack {
+                                            ForEach(bandsViewModel.userBands) { band in
+                                                Button {
+                                                    selectedBand = band
+                                                } label: {
+                                                    BandRowView(band: band, selectedBand: $selectedBand)
+                                                }
                                             }
                                         }
                                     }

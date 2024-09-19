@@ -20,7 +20,6 @@ struct User: Identifiable, Codable {
     var hasPro: Bool?
     var currentVersion: String?
     var showsExplicitSongs: Bool?
-    var enableAutoscroll: Bool?
     var metronomeStyle: [String]?
     var fcmId: String?
     var purchaseReceipt: String?

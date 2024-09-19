@@ -17,7 +17,34 @@ struct BandMemberPopoverRowView: View {
         return size == [16: 12]
     }
     var badgeDimensions: CGFloat {
-        return small ? 22 : 33
+        switch size {
+        case [16: 12]:
+            return 22
+        case [35: 24]:
+            return 33
+        default:
+            return 28
+        }
+    }
+    var iconSize: CGFloat {
+        switch size {
+        case [16: 12]:
+            return 11
+        case [35: 24]:
+            return 17
+        default:
+            return 12
+        }
+    }
+    var offset: CGSize {
+        switch size {
+        case [16: 12]:
+            return CGSizeMake(15, -13)
+        case [35: 24]:
+            return CGSizeMake(35, -25)
+        default:
+            return CGSizeMake(20, -18)
+        }
     }
     
     init(member: BandMember, size: [CGFloat: CGFloat]? = nil, showBadge: Bool? = nil, role: BandRole? = nil) {
@@ -35,14 +62,14 @@ struct BandMemberPopoverRowView: View {
             .clipShape(Circle())
             .overlay {
                 if let role = role, showBadge {
-                    FAText(iconName: role.icon ?? "star", size: small ? 11 : 17)
+                    FAText(iconName: role.icon ?? "star", size: iconSize)
                         .foregroundColor(.white)
                         .background {
                             Circle()
                                 .foregroundColor(Color.accentColor)
                                 .frame(width: badgeDimensions, height: badgeDimensions)
                         }
-                        .offset(x: small ? 15 : 35, y: small ? -13 : -25)
+                        .offset(offset)
                         .shadow(radius: 3)
                 }
             }

@@ -561,10 +561,10 @@ struct SongDetailView: View {
                                         }
                                     }
                                 }
-                                // Don't push elements left unless the word count and variation picker are absent
-                                if !wordCountBool || !getShowVariationCondition() {
-                                    Spacer()
-                                }
+                            }
+                            // Don't push elements left unless the word count or variation picker are absent
+                            if !getShowVariationCondition() || !wordCountBool {
+                                Spacer()
                             }
                         }
                     }
@@ -592,7 +592,7 @@ struct SongDetailView: View {
             return Alert(title: Text("Error"), message: Text("An unknown error has occured."), dismissButton: .cancel())
         })
         .onAppear {
-            // FIXME: why is this property being check by a local variable?
+            // FIXME: why is this property being checked by a local variable?
             // Check if the user has enabled the word counter or not
             wordCountBool = viewModel.currentUser?.wordCount ?? true
             songViewModel.fetchSongVariations(song: song) { variations in

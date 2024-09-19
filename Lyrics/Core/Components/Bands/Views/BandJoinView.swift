@@ -48,7 +48,7 @@ struct BandJoinView: View {
                 .padding()
             Spacer()
             Divider()
-            LiveLyricsButton("Create", showProgressIndicator: $isButtonLoading) {
+            LiveLyricsButton("Join", showProgressIndicator: $isButtonLoading) {
                 isButtonLoading = true
                 bandsViewModel.joinBand(code) { success in
                     if success {

@@ -176,7 +176,7 @@ struct LiveLyricsTipStyle: TipViewStyle {
         VStack {
             ZStack(alignment: .topTrailing) {
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack(alignment: .center, spacing: 8) {
+                    HStack(alignment: .center, spacing: 10) {
                         configuration.image?
                             .font(.system(size: 26))
                         configuration.title?
@@ -187,6 +187,7 @@ struct LiveLyricsTipStyle: TipViewStyle {
                         .font(.system(size: 16))
                         .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 Button(action: {
                     configuration.tip.invalidate(reason: .tipClosed)
                 }, label: {
@@ -205,5 +206,6 @@ struct LiveLyricsTipStyle: TipViewStyle {
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

@@ -535,7 +535,7 @@ struct PlayView: View {
                     }
                 }
                 Spacer()
-                if viewModel.currentUser?.enableAutoscroll ?? true && lines.count > 1 {
+                if lines.count > 1 {
                     let buttons = HStack {
                         Button(action: {
                             if let proxy = proxy {

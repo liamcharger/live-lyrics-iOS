@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var notificationManager = NotificationManager.shared
+    @ObservedObject var mainViewModel = MainViewModel()
     
     @State private var showWhatsNew = false
     
