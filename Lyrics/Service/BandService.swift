@@ -31,18 +31,33 @@ struct BandService {
         }
     }
     
-    func fetchUserBands(forUid: String? = nil, completion: @escaping([Band]) -> Void) {
+    func fetchUserBands(forUid: String? = nil, withListener: Bool = true, completion: @escaping([Band]) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        Firestore.firestore().collection("bands").whereField("members", arrayContains: uid).addSnapshotListener { snapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
+        let ref = Firestore.firestore().collection("bands").whereField("members", arrayContains: uid)
+        
+        if withListener {
+            ref.addSnapshotListener { snapshot, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                guard let documents = snapshot?.documents else { return }
+                
+                let bands = documents.compactMap({ try? $0.data(as: Band.self) })
+                
+                completion(bands)
             }
-            guard let documents = snapshot?.documents else { return }
-            
-            let bands = documents.compactMap({ try? $0.data(as: Band.self) })
-            
-            completion(bands)
+        } else {
+            ref.getDocuments { snapshot, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                guard let documents = snapshot?.documents else { return }
+                
+                let bands = documents.compactMap({ try? $0.data(as: Band.self) })
+                
+                completion(bands)
+            }
         }
     }
     

@@ -30,8 +30,8 @@ class BandsViewModel: ObservableObject {
     
     static let shared = BandsViewModel()
     
-    func fetchUserBands(completion: @escaping() -> Void) {
-        service.fetchUserBands { bands in
+    func fetchUserBands(withListener: Bool = true, completion: @escaping() -> Void) {
+        service.fetchUserBands(withListener: withListener) { bands in
             self.isLoadingUserBands = false
             self.userBands = bands
             completion()

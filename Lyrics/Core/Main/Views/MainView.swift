@@ -322,9 +322,9 @@ struct MainView: View {
                         }
                     }
                     // Show alert instead of displaying badge on bottom edge of the display when the device is not in portrait mode to save space
-                    // FIXME: alert does not show
-                    if !NetworkManager.shared.getNetworkState() && UIDevice.current.orientation != .portrait && UIDevice.current.orientation != .portraitUpsideDown {
+                    if !NetworkManager.shared.getNetworkState() && UIDeviceOrientation.portrait.isLandscape && !mainViewModel.hasShownOfflineAlert {
                         showOfflineAlert = true
+                        mainViewModel.hasShownOfflineAlert = true
                     }
                     // Load user-set sort settings
                     sortViewModel.loadFromUserDefaults { sortSelection in
@@ -648,7 +648,7 @@ struct MainView: View {
                                                                             .deleteDisabled(true)
                                                                             .moveDisabled(true)
                                                                     } else {
-                                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
+                                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
                                                                             ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                                 .contextMenu {
                                                                                     if !(song.readOnly ?? false) {
@@ -849,7 +849,7 @@ struct MainView: View {
                                                     .moveDisabled(true)
                                             } else {
                                                 HStack {
-                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
+                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs)) {
                                                         ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                             .contextMenu {
                                                                 songContextMenu(song: song)
@@ -980,12 +980,12 @@ struct MainView: View {
         }
         .overlay {
             if !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable {
-                let notConnectedAndInLandscape = !NetworkManager.shared.getNetworkState() && (UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown)
+                let notConnectedAndInPortrait = !NetworkManager.shared.getNetworkState() && UIDeviceOrientation.portrait.isPortrait
                 
                 VStack {
                     Spacer()
                     ZStack {
-                        if notConnectedAndInLandscape {
+                        if notConnectedAndInPortrait {
                             VisualEffectBlur(blurStyle: .systemMaterial)
                                 .mask(LinearGradient(
                                     gradient: Gradient(colors: [Color.white, Color.clear]),
@@ -996,7 +996,7 @@ struct MainView: View {
                         }
                         VStack {
                             Spacer()
-                            if notConnectedAndInLandscape {
+                            if notConnectedAndInPortrait {
                                 Button {
                                     showOfflineAlert = true
                                 } label: {

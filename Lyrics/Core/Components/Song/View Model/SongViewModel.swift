@@ -31,9 +31,9 @@ class SongViewModel: ObservableObject {
     
     static let shared = SongViewModel()
     
-    func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
+    func fetchSongVariations(song: Song, withListener: Bool = true, completion: @escaping([SongVariation]) -> Void) {
         self.isLoadingVariations = true
-        service.fetchSongVariations(song: song) { variations in
+        service.fetchSongVariations(song: song, withListener: withListener) { variations in
             completion(variations)
             self.isLoadingVariations = false
         }

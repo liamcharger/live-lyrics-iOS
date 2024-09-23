@@ -204,7 +204,7 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
                 self.delegate.isScrolling = $isScrolling
                 self.delegate.isScrollingProgrammatically = $isScrollingProgrammatically
             }
-            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { scrollView in
+            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17, .v18)) { scrollView in
                 scrollView.delegate = delegate
             }
     }

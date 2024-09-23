@@ -7,7 +7,6 @@
 
 import SwiftUI
 import BottomSheet
-import SimpleToast
 
 struct BandsView: View {
     @ObservedObject var bandsViewModel = BandsViewModel.shared
@@ -54,7 +53,7 @@ struct BandsView: View {
                                         })
                                     ])
                                     if bandsViewModel.userBands.isEmpty {
-                                        // TODO: add "what are bands?" button
+                                        // TODO: add "what are bands?" button or tip
                                         FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
                                             .frame(maxWidth: .infinity)
                                             .frame(height: geo.size.height / 2.2, alignment: .bottom)

@@ -39,7 +39,12 @@ struct HeaderActionsView: View {
                     button.action()
                 } label: {
                     HStack(spacing: 7) {
-                        FAText(iconName: button.icon, size: 18)
+                        if button.icon.contains("sf-") {
+                            Image(systemName: button.icon.replacingOccurrences(of: "sf-", with: ""))
+                                .font(.system(size: 18))
+                        } else {
+                            FAText(iconName: button.icon, size: 18)
+                        }
                         Text(button.title)
                             .font(.body.weight(.semibold))
                             .multilineTextAlignment(.leading)
