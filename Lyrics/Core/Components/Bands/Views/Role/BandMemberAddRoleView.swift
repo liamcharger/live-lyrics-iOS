@@ -20,6 +20,11 @@ struct BandMemberAddRoleView: View {
     
     @ObservedObject var bandsViewModel = BandsViewModel.shared
     
+    let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
@@ -37,7 +42,7 @@ struct BandMemberAddRoleView: View {
                         }) {
                             FAText(iconName: "trash-can", size: 19)
                                 .padding(12)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.red)
                                 .background(Material.regular)
                                 .clipShape(Circle())
                         }
@@ -56,7 +61,7 @@ struct BandMemberAddRoleView: View {
                 Divider()
                     .padding(.horizontal, -12)
                 ScrollView {
-                    VStack {
+                    LazyVGrid(columns: columns) {
                         ForEach(bandsViewModel.memberRoles, id: \.name) { role in
                             Button {
                                 selectedRole = role
@@ -65,21 +70,7 @@ struct BandMemberAddRoleView: View {
                                 }
                                 dismiss()
                             } label: {
-                                HStack(spacing: 8) {
-                                    Group {
-                                        FAText(iconName: role.icon ?? "star", size: 20)
-                                        Text(role.name)
-                                    }
-                                    .foregroundColor(.primary)
-                                    Spacer()
-                                    if let selectedRole = selectedRole, selectedRole.name == role.name {
-                                        Image(systemName: "checkmark")
-                                            .font(.body.weight(.medium))
-                                    }
-                                }
-                                .padding()
-                                .background(Material.regular)
-                                .clipShape(Capsule())
+                                ContentRowView(role.name, icon: role.icon ?? "star", actionIcon: selectedRole?.name == role.name ? "checkmark" : "")
                             }
                         }
                         /*

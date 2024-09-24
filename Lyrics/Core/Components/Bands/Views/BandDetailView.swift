@@ -14,9 +14,6 @@ struct BandDetailView: View {
     
     @Binding var band: Band?
     
-    let columns = [
-        GridItem(.adaptive(minimum: 60))
-    ]
     let pasteboard = UIPasteboard.general
     
     @State var bandMembers = [BandMember]()
@@ -91,19 +88,17 @@ struct BandDetailView: View {
                             }
                             VStack(spacing: 2) {
                                 ListHeaderView(title: NSLocalizedString("band_members", comment: ""))
-                                LazyVGrid(columns: columns) {
-                                    ForEach(bandMembers) { member in
-                                        let role = roles.first(where: { $0.id! == member.roleId ?? "" })
-                                        
-                                        Button {
-                                            selectedMember = member
-                                        } label: {
-                                            BandMemberPopoverRowView(member: member, size: [18: 14], showBadge: true, role: role)
+                                ScrollView(.horizontal) {
+                                    HStack {
+                                        ForEach(bandMembers) { member in
+                                            Button {
+                                                selectedMember = member
+                                            } label: {
+                                                BandMemberRowView(member: member)
+                                            }
                                         }
-                                        .frame(maxWidth: .infinity)
                                     }
                                 }
-                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             // Should this section be included? Will require logic implementation to add and remove bandId when it has been added and removed from the band
                             if !songs.isEmpty {
