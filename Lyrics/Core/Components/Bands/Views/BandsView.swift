@@ -17,7 +17,20 @@ struct BandsView: View {
     
     @State var selectedBand: Band?
     
+    @AppStorage("hasShownBandsIntro") var hasShownBandsIntro = false
+    
     var body: some View {
+        if hasShownBandsIntro {
+            content
+        } else {
+            NewFeatureView(feature: NewFeature(title: "Bands", sections: [
+                NewFeatureSection(id: 1, title: "An Easy Way to Collaborate", icon: "users", subtitle: "Bands makes it easy to share songs and folders with your band members, but with a twist: you can share song variations tailored to each member’s role inside the band."),
+                NewFeatureSection(id: 2, title: "Member Roles", icon: "users", subtitle: "Assign a role to a member to give them access to a variation specifically created for that role, like piano chords for a keyboardist, or special lyrics for a backup singer.")
+            ]))
+        }
+    }
+    
+    var content: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: $collapsedNavbarTitle)

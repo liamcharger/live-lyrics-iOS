@@ -155,6 +155,8 @@
 		E0E79D4D2B5F010B0030186C /* FolderDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */; };
 		E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */; };
 		E0F0F2DB2CA2F6B1006ADF02 /* BandMemberRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0F2DA2CA2F6B1006ADF02 /* BandMemberRowView.swift */; };
+		E0F0F2DD2CA30552006ADF02 /* NewFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0F2DC2CA30552006ADF02 /* NewFeatureView.swift */; };
+		E0F0F2E02CA322F8006ADF02 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = E0F0F2DF2CA322F8006ADF02 /* FluidGradient */; };
 		E0F70B362C876344006A9867 /* SongExploreDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B352C876344006A9867 /* SongExploreDetailView.swift */; };
 		E0F70B372C876344006A9867 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B342C876344006A9867 /* ExploreView.swift */; };
 		E0F70B392C876361006A9867 /* Musixmatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B382C876361006A9867 /* Musixmatch.swift */; };
@@ -330,6 +332,7 @@
 		E0E79D4C2B5F010B0030186C /* FolderDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0F0F2DA2CA2F6B1006ADF02 /* BandMemberRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandMemberRowView.swift; sourceTree = "<group>"; };
+		E0F0F2DC2CA30552006ADF02 /* NewFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFeatureView.swift; sourceTree = "<group>"; };
 		E0F70B342C876344006A9867 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
 		E0F70B352C876344006A9867 /* SongExploreDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongExploreDetailView.swift; sourceTree = "<group>"; };
 		E0F70B382C876361006A9867 /* Musixmatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Musixmatch.swift; sourceTree = "<group>"; };
@@ -347,6 +350,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0F0F2E02CA322F8006ADF02 /* FluidGradient in Frameworks */,
 				E0C138E02BBCAB12003C0D10 /* GoogleMobileAds in Frameworks */,
 				E0E1AE792B23B6EC0085B8CC /* StoreKit.framework in Frameworks */,
 				E03541012BC05A3400273830 /* FirebaseMessaging in Frameworks */,
@@ -667,6 +671,7 @@
 			children = (
 				E0B02B9B2AF592F2002E10D4 /* ShowWhatsNew.swift */,
 				E0B02B9E2AF5A389002E10D4 /* FeaturesView.swift */,
+				E0F0F2DC2CA30552006ADF02 /* NewFeatureView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -1168,6 +1173,7 @@
 				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
 				E0867CF02BD5989B005605CD /* BottomSheet */,
 				E02A0AF12C339DE300105365 /* FirebaseFunctions */,
+				E0F0F2DF2CA322F8006ADF02 /* FluidGradient */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1247,6 +1253,7 @@
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				E0F0F2DE2CA322F7006ADF02 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1311,6 +1318,7 @@
 				E00773162C97D8BE0083A0FA /* ListStateView.swift in Sources */,
 				E03A6F0F2C8E24F600CA16D0 /* DemoAttachment.swift in Sources */,
 				E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */,
+				E0F0F2DD2CA30552006ADF02 /* NewFeatureView.swift in Sources */,
 				E0A5A4B02A0A8F9C00AF8EBF /* WebView.swift in Sources */,
 				E06D77892A17CF310032332F /* SettingsViewModel.swift in Sources */,
 				E0E20D792C9927D9003B2D4D /* BandDetailView.swift in Sources */,
@@ -1856,6 +1864,14 @@
 				minimumVersion = 11.2.0;
 			};
 		};
+		E0F0F2DE2CA322F7006ADF02 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Cindori/FluidGradient";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1913,6 +1929,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
+		};
+		E0F0F2DF2CA322F8006ADF02 /* FluidGradient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0F0F2DE2CA322F7006ADF02 /* XCRemoteSwiftPackageReference "FluidGradient" */;
+			productName = FluidGradient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

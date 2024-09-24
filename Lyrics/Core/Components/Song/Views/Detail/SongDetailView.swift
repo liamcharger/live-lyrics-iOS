@@ -600,6 +600,7 @@ struct SongDetailView: View {
             // FIXME: why is this property being checked by a local variable?
             // Check if the user has enabled the word counter or not
             wordCountBool = viewModel.currentUser?.wordCount ?? true
+            wordCountStyle = viewModel.currentUser?.wordCountStyle ?? "words"
             songViewModel.fetchSongVariations(song: song) { variations in
                 // Initialize a variable to assign parsed variations to
                 var parsedVariations = [SongVariation]()

@@ -1,5 +1,5 @@
 {
-  "originHash" : "d1d2645338e6d65e01cc36dc0d1f106d40d171095ee7fb99213041202e59ed39",
+  "originHash" : "cfa716653a2d32d13fe75531b3909e382ef6e2d5dfb13ee9fd71947470062103",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -35,6 +35,15 @@
       "state" : {
         "revision" : "e57841b296d04370ea23580f908881b0ccab17b9",
         "version" : "10.28.1"
+      }
+    },
+    {
+      "identity" : "fluidgradient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Cindori/FluidGradient",
+      "state" : {
+        "revision" : "9ddda4cf23671ef0228e88681ec6210cb3e0d7f7",
+        "version" : "1.0.0"
       }
     },
     {
