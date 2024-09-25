@@ -113,4 +113,8 @@ class BandsViewModel: ObservableObject {
             return .gray
         }
     }
+    
+    func bandCreator(_ band: Band) -> Bool {
+        return band.createdBy == uid()
+    }
 }

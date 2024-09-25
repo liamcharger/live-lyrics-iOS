@@ -111,12 +111,12 @@ struct SongDetailView: View {
         // Prevent joined users from being fetched more than once
         if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
             // User is not the owner, so add the owner to the array
-            if songDetailViewModel.uid() != song.uid {
+            if uid() != song.uid {
                 joinedUsersStrings.insert(song.uid, at: 0)
             }
             // User is not the admin but is a joined user, so remove their profile from the array
-            if joinedUsersStrings.contains(songDetailViewModel.uid()) {
-                if let index = joinedUsersStrings.firstIndex(where: { $0 == songDetailViewModel.uid() }) {
+            if joinedUsersStrings.contains(uid()) {
+                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
                     joinedUsersStrings.remove(at: index)
                 }
             }
@@ -518,9 +518,9 @@ struct SongDetailView: View {
                                                 if (song.variations ?? []).isEmpty {
                                                     `default`
                                                 } else {
-                                                    if song.uid == songDetailViewModel.uid() {
+                                                    if song.uid == uid() {
                                                         `default`
-                                                    } else if song.uid != songDetailViewModel.uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                                    } else if song.uid != uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
                                                         `default`
                                                     }
                                                 }
@@ -537,7 +537,7 @@ struct SongDetailView: View {
                                                 }
                                                 // Only show "new" and "manage" buttons when the song is not read-only and all variations are allowed
                                                 if !songDetailViewModel.readOnly(song) {
-                                                    if song.uid == songDetailViewModel.uid() || (song.variations ?? []).isEmpty {
+                                                    if song.uid == uid() || (song.variations ?? []).isEmpty {
                                                         Divider()
                                                         if songVariations.count > 0 {
                                                             Button {
@@ -699,13 +699,13 @@ struct SongDetailView: View {
                     self.lineSpacing = song.lineSpacing ?? 1
                     if joinedUsers == nil {
                         // Set the joinedUsersStrings var based on media type
-                        if let folder = folder, folder.id! != songDetailViewModel.uid() {
+                        if let folder = folder, folder.id! != uid() {
                             self.joinedUsersStrings = folder.joinedUsers ?? []
                         } else {
                             self.joinedUsersStrings = song.joinedUsers ?? []
                         }
                         // User's id is not in the song, the user has been removed from the song
-                        if !joinedUsersStrings.contains(where: { $0 == songDetailViewModel.uid() }) && song.uid != songDetailViewModel.uid() {
+                        if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
                             showAlert = true
                             activeAlert = .kickedOut
                         } else {

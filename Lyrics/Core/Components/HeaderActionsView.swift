@@ -41,7 +41,7 @@ struct HeaderActionsView: View {
                     HStack(spacing: 7) {
                         if button.icon.contains("sf-") {
                             Image(systemName: button.icon.replacingOccurrences(of: "sf-", with: ""))
-                                .font(.system(size: 18))
+                                .font(.system(size: 18).weight(.medium))
                         } else {
                             FAText(iconName: button.icon, size: 18)
                         }

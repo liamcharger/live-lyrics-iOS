@@ -522,17 +522,6 @@
     "An unknown error has occured." : {
 
     },
-    "An unknown error has occurred." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se ha producido un error desconocido."
-          }
-        }
-      }
-    },
     "antonym_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -572,6 +561,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Estás seguro de que deseas %1$@ “%2$@”?"
+          }
+        }
+      }
+    },
+    "Are you sure you want to %@ \"%@\"? This action cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Are you sure you want to %1$@ \"%2$@\"? This action cannot be undone."
           }
         }
       }
@@ -734,6 +733,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desplazamiento automático"
+          }
+        }
+      }
+    },
+    "band_feature_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bands make it easy to share songs and folders with your band members, but with a twist: you can share song variations tailored to each member’s role inside the band."
           }
         }
       }
@@ -1179,6 +1189,9 @@
         }
       }
     },
+    "Delete Band" : {
+
+    },
     "Delete Demo" : {
       "localizations" : {
         "es" : {
@@ -1399,17 +1412,6 @@
         }
       }
     },
-    "Enter a name for your song." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa un nombre para tu canción."
-          }
-        }
-      }
-    },
     "Enter some details for your new variation." : {
 
     },
@@ -1580,17 +1582,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ahora vamos a iniciar sesión."
-          }
-        }
-      }
-    },
-    "Good Afternoon." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buenas tardes."
           }
         }
       }
@@ -1859,6 +1850,9 @@
           }
         }
       }
+    },
+    "Leave Band" : {
+
     },
     "Leave Folder" : {
       "localizations" : {
@@ -2397,17 +2391,6 @@
     "outgoing" : {
 
     },
-    "Outgoing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saliente"
-          }
-        }
-      }
-    },
     "Paragraphs" : {
       "localizations" : {
         "es" : {
@@ -2760,17 +2743,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nombre del rol"
-          }
-        }
-      }
-    },
-    "Rounded" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redondeado"
           }
         }
       }

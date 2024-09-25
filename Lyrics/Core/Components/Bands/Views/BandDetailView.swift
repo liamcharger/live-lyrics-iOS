@@ -16,15 +16,16 @@ struct BandDetailView: View {
     
     let pasteboard = UIPasteboard.general
     
-    @State var bandMembers = [BandMember]()
-    @State var selectedMember: BandMember?
-    @State var roles = [BandRole]()
+    @State private var bandMembers = [BandMember]()
+    @State private var selectedMember: BandMember?
+    @State private var roles = [BandRole]()
     
-    @State var loadingMembers = true
-    @State var loadingRoles = true
-    @State var showCopiedAlert = false
+    @State private var loadingMembers = true
+    @State private var loadingRoles = true
+    @State private var showCopiedAlert = false
+    @State private var showDeleteConfirmation = false
     
-    var songs: [Song] {
+    private var songs: [Song] {
         let songs = mainViewModel.songs + mainViewModel.sharedSongs
         
         return songs.filter { song in
@@ -63,32 +64,38 @@ struct BandDetailView: View {
                                     }
                                 }
                                 
-                                let bandCreator = band.createdBy == SongDetailViewModel.shared.uid()
-                                
                                 HeaderActionsView([
-                                    .init(title: NSLocalizedString("Get Join Code", comment: ""), icon: "link", scheme: .primaryAlt, action: {
+                                    .init(title: NSLocalizedString("Get Join Code", comment: ""), icon: "link", scheme: .primary, action: {
                                         self.pasteboard.string = band.joinId
                                         self.showCopiedAlert = true
                                     }),
-                                    .init(title: bandCreator ? NSLocalizedString("Delete", comment: "") : NSLocalizedString("Leave", comment: ""), icon: bandCreator ? "trash-can" : "sf-rectangle.portrait.and.arrow.right", scheme: .destructive, action: {
-                                        if bandCreator {
+                                    .init(title: bandsViewModel.bandCreator(band) ? NSLocalizedString("Delete", comment: "") : NSLocalizedString("Leave", comment: ""), icon: bandsViewModel.bandCreator(band) ? "trash-can" : "sf-rectangle.portrait.and.arrow.right", scheme: .destructive, action: {
+                                        self.showDeleteConfirmation = true
+                                    })
+                                ])
+                                .confirmationDialog(bandsViewModel.bandCreator(band) ? "Delete Band" : "Leave Band", isPresented: $showDeleteConfirmation) {
+                                    Button(bandsViewModel.bandCreator(band) ? "Delete" : "Leave", role: .destructive) {
+                                        if bandsViewModel.bandCreator(band) {
                                             self.bandsViewModel.deleteBand(band)
                                         } else {
                                             self.bandsViewModel.leaveBand(band)
                                         }
                                         self.band = nil
-                                    })
-                                ])
+                                    }
+                                    Button("Cancel", role: .cancel) {}
+                                } message: {
+                                    Text("Are you sure you want to \(bandsViewModel.bandCreator(band) ? "delete" : "leave") \"\(band.name)\"? This action cannot be undone.")
+                                }
                             }
                             .padding(.top)
                             .padding(.bottom, 6)
-                            if #available(iOS 17, *), band.createdBy == SongDetailViewModel.shared.uid() {
+                            if #available(iOS 17, *), band.createdBy == uid() {
                                 TipView(JoinBandTip())
                                     .tipViewStyle(LiveLyricsTipStyle())
                             }
                             VStack(spacing: 2) {
                                 ListHeaderView(title: NSLocalizedString("band_members", comment: ""))
-                                ScrollView(.horizontal) {
+                                ScrollView(.horizontal, showsIndicators: false) {
                                     HStack {
                                         ForEach(bandMembers) { member in
                                             Button {
@@ -98,7 +105,9 @@ struct BandDetailView: View {
                                             }
                                         }
                                     }
+                                    .padding(.horizontal)
                                 }
+                                .padding(.horizontal, -16)
                             }
                             // Should this section be included? Will require logic implementation to add and remove bandId when it has been added and removed from the band
                             if !songs.isEmpty {

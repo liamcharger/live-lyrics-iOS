@@ -49,43 +49,59 @@ struct BandMemberPopover: View {
                     .font(.system(size: 20))
                     .foregroundColor(.gray)
                 }
-                Button {
-                    showAddRoleView = true
-                } label: {
-                    if let role = role {
-                        HStack(spacing: 8) {
-                            // Better icon than "star"?
-                            FAText(iconName: role.icon ?? "star", size: 23)
-                            Text(role.name.capitalized)
-                                .font(.body.weight(.semibold))
-                        }
-                        .padding(12)
-                        .padding(.horizontal, 4)
-                        .background {
-                            if let color = role.color, !color.isEmpty {
-                                return bandsViewModel.getRoleColor(color)
+                HStack(spacing: 7) {
+                    Spacer()
+                    Button {
+                        showAddRoleView = true
+                    } label: {
+                        if let role = role {
+                            HStack(spacing: 7) {
+                                // Better icon than "star"?
+                                FAText(iconName: role.icon ?? "star", size: 18)
+                                Text(role.name.capitalized)
+                                    .font(.body.weight(.semibold))
                             }
-                            return Color.blue
+                            .padding(10)
+                            .padding(.horizontal, 8)
+                            .background {
+                                if let color = role.color, !color.isEmpty {
+                                    return bandsViewModel.getRoleColor(color)
+                                }
+                                return Color.blue
+                            }
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                        } else if band.admins.contains(where: { $0 == uid() }) {
+                            HStack(spacing: 7) {
+                                FAText(iconName: "plus", size: 18)
+                                Text("Add Role")
+                                    .font(.body.weight(.semibold))
+                            }
+                            .padding(10)
+                            .padding(.horizontal, 8)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
                         }
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(14)
-                    } else if band.admins.contains(where: { $0 == AuthViewModel.shared.currentUser?.id! }) {
-                        HStack(spacing: 9) {
-                            FAText(iconName: "plus", size: 23)
-                            Text("Add Role")
-                                .font(.body.weight(.semibold))
-                        }
-                        .padding(12)
-                        .padding(.horizontal, 4)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(14)
                     }
+                    if bandsViewModel.bandCreator(band) && member.uid != uid() {
+                        Button {
+                            showRemoveSheet = true
+                        } label: {
+                            HStack(spacing: 7) {
+                                Text("Remove")
+                                FAText(iconName: "square-arrow-right", size: 18)
+                            }
+                            .foregroundColor(.red)
+                            .padding(10)
+                            .padding(.horizontal, 8)
+                            .background(Material.regular)
+                            .clipShape(Capsule())
+                        }
+                    }
+                    Spacer()
                 }
+                .padding(12)
                 Spacer()
             }
         }
@@ -95,7 +111,7 @@ struct BandMemberPopover: View {
         }
         .confirmationDialog("Remove Band Member?", isPresented: $showRemoveSheet) {
             Button("Remove", role: .destructive) {
-                
+                bandsViewModel.leaveBand(band, uid: member.uid)
                 dismiss()
             }
             Button("Cancel", role: .cancel) {}

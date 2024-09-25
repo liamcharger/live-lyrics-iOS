@@ -21,6 +21,10 @@ func hasHomeButton() -> Bool {
     return true
 }
 
+func uid() -> String {
+    return AuthViewModel.shared.currentUser?.id ?? ""
+}
+
 func greeting(withName: Bool? = nil) -> String {
     let date = Date()
     let calendar = Calendar.current

@@ -18,7 +18,7 @@ struct BandMemberRowView: View {
                 BandMemberPopoverRowView(member: member, size: [21: 18])
                 Text(member.fullname.replacingOccurrences(of: " ", with: "\n"))
                     .lineLimit(2)
-                    .frame(maxWidth: .infinity)
+                    .frame(minWidth: 140)
                     .multilineTextAlignment(.center)
                     .font(.title3.weight(.bold))
                 if let role {
@@ -34,12 +34,11 @@ struct BandMemberRowView: View {
                 }
             }
             .padding()
-            .frame(minWidth: 140)
+            .frame(minHeight: 220)
             .background(Material.thin)
             .foregroundColor(.white)
             .clipShape(RoundedRectangle(cornerRadius: 20))
         }
-        .frame(maxWidth: 180)
     }
 }
 

@@ -187,9 +187,6 @@ struct MainView: View {
             self.isLoadingFolderSongs = false
         }
     }
-    func uid() -> String {
-        return authViewModel.currentUser?.id ?? ""
-    }
     func fetchJoinedUsers(folder: Folder, completion: @escaping([User]) -> Void) {
         var joinedUsersStrings = folder.joinedUsers ?? []
         var users = [User]()
