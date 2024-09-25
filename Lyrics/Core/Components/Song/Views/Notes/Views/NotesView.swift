@@ -48,13 +48,9 @@ struct NotesView: View {
                 }
             } else {
                 ZStack {
-                    // Slight lag on enter because notesViewModel.notes is being used rather than a @State variable
                     TextEditor(text: $notesViewModel.notes)
                         .padding(.leading, 13)
                         .focused($isInputActive)
-                        .onChange(of: notesViewModel.notes) { notes in
-                            notesViewModel.updateNotes(song: song, folder: folder, notes: notes)
-                        }
                     if notesViewModel.notes.isEmpty && !isInputActive {
                         Text("Tap to enter your notes...")
                             .foregroundColor(.gray.opacity(0.6))
@@ -71,6 +67,7 @@ struct NotesView: View {
         }
         .onAppear {
             notesViewModel.fetchNotes(song: song, folder: folder)
+            notesViewModel.startUpdatingNotes(song: song, folder: folder)
         }
     }
 }
