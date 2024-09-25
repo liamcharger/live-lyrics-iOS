@@ -128,7 +128,7 @@ struct BandDetailView: View {
                         .padding()
                     }
                 } else {
-                    ProgressView("loading")
+                    ProgressView("Loading")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
