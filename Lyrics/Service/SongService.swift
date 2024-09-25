@@ -253,8 +253,9 @@ class SongService {
 										completedSongs.append(song) // Ensure song is appended after variations are set
 										group.leave()
 									}
-								} else if variations.contains(where: { $0 == SongVariation.defaultId }){
-									song.variations?.append(SongVariation.defaultId)
+								} else if variations.contains(where: { $0 == SongVariation.defaultId }) {
+									var song = song
+									song.variations = [SongVariation.defaultId]
 									completedSongs.append(song)
 									group.leave()
 								} else if variations.isEmpty {
@@ -429,11 +430,7 @@ class SongService {
 				}
 				let folders = documents.compactMap({ try? $0.data(as: Folder.self) })
 				
-				if folders.isEmpty {
-					completion([Folder.folder])
-				} else {
-					completion(folders)
-				}
+				completion(folders)
 			}
 	}
 	

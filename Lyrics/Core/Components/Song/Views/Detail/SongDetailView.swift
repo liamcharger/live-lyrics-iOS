@@ -624,12 +624,12 @@ struct SongDetailView: View {
                         }
                     } else {
                         // Default variation is allowed, add it to the array
-                        if variationIds.contains(SongVariation.defaultId) || variationIds.isEmpty {
+                        if variationIds.contains(SongVariation.defaultId) {
                             parsedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
                         }
                         
                         // Filter allowed variations
-                        var filteredVariations = variations.filter { variation in
+                        let filteredVariations = variations.filter { variation in
                             if let variationId = variation.id {
                                 return variationIds.contains(variationId)
                             }
@@ -639,7 +639,7 @@ struct SongDetailView: View {
                         
                         // Set the initial lyrics
                         if let firstVariation = filteredVariations.first {
-                            if !variationIds.contains(SongVariation.defaultId) {
+                            if firstVariation.title != SongVariation.defaultId {
                                 selectedVariation = firstVariation
                                 if !isInputActive {
                                     self.lyrics = firstVariation.lyrics
