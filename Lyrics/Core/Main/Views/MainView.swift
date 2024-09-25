@@ -456,10 +456,10 @@ struct MainView: View {
                                     LoadingView()
                                 } else {
                                     if !isFoldersCollapsed {
-                                        ForEach(searchableFolders) { folder  in
-                                            if folder.title == "noFolders" {
-                                                EmptyStateView(state: .folders)
-                                            } else {
+                                        if searchableFolders.isEmpty {
+                                            EmptyStateView(state: .folders)
+                                        } else {
+                                            ForEach(searchableFolders) { folder  in
                                                 VStack {
                                                     HStack {
                                                         Button {
@@ -840,11 +840,11 @@ struct MainView: View {
                                     if mainViewModel.isLoadingSongs || (mainViewModel.isLoadingSharedSongs && !isUpdatingSharedSongs) {
                                         LoadingView()
                                     } else {
-                                        ForEach(searchableSongs) { song in
-                                            if song.title == "noSongs" {
-                                                EmptyStateView(state: .songs)
-                                                    .moveDisabled(true)
-                                            } else {
+                                        if searchableSongs.isEmpty {
+                                            EmptyStateView(state: .songs)
+                                                .moveDisabled(true)
+                                        } else {
+                                            ForEach(searchableSongs) { song in
                                                 HStack {
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs)) {
                                                         ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)

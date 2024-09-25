@@ -27,11 +27,7 @@ class SongService {
 				
 				let songs = documents.compactMap({ try? $0.data(as: Song.self) })
 				
-				if documents.isEmpty {
-					completion([Song.song])
-				} else {
-					completion(songs)
-				}
+				completion(songs)
 			}
 	}
 	
@@ -277,11 +273,7 @@ class SongService {
 				}
 				
 				group.notify(queue: .main) {
-					if completedSongs.isEmpty {
-						completion([Song.song])
-					} else {
-						completion(completedSongs)
-					}
+					completion(completedSongs)
 				}
 			}
 	}
