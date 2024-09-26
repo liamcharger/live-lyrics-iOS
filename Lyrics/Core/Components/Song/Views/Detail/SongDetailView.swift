@@ -333,8 +333,8 @@ struct SongDetailView: View {
                             }
                         }
                     if restoreSong == nil {
-                        // Add black "shadow" to avoid element conflicts
-                        Color.black
+                        // Add "shadow" to avoid element conflicts
+                        Color(.systemBackground)
                             .mask(LinearGradient(
                                 gradient: Gradient(colors: [Color.black, Color.clear]),
                                 startPoint: .top,

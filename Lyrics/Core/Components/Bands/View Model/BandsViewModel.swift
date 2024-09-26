@@ -68,14 +68,18 @@ class BandsViewModel: ObservableObject {
         }
     }
     
-    func joinBand(_ code: String, completion: @escaping(Bool) -> Void) {
+    func joinBand(_ code: String, completion: @escaping(String?) -> Void) {
         service.fetchBand(fromCode: code) { band in
             if let band = band {
-                self.service.joinBand(band: band) {
-                    completion(true)
+                if !band.members.contains(uid()) {
+                    self.service.joinBand(band: band) {
+                        completion(nil)
+                    }
+                } else {
+                    completion(NSLocalizedString("already_joined_band", comment: ""))
                 }
             } else {
-                completion(false)
+                completion(NSLocalizedString("band_with_code_not_found", comment: ""))
             }
         }
     }
@@ -116,5 +120,9 @@ class BandsViewModel: ObservableObject {
     
     func bandCreator(_ band: Band) -> Bool {
         return band.createdBy == uid()
+    }
+    
+    func bandAdmin(_ band: Band) -> Bool {
+        return band.admins.contains(uid())
     }
 }

@@ -71,7 +71,7 @@ struct BandMemberPopover: View {
                             }
                             .foregroundColor(.white)
                             .clipShape(Capsule())
-                        } else if band.admins.contains(where: { $0 == uid() }) {
+                        } else if bandsViewModel.bandAdmin(band) {
                             HStack(spacing: 7) {
                                 FAText(iconName: "plus", size: 18)
                                 Text("Add Role")
@@ -84,7 +84,8 @@ struct BandMemberPopover: View {
                             .clipShape(Capsule())
                         }
                     }
-                    if bandsViewModel.bandCreator(band) && member.uid != uid() {
+                    .disabled(!bandsViewModel.bandAdmin(band))
+                    if bandsViewModel.bandAdmin(band) && member.uid != uid() {
                         Button {
                             showRemoveSheet = true
                         } label: {

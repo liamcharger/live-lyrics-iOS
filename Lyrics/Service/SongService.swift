@@ -314,7 +314,7 @@ class SongService {
 				BandsViewModel.shared.fetchMemberRoles(band) { roles in
 					group.leave()
 					guard let memberRoleId = roles.first(where: { $0.id == member.roleId })?.id else {
-						print("Role not found")
+						print("Member does not have a role")
 						completion([]) // If the role isn't found, return
 						return
 					}
@@ -1037,7 +1037,10 @@ class SongService {
 				if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
 					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.fullname) has shared a \(request.contentType == "folder" ? "folder" : "song")", type: .incoming)
 				}
-				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers":FieldValue.arrayUnion([request.from])])
+				if let bandId = request.bandId {
+					Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["bandId": bandId])
+				}
+				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers": FieldValue.arrayUnion([request.from])])
 				completion(nil)
 			}
 		}
@@ -1267,7 +1270,7 @@ class SongService {
 						"duration": song.duration
 					]
 					
-					if let hasPro = AuthViewModel.shared.currentUser?.hasPro {
+					if AuthViewModel.shared.currentUser?.hasPro != nil {
 						songData["demoAttachments"] = song.demoAttachments ?? []
 					}
 					
@@ -1326,18 +1329,21 @@ class SongService {
 		}
 	}
 	
-	func deleteRequest(if request: ShareRequest, uid: String) {
-		if request.to.count > 2 {
+	func deleteRequest(if request: ShareRequest, uid userId: String) {
+		if request.to.count <= 1 {
+			self.deleteRequest(request, uid: userId)
+		} else {
 			for toUser in request.to {
-				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in
+				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([userId])]) { error in
 					if let error = error {
 						print(error.localizedDescription)
 					}
-					self.deleteRequest(request, uid: uid, outgoing: false)
+					self.deleteRequest(request, uid: userId, outgoing: false)
 				}
 			}
-		} else {
-			self.deleteRequest(request, uid: uid)
+			if userId == uid() {
+				self.deleteRequest(request, uid: userId)
+			}
 		}
 	}
 	
@@ -1362,6 +1368,17 @@ class SongService {
 		}
 		
 		dispatch.notify(queue: .main) {
+			if let bandId = song.bandId {
+				guard let joinedUsers = {
+					return song.joinedUsers?.filter { userId in
+						userId != uid
+					}
+				}() else { return }
+				
+				if joinedUsers.count <= 1 {
+					Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).updateData(["bandId": FieldValue.delete()])
+				}
+			}
 			UserService().fetchUser(withUid: forUid ?? song.uid) { user in
 				if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
 					UserService().sendNotificationToFCM(tokens: [token], title: "Song Left", body: "\(currentUser.fullname) has left the song \"\(song.title)\"", type: .left)

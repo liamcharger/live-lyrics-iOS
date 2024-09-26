@@ -519,6 +519,16 @@
         }
       }
     },
+    "already_joined_band" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’re already a member in this band."
+          }
+        }
+      }
+    },
     "An unknown error has occured." : {
       "localizations" : {
         "es" : {
@@ -1626,6 +1636,7 @@
       }
     },
     "Get Join Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1834,6 +1845,7 @@
       }
     },
     "Introducing Play View" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1844,6 +1856,7 @@
       }
     },
     "Introducing Variations" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1852,6 +1865,9 @@
           }
         }
       }
+    },
+    "Invite" : {
+
     },
     "issue_deleting_account" : {
       "extractionState" : "manual",
@@ -1886,16 +1902,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unirse a la banda"
-          }
-        }
-      }
-    },
-    "Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantén organizadas las versiones de tu canción creando variaciones para los acordes de guitarra, las partes vocales y mucho más."
           }
         }
       }
@@ -2428,16 +2434,6 @@
         }
       }
     },
-    "Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las notas son guías valiosas que sirven para recordar detalles cruciales tanto en las sesiones de práctica como en las actuaciones."
-          }
-        }
-      }
-    },
     "OK" : {
       "localizations" : {
         "es" : {
@@ -2530,16 +2526,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alfiler"
-          }
-        }
-      }
-    },
-    "Play View keeps musicians focused by removing distractions during gigs." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play View mantiene a los músicos concentrados eliminando las distracciones durante los conciertos."
           }
         }
       }
@@ -3365,16 +3351,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este artículo no puede comprarse debido a restricciones del dispositivo."
-          }
-        }
-      }
-    },
-    "Tip" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Consejo"
           }
         }
       }

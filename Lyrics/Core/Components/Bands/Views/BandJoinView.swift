@@ -11,6 +11,7 @@ struct BandJoinView: View {
     @ObservedObject var bandsViewModel = BandsViewModel.shared
     
     @State var code = ""
+    @State var errorMessage = ""
     @State var showAlert = false
     @State var isButtonLoading = false
     
@@ -50,11 +51,12 @@ struct BandJoinView: View {
             Divider()
             LiveLyricsButton("Join", showProgressIndicator: $isButtonLoading) {
                 isButtonLoading = true
-                bandsViewModel.joinBand(code) { success in
-                    if success {
-                        isPresented = false
-                    } else {
+                bandsViewModel.joinBand(code) { error in
+                    if let error = error {
+                        errorMessage = error
                         showAlert = true
+                    } else {
+                        isPresented = false
                     }
                     isButtonLoading = false
                 }
@@ -67,7 +69,7 @@ struct BandJoinView: View {
             isCodeFocused = true
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text(NSLocalizedString("band_with_code_not_found", comment: "")), dismissButton: .cancel())
+            Alert(title: Text(errorMessage), dismissButton: .cancel())
         }
     }
 }

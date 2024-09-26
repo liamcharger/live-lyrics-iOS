@@ -64,15 +64,26 @@ struct BandDetailView: View {
                                     }
                                 }
                                 
-                                HeaderActionsView([
-                                    .init(title: NSLocalizedString("Get Join Code", comment: ""), icon: "link", scheme: .primary, action: {
-                                        self.pasteboard.string = band.joinId
-                                        self.showCopiedAlert = true
-                                    }),
-                                    .init(title: bandsViewModel.bandCreator(band) ? NSLocalizedString("Delete", comment: "") : NSLocalizedString("Leave", comment: ""), icon: bandsViewModel.bandCreator(band) ? "trash-can" : "sf-rectangle.portrait.and.arrow.right", scheme: .destructive, action: {
-                                        self.showDeleteConfirmation = true
-                                    })
-                                ])
+                                let invite = HeaderActionButton(title: NSLocalizedString("Invite", comment: ""), icon: "user-plus", scheme: .primary, action: {
+                                    self.pasteboard.string = band.joinId
+                                    self.showCopiedAlert = true
+                                })
+                                let leave = HeaderActionButton(title: bandsViewModel.bandCreator(band) ? NSLocalizedString("Delete", comment: "") : NSLocalizedString("Leave", comment: ""), icon: bandsViewModel.bandCreator(band) ? "trash-can" : "sf-rectangle.portrait.and.arrow.right", scheme: .destructive, action: {
+                                    self.showDeleteConfirmation = true
+                                })
+                                
+                                Group {
+                                    if bandsViewModel.bandAdmin(band) {
+                                        HeaderActionsView([
+                                            invite,
+                                            leave
+                                        ])
+                                    } else {
+                                        HeaderActionsView([
+                                            leave
+                                        ])
+                                    }
+                                }
                                 .confirmationDialog(bandsViewModel.bandCreator(band) ? "Delete Band" : "Leave Band", isPresented: $showDeleteConfirmation) {
                                     Button(bandsViewModel.bandCreator(band) ? "Delete" : "Leave", role: .destructive) {
                                         if bandsViewModel.bandCreator(band) {
@@ -109,7 +120,7 @@ struct BandDetailView: View {
                                 }
                                 .padding(.horizontal, -16)
                             }
-                            // Should this section be included? Will require logic implementation to add and remove bandId when it has been added and removed from the band
+                            // TODO: Should this section be included? Will require logic implementation to add and remove bandId when it has been added and removed from the band
                             if !songs.isEmpty {
                                 VStack(spacing: 2) {
                                     ListHeaderView(title: NSLocalizedString("shared_songs", comment: ""))
@@ -117,6 +128,7 @@ struct BandDetailView: View {
                                         ForEach(songs) { song in
                                             NavigationLink {
                                                 SongDetailView(song: song, songs: songs)
+                                                    .padding(.top, 10) // Add spacing to top of view since there are no status bar insets in the sheet
                                             } label: {
                                                 ListRowView(title: song.title, navArrow: "chevron.right", sharedBadge: true, song: song)
                                             }
