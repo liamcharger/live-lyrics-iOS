@@ -72,15 +72,6 @@ func greeting(withName: Bool? = nil) -> String {
 extension View {
     // Create a modifier for each tip because we can't pass a param ("Tip requires iOS 17.0 or newer")
     @ViewBuilder
-    func showPlayViewTip() -> some View {
-        if #available(iOS 17, *) {
-            self
-                .popoverTip(PlayViewTip(), arrowEdge: .top)
-                .tipViewStyle(LiveLyricsTipStyle())
-        }
-    }
-    
-    @ViewBuilder
     func showAutoscrollSpeedTip() -> some View {
         if #available(iOS 17, *) {
             self

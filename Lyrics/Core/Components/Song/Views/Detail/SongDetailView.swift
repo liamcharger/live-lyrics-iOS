@@ -232,7 +232,6 @@ struct SongDetailView: View {
                                             .stroke(.blue, lineWidth: 2.5)
                                     }
                             }
-                            .showPlayViewTip()
                             Button {
                                 songDetailViewModel.showNotesView = true
                             } label: {
@@ -428,10 +427,6 @@ struct SongDetailView: View {
                     }
                 } else {
                     VStack(spacing: 14) {
-                        if #available(iOS 17, *) {
-                            TipView(VariationsTip())
-                                .tipViewStyle(LiveLyricsTipStyle())
-                        }
                         if !isInputActive, let demoAttachments = song.demoAttachments {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
