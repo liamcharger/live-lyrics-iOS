@@ -183,6 +183,10 @@ struct ExploreView: View {
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            musixmatchService.requestPopularSongs()
+            musixmatchService.requestPopularArtists()
+        }
     }
 }
 

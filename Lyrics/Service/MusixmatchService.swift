@@ -27,13 +27,6 @@ class MusixmatchService: ObservableObject {
     
     static let shared = MusixmatchService()
     
-    init() {
-        DispatchQueue.main.async {
-            self.requestPopularSongs()
-            self.requestPopularArtists()
-        }
-    }
-    
     func requestPopularSongs() {
         var components = URLComponents(string: MusixmatchService.endpoint + "chart.tracks.get")
         
