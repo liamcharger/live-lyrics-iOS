@@ -17,7 +17,8 @@ struct ResetPasswordView: View {
     
     @FocusState var focused: Bool
     
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
+    
     @Environment(\.presentationMode) var presMode
     
     var body: some View {

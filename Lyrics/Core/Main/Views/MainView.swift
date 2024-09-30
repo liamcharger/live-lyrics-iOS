@@ -7,9 +7,7 @@
 
 import SwiftUI
 import MobileCoreServices
-#if os(iOS)
 import BottomSheet
-#endif
 
 struct MainView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
@@ -17,8 +15,7 @@ struct MainView: View {
     @ObservedObject var sortViewModel = SortViewModel.shared
     @ObservedObject var notificationManager = NotificationManager.shared
     @ObservedObject var networkManager = NetworkManager.shared
-    
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
@@ -190,9 +187,6 @@ struct MainView: View {
             self.isLoadingFolderSongs = false
         }
     }
-    func uid() -> String {
-        return authViewModel.currentUser?.id ?? ""
-    }
     func fetchJoinedUsers(folder: Folder, completion: @escaping([User]) -> Void) {
         var joinedUsersStrings = folder.joinedUsers ?? []
         var users = [User]()
@@ -325,9 +319,9 @@ struct MainView: View {
                         }
                     }
                     // Show alert instead of displaying badge on bottom edge of the display when the device is not in portrait mode to save space
-                    // FIXME: alert does not show
-                    if !NetworkManager.shared.getNetworkState() && UIDevice.current.orientation != .portrait && UIDevice.current.orientation != .portraitUpsideDown {
+                    if !NetworkManager.shared.getNetworkState() && UIDeviceOrientation.portrait.isLandscape && !mainViewModel.hasShownOfflineAlert {
                         showOfflineAlert = true
+                        mainViewModel.hasShownOfflineAlert = true
                     }
                     // Load user-set sort settings
                     sortViewModel.loadFromUserDefaults { sortSelection in
@@ -359,28 +353,14 @@ struct MainView: View {
                             VStack(alignment: .leading) {
                                 Text(greeting(withName: true))
                                     .font(.largeTitle.weight(.bold))
-                                HStack(spacing: 10) {
-                                    ForEach(0...1, id: \.self) { index in
-                                        Button {
-                                            if index == 0 {
-                                                showNewSong = true
-                                            } else {
-                                                showNewFolder = true
-                                            }
-                                        } label: {
-                                            HStack(spacing: 7) {
-                                                FAText(iconName: index == 0 ? "pen-to-square" : "folder-plus", size: 18)
-                                                Text(index == 0 ? "New Song" : "New Folder")
-                                                    .font(.body.weight(.semibold))
-                                            }
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(Color.blue)
-                                            .foregroundColor(.white)
-                                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                                        }
-                                    }
-                                }
+                                HeaderActionsView([
+                                    .init(title: NSLocalizedString("New Song", comment: ""), icon: "pen-to-square", scheme: .primary, action: {
+                                        showNewSong = true
+                                    }),
+                                    .init(title: NSLocalizedString("New Folder", comment: ""), icon: "folder-plus", scheme: .primary, action: {
+                                        showNewFolder = true
+                                    })
+                                ])
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, -18)
@@ -418,6 +398,11 @@ struct MainView: View {
                                             .padding()
                                         }
                                     })
+                                    NavigationLink(destination: {
+                                        BandsView()
+                                    }) {
+                                        ContentRowView(NSLocalizedString("bands", comment: ""), icon: "guitar", color: .blue)
+                                    }
                                     NavigationLink(destination: {
                                         if let user = authViewModel.currentUser, user.hasPro ?? false {
                                             ExploreView()
@@ -471,10 +456,10 @@ struct MainView: View {
                                     LoadingView()
                                 } else {
                                     if !isFoldersCollapsed {
-                                        ForEach(searchableFolders) { folder  in
-                                            if folder.title == "noFolders" {
-                                                EmptyStateView(state: .folders)
-                                            } else {
+                                        if searchableFolders.isEmpty {
+                                            EmptyStateView(state: .folders)
+                                        } else {
+                                            ForEach(searchableFolders) { folder  in
                                                 VStack {
                                                     HStack {
                                                         Button {
@@ -660,7 +645,7 @@ struct MainView: View {
                                                                             .deleteDisabled(true)
                                                                             .moveDisabled(true)
                                                                     } else {
-                                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
+                                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
                                                                             ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                                                 .contextMenu {
                                                                                     if !(song.readOnly ?? false) {
@@ -855,13 +840,13 @@ struct MainView: View {
                                     if mainViewModel.isLoadingSongs || (mainViewModel.isLoadingSharedSongs && !isUpdatingSharedSongs) {
                                         LoadingView()
                                     } else {
-                                        ForEach(searchableSongs) { song in
-                                            if song.title == "noSongs" {
-                                                EmptyStateView(state: .songs)
-                                                    .moveDisabled(true)
-                                            } else {
+                                        if searchableSongs.isEmpty {
+                                            EmptyStateView(state: .songs)
+                                                .moveDisabled(true)
+                                        } else {
+                                            ForEach(searchableSongs) { song in
                                                 HStack {
-                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words")) {
+                                                    NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs)) {
                                                         ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
                                                             .contextMenu {
                                                                 songContextMenu(song: song)
@@ -933,6 +918,17 @@ struct MainView: View {
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
                         }
                     }
+                    .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
+                        if let selectedSong = selectedSong {
+                            Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                if !songViewModel.isShared(song: selectedSong) {
+                                    songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                } else {
+                                    songViewModel.leaveSong(song: selectedSong)
+                                }
+                            }
+                        }
+                    }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
                         let animation = Animation.easeInOut(duration: 0.22)
                         
@@ -981,12 +977,12 @@ struct MainView: View {
         }
         .overlay {
             if !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable {
-                let notConnectedAndInLandscape = !NetworkManager.shared.getNetworkState() && (UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown)
+                let notConnectedAndInPortrait = !NetworkManager.shared.getNetworkState() && UIDeviceOrientation.portrait.isPortrait
                 
                 VStack {
                     Spacer()
                     ZStack {
-                        if notConnectedAndInLandscape {
+                        if notConnectedAndInPortrait {
                             VisualEffectBlur(blurStyle: .systemMaterial)
                                 .mask(LinearGradient(
                                     gradient: Gradient(colors: [Color.white, Color.clear]),
@@ -997,7 +993,7 @@ struct MainView: View {
                         }
                         VStack {
                             Spacer()
-                            if notConnectedAndInLandscape {
+                            if notConnectedAndInPortrait {
                                 Button {
                                     showOfflineAlert = true
                                 } label: {
@@ -1044,5 +1040,4 @@ struct MainView: View {
 
 #Preview {
     MainView()
-        .environmentObject(AuthViewModel())
 }

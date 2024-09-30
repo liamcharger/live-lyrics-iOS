@@ -17,8 +17,10 @@ struct UserToShare: Codable {
 struct ShareView: View {
     @Environment(\.presentationMode) var presMode
     
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var authViewModel = AuthViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
+    @ObservedObject var bandsViewModel = BandsViewModel.shared
+    @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var networkManager = NetworkManager.shared
     
     @Binding var isDisplayed: Bool
@@ -33,6 +35,7 @@ struct ShareView: View {
     @State var readOnly = false
     
     @State var selectedUser: User?
+    @State var selectedBand: Band?
     
     @AppStorage("ShareView.recentSearches") var recentSearches = ""
     
@@ -43,7 +46,7 @@ struct ShareView: View {
     let defaultVariationId = SongVariation.defaultId
     
     var disabled: Bool {
-        selectedUsers.isEmpty || !networkManager.getNetworkState() || isSendingRequest
+        (selectedUsers.isEmpty && selectedBand == nil) || !networkManager.getNetworkState() || isSendingRequest
     }
     
     init(isDisplayed: Binding<Bool>, song: Song? = nil, folder: Folder? = nil) {
@@ -61,33 +64,57 @@ struct ShareView: View {
                     Spacer()
                     Button {
                         let timestamp = Date()
+                        let dispatch = DispatchGroup()
                         guard let fromUser = authViewModel.currentUser else { return }
+                        guard let fromUserId = authViewModel.currentUser?.id else { return }
                         let toUsernames = selectedUsers.map { $0.username }
                         let toUserIds = selectedUsers.compactMap { $0.id }
-                        let fcmIds = selectedUsers.compactMap { $0.notificationToken }
                         let type = collaborate ? "collaborate" : "copy"
                         
                         var request: ShareRequest?
+                        var users = [ShareUser]()
                         
-                        if let song = song {
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: selectedVariations.isEmpty ? nil : selectedVariations.compactMap({ $0.id }), readOnly: readOnly, notificationTokens: fcmIds, fromNotificationToken: fromUser.fcmId)
-                        } else if let folder = folder {
-                            request = ShareRequest(timestamp: timestamp, from: fromUser.id ?? "", to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly, notificationTokens: fcmIds, fromNotificationToken: fromUser.fcmId)
-                        } else {
-                            print("Song and folder are nil")
-                        }
-                        if let request = request {
-                            self.isSendingRequest = true
-                            authViewModel.sendInviteToUser(request: request, includeDefault: selectedVariations.contains(where: { $0.title == defaultVariationId})) { error in
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                    return
+                        if let selectedBand = selectedBand {
+                            let toUserIds = selectedBand.members
+                            
+                            dispatch.enter()
+                            bandsViewModel.fetchBandMembers(selectedBand, withListener: false) { members in
+                                dispatch.leave()
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: (song?.id ?? (folder?.id!))!, contentType: song == nil ? "folder" : "song", contentName: song?.title ?? (folder?.title)!, type: type, toUsername: [selectedBand.name], fromUsername: fromUser.username, songVariations: [SongVariation.defaultId], readOnly: readOnly, bandId: selectedBand.id!)
+                                
+                                for member in members.filter({ $0.uid != fromUserId }) {
+                                    users.append(ShareUser(uid: member.uid, songVariations: selectedVariations.compactMap({ $0.id }), fcmId: member.fcmId))
                                 }
-                                self.isSendingRequest = false
-                                presMode.wrappedValue.dismiss()
                             }
                         } else {
-                            print("Error: request is nil")
+                            dispatch.enter()
+                            if let song = song {
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: song.id ?? "", contentType: "song", contentName: song.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, songVariations: [SongVariation.defaultId], readOnly: readOnly)
+                                
+                                for user in selectedUsers {
+                                    users.append(ShareUser(uid: user.id!, songVariations: selectedVariations.compactMap({ $0.id }), fcmId: user.notificationToken))
+                                }
+                            } else if let folder = folder {
+                                request = ShareRequest(timestamp: timestamp, from: fromUserId, to: toUserIds, contentId: folder.id ?? "", contentType: "folder", contentName: folder.title, type: type, toUsername: toUsernames, fromUsername: fromUser.username, readOnly: readOnly)
+                                
+                                for user in selectedUsers {
+                                    users.append(ShareUser(uid: user.id!, songVariations: selectedVariations.compactMap({ $0.id }), fcmId: user.notificationToken))
+                                }
+                            }
+                            dispatch.leave()
+                        }
+                        dispatch.notify(queue: .main) {
+                            if let request = request {
+                                self.isSendingRequest = true
+                                authViewModel.sendInviteToUser(request: request, users: users, includeDefault: selectedVariations.contains(where: { $0.title == defaultVariationId})) { error in
+                                    if let error = error {
+                                        print(error.localizedDescription)
+                                        return
+                                    }
+                                    self.isSendingRequest = false
+                                    presMode.wrappedValue.dismiss()
+                                }
+                            }
                         }
                     } label: {
                         if isSendingRequest {
@@ -179,7 +206,7 @@ struct ShareView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && collaborate && folder == nil {
+            if (folder == nil ? !songViewModel.isLoadingVariations && !songVariations.contains(where: { $0.title == "noVariations" }) && songVariations.count >= 1 : true) && collaborate {
                 HStack {
                     Text("Including variation\(selectedVariations.count > 1 || selectedVariations.isEmpty ? "s" : ""):")
                     Spacer()
@@ -195,23 +222,36 @@ struct ShareView: View {
                                     self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.title == defaultVariationId})!)
                                 }
                             } else {
-                                self.selectedVariations.append(SongVariation(title: defaultVariationId, lyrics: "", songUid: "", songId: ""))
+                                self.selectedVariations.append(SongVariation(id: defaultVariationId, title: defaultVariationId, lyrics: "", songUid: "", songId: ""))
                             }
                         } label: {
                             Label(NSLocalizedString("Main", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == defaultVariationId}) ? "checkmark" : "")
                         }
-                        Divider()
-                        ForEach(songVariations, id: \.id) { variation in
+                        if selectedBand != nil {
                             Button {
-                                if selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) {
-                                    if selectedVariations.count >= 2 {
-                                        self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
-                                    }
-                                } else {
-                                    self.selectedVariations.append(variation)
-                                }
+                                self.selectedVariations.removeAll()
+                                self.selectedVariations.append(SongVariation(id: "byRole", title: "byRole", lyrics: "", songUid: "", songId: ""))
                             } label: {
-                                Label(variation.title, systemImage: selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) ? "checkmark" : "")
+                                Label(NSLocalizedString("By Role", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == "byRole"}) ? "checkmark" : "")
+                            }
+                        }
+                        if folder == nil {
+                            Divider()
+                            ForEach(songVariations, id: \.id) { variation in
+                                Button {
+                                    if let byRole = selectedVariations.firstIndex(where: { $0.title == "byRole" }) {
+                                        self.selectedVariations.remove(at: byRole)
+                                    }
+                                    if selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) {
+                                        if selectedVariations.count >= 2 {
+                                            self.selectedVariations.remove(at: selectedVariations.firstIndex(where: {$0.id ?? "" == variation.id ?? ""})!)
+                                        }
+                                    } else {
+                                        self.selectedVariations.append(variation)
+                                    }
+                                } label: {
+                                    Label(variation.title, systemImage: selectedVariations.contains(where: { $0.id ?? "" == variation.id ?? "" }) ? "checkmark" : "")
+                                }
                             }
                         }
                     } label: {
@@ -225,6 +265,8 @@ struct ShareView: View {
                                         
                                         if title == defaultVariationId {
                                             return NSLocalizedString("Main", comment: "")
+                                        } else if title == "byRole" {
+                                            return NSLocalizedString("By Role", comment: "")
                                         } else {
                                             return title
                                         }
@@ -248,32 +290,75 @@ struct ShareView: View {
                     .submitLabel(.search)
                     .onSubmit {
                         firstSearch = false
-                        if searchText == "" {
+                        if searchText.isEmpty {
                             firstSearch = true
                             authViewModel.users = []
                         } else {
                             authViewModel.fetchUsers(username: searchText, filterCurrentUser: true) {
-                                if !recentSearches.components(separatedBy: ",").contains(where: {$0 == searchText}) && !authViewModel.users.isEmpty {
+                                if !recentSearches.components(separatedBy: ",").contains(where: { $0 == searchText }) && !authViewModel.users.isEmpty {
                                     recentSearches.append(",\(searchText)")
                                 }
                             }
                         }
                     }
                     .padding()
+                
                 Divider()
-                if authViewModel.isLoadingUsers {
+                
+                if authViewModel.isLoadingUsers || bandsViewModel.isLoadingUserBands {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if !authViewModel.users.isEmpty || (!recentSearches.isEmpty && searchText.isEmpty) && firstSearch {
-                        ScrollView {
-                            VStack {
-                                if !authViewModel.users.isEmpty {
+                    ScrollView {
+                        VStack {
+                            // Show bands if searchText is empty
+                            if firstSearch || searchText.isEmpty {
+                                VStack(spacing: 2) {
+                                    ListHeaderView(title: NSLocalizedString("bands", comment: ""))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    VStack {
+                                        ForEach(bandsViewModel.userBands) { band in
+                                            Button {
+                                                if let selectedBand = selectedBand, selectedBand.id! == band.id! {
+                                                    self.selectedBand = nil
+                                                } else {
+                                                    self.selectedBand = band
+                                                    self.selectedUser = nil
+                                                    self.selectedUsers = []
+                                                }
+                                            } label: {
+                                                HStack {
+                                                    Text(band.name)
+                                                        .font(.body.weight(.semibold))
+                                                    Spacer()
+                                                    if let selectedBand = selectedBand, selectedBand.id! == band.id! {
+                                                        Image(systemName: "checkmark.circle.fill")
+                                                            .foregroundColor(.blue)
+                                                            .imageScale(.large)
+                                                    } else {
+                                                        Image(systemName: "circle")
+                                                            .imageScale(.large)
+                                                    }
+                                                }
+                                                .padding()
+                                                .background(Material.regular)
+                                                .foregroundColor(.primary)
+                                                .clipShape(Capsule())
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding(.bottom)
+                            }
+                            // Show search results if user has searched
+                            if !authViewModel.users.isEmpty {
+                                VStack {
                                     ForEach(authViewModel.users.indices, id: \.self) { index in
                                         let user = authViewModel.users[index]
                                         
                                         Button {
                                             selectedUser = user
+                                            selectedBand = nil
                                             
                                             if let userId = user.id {
                                                 if let existingIndex = selectedUsers.firstIndex(where: { $0.id == userId && $0.username == user.username }) {
@@ -286,7 +371,9 @@ struct ShareView: View {
                                             SongShareRowView(user: user, selectedUsers: $selectedUsers)
                                         }
                                     }
-                                } else if recentSearches.contains(",") && firstSearch {
+                                }
+                            } else if recentSearches.contains(",") {
+                                VStack {
                                     HStack {
                                         ListHeaderView(title: NSLocalizedString("recently_searched", comment: ""))
                                         Spacer()
@@ -317,7 +404,6 @@ struct ShareView: View {
                                                     .foregroundColor(.primary)
                                                     .clipShape(Capsule())
                                             }
-                                            .contentShape(.contextMenuPreview, Capsule())
                                             .contextMenu {
                                                 Button(role: .destructive) {
                                                     if let index = recentSearches.components(separatedBy: ",").firstIndex(of: search) {
@@ -332,23 +418,25 @@ struct ShareView: View {
                                         }
                                     }
                                 }
-                            }
-                            .padding()
-                        }
-                    } else {
-                        FullscreenMessage(imageName: firstSearch ? "magnifyingglass" : "person.slash", title: {
-                            if firstSearch {
-                                if let song = song {
-                                    return "Search for a user by their username to share \"\(song.title)\"."
-                                } else if let folder = folder {
-                                    return "Search for a user by their username to share \"\(folder.title)\"."
-                                } else {
-                                    return "Search for a user by their username to share."
-                                }
                             } else {
-                                return "It doesn't look like there are any users with that username."
+                                FullscreenMessage(imageName: firstSearch ? "magnifyingglass" : "person.slash", title: {
+                                    let bandDesc = bandsViewModel.bands.isEmpty ? "" : NSLocalizedString("or_choose_band", comment: "")
+                                    
+                                    if firstSearch {
+                                        if let song = song {
+                                            return "Search for a user by their username \(bandDesc) to share \"\(song.title)\"."
+                                        } else if let folder = folder {
+                                            return "Search for a user by their username \(bandDesc) to share \"\(folder.title)\"."
+                                        } else {
+                                            return "Search for a user by their username \(bandDesc) to share."
+                                        }
+                                    } else {
+                                        return "It doesn't look like there are any users with that username."
+                                    }
+                                }(), spaceNavbar: true)
                             }
-                        }(), spaceNavbar: true)
+                        }
+                        .padding()
                     }
                 }
             } else {
@@ -370,6 +458,7 @@ struct ShareView: View {
                     self.songVariations = variations
                 }
             }
+            bandsViewModel.fetchUserBands {}
         }
     }
 }

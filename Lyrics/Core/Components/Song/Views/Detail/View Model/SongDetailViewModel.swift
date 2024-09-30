@@ -28,10 +28,6 @@ class SongDetailViewModel: ObservableObject {
     
     static let shared = SongDetailViewModel()
     
-    func uid() -> String {
-        return AuthViewModel.shared.currentUser?.id ?? ""
-    }
-    
     func readOnly(_ song: Song) -> Bool {
         return song.readOnly ?? false
     }

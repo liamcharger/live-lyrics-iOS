@@ -30,6 +30,7 @@ struct Song: Identifiable, Codable, Equatable {
     var duration: String?
     var tags: [String]?
     var demoAttachments: [String]?
+    var bandId: String?
     
     var joinedUsers: [String]?
     var variations: [String]?

@@ -34,11 +34,6 @@ struct NotesView: View {
                 }
             }
             .padding()
-            if #available(iOS 17, *) {
-                TipView(NotesViewTip())
-                    .tipViewStyle(LiveLyricsTipStyle())
-                    .padding([.bottom, .horizontal])
-            }
             Divider()
             if notesViewModel.isLoading {
                 VStack {
@@ -48,13 +43,9 @@ struct NotesView: View {
                 }
             } else {
                 ZStack {
-                    // Slight lag on enter because notesViewModel.notes is being used rather than a @State variable
                     TextEditor(text: $notesViewModel.notes)
                         .padding(.leading, 13)
                         .focused($isInputActive)
-                        .onChange(of: notesViewModel.notes) { notes in
-                            notesViewModel.updateNotes(song: song, folder: folder, notes: notes)
-                        }
                     if notesViewModel.notes.isEmpty && !isInputActive {
                         Text("Tap to enter your notes...")
                             .foregroundColor(.gray.opacity(0.6))
@@ -71,6 +62,10 @@ struct NotesView: View {
         }
         .onAppear {
             notesViewModel.fetchNotes(song: song, folder: folder)
+            notesViewModel.startUpdatingNotes(song: song, folder: folder)
+        }
+        .onDisappear {
+            notesViewModel.updateNotes(song: song, folder: folder, notes: notesViewModel.notes)
         }
     }
 }

@@ -8,16 +8,15 @@
 import SwiftUI
 
 struct EditPasswordView: View {
-    // Environment vars
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
+    @ObservedObject var profileViewModel = ProfileViewModel()
+    
     @Environment(\.presentationMode) var presMode
     
-    // Binding vars
     @Binding var showProfileView: Bool
     
     let user: User
     
-    // State vars
     @State var password = ""
     @State var confirmPassword = ""
     @State var currentPassword = ""
@@ -26,10 +25,6 @@ struct EditPasswordView: View {
     @State var showError = false
     @State var showAlert = false
     
-    // ObservedObject vars
-    @ObservedObject var profileViewModel = ProfileViewModel()
-    
-    // Standard vars
     var isEmpty: Bool {
         currentPassword.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty || confirmPassword != password
     }

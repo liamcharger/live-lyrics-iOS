@@ -21,6 +21,10 @@ func hasHomeButton() -> Bool {
     return true
 }
 
+func uid() -> String {
+    return AuthViewModel.shared.currentUser?.id ?? ""
+}
+
 func greeting(withName: Bool? = nil) -> String {
     let date = Date()
     let calendar = Calendar.current
@@ -67,15 +71,6 @@ func greeting(withName: Bool? = nil) -> String {
 
 extension View {
     // Create a modifier for each tip because we can't pass a param ("Tip requires iOS 17.0 or newer")
-    @ViewBuilder
-    func showPlayViewTip() -> some View {
-        if #available(iOS 17, *) {
-            self
-                .popoverTip(PlayViewTip(), arrowEdge: .top)
-                .tipViewStyle(LiveLyricsTipStyle())
-        }
-    }
-    
     @ViewBuilder
     func showAutoscrollSpeedTip() -> some View {
         if #available(iOS 17, *) {
@@ -143,7 +138,7 @@ extension Color {
     static var materialRegularGray: Color {
         Color(UIColor { traitCollection in
             if traitCollection.userInterfaceStyle == .dark {
-                return UIColor(red: 34/255, green: 34/255, blue: 36/255, alpha: 1.0)
+                return UIColor(red: 42/255, green: 42/255, blue: 43/255, alpha: 1.0)
             } else {
                 return UIColor(red: 240/255, green: 240/255, blue: 243/255, alpha: 1.0)
             }
@@ -204,7 +199,7 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
                 self.delegate.isScrolling = $isScrolling
                 self.delegate.isScrollingProgrammatically = $isScrollingProgrammatically
             }
-            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { scrollView in
+            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17, .v18)) { scrollView in
                 scrollView.delegate = delegate
             }
     }
