@@ -7,7 +7,7 @@
 
 import FirebaseAuth
 import Firebase
-import CoreData
+import FirebaseFirestore
 
 class SongService {
 	func fetchSongs(completion: @escaping ([Song]) -> Void) {
@@ -27,29 +27,24 @@ class SongService {
 				
 				let songs = documents.compactMap({ try? $0.data(as: Song.self) })
 				
-				if documents.isEmpty {
-					completion([Song.song])
-				} else {
-					completion(songs)
-				}
+				completion(songs)
 			}
 	}
 	
-	// FIXME: group completion called before fetchSongs are finished loading, resulting in loading state changing to false when songs are not loaded
-	func fetchSharedSongs(completion: @escaping([Song]) -> Void) {
+	func fetchSharedSongs(completion: @escaping ([Song]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("shared-songs")
 			.addSnapshotListener { snapshot, error in
 				if let error = error {
 					print("Error fetching shared songs: \(error.localizedDescription)")
-					completion([])
+					completion([]) // Returning an empty list in case of an error
 					return
 				}
 				
 				guard let documents = snapshot?.documents else {
 					print("No shared song documents found")
-					completion([])
+					completion([]) // Returning an empty list if no documents found
 					return
 				}
 				
@@ -58,27 +53,30 @@ class SongService {
 				
 				for document in documents {
 					guard let sharedSong = try? document.data(as: SharedSong.self) else {
-						continue
+						continue // Skip if sharedSong can't be parsed
 					}
-					group.enter()
+					group.enter() // Enter the group before starting the async task
+					
 					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId, songCompletion: { song in
 						if var song = song {
+							// Add the additional properties from sharedSong
 							song.variations = sharedSong.variations
 							song.readOnly = sharedSong.readOnly
 							song.pinned = sharedSong.pinned
 							song.performanceMode = sharedSong.performanceMode
+							song.bandId = sharedSong.bandId
 							completedSongs.append(song)
 						}
-						group.leave()
+						group.leave() // Leave the group after the async task completes
 					}, registrationCompletion: { _ in })
 				}
 				
+				// Notify the completion after all async tasks are done
 				group.notify(queue: .main) {
 					completion(completedSongs)
 				}
 			}
 	}
-
 	
 	func fetchSharedFolders(completion: @escaping([Folder]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -109,16 +107,21 @@ class SongService {
 						}
 						guard let snapshot = snapshot, snapshot.exists else {
 							print("Folder does not exist")
+							group.leave()
 							return
 						}
 						
 						guard var folder = try? snapshot.data(as: Folder.self) else {
 							print("Error parsing folder")
+							group.leave()
 							return
 						}
 						
 						folder.readOnly = sharedFolder.readOnly
+						folder.songVariations = sharedFolder.songVariations
+						folder.bandId = sharedFolder.bandId
 						completedFolders.append(folder)
+						
 						group.leave()
 					}
 				}
@@ -241,28 +244,116 @@ class SongService {
 				let folderSongs = documents.compactMap { try? $0.data(as: FolderSong.self) }
 				
 				for folderSong in folderSongs {
-					print(folderSong.id ?? "" + ", ", folderSong.order)
 					group.enter()
-					let songUid = folderSong.uid ?? userId
-					self.fetchSong(listen: false, forUser: songUid, withId: folderSong.id!) { song in
-						if let song = song {
-							completedSongs.append(song)
+					self.fetchSong(listen: false, forUser: folderSong.uid, withId: folderSong.id!) { song in
+						if var song = song {
+							// If the folder is from a band, pass it onto the song
+							song.bandId = folder.bandId
+							if let variations = folder.songVariations {
+								if let bandId = folder.bandId, variations.contains(where: { $0 == "byRole" }) {
+									// Fetch variations based on band roles
+									self.handleVariations(song, bandId: bandId) { songVariations in
+										song.variations = songVariations.compactMap({ $0.id })
+										completedSongs.append(song) // Ensure song is appended after variations are set
+										group.leave()
+									}
+								} else if variations.contains(where: { $0 == SongVariation.defaultId }) {
+									var song = song
+									song.variations = [SongVariation.defaultId]
+									completedSongs.append(song)
+									group.leave()
+								} else if variations.isEmpty {
+									song.variations = []
+									completedSongs.append(song)
+									group.leave()
+								}
+							} else {
+								completedSongs.append(song)
+								group.leave()
+							}
+						} else {
+							group.leave()
 						}
-						group.leave()
 					} registrationCompletion: { _ in }
 				}
 				
 				group.notify(queue: .main) {
-					if completedSongs.isEmpty {
-						completion([Song.song])
-					} else {
-						completion(completedSongs)
-					}
+					completion(completedSongs)
 				}
 			}
 	}
 	
-	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
+	func handleVariations(_ song: Song, bandId: String, completion: @escaping ([SongVariation]) -> Void) {
+		guard let uid = Auth.auth().currentUser?.uid else {
+			completion([])
+			return
+		}
+		
+		let group = DispatchGroup()
+		var filteredVariations = [SongVariation]()
+		
+		group.enter()
+		BandsViewModel.shared.fetchUserBands(withListener: false) {
+			guard let band = BandsViewModel.shared.userBands.first(where: { $0.id == bandId }) else {
+				print("Band not found")
+				// If the band isn't found, return empty variations
+				completion([])
+				return
+			}
+			
+			group.enter()
+			
+			// Fetch band members
+			BandsViewModel.shared.fetchBandMembers(band, withListener: false) { members in
+				group.leave()
+				guard let member = members.first(where: { $0.uid == uid }) else {
+					print("Member not found")
+					// If the member isn't found, return
+					completion([])
+					return
+				}
+				
+				group.enter()
+				// TODO in future: add withListener property when roles are fetched from Firestore
+				BandsViewModel.shared.fetchMemberRoles(band) { roles in
+					group.leave()
+					guard let memberRoleId = roles.first(where: { $0.id == member.roleId })?.id else {
+						print("Member does not have a role")
+						completion([]) // If the role isn't found, return
+						return
+					}
+					
+					print(memberRoleId)
+					
+					group.enter()
+					SongViewModel.shared.fetchSongVariations(song: song, withListener: false) { songVariations in
+						// Filter variations based on the role
+						for variation in songVariations {
+							if let roleId = variation.roleId {
+								if roleId == memberRoleId {
+									filteredVariations.append(variation)
+								}
+							}
+						}
+						
+						// If no variations match, add a default variation
+						if filteredVariations.isEmpty {
+							filteredVariations.append(SongVariation(id: SongVariation.defaultId, title: SongVariation.defaultId, lyrics: "", songUid: "", songId: "", roleId: ""))
+						}
+						
+						group.leave()
+					}
+				}
+				group.leave()
+			}
+		}
+		
+		group.notify(queue: .main) {
+			completion(filteredVariations)
+		}
+	}
+	
+	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, folder: Folder? = nil, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else {
 			songCompletion(nil)
 			registrationCompletion(nil)
@@ -311,7 +402,7 @@ class SongService {
 			}
 		}
 	}
-
+	
 	func fetchFolder(forUser: String? = nil, withId id: String, folder: Folder? = nil, completion: @escaping (Folder?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
@@ -343,17 +434,15 @@ class SongService {
 				}
 				let folders = documents.compactMap({ try? $0.data(as: Folder.self) })
 				
-				if folders.isEmpty {
-					completion([Folder.folder])
-				} else {
-					completion(folders)
-				}
+				completion(folders)
 			}
 	}
 	
-	func fetchSongVariations(song: Song, completion: @escaping([SongVariation]) -> Void) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations")
-			.addSnapshotListener { snapshot, error in
+	func fetchSongVariations(song: Song, withListener: Bool = true, completion: @escaping([SongVariation]) -> Void) {
+		let ref = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations")
+		
+		if withListener {
+			ref.addSnapshotListener { snapshot, error in
 				guard let documents = snapshot?.documents else {
 					return
 				}
@@ -361,6 +450,16 @@ class SongService {
 				
 				completion(variations)
 			}
+		} else {
+			ref.getDocuments { snapshot, error in
+				guard let documents = snapshot?.documents else {
+					return
+				}
+				let variations = documents.compactMap({ try? $0.data(as: SongVariation.self) })
+				
+				completion(variations)
+			}
+		}
 	}
 	
 	func updateBpb(song: Song, bpb: Int) {
@@ -552,13 +651,13 @@ class SongService {
 		}
 	}
 	
-	func createSongVariation(song: Song, lyrics: String, title: String, completion: @escaping(Error?, String) -> Void) {
+	func createSongVariation(song: Song, lyrics: String, title: String, role: BandRole?, completion: @escaping(Error?, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let id = UUID().uuidString
 		
 		let documentRef = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(id)
 		
-		documentRef.setData(["title": title, "lyrics": lyrics, "songUid": uid, "songId": song.id!]) { error in
+		documentRef.setData(["title": title, "lyrics": lyrics, "songUid": uid, "songId": song.id!, "roleId": role?.id ?? FieldValue.delete()]) { error in
 			if let error = error {
 				print("Error creating song variation: \(error.localizedDescription)")
 				completion(error, "")
@@ -572,14 +671,14 @@ class SongService {
 	func createNewDemoAttachment(from url: String, for song: Song, completion: @escaping() -> Void) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 			.updateData(["demoAttachments": FieldValue.arrayUnion([url])]) { error in
-			if let error = error {
-				print("Error creating song demo attachment: \(error.localizedDescription)")
+				if let error = error {
+					print("Error creating song demo attachment: \(error.localizedDescription)")
+					completion()
+					return
+				}
+				
 				completion()
-				return
 			}
-			
-			completion()
-		}
 	}
 	
 	func createSong(withUid: String? = nil, song: Song, completion: @escaping(Error?) -> Void) {
@@ -650,11 +749,11 @@ class SongService {
 	func deleteDemoAttachment(demo: DemoAttachment, for song: Song, completion: @escaping() -> Void) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 			.updateData(["demoAttachments": FieldValue.arrayRemove([demo.url])]) { error in
-			if let error = error {
-				print(error.localizedDescription)
+				if let error = error {
+					print(error.localizedDescription)
+				}
+				completion()
 			}
-			completion()
-		}
 	}
 	
 	func deleteVariation(song: Song, variation: SongVariation) {
@@ -665,8 +764,8 @@ class SongService {
 		}
 	}
 	
-	func updateVariation(song: Song, variation: SongVariation, title: String) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).updateData(["title": title]) { error in
+	func updateVariation(song: Song, variation: SongVariation, title: String, role: BandRole?) {
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!).updateData(["title": title, "roleId": role?.id ?? FieldValue.delete()]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -877,14 +976,14 @@ class SongService {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(songId).updateData(["tags": filteredTags.isEmpty ? FieldValue.delete() : filteredTags], completion: completion)
 	}
 	
-	func sendInviteToUser(request: ShareRequest, includeDefault: Bool, completion: @escaping(Error?) -> Void) {
+	func sendInviteToUser(request: ShareRequest, users: [ShareUser], includeDefault: Bool, completion: @escaping(Error?) -> Void) {
 		let id = UUID().uuidString
 		let dispatch = DispatchGroup()
 		
 		var songVariations = [String]()
 		let variations = request.songVariations ?? []
 		songVariations = variations + (includeDefault ? [SongVariation.defaultId] : [])
-
+		
 		let requestData: [String: Any?] = [
 			"timestamp": request.timestamp,
 			"from": request.from,
@@ -897,6 +996,7 @@ class SongService {
 			"fromUsername": request.fromUsername,
 			"songVariations": songVariations,
 			"readOnly": request.readOnly,
+			"bandId": request.bandId,
 			"notificationTokens": request.notificationTokens,
 			"fromNotificationToken": request.fromNotificationToken
 		]
@@ -908,14 +1008,32 @@ class SongService {
 				return
 			}
 			
-			for toUser in request.to {
+			for user in users {
+				let requestData: [String: Any?] = [
+					"timestamp": request.timestamp,
+					"from": request.from,
+					"to": request.to,
+					"contentId": request.contentId,
+					"contentType": request.contentType,
+					"contentName": request.contentName,
+					"type": request.type,
+					"toUsername": request.toUsername,
+					"fromUsername": request.fromUsername,
+					"songVariations": user.songVariations,
+					"readOnly": request.readOnly,
+					"bandId": request.bandId
+				]
+				
 				dispatch.enter()
-				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(id).setData(requestData) { error in
+				Firestore.firestore().collection("users").document(user.uid).collection("incoming-share-requests").document(id).setData(requestData) { error in
 					if let error = error {
 						completion(error)
 						print(error.localizedDescription)
 					}
 					dispatch.leave()
+					if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
+						UserService().sendNotificationToFCM(tokens: [token], title: "Incoming Request", body: "\(currentUser.username) has sent a \(request.contentType == "folder" ? "folder" : "song").", type: .incoming)
+					}
 				}
 			}
 			
@@ -923,7 +1041,10 @@ class SongService {
 				if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
 					UserService().sendNotificationToFCM(tokens: tokens, title: "Incoming Request", body: "\(currentUser.fullname) has shared a \(request.contentType == "folder" ? "folder" : "song")", type: .incoming)
 				}
-				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers":FieldValue.arrayUnion([request.from])])
+				if let bandId = request.bandId {
+					Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["bandId": bandId])
+				}
+				Firestore.firestore().collection("users").document(request.from).collection("songs").document(id).updateData(["joinedUsers": FieldValue.arrayUnion([request.from])])
 				completion(nil)
 			}
 		}
@@ -975,8 +1096,9 @@ class SongService {
 		let group = DispatchGroup()
 		
 		group.enter()
-		deleteRequest(request, uid: incomingReqColUid ?? uid)
+		deleteRequest(if: request, uid: incomingReqColUid ?? uid)
 		group.leave()
+		
 		group.notify(queue: .main) {
 			if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
 				if let declinedBy = declinedBy {
@@ -1001,11 +1123,13 @@ class SongService {
 			self.fetchFolder(forUser: request.from, withId: request.contentId) { folder in
 				if let folder = folder {
 					if request.type == "collaborate" {
-						let sharedFolder: [String: Any] = [
+						let sharedFolder: [String: Any?] = [
 							"from": request.from,
 							"folderId": request.contentId,
 							"order": 0,
-							"readOnly": request.readOnly ?? false
+							"readOnly": request.readOnly ?? false,
+							"songVariations": request.songVariations,
+							"bandId": request.bandId
 						]
 						
 						dispatch.enter()
@@ -1025,7 +1149,8 @@ class SongService {
 						}
 						
 						dispatch.notify(queue: .main) {
-							self.deleteRequest(request, uid: uid)
+							Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])])
+							self.deleteRequest(if: request, uid: uid)
 							completion()
 						}
 					} else {
@@ -1060,6 +1185,22 @@ class SongService {
 						}
 						
 						dispatch.notify(queue: .main) {
+							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
+								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\".", type: .accepted)
+								// TODO: double check logic
+								if request.to.count > 1 {
+									for toUser in request.to {
+										Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in
+											if let error = error {
+												print(error.localizedDescription)
+											}
+											self.deleteRequest(request, uid: uid, outgoing: false)
+										}
+									}
+								} else {
+									self.deleteRequest(request, uid: uid)
+								}
+							}
 							self.deleteRequest(request, uid: uid)
 							if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
 								UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.fullname) has accepted the folder \"\(request.contentName)\"", type: .accepted)
@@ -1081,12 +1222,13 @@ class SongService {
 				}
 				
 				if request.type == "collaborate" {
-					let sharedSong: [String: Any?] = [
+					var sharedSong: [String: Any?] = [
 						"from": request.from,
 						"songId": request.contentId,
 						"order": 0,
+						"readOnly": request.readOnly,
 						"variations": request.songVariations,
-						"readOnly": request.readOnly
+						"bandId": request.bandId
 					]
 					
 					dispatch.enter()
@@ -1105,7 +1247,7 @@ class SongService {
 					}
 					
 					dispatch.notify(queue: .main) {
-						self.deleteRequest(request, uid: uid)
+						self.deleteRequest(if: request, uid: uid)
 						if let currentUser = AuthViewModel.shared.currentUser, let token = request.fromNotificationToken {
 							UserService().sendNotificationToFCM(tokens: [token], title: "Request Accepted", body: "\(currentUser.fullname) has accepted the song \"\(request.contentName)\"", type: .accepted)
 						}
@@ -1132,7 +1274,7 @@ class SongService {
 						"duration": song.duration
 					]
 					
-					if let hasPro = AuthViewModel.shared.currentUser?.hasPro {
+					if AuthViewModel.shared.currentUser?.hasPro != nil {
 						songData["demoAttachments"] = song.demoAttachments ?? []
 					}
 					
@@ -1174,17 +1316,37 @@ class SongService {
 		}
 	}
 	
-	func deleteRequest(_ request: ShareRequest, uid: String) {
+	func deleteRequest(_ request: ShareRequest, uid: String, outgoing: Bool? = nil) {
 		Firestore.firestore().collection("users").document(uid).collection("incoming-share-requests").document(request.id!).delete { error in
 			if let error = error {
 				print("Error: \(error.localizedDescription)")
 				return
 			}
 		}
-		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id!).delete { error in
-			if let error = error {
-				print("Error: \(error.localizedDescription)")
-				return
+		if outgoing ?? true {
+			Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(request.id!).delete { error in
+				if let error = error {
+					print("Error: \(error.localizedDescription)")
+					return
+				}
+			}
+		}
+	}
+	
+	func deleteRequest(if request: ShareRequest, uid userId: String) {
+		if request.to.count <= 1 {
+			self.deleteRequest(request, uid: userId)
+		} else {
+			for toUser in request.to {
+				Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([userId])]) { error in
+					if let error = error {
+						print(error.localizedDescription)
+					}
+					self.deleteRequest(request, uid: userId, outgoing: false)
+				}
+			}
+			if userId == uid() {
+				self.deleteRequest(request, uid: userId)
 			}
 		}
 	}
@@ -1210,6 +1372,17 @@ class SongService {
 		}
 		
 		dispatch.notify(queue: .main) {
+			if let bandId = song.bandId {
+				guard let joinedUsers = {
+					return song.joinedUsers?.filter { userId in
+						userId != uid
+					}
+				}() else { return }
+				
+				if joinedUsers.count <= 1 {
+					Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).updateData(["bandId": FieldValue.delete()])
+				}
+			}
 			UserService().fetchUser(withUid: forUid ?? song.uid) { user in
 				if let currentUser = AuthViewModel.shared.currentUser, let token = user.fcmId {
 					UserService().sendNotificationToFCM(tokens: [token], title: "Song Left", body: "\(currentUser.fullname) has left the song \"\(song.title)\"", type: .left)

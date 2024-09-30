@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import BottomSheet
 
 struct NewSongVariationView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
@@ -18,6 +19,8 @@ struct NewSongVariationView: View {
     @State var showError = false
     @State var showInfo = false
     @State var canDismissProgrammatically = false
+    @State var showAddRoleSheet = false
+    @State var selectedRole: BandRole?
     @State var showProgressButton = false
     
     @Binding var isDisplayed: Bool
@@ -28,7 +31,7 @@ struct NewSongVariationView: View {
     let song: Song
     
     func createVariation() {
-        songViewModel.createSongVariation(song: song, lyrics: lyrics, title: title) { error, createdId in
+        songViewModel.createSongVariation(song: song, lyrics: lyrics, title: title, role: selectedRole) { error, createdId in
             if let error = error {
                 print(error.localizedDescription)
                 self.errorMessage = error.localizedDescription
@@ -44,7 +47,7 @@ struct NewSongVariationView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Enter a name for your new variation.")
+                Text("Enter some details for your new variation.")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
@@ -55,12 +58,28 @@ struct NewSongVariationView: View {
             .padding()
             Divider()
             Spacer()
-            TextField(NSLocalizedString("title", comment: ""), text: $title)
-                .padding(14)
-                .background(Material.regular)
-                .clipShape(Capsule())
-                .focused($isFocused)
-                .padding()
+            VStack {
+                TextField(NSLocalizedString("title", comment: ""), text: $title)
+                    .padding(14)
+                    .background(Material.regular)
+                    .clipShape(Capsule())
+                    .cornerRadius(10)
+                    .focused($isFocused)
+                Button {
+                    showAddRoleSheet = true
+                } label: {
+                    HStack {
+                        Text(selectedRole?.name ?? "Add a Role")
+                        Spacer()
+                        FAText(iconName: selectedRole?.icon ?? "plus", size: 18)
+                    }
+                    .padding()
+                    .background(Material.regular)
+                    .clipShape(Capsule())
+                    .cornerRadius(10)
+                }
+            }
+            .padding()
             Spacer()
             Divider()
             LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { view2 = true })
@@ -77,6 +96,9 @@ struct NewSongVariationView: View {
                 .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
                 .padding()
+        }
+        .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium()]) {
+            BandMemberAddRoleView(member: nil, band: nil, selectedRole: $selectedRole)
         }
         .onAppear {
             isFocused = true

@@ -82,7 +82,7 @@ struct RecentlyDeletedView: View {
                                 } else {
                                     let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
                                     
-                                    NavigationLink(destination: SongDetailView(song: songData, songs: nil, restoreSong: song, wordCountStyle: authViewModel.currentUser?.wordCountStyle ?? "Words", folder: nil), label: {
+                                    NavigationLink(destination: SongDetailView(song: songData, songs: nil, restoreSong: song, folder: nil), label: {
                                         VStack(alignment: .leading, spacing: 6) {
                                             HStack {
                                                 Text(song.title)
@@ -204,7 +204,6 @@ struct RecentlyDeletedView: View {
 #Preview {
     NavigationView {
         RecentlyDeletedView()
-            .environmentObject(AuthViewModel())
             .onAppear {
                 RecentlyDeletedViewModel.shared.isLoadingSongs = false
                 RecentlyDeletedViewModel.shared.songs.append(RecentlyDeletedSong(uid: "", timestamp: Date.distantPast, folderIds: [], deletedTimestamp: Date.distantFuture, title: "Test", lyrics: ""))

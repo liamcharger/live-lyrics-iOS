@@ -12,10 +12,10 @@ import BottomSheet
 
 struct MenuView: View {
     @Environment(\.presentationMode) var presMode
-    @EnvironmentObject var viewModel: AuthViewModel
     @EnvironmentObject var storeKitManager: StoreKitManager
     
     @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var viewModel = AuthViewModel.shared
     
     @State var showLogoutMenu = false
     @State var showNewSong = false
@@ -90,7 +90,6 @@ struct MenuView: View {
                     }
                     .sheet(isPresented: $showProfileView) {
                         ProfileView(user: user, showProfileView: $showProfileView)
-                            .environmentObject(viewModel)
                     }
                     SheetCloseButton {
                         showMenu = false
@@ -99,7 +98,6 @@ struct MenuView: View {
                 .padding()
                 Divider()
                 if mainViewModel.notifications.isEmpty {
-                    // TODO: replace with envelope (slashed)
                     FullscreenMessage(imageName: "envelope", title: "Hmm, it doesn't look like you have any new messages.")
                 } else {
                     ScrollView {

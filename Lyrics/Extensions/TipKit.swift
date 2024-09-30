@@ -9,27 +9,6 @@ import Foundation
 import TipKit
 
 @available(iOS 17, *)
-struct PlayViewTip: Tip {
-    var title: Text {
-        Text("Introducing Play View")
-    }
-    
-    var message: Text? {
-        Text("Play View keeps musicians focused by removing distractions during gigs.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "play")
-    }
-    
-    var options: [TipOption] {
-        return [
-            Tips.MaxDisplayCount(1)
-        ]
-    }
-}
-
-@available(iOS 17, *)
 struct AutoscrollSpeedTip: Tip {
     var title: Text {
         Text("Looking to adjust scroll speed?")
@@ -41,48 +20,6 @@ struct AutoscrollSpeedTip: Tip {
     
     var image: Image? {
         Image(systemName: "hare")
-    }
-    
-    var options: [TipOption] {
-        return [
-            Tips.MaxDisplayCount(1)
-        ]
-    }
-}
-
-@available(iOS 17, *)
-struct VariationsTip: Tip {
-    var title: Text {
-        Text("Introducing Variations")
-    }
-    
-    var message: Text? {
-        Text("Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "rectangle.stack")
-    }
-    
-    var options: [TipOption] {
-        return [
-            Tips.MaxDisplayCount(1)
-        ]
-    }
-}
-
-@available(iOS 17, *)
-struct NotesViewTip: Tip {
-    var title: Text {
-        Text("Tip")
-    }
-    
-    var message: Text? {
-        Text("Notes are valuable guides, serving as reminders for crucial details in both practice sessions and performances.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "doc.text")
     }
     
     var options: [TipOption] {
@@ -135,23 +72,17 @@ struct ExploreDetailViewTip: Tip {
 }
 
 @available(iOS 17, *)
-struct DemoAttachmentTip: Tip {
+struct JoinBandTip: Tip {
     var title: Text {
-        Text("Want to save this song?")
+        Text("Want to add members to your band?")
     }
     
     var message: Text? {
-        Text("Click to add to your library.")
+        Text("Ask the band member to click the \"Join a Band\" button in previous view and enter the code you receive when clicking the button above.")
     }
     
     var image: Image? {
-        Image(systemName: "doc.badge.plus")
-    }
-    
-    var options: [TipOption] {
-        return [
-            Tips.MaxDisplayCount(1)
-        ]
+        Image(systemName: "person.2.badge.plus")
     }
 }
 
@@ -159,17 +90,20 @@ struct DemoAttachmentTip: Tip {
 struct LiveLyricsTipStyle: TipViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack {
-            HStack(alignment: .top, spacing: 12) {
-                configuration.image?
-                    .font(.system(size: 30))
-                VStack(alignment: .leading, spacing: 7) {
-                    configuration.title?
-                        .font(.title3.weight(.bold))
+            ZStack(alignment: .topTrailing) {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(alignment: .center, spacing: 10) {
+                        configuration.image?
+                            .font(.system(size: 26))
+                        configuration.title?
+                            .font(.title3.weight(.bold))
+                    }
+                    .padding(.trailing, 20)
                     configuration.message?
                         .font(.system(size: 16))
                         .foregroundStyle(.secondary)
                 }
-                Spacer()
+                .frame(maxWidth: .infinity, alignment: .leading)
                 Button(action: {
                     configuration.tip.invalidate(reason: .tipClosed)
                 }, label: {
@@ -177,6 +111,7 @@ struct LiveLyricsTipStyle: TipViewStyle {
                         .fontWeight(.semibold)
                         .foregroundColor(.gray)
                 })
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
             ForEach(configuration.actions) { action in
                 Button(action: action.handler, label: {
@@ -187,5 +122,6 @@ struct LiveLyricsTipStyle: TipViewStyle {
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

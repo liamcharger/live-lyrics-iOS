@@ -13,14 +13,14 @@ struct AddSongsView: View {
     
     @Environment(\.presentationMode) var presMode
     
-    @State var errorMessage = ""
-    @State var searchText = ""
+    @State private var errorMessage = ""
+    @State private var searchText = ""
     
-    @State var showError = false
-    @State var showSearchBar = false
-    @State var isLoading = false
+    @State private var showError = false
+    @State private var showSearchBar = false
+    @State private var isLoading = false
     
-    @State var selectedSongs: [Song] = []
+    @State private var selectedSongs: [Song] = []
     
     let folder: Folder
     
@@ -46,18 +46,31 @@ struct AddSongsView: View {
             }
         }
         
-        songViewModel.moveSongsToFolder(folder: folder, songs: selectedSongs) { error in
-            if let error = error {
-                if error.localizedDescription == "Failed to get document because the client is offline." {
-                    self.errorMessage = "Please connect to the internet to perform this action."
+        var songs: [Song] = []
+        let dispatch = DispatchGroup()
+        
+        for song in selectedSongs {
+            dispatch.enter()
+            songViewModel.fetchSong(listen: false, song.id!) { song in
+                if let song = song {
+                    songs.append(song)
+                }
+                dispatch.leave()
+            } regCompletion: { _ in }
+        }
+        
+        dispatch.notify(queue: .main) {
+            songViewModel.moveSongsToFolder(folder: folder, songs: songs) { error in
+                if let error = error {
+                    if error.localizedDescription == "Failed to get document because the client is offline." {
+                        self.errorMessage = "Please connect to the internet to perform this action."
+                    } else {
+                        self.errorMessage = error.localizedDescription
+                    }
                     self.showError = true
                 } else {
-                    self.errorMessage = error.localizedDescription
-                    self.showError = true
+                    presMode.wrappedValue.dismiss()
                 }
-                self.isLoading = false
-            } else {
-                presMode.wrappedValue.dismiss()
                 self.isLoading = false
             }
         }
@@ -118,7 +131,6 @@ struct AddSongsView: View {
                     .overlay {
                         if isLoading {
                             ProgressView()
-                                .opacity(1)
                                 .tint(.primary)
                         }
                     }
@@ -163,7 +175,7 @@ struct AddSongsView: View {
                                 HStack(spacing: 7) {
                                     Text(song.title)
                                         .lineLimit(1)
-                                    if song.uid != AuthViewModel.shared.currentUser?.id! {
+                                    if song.uid != AuthViewModel.shared.currentUser?.id {
                                         Image(systemName: "person.2")
                                             .font(.system(size: 16).weight(.medium))
                                     }

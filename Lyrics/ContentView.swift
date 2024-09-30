@@ -27,14 +27,14 @@ struct ContentView: View {
                 } else {
                     MainView()
                         .environmentObject(viewModel)
+                        .sheet(isPresented: $showNewFolder) {
+                            NewFolderView(isDisplayed: $showNewFolder)
+                        }
+                        .sheet(isPresented: $showNewSong) {
+                            NewSongView(isDisplayed: $showNewSong)
+                        }
                 }
             }
-        }
-        .sheet(isPresented: $showNewFolder) {
-            NewFolderView(isDisplayed: $showNewFolder)
-        }
-        .sheet(isPresented: $showNewSong) {
-            NewSongView(isDisplayed: $showNewSong)
         }
         .onAppear {
             notificationManager.checkForUpdate { isNewVersion in

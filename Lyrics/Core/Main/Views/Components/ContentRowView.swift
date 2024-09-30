@@ -10,12 +10,14 @@ import SwiftUI
 struct ContentRowView: View {
     let title: String
     let icon: String
+    let actionIcon: String
     let color: Color
     
-    init(_ title: String, icon: String, color: Color? = nil) {
+    init(_ title: String, icon: String, color: Color? = nil, actionIcon: String? = nil) {
         self.title = title
         self.icon = icon
         self.color = color ?? Color.primary
+        self.actionIcon = actionIcon ?? "chevron.right"
     }
     
     var body: some View {
@@ -31,12 +33,12 @@ struct ContentRowView: View {
                 }
                 Text(title)
                     .font(.system(size: 18).weight(.semibold))
-                    .frame(maxWidth: 95, alignment: .leading)
+                    .frame(maxWidth: 102, alignment: .leading)
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            Image(systemName: "chevron.right")
+            Image(systemName: actionIcon)
                 .font(.body.weight(.medium))
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)

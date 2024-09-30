@@ -58,6 +58,7 @@ struct SongDetailView: View {
     @State private var showUserPopover = false
     @State private var showJoinedUsers = true
     @State private var showBackgroundBlur = false
+    @State private var isLoadingSongData = true
     
     @State private var updatedLyricsTimer: Timer?
     
@@ -72,7 +73,7 @@ struct SongDetailView: View {
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
     @ObservedObject var notesViewModel = NotesViewModel.shared
     @ObservedObject var songDetailViewModel = SongDetailViewModel.shared
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
     
     @Environment(\.presentationMode) var presMode
     @Environment(\.openURL) var openURL
@@ -110,12 +111,12 @@ struct SongDetailView: View {
         // Prevent joined users from being fetched more than once
         if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
             // User is not the owner, so add the owner to the array
-            if songDetailViewModel.uid() != song.uid {
+            if uid() != song.uid {
                 joinedUsersStrings.insert(song.uid, at: 0)
             }
             // User is not the admin but is a joined user, so remove their profile from the array
-            if joinedUsersStrings.contains(songDetailViewModel.uid()) {
-                if let index = joinedUsersStrings.firstIndex(where: { $0 == songDetailViewModel.uid() }) {
+            if joinedUsersStrings.contains(uid()) {
+                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
                     joinedUsersStrings.remove(at: index)
                 }
             }
@@ -155,11 +156,10 @@ struct SongDetailView: View {
         case kickedOut, error
     }
     
-    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, wordCountStyle: String, folder: Folder? = nil, joinedUsers: [User]? = nil, isSongFromFolder: Bool? = nil) {
+    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, folder: Folder? = nil, joinedUsers: [User]? = nil, isSongFromFolder: Bool? = nil) {
         self.songs = songs
         self.isSongFromFolder = isSongFromFolder ?? false
         self._joinedUsers = State(initialValue: joinedUsers)
-        self._wordCountStyle = State(initialValue: wordCountStyle)
         self._restoreSong = State(initialValue: restoreSong)
         self._fontSize = State(initialValue: inputSong.size ?? 18)
         self._lineSpacing = State(initialValue: inputSong.lineSpacing ?? 1.0)
@@ -232,7 +232,6 @@ struct SongDetailView: View {
                                             .stroke(.blue, lineWidth: 2.5)
                                     }
                             }
-                            .showPlayViewTip()
                             Button {
                                 songDetailViewModel.showNotesView = true
                             } label: {
@@ -308,77 +307,82 @@ struct SongDetailView: View {
                 .padding([.horizontal, .bottom])
             }
             Divider()
-            ZStack {
-                // Check if there are any joined users
-                let showJoinedUsers = joinedUsers?.isEmpty ?? true
-                
-                // Do not allow text editing if the song is read-only or in RecentlyDeleted
-                TextEditor(text: songs == nil || (song.readOnly ?? false) ? .constant(lyrics) : $lyrics)
-                    .multilineTextAlignment(alignment)
-                    .font(.system(size: CGFloat(fontSize), weight: weight))
-                    .lineSpacing(lineSpacing)
-                    .focused($isInputActive)
-                    .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
-                        // Add padding to insides of TextEditor
-                        textEditor.textContainerInset = UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12)
-                        
-                        // Get selected words to fetch rhymes, synonyms, etc.
-                        if let textRange = textEditor.selectedTextRange {
-                            DispatchQueue.main.async {
-                                songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
+            if isLoadingSongData {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ZStack {
+                    // Check if there are any joined users
+                    let showJoinedUsers = joinedUsers?.isEmpty ?? true
+                    
+                    // Do not allow text editing if the song is read-only or in RecentlyDeleted
+                    TextEditor(text: songs == nil || (song.readOnly ?? false) ? .constant(lyrics) : $lyrics)
+                        .multilineTextAlignment(alignment)
+                        .font(.system(size: CGFloat(fontSize), weight: weight))
+                        .lineSpacing(lineSpacing)
+                        .focused($isInputActive)
+                        .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
+                            // Add padding to insides of TextEditor
+                            textEditor.textContainerInset = UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12)
+                            
+                            // Get selected words to fetch rhymes, synonyms, etc.
+                            if let textRange = textEditor.selectedTextRange {
+                                DispatchQueue.main.async {
+                                    songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
+                                }
                             }
                         }
-                    }
-                if restoreSong == nil {
-                    // Add black "shadow" to avoid element conflicts
-                    Color.black
-                        .mask(LinearGradient(
-                            gradient: Gradient(colors: [Color.black, Color.clear]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
-                        .frame(height: 95)
-                        .frame(maxHeight: .infinity, alignment: .top)
-                        .opacity(!showJoinedUsers ? 1 : 0)
-                        .allowsHitTesting(false)
-                    VStack {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 6) {
-                                if let joinedUsers = joinedUsers, !showJoinedUsers {
-                                    ForEach(joinedUsers, id: \.id) { user in
-                                        Button {
-                                            selectedUser = user
-                                            showUserPopover = true
-                                        } label: {
-                                            UserPopoverRowView(user: user, song: song)
+                    if restoreSong == nil {
+                        // Add "shadow" to avoid element conflicts
+                        Color(.systemBackground)
+                            .mask(LinearGradient(
+                                gradient: Gradient(colors: [Color.black, Color.clear]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                            .frame(height: 95)
+                            .frame(maxHeight: .infinity, alignment: .top)
+                            .opacity(!showJoinedUsers ? 1 : 0)
+                            .allowsHitTesting(false)
+                        VStack {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 6) {
+                                    if let joinedUsers = joinedUsers, !showJoinedUsers {
+                                        ForEach(joinedUsers, id: \.id) { user in
+                                            Button {
+                                                selectedUser = user
+                                                showUserPopover = true
+                                            } label: {
+                                                UserPopoverRowView(user: user, song: song)
+                                            }
                                         }
                                     }
                                 }
+                                .padding(10)
                             }
-                            .padding(10)
-                        }
-                        .frame(height: 70)
-                        Spacer()
-                        // Only show the text style options when song is not read-only
-                        if !songDetailViewModel.readOnly(song) {
-                            HStack {
-                                Spacer()
-                                SongDetailMenuView(value: $fontSize, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
-                                    .padding(12)
-                                    .background {
-                                        // Add shadow to avoid element conflicts
-                                        VisualEffectBlur(blurStyle: .dark)
-                                            .blur(radius: 20)
-                                    }
+                            .frame(height: 70)
+                            Spacer()
+                            // Only show the text style options when song is not read-only
+                            if !songDetailViewModel.readOnly(song) {
+                                HStack {
+                                    Spacer()
+                                    SongDetailMenuView(value: $fontSize, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                        .padding(12)
+                                        .background {
+                                            // Add shadow to avoid element conflicts
+                                            VisualEffectBlur(blurStyle: .dark)
+                                                .blur(radius: 20)
+                                        }
+                                }
                             }
                         }
-                    }
-                } else {
-                    if lyrics.isEmpty {
-                        FullscreenMessage(imageName: "circle.slash", title: "There aren't any lyrics for this song.", spaceNavbar: true)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.gray)
-                            .frame(maxHeight: .infinity)
+                    } else {
+                        if lyrics.isEmpty {
+                            FullscreenMessage(imageName: "circle.slash", title: "There aren't any lyrics for this song.", spaceNavbar: true)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.gray)
+                                .frame(maxHeight: .infinity)
+                        }
                     }
                 }
             }
@@ -423,10 +427,6 @@ struct SongDetailView: View {
                     }
                 } else {
                     VStack(spacing: 14) {
-                        if #available(iOS 17, *) {
-                            TipView(VariationsTip())
-                                .tipViewStyle(LiveLyricsTipStyle())
-                        }
                         if !isInputActive, let demoAttachments = song.demoAttachments {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
@@ -513,9 +513,9 @@ struct SongDetailView: View {
                                                 if (song.variations ?? []).isEmpty {
                                                     `default`
                                                 } else {
-                                                    if song.uid == songDetailViewModel.uid() {
+                                                    if song.uid == uid() {
                                                         `default`
-                                                    } else if song.uid != songDetailViewModel.uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
+                                                    } else if song.uid != uid() && songVariations.contains(where: { $0.title == SongVariation.defaultId }) {
                                                         `default`
                                                     }
                                                 }
@@ -532,7 +532,7 @@ struct SongDetailView: View {
                                                 }
                                                 // Only show "new" and "manage" buttons when the song is not read-only and all variations are allowed
                                                 if !songDetailViewModel.readOnly(song) {
-                                                    if song.uid == songDetailViewModel.uid() || (song.variations ?? []).isEmpty {
+                                                    if song.uid == uid() || (song.variations ?? []).isEmpty {
                                                         Divider()
                                                         if songVariations.count > 0 {
                                                             Button {
@@ -561,10 +561,10 @@ struct SongDetailView: View {
                                         }
                                     }
                                 }
-                                // Don't push elements left unless the word count and variation picker are absent
-                                if !wordCountBool || !getShowVariationCondition() {
-                                    Spacer()
-                                }
+                            }
+                            // Don't push elements left unless the word count or variation picker are absent
+                            if !getShowVariationCondition() || !wordCountBool {
+                                Spacer()
                             }
                         }
                     }
@@ -592,50 +592,69 @@ struct SongDetailView: View {
             return Alert(title: Text("Error"), message: Text("An unknown error has occured."), dismissButton: .cancel())
         })
         .onAppear {
-            // FIXME: why is this property being check by a local variable?
+            // FIXME: why is this property being checked by a local variable?
             // Check if the user has enabled the word counter or not
             wordCountBool = viewModel.currentUser?.wordCount ?? true
+            wordCountStyle = viewModel.currentUser?.wordCountStyle ?? "words"
             songViewModel.fetchSongVariations(song: song) { variations in
+                // Initialize a variable to assign parsed variations to
+                var parsedVariations = [SongVariation]()
+                
                 // Check if there are any variations
                 if let variationIds = song.variations, !variationIds.isEmpty {
-                    // Initialize a variable to assign parsed variations to
-                    var parsedVariations = [SongVariation]()
-                    
-                    // Default variation is allowed, add it to the array
-                    if variationIds.contains(where: { $0 == SongVariation.defaultId }) || variationIds.isEmpty {
-                        parsedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
-                    }
-                    
-                    let filteredVariations = variations.filter { variation in
-                        // Make sure the variation is allowed, otherwise remove it
-                        if let variationId = variation.id {
-                            return variationIds.contains(variationId)
-                        }
-                        return false
-                    }
-                    parsedVariations.append(contentsOf: filteredVariations)
-                    
-                    // Set the inital lyrics
-                    if let firstVariation = filteredVariations.first {
-                        // The default variation is not included, so set the first variation
-                        if !variationIds.contains(SongVariation.defaultId) {
-                            selectedVariation = firstVariation
-                            // Only set the lyrics if the user hasn't started editing
+                    // Handle band-specific variations if applicable
+                    if let bandId = song.bandId, variationIds.contains(where: { $0 == "byRole" }) {
+                        SongService().handleVariations(song, bandId: bandId) { handledVariations in
+                            self.songVariations = handledVariations
                             if !isInputActive {
-                                self.lyrics = firstVariation.lyrics
+                                // Only set the first variation if it's not the default variation
+                                if let variation = handledVariations.first, variation.title != SongVariation.defaultId {
+                                    selectedVariation = variation
+                                    self.lyrics = variation.lyrics
+                                }
                             }
+                            
+                            // Ensure that after this async operation, we set loading to false
+                            isLoadingSongData = false
                         }
                     } else {
-                        // The default lyrics are allowed, set them as the inital lyrics
-                        if !isInputActive {
-                            self.lyrics = song.lyrics
+                        // Default variation is allowed, add it to the array
+                        if variationIds.contains(SongVariation.defaultId) {
+                            parsedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
                         }
+                        
+                        // Filter allowed variations
+                        let filteredVariations = variations.filter { variation in
+                            if let variationId = variation.id {
+                                return variationIds.contains(variationId)
+                            }
+                            return false
+                        }
+                        parsedVariations.append(contentsOf: filteredVariations)
+                        
+                        // Set the initial lyrics
+                        if let firstVariation = filteredVariations.first {
+                            if firstVariation.title != SongVariation.defaultId {
+                                selectedVariation = firstVariation
+                                if !isInputActive {
+                                    self.lyrics = firstVariation.lyrics
+                                }
+                            }
+                        } else {
+                            if !isInputActive {
+                                self.lyrics = song.lyrics
+                            }
+                        }
+                        
+                        self.songVariations = parsedVariations
+                        // Now that everything has been processed, set loading to false
+                        isLoadingSongData = false
                     }
-                    
-                    self.songVariations = parsedVariations
                 } else {
                     // No restrictions are set, allow all variations
                     self.songVariations = variations
+                    // After finishing, stop showing the progress view
+                    isLoadingSongData = false
                 }
             }
             songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
@@ -675,13 +694,13 @@ struct SongDetailView: View {
                     self.lineSpacing = song.lineSpacing ?? 1
                     if joinedUsers == nil {
                         // Set the joinedUsersStrings var based on media type
-                        if let folder = folder, folder.id! != songDetailViewModel.uid() {
+                        if let folder = folder, folder.id! != uid() {
                             self.joinedUsersStrings = folder.joinedUsers ?? []
                         } else {
                             self.joinedUsersStrings = song.joinedUsers ?? []
                         }
                         // User's id is not in the song, the user has been removed from the song
-                        if !joinedUsersStrings.contains(where: { $0 == songDetailViewModel.uid() }) && song.uid != songDetailViewModel.uid() {
+                        if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
                             showAlert = true
                             activeAlert = .kickedOut
                         } else {

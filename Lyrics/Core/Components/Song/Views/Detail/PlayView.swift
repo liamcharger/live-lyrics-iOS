@@ -51,7 +51,7 @@ struct PlayView: View {
     
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
-    @EnvironmentObject var viewModel: AuthViewModel
+    @ObservedObject var viewModel = AuthViewModel.shared
     
     var songs: [Song]?
     @State var metronomeTimer: DispatchSourceTimer?
@@ -535,7 +535,7 @@ struct PlayView: View {
                     }
                 }
                 Spacer()
-                if viewModel.currentUser?.enableAutoscroll ?? true && lines.count > 1 {
+                if lines.count > 1 {
                     let buttons = HStack {
                         Button(action: {
                             if let proxy = proxy {

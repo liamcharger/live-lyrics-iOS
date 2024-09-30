@@ -22,5 +22,6 @@ struct ShareRequest: Codable, Identifiable {
     var songVariations: [String]?
     var readOnly: Bool?
     var notificationTokens: [String]?
+    var bandId: String?
     var fromNotificationToken: String?
 }
