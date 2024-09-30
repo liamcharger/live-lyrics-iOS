@@ -31,21 +31,20 @@ class SongService {
 			}
 	}
 	
-	// FIXME: group completion called before fetchSongs are finished loading, resulting in loading state changing to false when songs are not loaded
-	func fetchSharedSongs(completion: @escaping([Song]) -> Void) {
+	func fetchSharedSongs(completion: @escaping ([Song]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("shared-songs")
 			.addSnapshotListener { snapshot, error in
 				if let error = error {
 					print("Error fetching shared songs: \(error.localizedDescription)")
-					completion([])
+					completion([]) // Returning an empty list in case of an error
 					return
 				}
 				
 				guard let documents = snapshot?.documents else {
 					print("No shared song documents found")
-					completion([])
+					completion([]) // Returning an empty list if no documents found
 					return
 				}
 				
@@ -54,11 +53,13 @@ class SongService {
 				
 				for document in documents {
 					guard let sharedSong = try? document.data(as: SharedSong.self) else {
-						continue
+						continue // Skip if sharedSong can't be parsed
 					}
-					group.enter()
+					group.enter() // Enter the group before starting the async task
+					
 					self.fetchSong(listen: false, forUser: sharedSong.from, withId: sharedSong.songId, songCompletion: { song in
 						if var song = song {
+							// Add the additional properties from sharedSong
 							song.variations = sharedSong.variations
 							song.readOnly = sharedSong.readOnly
 							song.pinned = sharedSong.pinned
@@ -66,16 +67,16 @@ class SongService {
 							song.bandId = sharedSong.bandId
 							completedSongs.append(song)
 						}
-						group.leave()
+						group.leave() // Leave the group after the async task completes
 					}, registrationCompletion: { _ in })
 				}
 				
+				// Notify the completion after all async tasks are done
 				group.notify(queue: .main) {
 					completion(completedSongs)
 				}
 			}
 	}
-	
 	
 	func fetchSharedFolders(completion: @escaping([Folder]) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -106,11 +107,13 @@ class SongService {
 						}
 						guard let snapshot = snapshot, snapshot.exists else {
 							print("Folder does not exist")
+							group.leave()
 							return
 						}
 						
 						guard var folder = try? snapshot.data(as: Folder.self) else {
 							print("Error parsing folder")
+							group.leave()
 							return
 						}
 						
@@ -118,6 +121,7 @@ class SongService {
 						folder.songVariations = sharedFolder.songVariations
 						folder.bandId = sharedFolder.bandId
 						completedFolders.append(folder)
+						
 						group.leave()
 					}
 				}
