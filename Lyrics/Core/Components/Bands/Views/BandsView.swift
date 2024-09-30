@@ -44,8 +44,7 @@ struct BandsView: View {
                         }
                         .frame(height: 0)
                         HeaderView(NSLocalizedString("Bands", comment: ""), icon: "guitar", color: .blue, geo: geo, counter: "\(bandsViewModel.userBands.count) band\(bandsViewModel.userBands.count == 1 ? "" : "s")".uppercased())
-                        // TODO: add banner ad for BandsView in AdMob
-                        AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
+                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9327503401", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                         Group {
                             if !NetworkManager.shared.getNetworkState() {
                                 FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
