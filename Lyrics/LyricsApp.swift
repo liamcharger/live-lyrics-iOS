@@ -85,13 +85,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     let gcmMessageIDKey = "gcm.message_id"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { _, _ in }
-        
-        UNUserNotificationCenter.current().delegate = self
-        Messaging.messaging().delegate = self
-        application.registerForRemoteNotifications()
-        
         if let remoteNotification = launchOptions?[.remoteNotification] as? [String: Any] {
             handleNotification(userInfo: remoteNotification)
         }
@@ -160,6 +153,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         let sceneConfiguration = UISceneConfiguration (name: "Quick Action Scene", sessionRole: connectingSceneSession.role)
         sceneConfiguration.delegateClass = QuickActionSceneDelegate.self
         return sceneConfiguration
+    }
+    
+    func registerForNotifications() {
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { _, _ in }
+        
+        UNUserNotificationCenter.current().delegate = self
+        Messaging.messaging().delegate = self
+        UIApplication.shared.registerForRemoteNotifications()
     }
 }
 

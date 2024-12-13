@@ -197,23 +197,32 @@ struct ChooseAuthView: View {
                 .frame(width: 23, height: 23)
                 .padding(16)
                 .font(.body.weight(.semibold))
-                .background(Color(.darkGray))
                 .foregroundColor(.primary)
                 .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(Color(.darkGray), lineWidth: 2.5)
+                }
             Image(systemName: "textformat.size")
                 .frame(width: 23, height: 23)
                 .padding(16)
                 .font(.body.weight(.semibold))
-                .background(Color(.darkGray))
                 .foregroundColor(.primary)
                 .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(Color(.darkGray), lineWidth: 2.5)
+                }
             FAText(iconName: "ellipsis", size: 18)
                 .frame(width: 23, height: 23)
                 .padding(16)
                 .font(.body.weight(.semibold))
-                .background(Color(.darkGray))
                 .foregroundColor(.primary)
                 .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(Color(.darkGray), lineWidth: 2.5)
+                }
         }
         .padding(12)
         .background(Material.thin)

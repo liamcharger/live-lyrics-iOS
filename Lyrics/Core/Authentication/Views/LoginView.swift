@@ -18,8 +18,8 @@ struct LoginView: View {
     @State var showError = false
     @State var isButtonLoading = false
     
-    @FocusState var isHighlighted1: Bool
-    @FocusState var isHighlighted2: Bool
+    @FocusState var isEmailFocused: Bool
+    @FocusState var isPasswordFocused: Bool
     
     var isEmpty: Bool {
         email.trimmingCharacters(in: .whitespaces).isEmpty || password.trimmingCharacters(in: .whitespaces).isEmpty
@@ -32,16 +32,16 @@ struct LoginView: View {
     var body: some View {
         VStack(spacing: 15) {
             HStack(spacing: 12) {
-                Button(action: {
+                Button {
                     action()
-                }, label: {
+                } label: {
                     Image(systemName: "chevron.left")
                         .padding()
                         .font(.body.weight(.semibold))
                         .background(Material.regular)
                         .foregroundColor(.primary)
                         .clipShape(Circle())
-                })
+                }
                 Text("Login")
                     .lineLimit(1)
                     .font(.system(size: 28, design: .rounded).weight(.bold))
@@ -49,16 +49,16 @@ struct LoginView: View {
             }
             Spacer()
             VStack(alignment: .leading) {
-                CustomTextField(text: $email, placeholder: "Email")
+                CustomTextField(text: $email, placeholder: "Email", image: "envelope")
                     .autocapitalization(.none)
                     .autocorrectionDisabled()
-                    .focused($isHighlighted1)
-                CustomPasswordField(text: $password, placeholder: "Password")
+                    .focused($isEmailFocused)
+                CustomPasswordField(text: $password, placeholder: "Password", image: "lock")
                     .autocorrectionDisabled()
-                    .focused($isHighlighted2)
-                Button(action: {showResetPassword.toggle()}, label: {
+                    .focused($isPasswordFocused)
+                Button { showResetPassword.toggle() } label: {
                     Text("Forgot Password?")
-                })
+                }
             }
             Spacer()
             LiveLyricsButton("Sign In", showProgressIndicator: $isButtonLoading) {
@@ -75,9 +75,9 @@ struct LoginView: View {
             .opacity(isEmpty ? 0.5 : 1.0)
             .disabled(isEmpty)
         }
-        .alert(isPresented: $showError, content: {
+        .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
-        })
+        }
         .padding()
         .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)

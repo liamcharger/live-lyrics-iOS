@@ -15,7 +15,7 @@ struct ResetPasswordView: View {
     
     @Binding var text: String
     
-    @FocusState var focused: Bool
+    @FocusState var isFocused: Bool
     
     @ObservedObject var viewModel = AuthViewModel.shared
     
@@ -43,11 +43,14 @@ struct ResetPasswordView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $text, placeholder: "Email")
+            CustomTextField(text: $text, placeholder: "Email", image: "envelope")
                 .autocorrectionDisabled()
                 .autocapitalization(.none)
-                .focused($focused)
+                .focused($isFocused)
                 .padding()
+                .onAppear {
+                    isFocused = true
+                }
             Spacer()
             Divider()
             LiveLyricsButton("Continue") {
@@ -62,6 +65,7 @@ struct ResetPasswordView: View {
             }
             .disabled(text.trimmingCharacters(in: .whitespaces).isEmpty)
             .opacity(text.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
+            .padding()
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())

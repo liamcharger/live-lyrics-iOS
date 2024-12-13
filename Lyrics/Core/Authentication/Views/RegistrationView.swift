@@ -53,23 +53,19 @@ struct RegistrationView: View {
                 Divider()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
-                        CustomTextField(text: $email, placeholder: "Email")
-                        CustomTextField(text: $username, placeholder: "Username")
-                        CustomTextField(text: $fullname, placeholder: "Fullname")
-#if os(iOS)
+                        CustomTextField(text: $email, placeholder: "Email", image: "envelope")
+                        CustomTextField(text: $username, placeholder: "Username", image: "person")
+                        CustomTextField(text: $fullname, placeholder: "Fullname", image: "person")
                             .autocapitalization(.words)
-#endif
-                        CustomPasswordField(text: $password, placeholder: "Password")
-                        CustomPasswordField(text: $confirmPassword, placeholder: "Confirm Password")
+                        CustomPasswordField(text: $password, placeholder: "Password", image: "lock")
+                        CustomPasswordField(text: $confirmPassword, placeholder: "Confirm Password", image: "lock")
                         if password != confirmPassword {
                             Text("Passwords don't match.")
                                 .foregroundColor(Color.red)
                         }
                     }
-                    .autocorrectionDisabled(true)
-#if os(iOS)
+                    .autocorrectionDisabled()
                     .autocapitalization(.none)
-#endif
                     .padding()
                 }
                 Divider()
