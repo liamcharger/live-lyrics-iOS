@@ -154,6 +154,21 @@ struct MainView: View {
                 }
             }
     }
+    func searchableFolderSongs(_ songs: [Song]) -> [Song] {
+        let lowercasedQuery = songSearchText.lowercased()
+        
+        return songs.filter { item in
+            if !folderSongSearchText.isEmpty {
+                if let artist = item.artist {
+                    return item.title.lowercased().contains(lowercasedQuery) || artist.lowercased().contains(lowercasedQuery)
+                } else {
+                    return item.title.lowercased().contains(lowercasedQuery)
+                }
+            } else {
+                return true
+            }
+        }
+    }
     
     let pasteboard = UIPasteboard.general
     let columns = [
@@ -726,7 +741,7 @@ struct MainView: View {
                                                                 }
                                                                 .animation(.smooth(duration: 1), value: showFolderSongSearch)
                                                                 .padding(.vertical, 10)
-                                                                if !((joinedUsers ?? []).isEmpty) {
+                                                                if !((joinedUsers ?? []).isEmpty) && !showFolderSongSearch {
                                                                     VStack(alignment: .leading, spacing: 2) {
                                                                         Text("SHARED WITH")
                                                                             .font(.caption.weight(.semibold))
@@ -757,7 +772,7 @@ struct MainView: View {
                                                                         }
                                                                     }
                                                                 }
-                                                                ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { uneditedSong in
+                                                                ForEach(searchableFolderSongs(sortedSongs(songs: mainViewModel.folderSongs)), id: \.id) { uneditedSong in
                                                                     let song = {
                                                                         var song = uneditedSong
                                                                         song.readOnly = folder.readOnly
