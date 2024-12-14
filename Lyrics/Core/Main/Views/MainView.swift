@@ -705,7 +705,9 @@ struct MainView: View {
                                                                             }
                                                                     } else {
                                                                         Button {
-                                                                            showFolderSongSearch = true
+                                                                            withAnimation(.smooth) {
+                                                                                showFolderSongSearch = true
+                                                                            }
                                                                         } label: {
                                                                             HStack(spacing: 6) {
                                                                                 Image(systemName: "magnifyingglass")
@@ -721,7 +723,9 @@ struct MainView: View {
                                                                     }
                                                                     if showFolderSongSearch {
                                                                         CloseButton {
-                                                                            showFolderSongSearch = false
+                                                                            withAnimation(.smooth) {
+                                                                                showFolderSongSearch = false
+                                                                            }
                                                                         }
                                                                     } else {
                                                                         Button {
@@ -739,7 +743,6 @@ struct MainView: View {
                                                                         }
                                                                     }
                                                                 }
-                                                                .animation(.smooth(duration: 1), value: showFolderSongSearch)
                                                                 .padding(.vertical, 10)
                                                                 if !((joinedUsers ?? []).isEmpty) && !showFolderSongSearch {
                                                                     VStack(alignment: .leading, spacing: 2) {
