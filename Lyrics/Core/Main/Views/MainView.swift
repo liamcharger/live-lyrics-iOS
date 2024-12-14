@@ -182,16 +182,15 @@ struct MainView: View {
         })
     }
     // We need to find a place to put this
-    enum SearchArea {
+    enum SearchTarget {
         case song
         case folderSong
         case folder
     }
     
-    func clearSearch(for search: SearchArea) {
+    func clearSearch(for search: SearchTarget) {
         if search == .song {
             self.songSearchText = ""
-            self.showSongSearch = false
             self.isSongSearchFocused = false
         }
         if search == .folderSong {
@@ -201,7 +200,6 @@ struct MainView: View {
         }
         if search == .folder {
             self.folderSearchText = ""
-            self.showFolderSearch = false
             self.isFolderSearchFocused = false
         }
     }
@@ -529,6 +527,8 @@ struct MainView: View {
                                         Button {
                                             withAnimation(.bouncy) {
                                                 clearSearch(for: .folder)
+                                                
+                                                showFolderSearch = false
                                                 
                                                 isFoldersCollapsed.toggle()
                                             }
@@ -970,6 +970,8 @@ struct MainView: View {
                                         Button {
                                             withAnimation(.bouncy) {
                                                 clearSearch(for: .song)
+                                                
+                                                showSongSearch = false
                                                 
                                                 isSongsCollapsed.toggle()
                                             }

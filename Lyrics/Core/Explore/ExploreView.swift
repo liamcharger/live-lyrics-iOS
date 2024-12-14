@@ -24,11 +24,11 @@ struct ExploreView: View {
     @ObservedObject var musixmatchService = MusixmatchService.shared
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("explore", comment: ""), collapsed: .constant(true), collapsedTitle: .constant(true))
-                .padding()
-            Divider()
-            GeometryReader { geo in
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                CustomNavBar(title: NSLocalizedString("explore", comment: ""), collapsed: .constant(true), collapsedTitle: .constant(true))
+                    .padding()
+                Divider()
                 ScrollView {
                     VStack(spacing: 22) {
                         ZStack {
