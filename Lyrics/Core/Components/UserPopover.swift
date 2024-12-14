@@ -38,7 +38,7 @@ struct UserPopover: View {
         VStack(spacing: 0) {
             if let user = selectedUser {
                 Group {
-                    SheetCloseButton {
+                    CloseButton {
                         dismiss()
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)

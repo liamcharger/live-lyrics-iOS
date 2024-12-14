@@ -9,13 +9,13 @@ import SwiftUI
 
 struct CustomSearchBar: View {
     @Binding var text: String
-    let imageName: String
+    
     let placeholder: String
     
     var body: some View {
         VStack(spacing: 18) {
             HStack {
-                Image(systemName: imageName)
+                Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
                 TextField(placeholder, text: $text)
             }

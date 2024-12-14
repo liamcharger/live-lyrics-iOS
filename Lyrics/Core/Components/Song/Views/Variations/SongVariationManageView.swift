@@ -26,7 +26,7 @@ struct SongVariationManageView: View {
                 Text("Variations")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isDisplayed = false
                 }
             }

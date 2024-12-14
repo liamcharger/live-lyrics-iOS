@@ -49,7 +49,7 @@ struct SongTagView: View {
                 Text("Tags")
                     .font(.system(size: 26, weight: .bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isPresented = false
                 }
             }

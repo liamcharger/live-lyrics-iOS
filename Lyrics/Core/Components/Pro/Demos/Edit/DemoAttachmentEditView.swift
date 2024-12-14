@@ -25,7 +25,7 @@ struct DemoAttachmentEditView: View {
                 Text("Edit Demo")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     presMode.wrappedValue.dismiss()
                 }
             }

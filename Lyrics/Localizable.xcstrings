@@ -1363,12 +1363,26 @@
         }
       }
     },
+    "Do you want to allow notifications?" : {
+
+    },
     "Done" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hecho"
+          }
+        }
+      }
+    },
+    "dont_miss_anything_important" : {
+      "comment" : "Don't miss anything important!",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don’t miss anything important!"
           }
         }
       }
@@ -1635,17 +1649,6 @@
         }
       }
     },
-    "Get Join Code" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Obtener código de afiliación"
-          }
-        }
-      }
-    },
     "get_you_signed_in" : {
       "localizations" : {
         "en" : {
@@ -1797,6 +1800,12 @@
         }
       }
     },
+    "I don't want notifications" : {
+
+    },
+    "If you enable them, you'll be able to notified when someone shares you a song, or accepts or declines a shared song from you." : {
+
+    },
     "Including variation%@:" : {
       "localizations" : {
         "es" : {
@@ -1840,28 +1849,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Presentación de"
-          }
-        }
-      }
-    },
-    "Introducing Play View" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Presentación de Play View"
-          }
-        }
-      }
-    },
-    "Introducing Variations" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Introducción de variaciones"
           }
         }
       }
@@ -2628,6 +2615,9 @@
         }
       }
     },
+    "PRO" : {
+
+    },
     "Read only:" : {
       "localizations" : {
         "es" : {
@@ -2862,6 +2852,9 @@
           }
         }
       }
+    },
+    "Search" : {
+
     },
     "search_and_add" : {
       "localizations" : {
@@ -3137,6 +3130,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Palabras que empiezan por"
+          }
+        }
+      }
+    },
+    "stay_in_loop_enable_notifications" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stay in the loop when a friend shares a song or folder. Click to enable notifications."
           }
         }
       }

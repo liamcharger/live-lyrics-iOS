@@ -97,7 +97,7 @@ struct AddSongsView: View {
                 Spacer()
                 if !showSearchBar {
                     Button(action: {
-                        withAnimation(.bouncy(extraBounce: 0.1)) {
+                        withAnimation(.bouncy) {
                             showSearchBar.toggle()
                         }
                     }) {
@@ -110,7 +110,7 @@ struct AddSongsView: View {
                             .clipShape(Capsule())
                     }
                 }
-                SheetCloseButton {
+                CloseButton {
                     presMode.wrappedValue.dismiss()
                 }
                 if !selectedSongs.isEmpty {
@@ -148,9 +148,9 @@ struct AddSongsView: View {
                 ScrollView {
                     if showSearchBar {
                         HStack(spacing: 6) {
-                            CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
-                            SheetCloseButton {
-                                withAnimation(.bouncy(extraBounce: 0.1)) {
+                            CustomSearchBar(text: $searchText, placeholder: NSLocalizedString("search", comment: ""))
+                            CloseButton {
+                                withAnimation(.bouncy) {
                                     searchText = ""
                                     showSearchBar.toggle()
                                 }

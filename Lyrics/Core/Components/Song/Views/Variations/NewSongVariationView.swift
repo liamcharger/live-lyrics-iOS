@@ -51,7 +51,7 @@ struct NewSongVariationView: View {
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isDisplayed = false
                 }
             }
@@ -112,7 +112,7 @@ struct NewSongVariationView: View {
                     .font(.title.weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     view2 = false
                 }
             }

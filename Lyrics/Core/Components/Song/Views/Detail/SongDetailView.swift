@@ -714,7 +714,7 @@ struct SongDetailView: View {
             }
             checkForUpdatedLyrics()
             // Start a notes event listener
-            notesViewModel.fetchNotes(song: song)
+            notesViewModel.fetchNotes(song: song) {}
             // Do not allow device to fall asleep
             UIApplication.shared.isIdleTimerDisabled = true
         }

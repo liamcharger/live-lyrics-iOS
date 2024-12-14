@@ -1,5 +1,5 @@
 //
-//  SheetCloseButton.swift
+//  CloseButton.swift
 //  Lyrics
 //
 //  Created by Liam Willey on 10/24/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SheetCloseButton: View {
+struct CloseButton: View {
     let action: () -> Void
     
     var body: some View {
@@ -24,5 +24,5 @@ struct SheetCloseButton: View {
 }
 
 #Preview {
-    SheetCloseButton(action: {})
+    CloseButton(action: {})
 }

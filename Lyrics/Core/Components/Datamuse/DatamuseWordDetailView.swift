@@ -61,7 +61,7 @@ struct DatamuseWordDetailView: View {
                         .lineLimit(2)
                 }
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     presMode.wrappedValue.dismiss()
                 }
             }

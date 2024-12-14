@@ -25,12 +25,13 @@ struct MainView: View {
     @State var selectedUser: User?
     @State var draggedSong: Song?
     @State var draggedFolder: Folder?
-    // Property allows folder to check if it should be displaying its songs or not. selectedFolder is used for external views, such as SongMoveView, SongEditView, etc..
-    @State var selectedFolderForFolderUse: Folder?
+    // Property allows folder to check if it should be displaying its songs or not. selectedFolder in the MainViewModel is used for external views, such as SongMoveView, SongEditView, etc..
+    @State var selectedFolder: Folder?
     
     @State var joinedUsers: [User]?
     
     @State var hasFirestoreStartedListening = false
+    @State var showNotificationAuthView = false
     @State var showMenu = false
     @State var showOfflineAlert = false
     @State var showDeleteSheet = false
@@ -51,6 +52,8 @@ struct MainView: View {
     @State var isSharedSongsCollapsed = false
     @State var showSongSearch = false
     @State var showFolderSearch = false
+    @State var showFolderSongSearch = false
+    @State var showFolderNotesView = false
     @State var showSharedSongsSearch = false
     @State var isLoadingFolderSongs = false
     @State var displayFolderSongsSheet = false
@@ -66,10 +69,15 @@ struct MainView: View {
     
     @State var folderSearchText = ""
     @State var songSearchText = ""
+    @State var folderSongSearchText = ""
     @State var sharedSongSearchText = ""
     @State var newFolder = ""
     
     @State var sortSelection: SortSelectionEnum = .noSelection
+    
+    @FocusState var isFolderSongSearchFocused: Bool
+    @FocusState var isFolderSearchFocused: Bool
+    @FocusState var isSongSearchFocused: Bool
     
     var searchableFolders: [Folder] {
         let folders = mainViewModel.sharedFolders + mainViewModel.folders
@@ -158,17 +166,40 @@ struct MainView: View {
             return song1.pinned ?? false && !(song2.pinned ?? false)
         })
     }
-    func clearSearch() {
-        self.songSearchText = ""
-        self.folderSearchText = ""
+    // We need to find a place to put this
+    enum SearchArea {
+        case song
+        case folderSong
+        case folder
+    }
+    
+    func clearSearch(for search: SearchArea) {
+        if search == .song {
+            self.songSearchText = ""
+            self.showSongSearch = false
+            self.isSongSearchFocused = false
+        }
+        if search == .folderSong {
+            self.folderSongSearchText = ""
+            self.isFolderSongSearchFocused = false
+            self.showFolderSongSearch = false
+        }
+        if search == .folder {
+            self.folderSearchText = ""
+            self.showFolderSearch = false
+            self.isFolderSearchFocused = false
+        }
     }
     func openFolder(_ folder: Folder) {
+        self.clearSearch(for: .folderSong)
+        
         self.openedFolder = true
-        self.selectedFolderForFolderUse = folder
+        self.selectedFolder = folder
         self.mainViewModel.folderSongs = []
         self.mainViewModel.selectedFolder = folder
         self.mainViewModel.fetchSongs(folder)
         self.isLoadingFolderSongs = true
+        
         self.fetchJoinedUsers(folder: folder) { users in
             self.joinedUsers = users
         }
@@ -181,8 +212,10 @@ struct MainView: View {
     }
     func closeFolder() {
         withAnimation(.bouncy) {
+            self.clearSearch(for: .folderSong)
+            
             self.openedFolder = false
-            self.selectedFolderForFolderUse = nil
+            self.selectedFolder = nil
             self.mainViewModel.selectedFolder = nil
             self.isLoadingFolderSongs = false
         }
@@ -323,6 +356,23 @@ struct MainView: View {
                         showOfflineAlert = true
                         mainViewModel.hasShownOfflineAlert = true
                     }
+                    // Check if we should show notification auth prompt
+                    UNUserNotificationCenter.current().getNotificationSettings { settings in
+                        switch settings.authorizationStatus {
+                        case .notDetermined:
+                            showNotificationAuthView = true
+                        case .denied:
+                            DispatchQueue.main.async {
+                                mainViewModel.notification = Notification(title: NSLocalizedString("dont_miss_anything_important", comment: ""), body: NSLocalizedString("stay_in_loop_enable_notifications", comment: ""), imageName: "bell-ring", type: .notificationPrompt)
+                            }
+                        case .authorized, .provisional, .ephemeral:
+                            if let notif = mainViewModel.notification, notif.type == .notificationPrompt {
+                                mainViewModel.notification = nil
+                            }
+                        @unknown default:
+                            showNotificationAuthView = true
+                        }
+                    }
                     // Load user-set sort settings
                     sortViewModel.loadFromUserDefaults { sortSelection in
                         self.sortSelection = sortSelection
@@ -338,7 +388,7 @@ struct MainView: View {
         VStack(spacing: 0) {
             CustomNavBar(title: NSLocalizedString("home", comment: ""), navType: .home, showBackButton: false, collapsed: $showCollapsedNavBar, collapsedTitle: $showCollapsedNavBarTitle)
                 .padding()
-            Divider()
+            Divider() // TODO: fix divider showing before scroll on some devices
                 .opacity(showCollapsedNavBarDivider ? 1 : 0)
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -364,6 +414,32 @@ struct MainView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, -18)
+                            // We use a Notification object because we can use this for more than just a notification auth prompt
+                            if let notif = mainViewModel.notification {
+                                Button {
+                                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                                    
+                                    UIApplication.shared.open(url)
+                                } label: {
+                                    HStack(spacing: 13) {
+                                        FAText(iconName: "bell-ring", size: 26)
+                                            .foregroundStyle(.red)
+                                        VStack(alignment: .leading, spacing: 5) {
+                                            Text(notif.title)
+                                                .font(.system(size: 18).weight(.bold))
+                                                .foregroundStyle(Color.primary)
+                                            Text(notif.body)
+                                                .font(.system(size: 14.5))
+                                                .foregroundStyle(Color.primary.opacity(0.7)) // Slight secondary gray
+                                        }
+                                        .multilineTextAlignment(.leading)
+                                    }
+                                    .padding()
+                                    .padding(.horizontal, 2)
+                                    .background(Material.regular)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                                }
+                            }
                             VStack {
                                 LazyVGrid(columns: columns) {
                                     NavigationLink(destination: {
@@ -420,9 +496,12 @@ struct MainView: View {
                                         ListHeaderView(title: NSLocalizedString("folders", comment: ""))
                                         Spacer()
                                         Button {
-                                            clearSearch()
-                                            withAnimation(.bouncy(extraBounce: 0.1)) {
+                                            withAnimation(.bouncy) {
+                                                clearSearch(for: .folder)
+                                                
                                                 showFolderSearch.toggle()
+                                                
+                                                isFoldersCollapsed = false
                                             }
                                         } label: {
                                             Image(systemName: showFolderSearch ? "xmark" : "magnifyingglass")
@@ -433,7 +512,9 @@ struct MainView: View {
                                                 .font(.footnote.weight(.bold))
                                         }
                                         Button {
-                                            withAnimation(.bouncy(extraBounce: 0.1)) {
+                                            withAnimation(.bouncy) {
+                                                clearSearch(for: .folder)
+                                                
                                                 isFoldersCollapsed.toggle()
                                             }
                                         } label: {
@@ -447,7 +528,11 @@ struct MainView: View {
                                         .rotationEffect(Angle(degrees: isFoldersCollapsed ? 90 : 0))
                                     }
                                     if showFolderSearch {
-                                        CustomSearchBar(text: $folderSearchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
+                                        CustomSearchBar(text: $folderSearchText, placeholder: NSLocalizedString("search", comment: ""))
+                                            .focused($isFolderSearchFocused)
+                                            .onAppear {
+                                                isFolderSearchFocused = true
+                                            }
                                             .padding(.bottom)
                                     }
                                 }
@@ -464,7 +549,7 @@ struct MainView: View {
                                                     HStack {
                                                         Button {
                                                             if openedFolder {
-                                                                if selectedFolderForFolderUse?.id == folder.id {
+                                                                if selectedFolder?.id == folder.id {
                                                                     closeFolder()
                                                                 } else {
                                                                     closeFolder()
@@ -486,13 +571,13 @@ struct MainView: View {
                                                                     }
                                                                 }
                                                                 Spacer()
-                                                                if selectedFolderForFolderUse?.id == folder.id {
+                                                                if selectedFolder?.id == folder.id {
                                                                     if isLoadingFolderSongs || mainViewModel.folderSongs.isEmpty {
                                                                         ProgressView()
                                                                     } else {
                                                                         Image(systemName: "chevron.right")
                                                                             .foregroundColor(.gray)
-                                                                            .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolderForFolderUse?.id == folder.id ? 90 : 0))
+                                                                            .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolder?.id == folder.id ? 90 : 0))
                                                                     }
                                                                 } else {
                                                                     Image(systemName: "chevron.right")
@@ -591,11 +676,56 @@ struct MainView: View {
                                                             }
                                                         }
                                                     }
-                                                    if !isLoadingFolderSongs && selectedFolderForFolderUse?.id == folder.id && !isEditingFolders && !showEditSheet && !mainViewModel.folderSongs.isEmpty {
+                                                    if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet && !mainViewModel.folderSongs.isEmpty {
                                                         VStack {
                                                             if mainViewModel.folderSongs.isEmpty {
                                                                 LoadingView()
                                                             } else {
+                                                                HStack(spacing: 6) {
+                                                                    if showFolderSongSearch {
+                                                                        CustomSearchBar(text: $folderSongSearchText, placeholder: "Search")
+                                                                            .focused($isFolderSongSearchFocused)
+                                                                            .onAppear {
+                                                                                isFolderSongSearchFocused = true
+                                                                            }
+                                                                    } else {
+                                                                        Button {
+                                                                            showFolderSongSearch = true
+                                                                        } label: {
+                                                                            HStack(spacing: 6) {
+                                                                                Image(systemName: "magnifyingglass")
+                                                                                Text("Search")
+                                                                            }
+                                                                            .frame(maxWidth: .infinity)
+                                                                            .font(.body.weight(.medium))
+                                                                            .padding(12)
+                                                                            .background(Color.blue)
+                                                                            .foregroundStyle(.white)
+                                                                            .clipShape(Capsule())
+                                                                        }
+                                                                    }
+                                                                    if showFolderSongSearch {
+                                                                        CloseButton {
+                                                                            showFolderSongSearch = false
+                                                                        }
+                                                                    } else {
+                                                                        Button {
+                                                                            showFolderNotesView = true
+                                                                        } label: {
+                                                                            HStack(spacing: 6) {
+                                                                                FAText(iconName: "book", size: 18)
+                                                                                Text("Notes")
+                                                                            }
+                                                                            .frame(maxWidth: .infinity)
+                                                                            .padding(12)
+                                                                            .foregroundStyle(.white)
+                                                                            .background(Material.regular)
+                                                                            .clipShape(Capsule())
+                                                                        }
+                                                                    }
+                                                                }
+                                                                .animation(.smooth(duration: 1), value: showFolderSongSearch)
+                                                                .padding(.vertical, 10)
                                                                 if !((joinedUsers ?? []).isEmpty) {
                                                                     VStack(alignment: .leading, spacing: 2) {
                                                                         Text("SHARED WITH")
@@ -626,7 +756,6 @@ struct MainView: View {
                                                                             .padding([.horizontal, .bottom], 12)
                                                                         }
                                                                     }
-                                                                    .padding(.top, 10)
                                                                 }
                                                                 ForEach(sortedSongs(songs: mainViewModel.folderSongs), id: \.id) { uneditedSong in
                                                                     let song = {
@@ -776,9 +905,12 @@ struct MainView: View {
                                         ListHeaderView(title: NSLocalizedString("my_songs", comment: ""))
                                         Spacer()
                                         Button {
-                                            clearSearch()
-                                            withAnimation(.bouncy(extraBounce: 0.1)) {
-                                                self.showSongSearch.toggle()
+                                            withAnimation(.bouncy) {
+                                                clearSearch(for: .song)
+                                                
+                                                showSongSearch.toggle()
+                                                
+                                                isSongsCollapsed = false
                                             }
                                         } label: {
                                             Image(systemName: showSongSearch ? "xmark" : "magnifyingglass")
@@ -818,8 +950,10 @@ struct MainView: View {
                                             }
                                         }
                                         Button {
-                                            withAnimation(.bouncy(extraBounce: 0.1)) {
-                                                self.isSongsCollapsed.toggle()
+                                            withAnimation(.bouncy) {
+                                                clearSearch(for: .song)
+                                                
+                                                isSongsCollapsed.toggle()
                                             }
                                         } label: {
                                             Image(systemName: "chevron.down")
@@ -832,8 +966,12 @@ struct MainView: View {
                                         .rotationEffect(Angle(degrees: isSongsCollapsed ? 90 : 0))
                                     }
                                     if showSongSearch {
-                                        CustomSearchBar(text: $songSearchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search", comment: ""))
+                                        CustomSearchBar(text: $songSearchText, placeholder: NSLocalizedString("search", comment: ""))
                                             .padding(.bottom)
+                                            .focused($isSongSearchFocused)
+                                            .onAppear {
+                                                isSongSearchFocused = true
+                                            }
                                     }
                                 }
                                 if !isSongsCollapsed {
@@ -884,6 +1022,12 @@ struct MainView: View {
                     }
                     .fullScreenCover(isPresented: $showUpgradeSheet) {
                         UpgradeView()
+                    }
+                    .fullScreenCover(isPresented: $showNotificationAuthView) {
+                        NotificationAuthView()
+                    }
+                    .sheet(isPresented: $showFolderNotesView) {
+                        NotesView(folder: selectedFolder)
                     }
                     .sheet(isPresented: $showEditSheet) {
                         if let selectedFolder = mainViewModel.selectedFolder {

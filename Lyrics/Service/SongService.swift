@@ -563,14 +563,17 @@ class SongService {
 			guard let snapshot = snapshot else { return }
 			guard let song = try? snapshot.data(as: Song.self) else { return }
 			
+			print(song)
+			
 			completion(song.notes ?? "")
 		}
 	}
 	
 	func fetchNotes(folder: Folder, completion: @escaping(String) -> Void) {
-		Firestore.firestore().collection("users").document(folder.uid!).collection("songs").document(folder.id!).addSnapshotListener { snapshot, error in
-			guard let snapshot = snapshot else { return }
-			guard let folder = try? snapshot.data(as: Folder.self) else { return }
+		self.fetchFolder(withId: folder.id!) { folder in
+			guard let folder else { return }
+			
+			print(folder)
 			
 			completion(folder.notes ?? "")
 		}
@@ -1372,7 +1375,7 @@ class SongService {
 		}
 		
 		dispatch.notify(queue: .main) {
-			if let bandId = song.bandId {
+			if song.bandId != nil {
 				guard let joinedUsers = {
 					return song.joinedUsers?.filter { userId in
 						userId != uid

@@ -134,7 +134,7 @@ struct ShareView: View {
                     }
                     .opacity(disabled ? 0.5 : 1.0)
                     .disabled(disabled)
-                    SheetCloseButton {
+                    CloseButton {
                         isDisplayed = false
                     }
                 }
@@ -283,7 +283,7 @@ struct ShareView: View {
             }
             Divider()
             if networkManager.getNetworkState() {
-                CustomSearchBar(text: $searchText, imageName: "magnifyingglass", placeholder: NSLocalizedString("search_by_username", comment: ""))
+                CustomSearchBar(text: $searchText, placeholder: NSLocalizedString("search_by_username", comment: ""))
                     .focused($isFocused)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
@@ -378,7 +378,7 @@ struct ShareView: View {
                                         ListHeaderView(title: NSLocalizedString("recently_searched", comment: ""))
                                         Spacer()
                                         Button {
-                                            withAnimation(.bouncy(extraBounce: 0.1)) {
+                                            withAnimation {
                                                 self.recentSearches = ""
                                             }
                                         } label: {

@@ -25,7 +25,7 @@ struct SortView: View {
                 Text("Sort By")
                     .font(.system(size: 26, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isPresented = false
                 }
             }

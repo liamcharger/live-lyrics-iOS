@@ -39,7 +39,7 @@ struct FolderEditView: View {
                 Text("Edit Folder")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isDisplayed = false
                 }
             }

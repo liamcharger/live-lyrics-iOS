@@ -346,7 +346,7 @@ struct PlayView: View {
                                 .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
                                 .clipShape(Circle())
                         }
-                        SheetCloseButton {
+                        CloseButton {
                             if let proxy = proxy {
                                 stopAutoscroll(scrollViewProxy: proxy)
                             }

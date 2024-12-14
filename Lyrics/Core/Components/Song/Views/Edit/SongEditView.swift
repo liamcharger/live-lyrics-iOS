@@ -93,7 +93,7 @@ struct SongEditView: View {
                 Text("Edit Song")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     presMode.wrappedValue.dismiss()
                 }
             }

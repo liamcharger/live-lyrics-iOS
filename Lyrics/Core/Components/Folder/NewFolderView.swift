@@ -29,7 +29,7 @@ struct NewFolderView: View {
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                     .multilineTextAlignment(.leading)
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isDisplayed = false
                 }
             }

@@ -12,7 +12,7 @@ struct NotesView: View {
     let song: Song?
     let folder: Folder?
     
-    @FocusState var isInputActive: Bool
+    @FocusState var isFocused: Bool
     
     @ObservedObject var notesViewModel = NotesViewModel.shared
     
@@ -29,7 +29,7 @@ struct NotesView: View {
                 Text("Notes")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     presMode.wrappedValue.dismiss()
                 }
             }
@@ -45,8 +45,8 @@ struct NotesView: View {
                 ZStack {
                     TextEditor(text: $notesViewModel.notes)
                         .padding(.leading, 13)
-                        .focused($isInputActive)
-                    if notesViewModel.notes.isEmpty && !isInputActive {
+                        .focused($isFocused)
+                    if notesViewModel.notes.isEmpty && !isFocused {
                         Text("Tap to enter your notes...")
                             .foregroundColor(.gray.opacity(0.6))
                             .font(.system(size: 20).weight(.semibold))
@@ -54,15 +54,18 @@ struct NotesView: View {
                             .padding(.leading, 17)
                             .padding(.top, 8)
                             .onTapGesture {
-                                isInputActive = true
+                                isFocused = true
                             }
                     }
                 }
             }
         }
         .onAppear {
-            notesViewModel.fetchNotes(song: song, folder: folder)
-            notesViewModel.startUpdatingNotes(song: song, folder: folder)
+            notesViewModel.reset()
+            
+            notesViewModel.fetchNotes(song: song, folder: folder) {
+                notesViewModel.startUpdatingNotes(song: song, folder: folder)
+            }
         }
         .onDisappear {
             notesViewModel.updateNotes(song: song, folder: folder, notes: notesViewModel.notes)

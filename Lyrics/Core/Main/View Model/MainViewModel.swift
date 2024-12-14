@@ -36,6 +36,7 @@ class MainViewModel: ObservableObject {
     @Published var hasShownOfflineAlert = false
     
     @Published var notifications = [Notification]()
+    @Published var notification: Notification?
     
     let service = SongService()
     

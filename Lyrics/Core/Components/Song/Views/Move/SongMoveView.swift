@@ -24,6 +24,10 @@ struct SongMoveView: View {
     @State var showError = false
     @State var showNewFolderView = false
     
+    var folders: [Folder] {
+        return mainViewModel.sharedFolders + mainViewModel.folders
+    }
+    
     func move() {
         let dispatch = DispatchGroup()
         
@@ -69,7 +73,7 @@ struct SongMoveView: View {
                 .sheet(isPresented: $showNewFolderView) {
                     NewFolderView(isDisplayed: $showNewFolderView)
                 }
-                SheetCloseButton {
+                CloseButton {
                     showProfileView = false
                 }
                 if !selectedFolders.isEmpty {
@@ -98,50 +102,56 @@ struct SongMoveView: View {
             }
             .padding()
             Divider()
-            ScrollView {
-                if mainViewModel.folders.isEmpty {
-                    LoadingView()
-                } else {
-                    VStack(alignment: .leading) {
-                        ForEach(mainViewModel.folders) { folder in
-                            if folder.title == "noFolders" {
-                                Text("No Folders")
-                                    .foregroundColor(Color.gray)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            } else {
-                                Button(action: {
-                                    if selectedFolders.contains(where: { $0.id == folder.id }) {
-                                        selectedFolders.removeAll(where: { $0.id == folder.id })
-                                    } else {
-                                        selectedFolders.append(folder)
-                                    }
-                                }, label: {
-                                    HStack {
-                                        FAText(iconName: "folder-closed", size: 18)
-                                        Text(folder.title)
-                                            .lineLimit(1)
-                                            .multilineTextAlignment(.leading)
-                                        Spacer()
-                                        if selectedFolders.contains(where: { $0.id == folder.id }) {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(.blue)
-                                                .imageScale(.large)
-                                        } else {
-                                            Image(systemName: "circle")
-                                                .imageScale(.large)
-                                        }
-                                    }
-                                    .padding()
-                                    .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .clipShape(Capsule())
-                                })
-                                .disabled(isLoading)
-                            }
-                        }
-                        Spacer()
-                    }
+            if mainViewModel.isLoadingSharedFolders || mainViewModel.isLoadingFolders {
+                LoadingView()
                     .padding()
+                    .frame(maxHeight: .infinity, alignment: .top)
+            } else {
+                if folders.isEmpty {
+                    FullscreenMessage(imageName: "circle.slash", title: "you_dont_have_any_folders", spaceNavbar: true)
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            ForEach(folders) { folder in
+                                if folder.title == "noFolders" {
+                                    Text("No Folders")
+                                        .foregroundColor(Color.gray)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                } else {
+                                    Button(action: {
+                                        if selectedFolders.contains(where: { $0.id == folder.id }) {
+                                            selectedFolders.removeAll(where: { $0.id == folder.id })
+                                        } else {
+                                            selectedFolders.append(folder)
+                                        }
+                                    }, label: {
+                                        HStack {
+                                            FAText(iconName: "folder-closed", size: 18)
+                                            Text(folder.title)
+                                                .lineLimit(1)
+                                                .multilineTextAlignment(.leading)
+                                            Spacer()
+                                            if selectedFolders.contains(where: { $0.id == folder.id }) {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .foregroundColor(.blue)
+                                                    .imageScale(.large)
+                                            } else {
+                                                Image(systemName: "circle")
+                                                    .imageScale(.large)
+                                            }
+                                        }
+                                        .padding()
+                                        .background(Material.regular)
+                                        .foregroundColor(.primary)
+                                        .clipShape(Capsule())
+                                    })
+                                    .disabled(isLoading)
+                                }
+                            }
+                            Spacer()
+                        }
+                        .padding()
+                    }
                 }
             }
         }

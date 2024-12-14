@@ -40,7 +40,7 @@ struct EditPasswordView: View {
                 Text("Change Password")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     showProfileView = false
                 }
             }

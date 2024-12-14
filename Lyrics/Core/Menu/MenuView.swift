@@ -59,8 +59,13 @@ struct MenuView: View {
                             Text(user.fullname)
                                 .font(.title2.weight(.semibold))
                             if hasPro(user) {
-                                FAText(iconName: "crown", size: 15)
-                                    .foregroundColor(.yellow)
+                                Text("PRO")
+                                    .foregroundStyle(.white)
+                                    .font(.system(size: 12).weight(.semibold))
+                                    .padding(6)
+                                    .padding(.horizontal, 2)
+                                    .background(Color.blue)
+                                    .clipShape(Capsule())
                             }
                         }
                         HStack(spacing: 4) {
@@ -91,7 +96,7 @@ struct MenuView: View {
                     .sheet(isPresented: $showProfileView) {
                         ProfileView(user: user, showProfileView: $showProfileView)
                     }
-                    SheetCloseButton {
+                    CloseButton {
                         showMenu = false
                     }
                 }

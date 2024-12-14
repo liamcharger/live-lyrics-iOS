@@ -49,7 +49,7 @@ struct SongVariationEditView: View {
                 Text("Edit Variation")
                     .font(.title.weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     isDisplayed = false
                 }
             }

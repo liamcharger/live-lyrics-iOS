@@ -48,7 +48,7 @@ struct ProfileView: View {
                 Text("Edit Profile")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                SheetCloseButton {
+                CloseButton {
                     showProfileView = false
                 }
             }
@@ -131,7 +131,7 @@ struct ProfileView: View {
             VStack(spacing: 10) {
                 HStack {
                     Spacer()
-                    SheetCloseButton {
+                    CloseButton {
                         showDeleteSheet = false
                     }
                 }

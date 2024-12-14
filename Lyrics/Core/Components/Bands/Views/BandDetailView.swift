@@ -39,7 +39,7 @@ struct BandDetailView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                SheetCloseButton {
+                CloseButton {
                     band = nil
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
