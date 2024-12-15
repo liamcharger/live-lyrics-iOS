@@ -155,7 +155,7 @@ struct MainView: View {
             }
     }
     func searchableFolderSongs(_ songs: [Song]) -> [Song] {
-        let lowercasedQuery = songSearchText.lowercased()
+        let lowercasedQuery = folderSongSearchText.lowercased()
         
         return songs.filter { item in
             if !folderSongSearchText.isEmpty {
@@ -508,21 +508,26 @@ struct MainView: View {
                                     HStack {
                                         ListHeaderView(title: NSLocalizedString("folders", comment: ""))
                                         Spacer()
-                                        Button {
-                                            withAnimation(.bouncy) {
-                                                clearSearch(for: .folder)
-                                                
-                                                showFolderSearch.toggle()
-                                                
-                                                isFoldersCollapsed = false
-                                            }
-                                        } label: {
-                                            Image(systemName: showFolderSearch ? "xmark" : "magnifyingglass")
+                                        if !showFolderSearch {
+                                            Button {
+                                                withAnimation(.bouncy) {
+                                                    clearSearch(for: .folder)
+                                                    
+                                                    showFolderSearch.toggle()
+                                                    
+                                                    isFoldersCollapsed = false
+                                                }
+                                            } label: {
+                                                HStack(spacing: 4) {
+                                                    Image(systemName: "magnifyingglass")
+                                                    Text("Search")
+                                                }
                                                 .padding(12)
-                                                .foregroundColor(Color.white)
+                                                .foregroundColor(.white)
                                                 .background(Color.blue)
-                                                .clipShape(Circle())
-                                                .font(.footnote.weight(.bold))
+                                                .clipShape(Capsule())
+                                                .font(.system(size: 13).weight(.semibold))
+                                            }
                                         }
                                         Button {
                                             withAnimation(.bouncy) {
@@ -534,21 +539,30 @@ struct MainView: View {
                                             }
                                         } label: {
                                             Image(systemName: "chevron.down")
-                                                .padding(13.5)
+                                                .padding(14)
                                                 .foregroundColor(Color.blue)
                                                 .background(Material.regular)
                                                 .clipShape(Circle())
-                                                .font(.system(size: 18).weight(.medium))
+                                                .font(.system(size: 18).weight(.semibold))
                                         }
                                         .rotationEffect(Angle(degrees: isFoldersCollapsed ? 90 : 0))
                                     }
                                     if showFolderSearch {
-                                        CustomSearchBar(text: $folderSearchText, placeholder: NSLocalizedString("search", comment: ""))
-                                            .focused($isFolderSearchFocused)
-                                            .onAppear {
-                                                isFolderSearchFocused = true
+                                        HStack(spacing: 6) {
+                                            CustomSearchBar(text: $folderSearchText, placeholder: NSLocalizedString("search", comment: ""))
+                                                .focused($isFolderSearchFocused)
+                                                .onAppear {
+                                                    isFolderSearchFocused = true
+                                                }
+                                            CloseButton {
+                                                withAnimation(.bouncy) {
+                                                    clearSearch(for: .folder)
+                                                    
+                                                    showFolderSearch = false
+                                                }
                                             }
-                                            .padding(.bottom)
+                                        }
+                                        .padding(.bottom)
                                     }
                                 }
                                 // TODO: conform folders to grid with a separate detail view
@@ -605,14 +619,19 @@ struct MainView: View {
                                                             .clipShape(Capsule())
                                                             .contentShape(.contextMenuPreview, Capsule())
                                                             .contextMenu {
-                                                                if folder.uid ?? "" == uid() {
+                                                                let readOnly = (folder.readOnly ?? false)
+                                                                
+                                                                if !readOnly {
                                                                     Button {
+                                                                        // TODO: verify line 613 not needed
                                                                         mainViewModel.fetchSongs(folder)
                                                                         mainViewModel.selectedFolder = folder
                                                                         showAddSongSheet = true
                                                                     } label: {
                                                                         Label("Add Songs", systemImage: "plus")
                                                                     }
+                                                                }
+                                                                if folder.uid ?? "" == uid() {
                                                                     Button {
                                                                         selectedSong = nil
                                                                         mainViewModel.selectedFolder = folder
@@ -621,7 +640,14 @@ struct MainView: View {
                                                                         Label("Share", systemImage: "square.and.arrow.up")
                                                                     }
                                                                 }
-                                                                if !(folder.readOnly ?? false) {
+                                                                Button {
+                                                                    selectedSong = nil
+                                                                    mainViewModel.selectedFolder = folder
+                                                                    showFolderNotesView = true
+                                                                } label: {
+                                                                    Label("Notes", systemImage: "document")
+                                                                }
+                                                                if !readOnly {
                                                                     Button {
                                                                         showEditSheet = true
                                                                         mainViewModel.selectedFolder = folder
@@ -693,9 +719,11 @@ struct MainView: View {
                                                     }
                                                     if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet && !mainViewModel.folderSongs.isEmpty {
                                                         VStack {
-                                                            if mainViewModel.folderSongs.isEmpty {
+                                                            if mainViewModel.isLoadingFolderSongs {
                                                                 LoadingView()
                                                             } else {
+                                                                let songs = searchableFolderSongs(sortedSongs(songs: mainViewModel.folderSongs))
+                                                                
                                                                 HStack(spacing: 6) {
                                                                     if showFolderSongSearch {
                                                                         CustomSearchBar(text: $folderSongSearchText, placeholder: "Search")
@@ -705,7 +733,7 @@ struct MainView: View {
                                                                             }
                                                                     } else {
                                                                         Button {
-                                                                            withAnimation(.smooth) {
+                                                                            withAnimation(.bouncy) {
                                                                                 showFolderSongSearch = true
                                                                             }
                                                                         } label: {
@@ -723,8 +751,8 @@ struct MainView: View {
                                                                     }
                                                                     if showFolderSongSearch {
                                                                         CloseButton {
-                                                                            withAnimation(.smooth) {
-                                                                                showFolderSongSearch = false
+                                                                            withAnimation(.bouncy) {
+                                                                                clearSearch(for: .folderSong)
                                                                             }
                                                                         }
                                                                     } else {
@@ -775,135 +803,136 @@ struct MainView: View {
                                                                         }
                                                                     }
                                                                 }
-                                                                ForEach(searchableFolderSongs(sortedSongs(songs: mainViewModel.folderSongs)), id: \.id) { uneditedSong in
-                                                                    let song = {
-                                                                        var song = uneditedSong
-                                                                        song.readOnly = folder.readOnly
-                                                                        return song
-                                                                    }()
-                                                                    let isShared: Bool = {
-                                                                        return mainViewModel.selectedFolder?.uid ?? uid() != uid()
-                                                                    }()
-                                                                    
-                                                                    if song.title == "noSongs" {
-                                                                        Text("No Songs")
-                                                                            .foregroundColor(Color.gray)
-                                                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                                            .deleteDisabled(true)
-                                                                            .moveDisabled(true)
-                                                                    } else {
-                                                                        NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
-                                                                            ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
-                                                                                .contextMenu {
-                                                                                    if !(song.readOnly ?? false) {
-                                                                                        Button {
-                                                                                            selectedSong = song
-                                                                                            songViewModel.fetchSong(selectedSong?.id ?? "") { song in
+                                                                if songs.isEmpty {
+                                                                    EmptyStateView(state: .folderSongs)
+                                                                } else {
+                                                                    ForEach(songs, id: \.id) { uneditedSong in
+                                                                        let song = {
+                                                                            var song = uneditedSong
+                                                                            song.readOnly = folder.readOnly
+                                                                            return song
+                                                                        }()
+                                                                        let isShared: Bool = {
+                                                                            return mainViewModel.selectedFolder?.uid ?? uid() != uid()
+                                                                        }()
+                                                                        
+                                                                        if song.title == "noSongs" {
+                                                                            Text("No Songs")
+                                                                                .foregroundColor(Color.gray)
+                                                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                                                .deleteDisabled(true)
+                                                                                .moveDisabled(true)
+                                                                        } else {
+                                                                            NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.folderSongs, folder: folder, joinedUsers: joinedUsers, isSongFromFolder: true)) {
+                                                                                ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
+                                                                                    .contextMenu {
+                                                                                        if !(song.readOnly ?? false) {
+                                                                                            Button {
                                                                                                 selectedSong = song
-                                                                                            } regCompletion: { _ in }
-                                                                                            showSongEditSheet.toggle()
-                                                                                        } label: {
-                                                                                            Label("Edit", systemImage: "pencil")
-                                                                                        }
-                                                                                    }
-                                                                                    if !isShared {
-                                                                                        Button {
-                                                                                            selectedSong = song
-                                                                                            showShareSheet.toggle()
-                                                                                        } label: {
-                                                                                            Label("Share", systemImage: "square.and.arrow.up")
-                                                                                        }
-                                                                                    }
-                                                                                    if !songViewModel.isShared(song: song) && folder.uid ?? "" == uid() {
-                                                                                        Button {
-                                                                                            selectedSong = song
-                                                                                            showSongMoveSheet.toggle()
-                                                                                        } label: {
-                                                                                            Label("Move", systemImage: "folder")
-                                                                                        }
-                                                                                    }
-                                                                                    Menu {
-                                                                                        Button {
-                                                                                            selectedSong = song
-                                                                                            let pasteboard = UIPasteboard.general
-                                                                                            pasteboard.string = selectedSong?.title
-                                                                                        } label: {
-                                                                                            Label("Copy Title", systemImage: "textformat")
-                                                                                        }
-                                                                                        Button {
-                                                                                            selectedSong = song
-                                                                                            let pasteboard = UIPasteboard.general
-                                                                                            pasteboard.string = selectedSong?.lyrics
-                                                                                        } label: {
-                                                                                            Label("Copy Lyrics", systemImage: "doc.plaintext")
-                                                                                        }
-                                                                                    } label: {
-                                                                                        Label("Copy", systemImage: "doc.on.doc")
-                                                                                    }
-                                                                                    if song.uid == uid() {
-                                                                                        Button {
-                                                                                            mainViewModel.selectedFolder = folder
-                                                                                            selectedSong = song
-                                                                                            showTagSheet = true
-                                                                                        } label: {
-                                                                                            Label("Tags", systemImage: "tag")
-                                                                                        }
-                                                                                    }
-                                                                                    if folder.uid ?? "" == uid() {
-                                                                                        Button {
-                                                                                            if song.pinned ?? false {
-                                                                                                songViewModel.unpinSong(song)
-                                                                                            } else {
-                                                                                                songViewModel.pinSong(song)
-                                                                                            }
-                                                                                            mainViewModel.fetchSongs(folder)
-                                                                                        } label: {
-                                                                                            if song.pinned ?? false {
-                                                                                                Label("Unpin", systemImage: "pin.slash")
-                                                                                            } else {
-                                                                                                Label("Pin", systemImage: "pin")
+                                                                                                showSongEditSheet.toggle()
+                                                                                            } label: {
+                                                                                                Label("Edit", systemImage: "pencil")
                                                                                             }
                                                                                         }
-                                                                                    }
-                                                                                    Button(role: .destructive) {
-                                                                                        selectedSong = song
-                                                                                        mainViewModel.selectedFolder = folder
-                                                                                        showFolderSongDeleteSheet.toggle()
-                                                                                    } label: {
-                                                                                        Label("Remove", systemImage: "trash")
-                                                                                    }
-                                                                                }
-                                                                                .confirmationDialog(isShared ? "Remove Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
-                                                                                    if let selectedSong = selectedSong {
                                                                                         if !isShared {
-                                                                                            Button("Delete", role: .destructive) {
-                                                                                                songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                                                                            Button {
+                                                                                                selectedSong = song
+                                                                                                showShareSheet.toggle()
+                                                                                            } label: {
+                                                                                                Label("Share", systemImage: "square.and.arrow.up")
                                                                                             }
                                                                                         }
-                                                                                        Button("Remove from Folder") {
-                                                                                            mainViewModel.deleteSong(folder, selectedSong)
+                                                                                        if !songViewModel.isShared(song: song) && folder.uid ?? "" == uid() {
+                                                                                            Button {
+                                                                                                selectedSong = song
+                                                                                                showSongMoveSheet.toggle()
+                                                                                            } label: {
+                                                                                                Label("Move", systemImage: "folder")
+                                                                                            }
                                                                                         }
-                                                                                        Button("Cancel", role: .cancel) {}
+                                                                                        Menu {
+                                                                                            Button {
+                                                                                                selectedSong = song
+                                                                                                let pasteboard = UIPasteboard.general
+                                                                                                pasteboard.string = selectedSong?.title
+                                                                                            } label: {
+                                                                                                Label("Copy Title", systemImage: "textformat")
+                                                                                            }
+                                                                                            Button {
+                                                                                                selectedSong = song
+                                                                                                let pasteboard = UIPasteboard.general
+                                                                                                pasteboard.string = selectedSong?.lyrics
+                                                                                            } label: {
+                                                                                                Label("Copy Lyrics", systemImage: "doc.plaintext")
+                                                                                            }
+                                                                                        } label: {
+                                                                                            Label("Copy", systemImage: "doc.on.doc")
+                                                                                        }
+                                                                                        if song.uid == uid() {
+                                                                                            Button {
+                                                                                                mainViewModel.selectedFolder = folder
+                                                                                                selectedSong = song
+                                                                                                showTagSheet = true
+                                                                                            } label: {
+                                                                                                Label("Tags", systemImage: "tag")
+                                                                                            }
+                                                                                        }
+                                                                                        if folder.uid ?? "" == uid() {
+                                                                                            Button {
+                                                                                                if song.pinned ?? false {
+                                                                                                    songViewModel.unpinSong(song)
+                                                                                                } else {
+                                                                                                    songViewModel.pinSong(song)
+                                                                                                }
+                                                                                                mainViewModel.fetchSongs(folder)
+                                                                                            } label: {
+                                                                                                if song.pinned ?? false {
+                                                                                                    Label("Unpin", systemImage: "pin.slash")
+                                                                                                } else {
+                                                                                                    Label("Pin", systemImage: "pin")
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        Button(role: .destructive) {
+                                                                                            selectedSong = song
+                                                                                            mainViewModel.selectedFolder = folder
+                                                                                            showFolderSongDeleteSheet.toggle()
+                                                                                        } label: {
+                                                                                            Label("Remove", systemImage: "trash")
+                                                                                        }
                                                                                     }
-                                                                                } message: {
-                                                                                    if let selectedSong = selectedSong {
-                                                                                        Text("Are you sure you want to \(isShared ? "remove" : "delete") \"\(selectedSong.title)\"?")
+                                                                                    .confirmationDialog(isShared ? "Remove Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
+                                                                                        if let selectedSong = selectedSong {
+                                                                                            if !isShared {
+                                                                                                Button("Delete", role: .destructive) {
+                                                                                                    songViewModel.moveSongToRecentlyDeleted(selectedSong)
+                                                                                                }
+                                                                                            }
+                                                                                            Button("Remove from Folder") {
+                                                                                                mainViewModel.deleteSong(folder, selectedSong)
+                                                                                            }
+                                                                                            Button("Cancel", role: .cancel) {}
+                                                                                        }
+                                                                                    } message: {
+                                                                                        if let selectedSong = selectedSong {
+                                                                                            Text("Are you sure you want to \(isShared ? "remove" : "delete") \"\(selectedSong.title)\"?")
+                                                                                        }
                                                                                     }
-                                                                                }
-                                                                        }
-                                                                        .onDrag {
-                                                                            self.draggedSong = song
-                                                                            return NSItemProvider()
-                                                                        }
-                                                                        .onDrop(
-                                                                            of: [.text],
-                                                                            delegate: FolderSongDropViewDelegate(
-                                                                                folder: folder,
-                                                                                destinationItem: song,
-                                                                                items: $mainViewModel.folderSongs,
-                                                                                draggedItem: $draggedSong
+                                                                            }
+                                                                            .onDrag {
+                                                                                self.draggedSong = song
+                                                                                return NSItemProvider()
+                                                                            }
+                                                                            .onDrop(
+                                                                                of: [.text],
+                                                                                delegate: FolderSongDropViewDelegate(
+                                                                                    folder: folder,
+                                                                                    destinationItem: song,
+                                                                                    items: $mainViewModel.folderSongs,
+                                                                                    draggedItem: $draggedSong
+                                                                                )
                                                                             )
-                                                                        )
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -922,21 +951,26 @@ struct MainView: View {
                                     HStack(spacing: 3) {
                                         ListHeaderView(title: NSLocalizedString("my_songs", comment: ""))
                                         Spacer()
-                                        Button {
-                                            withAnimation(.bouncy) {
-                                                clearSearch(for: .song)
-                                                
-                                                showSongSearch.toggle()
-                                                
-                                                isSongsCollapsed = false
-                                            }
-                                        } label: {
-                                            Image(systemName: showSongSearch ? "xmark" : "magnifyingglass")
+                                        if !showSongSearch {
+                                            Button {
+                                                withAnimation(.bouncy) {
+                                                    clearSearch(for: .song)
+                                                    
+                                                    showSongSearch.toggle()
+                                                    
+                                                    isSongsCollapsed = false
+                                                }
+                                            } label: {
+                                                HStack(spacing: 4) {
+                                                    Image(systemName: "magnifyingglass")
+                                                    Text("Search")
+                                                }
                                                 .padding(12)
-                                                .foregroundColor(Color.white)
+                                                .foregroundColor(.white)
                                                 .background(Color.blue)
-                                                .clipShape(Circle())
-                                                .font(.footnote.weight(.bold))
+                                                .clipShape(Capsule())
+                                                .font(.system(size: 13).weight(.semibold))
+                                            }
                                         }
                                         if mainViewModel.songs.filter({ song in
                                             if song.title != "noSongs" {
@@ -977,21 +1011,30 @@ struct MainView: View {
                                             }
                                         } label: {
                                             Image(systemName: "chevron.down")
-                                                .padding(13.5)
+                                                .padding(14)
                                                 .foregroundColor(Color.blue)
                                                 .background(Material.regular)
                                                 .clipShape(Circle())
-                                                .font(.system(size: 18).weight(.medium))
+                                                .font(.system(size: 18).weight(.semibold))
                                         }
                                         .rotationEffect(Angle(degrees: isSongsCollapsed ? 90 : 0))
                                     }
                                     if showSongSearch {
-                                        CustomSearchBar(text: $songSearchText, placeholder: NSLocalizedString("search", comment: ""))
-                                            .padding(.bottom)
-                                            .focused($isSongSearchFocused)
-                                            .onAppear {
-                                                isSongSearchFocused = true
+                                        HStack(spacing: 6) {
+                                            CustomSearchBar(text: $songSearchText, placeholder: NSLocalizedString("search", comment: ""))
+                                                .focused($isSongSearchFocused)
+                                                .onAppear {
+                                                    isSongSearchFocused = true
+                                                }
+                                            CloseButton {
+                                                withAnimation(.bouncy) {
+                                                    clearSearch(for: .song)
+                                                    
+                                                    showSongSearch = false
+                                                }
                                             }
+                                        }
+                                        .padding(.bottom)
                                     }
                                 }
                                 if !isSongsCollapsed {
@@ -1047,11 +1090,13 @@ struct MainView: View {
                         NotificationAuthView()
                     }
                     .sheet(isPresented: $showFolderNotesView) {
-                        NotesView(folder: selectedFolder)
+                        NotesView(folder: mainViewModel.selectedFolder)
                     }
                     .sheet(isPresented: $showEditSheet) {
                         if let selectedFolder = mainViewModel.selectedFolder {
                             FolderEditView(folder: selectedFolder, isDisplayed: $showEditSheet, title: .constant(selectedFolder.title))
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .sheet(isPresented: $showShareSheet) {
@@ -1059,27 +1104,37 @@ struct MainView: View {
                             ShareView(isDisplayed: $showShareSheet, song: song)
                         }  else if let folder = mainViewModel.selectedFolder {
                             ShareView(isDisplayed: $showShareSheet, folder: folder)
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .sheet(isPresented: $showAddSongSheet, onDismiss: {mainViewModel.fetchSongs(mainViewModel.selectedFolder!)}) {
                         if let selectedFolder = mainViewModel.selectedFolder {
                             AddSongsView(folder: selectedFolder)
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .sheet(isPresented: $showSongMoveSheet) {
                         if let selectedSong = selectedSong {
                             SongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .sheet(isPresented: $showSongEditSheet, onDismiss: checkToFetchSharedSongs) {
                         if let selectedSong = selectedSong {
                             SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? NSLocalizedString("not_set", comment: "")), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .sheet(isPresented: $showTagSheet, onDismiss: checkToFetchSharedSongs) {
                         if let selectedSong = selectedSong {
                             let tags: [TagSelectionEnum] = selectedSong.tags?.compactMap { TagSelectionEnum(rawValue: $0) } ?? []
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
@@ -1091,6 +1146,8 @@ struct MainView: View {
                                     songViewModel.leaveSong(song: selectedSong)
                                 }
                             }
+                        } else {
+                            LoadingFailedView()
                         }
                     }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in

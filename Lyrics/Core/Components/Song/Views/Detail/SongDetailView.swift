@@ -71,7 +71,6 @@ struct SongDetailView: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var recentlyDeletedViewModel = RecentlyDeletedViewModel.shared
-    @ObservedObject var notesViewModel = NotesViewModel.shared
     @ObservedObject var songDetailViewModel = SongDetailViewModel.shared
     @ObservedObject var viewModel = AuthViewModel.shared
     
@@ -239,7 +238,7 @@ struct SongDetailView: View {
                                     .modifier(NavBarButtonViewModifier())
                                     .overlay {
                                         // Show a badge when notes are present
-                                        if notesViewModel.notes != "" {
+                                        if (song.notes ?? "") != "" {
                                             Circle()
                                                 .frame(width: 11, height: 11)
                                                 .foregroundColor(.blue)
@@ -713,8 +712,6 @@ struct SongDetailView: View {
                 self.fetchListener = reg
             }
             checkForUpdatedLyrics()
-            // Start a notes event listener
-            notesViewModel.fetchNotes(song: song) {}
             // Do not allow device to fall asleep
             UIApplication.shared.isIdleTimerDisabled = true
         }

@@ -61,14 +61,11 @@ struct NotesView: View {
             }
         }
         .onAppear {
-            notesViewModel.reset()
-            
-            notesViewModel.fetchNotes(song: song, folder: folder) {
-                notesViewModel.startUpdatingNotes(song: song, folder: folder)
-            }
+            notesViewModel.fetchNotes(song: song, folder: folder)
         }
         .onDisappear {
             notesViewModel.updateNotes(song: song, folder: folder, notes: notesViewModel.notes)
+            notesViewModel.stopUpdatingNotes()
         }
     }
 }

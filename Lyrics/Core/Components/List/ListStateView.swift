@@ -42,6 +42,7 @@ struct FullscreenMessage: View {
 enum EmptyState {
     case songs
     case folders
+    case folderSongs
     case demoAttachments
 }
 
@@ -54,6 +55,8 @@ struct EmptyStateView: View {
             return "music-slash"
         case .folders:
             return "folder-xmark"
+        case .folderSongs:
+            return "music-slash"
         case .demoAttachments:
             return "layer-group"
         }
@@ -64,6 +67,8 @@ struct EmptyStateView: View {
             return NSLocalizedString("you_dont_have_any_songs", comment: "")
         case .folders:
             return NSLocalizedString("you_dont_have_any_folders", comment: "")
+        case .folderSongs:
+            return NSLocalizedString("you_dont_have_any_folder_songs", comment: "")
         case .demoAttachments:
             return NSLocalizedString("no_demo_attachments", comment: "")
         }

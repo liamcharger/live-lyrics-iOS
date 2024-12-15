@@ -127,9 +127,15 @@ struct SongMoveView: View {
                                     }, label: {
                                         HStack {
                                             FAText(iconName: "folder-closed", size: 18)
-                                            Text(folder.title)
-                                                .lineLimit(1)
-                                                .multilineTextAlignment(.leading)
+                                            HStack(spacing: 7) {
+                                                Text(folder.title)
+                                                    .lineLimit(1)
+                                                    .multilineTextAlignment(.leading)
+                                                if folder.uid ?? "" != uid() {
+                                                    Image(systemName: "person.2")
+                                                        .font(.system(size: 16).weight(.medium))
+                                                }
+                                            }
                                             Spacer()
                                             if selectedFolders.contains(where: { $0.id == folder.id }) {
                                                 Image(systemName: "checkmark.circle.fill")

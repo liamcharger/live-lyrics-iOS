@@ -1783,6 +1783,9 @@
         }
       }
     },
+    "Hello, World!" : {
+
+    },
     "home" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3668,17 +3671,27 @@
         }
       }
     },
+    "you_dont_have_any_folder_songs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We didn’t find any songs here."
+          }
+        }
+      }
+    },
     "you_dont_have_any_folders" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You don’t have any folders."
+            "value" : "We didn’t find any folders here."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "No tienes carpetas."
           }
         }
@@ -3689,12 +3702,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You don’t have any songs. Go and create some!"
+            "value" : "We didn’t find any songs here. Go and create some!"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "No tienes canciones. Ve y crea algunas."
           }
         }

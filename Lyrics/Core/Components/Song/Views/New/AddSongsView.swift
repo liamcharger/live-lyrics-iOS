@@ -175,7 +175,7 @@ struct AddSongsView: View {
                                 HStack(spacing: 7) {
                                     Text(song.title)
                                         .lineLimit(1)
-                                    if song.uid != AuthViewModel.shared.currentUser?.id {
+                                    if song.uid != uid() {
                                         Image(systemName: "person.2")
                                             .font(.system(size: 16).weight(.medium))
                                     }

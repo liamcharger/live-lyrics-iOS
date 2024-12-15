@@ -196,7 +196,7 @@ struct BandService {
         guard let bandId = band.id, let memberId = member.id else { return }
         let ref = Firestore.firestore().collection("bands").document(bandId).collection("members").document(memberId)
         
-        print(role?.id ?? "No role ID")
+        print("Saving role ID: ", role?.id ?? "No role ID")
         if let roleId = role?.id {
             ref.updateData(["roleId": roleId]) { error in
                 if let error = error {

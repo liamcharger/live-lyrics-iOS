@@ -186,6 +186,8 @@ struct SongEditView: View {
                                                 .sheet(isPresented: $showDemoEditSheet) {
                                                     if let demo = selectedDemo {
                                                         DemoAttachmentEditView(demo: demo, song: song)
+                                                    } else {
+                                                        LoadingFailedView()
                                                     }
                                                 }
                                                 .confirmationDialog("Delete Demo", isPresented: $showDeleteConfirmation) {

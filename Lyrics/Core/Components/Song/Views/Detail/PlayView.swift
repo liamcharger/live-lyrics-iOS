@@ -368,7 +368,7 @@ struct PlayView: View {
                                             .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
                                             .font(.system(size: CGFloat(size), weight: weight))
                                             .id(index)
-                                            .animation(.spring(dampingFraction: 1.0))
+                                            .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                     } else {
                                         Button {
                                             scrollTo(index)
@@ -383,7 +383,7 @@ struct PlayView: View {
                                                 .background((isPressed && pressedIndexId == index) ? Color.materialRegularGray.opacity(0.75) : .clear)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                                 .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
-                                                .animation(.spring(dampingFraction: 1.0))
+                                                .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                         }
                                         .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
                                     }

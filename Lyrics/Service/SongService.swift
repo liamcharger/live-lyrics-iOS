@@ -323,7 +323,7 @@ class SongService {
 						return
 					}
 					
-					print(memberRoleId)
+					print("SongService.handVariations: ", "member role ID: ", memberRoleId)
 					
 					group.enter()
 					SongViewModel.shared.fetchSongVariations(song: song, withListener: false) { songVariations in
@@ -376,7 +376,7 @@ class SongService {
 					return
 				}
 				guard let snapshot = snapshot, let song = try? snapshot.data(as: Song.self) else {
-					print("Error parsing song or song does not exist: \(id)")
+					print("Error parsing song or song does not exist (SongService.fetchSong): \(id)")
 					songCompletion(nil)
 					return
 				}
@@ -386,13 +386,13 @@ class SongService {
 		} else {
 			documentReference.getDocument { snapshot, error in
 				if let error = error {
-					print("Error fetching song with ID \(id): \(error.localizedDescription)")
+					print("Error fetching song (SongService.fetchSong) with ID \(id): \(error.localizedDescription)")
 					songCompletion(nil)
 					registrationCompletion(nil)
 					return
 				}
 				guard let snapshot = snapshot, snapshot.exists, let song = try? snapshot.data(as: Song.self) else {
-					print("Error parsing song or song does not exist: \(id)")
+					print("Error parsing song or song does not exist (SongService.fetchSong): \(id)")
 					songCompletion(nil)
 					registrationCompletion(nil)
 					return
@@ -558,8 +558,8 @@ class SongService {
 			}
 	}
 	
-	func fetchNotes(song: Song, completion: @escaping(String) -> Void) {
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).addSnapshotListener { snapshot, error in
+	@discardableResult func fetchNotes(song: Song, completion: @escaping(String) -> Void) -> ListenerRegistration {
+		return Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).addSnapshotListener { snapshot, error in
 			guard let snapshot = snapshot else { return }
 			guard let song = try? snapshot.data(as: Song.self) else { return }
 			
@@ -569,11 +569,17 @@ class SongService {
 		}
 	}
 	
-	func fetchNotes(folder: Folder, completion: @escaping(String) -> Void) {
-		self.fetchFolder(withId: folder.id!) { folder in
-			guard let folder else { return }
+	@discardableResult func fetchNotes(folder: Folder, completion: @escaping(String) -> Void) -> ListenerRegistration {
+		return Firestore.firestore().collection("users").document(folder.uid!).collection("folders").document(folder.id!).addSnapshotListener { snapshot, error in
+			if let error = error {
+				print("Error fetching folder notes with ID \(folder.id!): \(error.localizedDescription)")
+				return
+			}
 			
-			print(folder)
+			guard let folder = try? snapshot?.data(as: Folder.self) else {
+				print("Error parsing folder: \(folder.id!)")
+				return
+			}
 			
 			completion(folder.notes ?? "")
 		}

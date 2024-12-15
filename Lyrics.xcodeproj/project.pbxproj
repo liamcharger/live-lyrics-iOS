@@ -16,7 +16,7 @@
 		E00773142C97D8A90083A0FA /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00773132C97D8A90083A0FA /* ListRowView.swift */; };
 		E00773162C97D8BE0083A0FA /* ListStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00773152C97D8BE0083A0FA /* ListStateView.swift */; };
 		E00E845D2B222AEB00573A9F /* StoreKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00E845C2B222AEB00573A9F /* StoreKitManager.swift */; };
-		E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0106C832A1EA1A0007D99DF /* MoveRowView.swift */; };
+		E0106C842A1EA1A1007D99DF /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0106C832A1EA1A0007D99DF /* RowView.swift */; };
 		E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01520E12A872EF4005C4F8C /* AddSongsView.swift */; };
 		E0176EA72A5491BC00B6AA69 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */; };
 		E01EB4452B20CA3A009C48F2 /* remote_config_defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */; };
@@ -48,6 +48,7 @@
 		E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */; };
 		E03A6F0A2C8CE14F00CA16D0 /* DemoAttachmentEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A6F092C8CE14F00CA16D0 /* DemoAttachmentEditView.swift */; };
 		E03A6F0F2C8E24F600CA16D0 /* DemoAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */; };
+		E03A7DFA2D0E8E02007A9209 /* LoadingFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */; };
 		E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BC0922B5C232B004261AF /* ChooseAuthView.swift */; };
 		E041055F2A90029900215FB0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* HapticManager.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
@@ -197,7 +198,7 @@
 		E00773152C97D8BE0083A0FA /* ListStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListStateView.swift; sourceTree = "<group>"; };
 		E00E845B2B22290100573A9F /* Live Lyrics.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Live Lyrics.storekit"; sourceTree = "<group>"; };
 		E00E845C2B222AEB00573A9F /* StoreKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitManager.swift; sourceTree = "<group>"; };
-		E0106C832A1EA1A0007D99DF /* MoveRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRowView.swift; sourceTree = "<group>"; };
+		E0106C832A1EA1A0007D99DF /* RowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowView.swift; sourceTree = "<group>"; };
 		E01520E12A872EF4005C4F8C /* AddSongsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSongsView.swift; sourceTree = "<group>"; };
 		E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = remote_config_defaults.plist; sourceTree = "<group>"; };
@@ -221,6 +222,7 @@
 		E02F21E42B21130600302646 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		E03A6F092C8CE14F00CA16D0 /* DemoAttachmentEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAttachmentEditView.swift; sourceTree = "<group>"; };
 		E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAttachment.swift; sourceTree = "<group>"; };
+		E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingFailedView.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
 		E041055E2A90029900215FB0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		E042474A2A02EF4E00CA48B3 /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -720,7 +722,6 @@
 			isa = PBXGroup;
 			children = (
 				E05226512A1BBCFC00ECF255 /* SongMoveView.swift */,
-				E0106C832A1EA1A0007D99DF /* MoveRowView.swift */,
 			);
 			path = Move;
 			sourceTree = "<group>";
@@ -937,6 +938,8 @@
 				E073A9992C77A63700BF2E9F /* NotificationRowView.swift */,
 				E0CA85232B081D5100188CD0 /* LoadingView.swift */,
 				E0CA851A2B081D5100188CD0 /* CloseButton.swift */,
+				E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */,
+				E0106C832A1EA1A0007D99DF /* RowView.swift */,
 				E0705FD62C5C874600BC7AD6 /* HeaderView.swift */,
 				E0E20D762C991B0D003B2D4D /* HeaderActionsView.swift */,
 			);
@@ -1329,7 +1332,7 @@
 				E042477F2A02EF8F00CA48B3 /* SongDetailView.swift in Sources */,
 				E09C612D2C35D4220061986F /* BandChooseRoleView.swift in Sources */,
 				E0705FD52C5C161300BC7AD6 /* CustomBackButton.swift in Sources */,
-				E0106C842A1EA1A1007D99DF /* MoveRowView.swift in Sources */,
+				E0106C842A1EA1A1007D99DF /* RowView.swift in Sources */,
 				E0CC166D2C752744003F3703 /* Rhyme.swift in Sources */,
 				E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */,
 				E05B9A7E2BCF2351000292FA /* FolderSong.swift in Sources */,
@@ -1366,6 +1369,7 @@
 				E0BE613D2BFD373A003757A5 /* UserPopover.swift in Sources */,
 				E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */,
 				E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */,
+				E03A7DFA2D0E8E02007A9209 /* LoadingFailedView.swift in Sources */,
 				E041055F2A90029900215FB0 /* HapticManager.swift in Sources */,
 				E06133692C7B5D5A002016D3 /* TagSelectionEnum.swift in Sources */,
 				E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */,

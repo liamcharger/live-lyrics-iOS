@@ -59,6 +59,8 @@ struct SongVariationManageView: View {
                                         .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
                                             if let variation = selectedVariation {
                                                 SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                                            } else {
+                                                LoadingFailedView()
                                             }
                                         }
                                         Button {
