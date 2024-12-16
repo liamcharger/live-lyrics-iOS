@@ -81,7 +81,7 @@ struct PlayView: View {
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
-        self.key = song.key ?? NSLocalizedString("not_set", comment: "")
+        self.key = song.key ?? ""
         self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
@@ -100,7 +100,7 @@ struct PlayView: View {
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
-        self.key = song.key ?? NSLocalizedString("not_set", comment: "")
+        self.key = song.key ?? ""
         self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
@@ -351,7 +351,7 @@ struct PlayView: View {
                                 .font(.title2.weight(.bold))
                                 .lineLimit(1).truncationMode(.tail)
                             Spacer()
-                            if key != "" && key != NSLocalizedString("not_set", comment: "") {
+                            if key != "" {
                                 Text("Key: " + key)
                                     .foregroundColor(Color.gray)
                                     .padding(.trailing, 6)

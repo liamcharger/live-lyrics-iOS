@@ -110,12 +110,12 @@
         }
       }
     },
-    "%lld days" : {
+    "%lld day%@" : {
       "localizations" : {
-        "es" : {
+        "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld días"
+            "state" : "new",
+            "value" : "%1$lld day%2$@"
           }
         }
       }
@@ -521,6 +521,9 @@
           }
         }
       }
+    },
+    "Allow Notifications" : {
+
     },
     "already_joined_band" : {
       "localizations" : {
@@ -3432,6 +3435,9 @@
           }
         }
       }
+    },
+    "Understood" : {
+
     },
     "unknown_error_adding_songs" : {
       "localizations" : {

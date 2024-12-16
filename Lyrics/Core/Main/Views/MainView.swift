@@ -405,7 +405,7 @@ struct MainView: View {
                 .opacity(showCollapsedNavBarDivider ? 1 : 0)
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
-                    Group {
+                    VStack {
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/1814470464", height: 80, paddingTop: 16, paddingLeft: 16, paddingBottom: 0, paddingRight: 16)
                         VStack(spacing: 22) {
                             GeometryReader { geo in
@@ -1087,7 +1087,13 @@ struct MainView: View {
                         UpgradeView()
                     }
                     .fullScreenCover(isPresented: $showNotificationAuthView) {
-                        NotificationAuthView()
+                        AlertView(AlertViewAlert(title: NSLocalizedString("Do you want to allow notifications?", comment: ""), subtitle: NSLocalizedString("If you enable them, you'll be able to notified when someone shares you a song, or accepts or declines a shared song from you.", comment: ""), icon: "bell-ring", accent: .red), primary: AlertButton(title: NSLocalizedString("Allow Notifications", comment: ""), action: {
+                            AppDelegate().registerForNotifications {
+                                showNotificationAuthView = false
+                            }
+                        }), secondary: AlertButton(title: NSLocalizedString("I don't want notifications", comment: ""), action: {
+                            showNotificationAuthView = false
+                        }))
                     }
                     .sheet(isPresented: $showFolderNotesView) {
                         NotesView(folder: mainViewModel.selectedFolder)
@@ -1124,7 +1130,7 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $showSongEditSheet, onDismiss: checkToFetchSharedSongs) {
                         if let selectedSong = selectedSong {
-                            SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? NSLocalizedString("not_set", comment: "")), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
+                            SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? ""), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
                         } else {
                             LoadingFailedView()
                         }
@@ -1152,44 +1158,23 @@ struct MainView: View {
                     }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
                         let animation = Animation.easeInOut(duration: 0.22)
+                        let value = (value.first ?? 0)
                         
-                        if hasHomeButton() ? value.first ?? 0 <= 100 : value.first ?? 0 <= 145 {
-                            DispatchQueue.main.async {
-                                withAnimation(.easeInOut(duration: 0.1)) {
-                                    showCollapsedNavBarDivider = true
-                                }
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                withAnimation(.easeInOut(duration: 0.1)) {
-                                    showCollapsedNavBarDivider = false
-                                }
+                        print(value)
+                        
+                        DispatchQueue.main.async {
+                            withAnimation(.easeInOut(duration: 0.1)) {
+                                showCollapsedNavBarDivider = (hasHomeButton() ? value <= 100 : value <= 145) // TODO: fix divider showing when it shouldn't
                             }
                         }
-                        if value.first ?? 0 <= 55 {
-                            DispatchQueue.main.async {
-                                withAnimation(animation) {
-                                    showCollapsedNavBarTitle = true
-                                }
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                withAnimation(animation) {
-                                    showCollapsedNavBarTitle = false
-                                }
+                        DispatchQueue.main.async {
+                            withAnimation(animation) {
+                                showCollapsedNavBarTitle = value <= 80
                             }
                         }
-                        if value.first ?? 0 <= -15 {
-                            DispatchQueue.main.async {
-                                withAnimation(animation) {
-                                    showCollapsedNavBar = false
-                                }
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                withAnimation(animation) {
-                                    showCollapsedNavBar = true
-                                }
+                        DispatchQueue.main.async {
+                            withAnimation(animation) {
+                                showCollapsedNavBar = !(value <= -12)
                             }
                         }
                     }

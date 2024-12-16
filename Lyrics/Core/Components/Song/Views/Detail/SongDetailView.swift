@@ -677,12 +677,10 @@ struct SongDetailView: View {
                         }
                     }
                     self.key = {
-                        // Return "Not Set" if the key has not been set
                         if let key = song.key, !key.isEmpty {
                             return key
-                        } else {
-                            return NSLocalizedString("not_set", comment: "")
                         }
+                        return ""
                     }()
                     self.artist = song.artist ?? ""
                     self.duration = song.duration ?? ""

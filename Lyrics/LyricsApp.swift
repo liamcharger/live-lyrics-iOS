@@ -155,13 +155,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return sceneConfiguration
     }
     
-    func registerForNotifications() {
+    func registerForNotifications(completion: @escaping() -> Void) {
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { _, _ in }
         
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
         UIApplication.shared.registerForRemoteNotifications()
+        
+        completion()
     }
 }
 

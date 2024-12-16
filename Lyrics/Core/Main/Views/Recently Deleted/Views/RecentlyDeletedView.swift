@@ -93,7 +93,7 @@ struct RecentlyDeletedView: View {
                                             }
                                             let daysLeft = 30 - Calendar.current.dateComponents([.day], from: song.deletedTimestamp, to: Date()).day!
                                             if daysLeft <= 7 {
-                                                Text("\(daysLeft) days")
+                                                Text("\(daysLeft) day\(daysLeft == 1 ? "" : "s")")
                                                     .font(.body.weight(.semibold))
                                                     .foregroundColor(.red)
                                             }

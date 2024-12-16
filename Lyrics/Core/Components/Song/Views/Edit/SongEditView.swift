@@ -82,9 +82,9 @@ struct SongEditView: View {
         self._duration = duration
         
         self._stateTitle = State(initialValue: title.wrappedValue)
-        self._stateArtist = State(initialValue: artist.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": artist.wrappedValue)
-        self._stateKey = State(initialValue: key.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": key.wrappedValue)
-        self._stateDuration = State(initialValue: duration.wrappedValue == NSLocalizedString("not_set", comment: "") ? "": duration.wrappedValue)
+        self._stateArtist = State(initialValue: artist.wrappedValue)
+        self._stateKey = State(initialValue: key.wrappedValue)
+        self._stateDuration = State(initialValue: duration.wrappedValue)
     }
     
     var body: some View {

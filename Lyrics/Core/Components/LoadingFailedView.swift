@@ -11,26 +11,12 @@ struct LoadingFailedView: View {
     @Environment(\.presentationMode) var presMode
     
     var body: some View {
-        VStack {
-            VStack(spacing: 18) {
-                FAText(iconName: "warning", size: 60)
-                    .foregroundStyle(.yellow)
-                Text("Hmm...we had a problem loading what you requested.")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.largeTitle.weight(.bold))
-                Text("Try again in a few minutes, and make sure you're online.")
-                    .font(.system(size: 20))
-            }
-            .multilineTextAlignment(.center)
-            .frame(maxHeight: .infinity, alignment: .center)
-            Spacer()
-            VStack(spacing: 12) {
-                LiveLyricsButton("Understood", showProgressIndicator: .constant(false)) {
-                    presMode.wrappedValue.dismiss()
-                }
-            }
+        let alert = AlertViewAlert(title: NSLocalizedString("Hmm...we had a problem loading what you requested.", comment: ""), subtitle: NSLocalizedString("Try again in a few minutes, and make sure you're online.", comment: ""), icon: "warning", accent: .yellow)
+        let primary = AlertButton(title: NSLocalizedString("Understood", comment: "")) {
+            presMode.wrappedValue.dismiss()
         }
-        .padding()
+        
+        AlertView(alert, primary: primary)
     }
 }
 
