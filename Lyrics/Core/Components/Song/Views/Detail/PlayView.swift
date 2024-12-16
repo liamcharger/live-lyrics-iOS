@@ -34,8 +34,10 @@ struct PlayView: View {
     @State private var scrollPosition: Int = 0
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
+    @State private var countdownTimer: Timer?
     @State private var beatCounter: Int = 0
     @State private var pressedIndexId: Int = 0
+    @State private var countdown: Int = 4
     
     @State var isPlayingMetronome = false
     @State var isPulsing = false
@@ -43,6 +45,7 @@ struct PlayView: View {
     @State var isUserScrolling = false
     @State var isScrollingProgrammatically = true
     @State var isPressed = false
+    @State var isShowingCountdown = false
     
     @State var proxy: ScrollViewProxy?
     
@@ -120,24 +123,45 @@ struct PlayView: View {
         isScrolling = true
         isScrollingProgrammatically = true
         
+        // FIXME: implement better way to enforce a default
         var duration = "2:00"
-        if !self.duration.isEmpty || self.duration != "" {
+        if !self.duration.isEmpty {
             duration = self.duration
         }
         
-        scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
-            withAnimation {
-                isScrollingProgrammatically = true
-                
-                if currentLineIndex >= lines.count {
-                    currentLineIndex = 0
-                    scrollTo(0)
-                    scrollTimer?.invalidate()
-                    isScrolling = false
-                } else {
-                    scrollPosition = currentLineIndex + 1
-                    scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
-                    currentLineIndex += 1
+        countdown = 3
+        withAnimation(.smooth) {
+            isShowingCountdown = true
+        }
+        
+        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if countdown > 1 {
+                countdown -= 1
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            countdownTimer?.invalidate()
+            countdownTimer = nil
+            
+            withAnimation(.smooth) {
+                isShowingCountdown = false
+            }
+            
+            scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
+                withAnimation {
+                    isScrollingProgrammatically = true
+                    
+                    if currentLineIndex >= lines.count {
+                        currentLineIndex = 0
+                        scrollTo(0)
+                        scrollTimer?.invalidate()
+                        isScrolling = false
+                    } else {
+                        scrollPosition = currentLineIndex + 1
+                        scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
+                        currentLineIndex += 1
+                    }
                 }
             }
         }
@@ -318,294 +342,302 @@ struct PlayView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading) {
-                VStack(spacing: 0) {
-                    HStack {
-                        Text(title)
-                            .font(.title2.weight(.bold))
-                            .lineLimit(1).truncationMode(.tail)
-                        Spacer()
-                        if key != "" && key != NSLocalizedString("not_set", comment: "") {
-                            Text("Key: " + key)
-                                .foregroundColor(Color.gray)
-                                .padding(.trailing, 6)
-                        }
-                        Button {
-                            if selectedTool == "metronome" {
-                                selectedTool = ""
-                            } else {
-                                selectedTool = "metronome"
+        ZStack {
+            VStack(spacing: 0) {
+                VStack(alignment: .leading) {
+                    VStack(spacing: 0) {
+                        HStack {
+                            Text(title)
+                                .font(.title2.weight(.bold))
+                                .lineLimit(1).truncationMode(.tail)
+                            Spacer()
+                            if key != "" && key != NSLocalizedString("not_set", comment: "") {
+                                Text("Key: " + key)
+                                    .foregroundColor(Color.gray)
+                                    .padding(.trailing, 6)
                             }
-                        } label: {
-                            Image(systemName: "metronome")
-                                .imageScale(.medium)
-                                .padding(11)
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(selectedTool == "metronome" ? .white : .primary)
-                                .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
-                                .clipShape(Circle())
-                        }
-                        CloseButton {
-                            if let proxy = proxy {
-                                stopAutoscroll(scrollViewProxy: proxy)
-                            }
-                            stopTimer()
-                            dismiss = false
-                        }
-                    }
-                    .padding(hasHomeButton() ? .top : [])
-                    .padding([.horizontal, .bottom])
-                    Divider()
-                    ScrollViewReader { proxy in
-                        ScrollView {
-                            VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
-                                ForEach(lines.indices, id: \.self) { index in
-                                    let line = lines[index]
-                                    
-                                    if !performanceMode {
-                                        Text(line)
-                                            .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                            .font(.system(size: CGFloat(size), weight: weight))
-                                            .id(index)
-                                            .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
-                                    } else {
-                                        Button {
-                                            scrollTo(index)
-                                        } label: {
-                                            Text(line)
-                                                .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                                .font(.system(size: 42, weight: .bold, design: .rounded))
-                                                .foregroundColor(.primary)
-                                                .id(index)
-                                                .padding(5)
-                                                .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
-                                                .background((isPressed && pressedIndexId == index) ? Color.materialRegularGray.opacity(0.75) : .clear)
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
-                                                .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
-                                        }
-                                        .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
-                                    }
-                                }
-                            }
-                            .padding()
-                        }
-                        .scrollStatusByIntrospect(isScrolling: $isUserScrolling, isScrollingProgrammatically: $isScrollingProgrammatically)
-                        .onAppear {
-                            self.proxy = proxy
-                        }
-                    }
-                }
-            }
-            if !selectedTool.isEmpty {
-                Divider()
-                Group {
-                    switch selectedTool {
-                    case "metronome":
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("METRONOME")
-                                .font(.caption.weight(.semibold))
-                            HStack {
-                                Menu {
-                                    Stepper("\(bpm) Beats Per Minute", value: $bpm, in: 25...260)
-                                } label: {
-                                    Text("\(bpm) BPM")
-                                        .padding(10)
-                                        .font(.body.weight(.semibold))
-                                        .foregroundColor(.primary)
-                                        .background(Material.regular)
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
-                                .onChange(of: bpm) { bpm in
-                                    stopTimer()
-                                    songViewModel.updateBpm(for: song, with: bpm)
-                                }
-                                .disabled(readOnly())
-                                Menu {
-                                    Button {
-                                        bpb = 1
-                                    } label: {
-                                        Label("1", systemImage: bpb == 1 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 2
-                                    } label: {
-                                        Label("2", systemImage: bpb == 2 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 3
-                                    } label: {
-                                        Label("3", systemImage: bpb == 3 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 4
-                                    } label: {
-                                        Label("4", systemImage: bpb == 4 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 5
-                                    } label: {
-                                        Label("5", systemImage: bpb == 5 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 6
-                                    } label: {
-                                        Label("6", systemImage: bpb == 6 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 7
-                                    } label: {
-                                        Label("7", systemImage: bpb == 7 ? "checkmark" : "")
-                                    }
-                                    Button {
-                                        bpb = 8
-                                    } label: {
-                                        Label("8", systemImage: bpb == 8 ? "checkmark" : "")
-                                    }
-                                } label: {
-                                    Text("\(bpb) BPB")
-                                        .padding(10)
-                                        .font(.body.weight(.semibold))
-                                        .foregroundColor(.primary)
-                                        .background(Material.regular)
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
-                                .onChange(of: bpb) { bpb in
-                                    songViewModel.updateBpb(for: song, with: bpb)
-                                }
-                                .disabled(readOnly())
-                                Spacer()
-                                if isPulsing {
-                                    Circle()
-                                        .frame(width: 12, height: 12)
-                                        .foregroundColor(.primary)
-                                }
-                                Button {
-                                    if isPlayingMetronome {
-                                        stopTimer()
-                                    } else {
-                                        loadSounds()
-                                        startTimer()
-                                    }
-                                } label: {
-                                    FAText(iconName: isPlayingMetronome ? "pause" : "play", size: 18)
-                                        .padding()
-                                        .padding(.trailing, isPlayingMetronome ? 0 : -2)
-                                        .font(.body.weight(.semibold))
-                                        .foregroundColor(.white)
-                                        .background(isPlayingMetronome ? .red : .blue)
-                                        .clipShape(Circle())
-                                }
-                                Button {
-                                    isPlayingMetronome = false
+                            Button {
+                                if selectedTool == "metronome" {
                                     selectedTool = ""
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .padding(15)
-                                        .font(.body.weight(.semibold))
-                                        .foregroundColor(.primary)
-                                        .background(Material.regular)
-                                        .clipShape(Circle())
-                                }
-                            }
-                        }
-                    default:
-                        EmptyView()
-                    }
-                }
-                .padding(12)
-            }
-            Divider()
-            HStack {
-                if songs != nil {
-                    Button(action: {
-                        DispatchQueue.main.async {
-                            swipeRight()
-                            hapticByStyle(.medium)
-                        }
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.medium)
-                            .padding()
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(.primary)
-                            .background(Material.regular)
-                            .clipShape(Circle())
-                    }
-                }
-                Spacer()
-                if lines.count > 1 {
-                    let buttons = HStack {
-                        Button(action: {
-                            if let proxy = proxy {
-                                if isScrolling {
-                                    stopAutoscroll(scrollViewProxy: proxy)
                                 } else {
-                                    startAutoscroll(scrollViewProxy: proxy)
-                                }
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: isScrolling ? "stop" : "play")
-                                Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: ""))
-                            }
-                            .imageScale(.medium)
-                            .padding()
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(.white)
-                            .background(isScrolling ? .red : .blue)
-                            .clipShape(Capsule())
-                        }
-                        if !readOnly() {
-                            Menu {
-                                Button {
-                                    performanceMode.toggle()
-                                } label: {
-                                    Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                                    selectedTool = "metronome"
                                 }
                             } label: {
-                                FAText(iconName: "gear", size: 20)
+                                Image(systemName: "metronome")
                                     .imageScale(.medium)
-                                    .padding()
+                                    .padding(11)
                                     .font(.body.weight(.semibold))
-                                    .foregroundColor(.primary)
-                                    .background(Material.regular)
+                                    .foregroundColor(selectedTool == "metronome" ? .white : .primary)
+                                    .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
                                     .clipShape(Circle())
                             }
-                            .onChange(of: performanceMode) { performanceMode in
-                                songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                            CloseButton {
+                                if let proxy = proxy {
+                                    stopAutoscroll(scrollViewProxy: proxy)
+                                }
+                                stopTimer()
+                                dismiss = false
+                            }
+                        }
+                        .padding(hasHomeButton() ? .top : [])
+                        .padding([.horizontal, .bottom])
+                        Divider()
+                        ScrollViewReader { proxy in
+                            ScrollView {
+                                VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
+                                    ForEach(lines.indices, id: \.self) { index in
+                                        let line = lines[index]
+                                        
+                                        if !performanceMode {
+                                            Text(line)
+                                                .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
+                                                .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                                .font(.system(size: CGFloat(size), weight: weight))
+                                                .id(index)
+                                                .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
+                                        } else {
+                                            Button {
+                                                scrollTo(index)
+                                            } label: {
+                                                Text(line)
+                                                    .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                                    .font(.system(size: 42, weight: .bold, design: .rounded))
+                                                    .foregroundColor(.primary)
+                                                    .padding(5)
+                                                    .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
+                                                    .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
+                                                    .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
+                                                    .id(index)
+                                            }
+                                            .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
+                                            .shadow(color: (currentLineIndex == index && isScrolling && !isPressed) ? Color.blue : Color.clear, radius: 10, y: 8)
+                                        }
+                                    }
+                                }
+                                .padding()
+                            }
+                            .scrollStatusByIntrospect(isScrolling: $isUserScrolling, isScrollingProgrammatically: $isScrollingProgrammatically)
+                            .onAppear {
+                                self.proxy = proxy
                             }
                         }
                     }
-                    
-                    if #available(iOS 17, *) {
-                        buttons
-                            .showAutoscrollSpeedTip()
-                    } else {
-                        buttons
-                    }
                 }
-                Spacer()
-                if songs != nil {
-                    Button(action: {
-                        DispatchQueue.main.async {
-                            swipeLeft()
-                            hapticByStyle(.medium)
+                if !selectedTool.isEmpty {
+                    Divider()
+                    Group {
+                        switch selectedTool {
+                        case "metronome":
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("METRONOME")
+                                    .font(.caption.weight(.semibold))
+                                HStack {
+                                    Menu {
+                                        Stepper("\(bpm) Beats Per Minute", value: $bpm, in: 25...260)
+                                    } label: {
+                                        Text("\(bpm) BPM")
+                                            .padding(10)
+                                            .font(.body.weight(.semibold))
+                                            .foregroundColor(.primary)
+                                            .background(Material.regular)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                                    .onChange(of: bpm) { bpm in
+                                        stopTimer()
+                                        songViewModel.updateBpm(for: song, with: bpm)
+                                    }
+                                    .disabled(readOnly())
+                                    Menu {
+                                        Button {
+                                            bpb = 1
+                                        } label: {
+                                            Label("1", systemImage: bpb == 1 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 2
+                                        } label: {
+                                            Label("2", systemImage: bpb == 2 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 3
+                                        } label: {
+                                            Label("3", systemImage: bpb == 3 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 4
+                                        } label: {
+                                            Label("4", systemImage: bpb == 4 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 5
+                                        } label: {
+                                            Label("5", systemImage: bpb == 5 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 6
+                                        } label: {
+                                            Label("6", systemImage: bpb == 6 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 7
+                                        } label: {
+                                            Label("7", systemImage: bpb == 7 ? "checkmark" : "")
+                                        }
+                                        Button {
+                                            bpb = 8
+                                        } label: {
+                                            Label("8", systemImage: bpb == 8 ? "checkmark" : "")
+                                        }
+                                    } label: {
+                                        Text("\(bpb) BPB")
+                                            .padding(10)
+                                            .font(.body.weight(.semibold))
+                                            .foregroundColor(.primary)
+                                            .background(Material.regular)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                                    .onChange(of: bpb) { bpb in
+                                        songViewModel.updateBpb(for: song, with: bpb)
+                                    }
+                                    .disabled(readOnly())
+                                    Spacer()
+                                    if isPulsing {
+                                        Circle()
+                                            .frame(width: 12, height: 12)
+                                            .foregroundColor(.primary)
+                                    }
+                                    Button {
+                                        if isPlayingMetronome {
+                                            stopTimer()
+                                        } else {
+                                            loadSounds()
+                                            startTimer()
+                                        }
+                                    } label: {
+                                        FAText(iconName: isPlayingMetronome ? "pause" : "play", size: 18)
+                                            .padding()
+                                            .padding(.trailing, isPlayingMetronome ? 0 : -2)
+                                            .font(.body.weight(.semibold))
+                                            .foregroundColor(.white)
+                                            .background(isPlayingMetronome ? .red : .blue)
+                                            .clipShape(Circle())
+                                    }
+                                    Button {
+                                        isPlayingMetronome = false
+                                        selectedTool = ""
+                                    } label: {
+                                        Image(systemName: "xmark")
+                                            .padding(15)
+                                            .font(.body.weight(.semibold))
+                                            .foregroundColor(.primary)
+                                            .background(Material.regular)
+                                            .clipShape(Circle())
+                                    }
+                                }
+                            }
+                        default:
+                            EmptyView()
                         }
-                    }) {
-                        Image(systemName: "chevron.right")
-                            .imageScale(.medium)
-                            .padding()
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(.primary)
-                            .background(Material.regular)
-                            .clipShape(Circle())
+                    }
+                    .padding(12)
+                }
+                Divider()
+                HStack {
+                    if songs != nil {
+                        Button(action: {
+                            DispatchQueue.main.async {
+                                swipeRight()
+                                hapticByStyle(.medium)
+                            }
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.medium)
+                                .padding()
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .background(Material.regular)
+                                .clipShape(Circle())
+                        }
+                    }
+                    Spacer()
+                    if lines.count > 1 {
+                        let buttons = HStack {
+                            Button(action: {
+                                if let proxy = proxy {
+                                    if isScrolling {
+                                        stopAutoscroll(scrollViewProxy: proxy)
+                                    } else {
+                                        startAutoscroll(scrollViewProxy: proxy)
+                                    }
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: isScrolling ? "stop" : "play")
+                                    Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: ""))
+                                }
+                                .imageScale(.medium)
+                                .padding()
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.white)
+                                .background(isScrolling ? .red : .blue)
+                                .clipShape(Capsule())
+                            }
+                            if !readOnly() {
+                                Menu {
+                                    Button {
+                                        performanceMode.toggle()
+                                    } label: {
+                                        Label("Performance Mode", systemImage: performanceMode ? "checkmark" : "")
+                                    }
+                                } label: {
+                                    FAText(iconName: "gear", size: 20)
+                                        .imageScale(.medium)
+                                        .padding()
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(.primary)
+                                        .background(Material.regular)
+                                        .clipShape(Circle())
+                                }
+                                .onChange(of: performanceMode) { performanceMode in
+                                    songViewModel.updatePerformanceMode(for: song, with: performanceMode)
+                                }
+                            }
+                        }
+                        
+                        if #available(iOS 17, *) {
+                            buttons
+                                .showAutoscrollSpeedTip()
+                        } else {
+                            buttons
+                        }
+                    }
+                    Spacer()
+                    if songs != nil {
+                        Button(action: {
+                            DispatchQueue.main.async {
+                                swipeLeft()
+                                hapticByStyle(.medium)
+                            }
+                        }) {
+                            Image(systemName: "chevron.right")
+                                .imageScale(.medium)
+                                .padding()
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .background(Material.regular)
+                                .clipShape(Circle())
+                        }
                     }
                 }
+                .padding([.horizontal, .top])
+                .padding(hasHomeButton() ? .bottom : [])
             }
-            .padding([.horizontal, .top])
-            .padding(hasHomeButton() ? .bottom : [])
+            .blur(radius: isShowingCountdown ? 35 : 0)
+            .disabled(isShowingCountdown)
+            if isShowingCountdown {
+                Text("\(countdown)")
+                    .font(.system(size: 80).weight(.bold))
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
@@ -625,8 +657,14 @@ struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .onChange(of: configuration.isPressed) { isPressed in
-                self.isPressed = isPressed
-                self.pressedIndexId = index
+                withAnimation(.smooth) {
+                    self.isPressed = isPressed
+                    self.pressedIndexId = index
+                }
             }
     }
+}
+
+#Preview {
+    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, size: 18, key: "the key of K", notes: nil, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, duration: nil, tags: nil, demoAttachments: nil, bandId: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, key: "da key of K", title: "Test Song", lyrics: "Testing line 1\nTesting line 1\nTesting line 2\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1", duration: .constant("0:30"), bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [Song.song], dismiss: .constant(false))
 }
