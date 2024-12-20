@@ -34,7 +34,6 @@ struct SongDetailView: View {
     @State private var artist = ""
     @State private var errorMessage = ""
     @State private var wordCountStyle = ""
-    @State private var duration = ""
     @State private var createdVariationId = ""
     @State private var bpm = 120
     @State private var bpb = 4
@@ -175,7 +174,6 @@ struct SongDetailView: View {
         self._currentIndex = State(initialValue: inputSong.order ?? 0)
         self._key = State(initialValue: inputSong.key ?? "")
         self._artist = State(initialValue: inputSong.artist ?? "")
-        self._duration = State(initialValue: inputSong.duration ?? "")
         self._bpm = State(initialValue: inputSong.bpm ?? 120)
         self._bpb = State(initialValue: inputSong.bpb ?? 4)
         self._performanceMode = State(initialValue: inputSong.performanceMode ?? true)
@@ -665,6 +663,7 @@ struct SongDetailView: View {
                 if let song = song {
                     // Assignment overwrites sharedSong properties, so reassign them
                     self.song = song
+                    print("Song updated")
                     self.song.readOnly = readOnly
                     self.song.variations = variations
                     self.song.performanceMode = performanceMode
@@ -683,7 +682,6 @@ struct SongDetailView: View {
                         return ""
                     }()
                     self.artist = song.artist ?? ""
-                    self.duration = song.duration ?? ""
                     self.tags = song.tags ?? []
                     self.weight = songDetailViewModel.getWeight(weight: Int(song.weight ?? 0))
                     self.alignment = songDetailViewModel.getAlignment(alignment: Int(song.alignment ?? 0))
@@ -767,7 +765,7 @@ struct SongDetailView: View {
             ShareView(isDisplayed: $songDetailViewModel.showShareSheet, song: song)
         }
         .sheet(isPresented: $songDetailViewModel.showEditView) {
-            SongEditView(song: song, isDisplayed: $songDetailViewModel.showEditView, title: $title, key: $key, artist: $artist, duration: $duration)
+            SongEditView(song: song, isDisplayed: $songDetailViewModel.showEditView, title: $title, key: $key, artist: $artist)
         }
         .sheet(isPresented: $songDetailViewModel.showMoveView) {
             SongMoveView(song: song, showProfileView: $songDetailViewModel.showMoveView, songTitle: song.title)
@@ -790,7 +788,7 @@ struct SongDetailView: View {
             SongVariationManageView(song: song, isDisplayed: $showVariationsManagementSheet, lyrics: $lyrics, selectedVariation: $selectedVariation, songVariations: $songVariations)
         }
         .fullScreenCover(isPresented: $showPlayView) {
-            PlayView(song: song, size: fontSize, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, duration: $duration, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [], dismiss: $showPlayView)
+            PlayView(song: song, size: fontSize, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [], dismiss: $showPlayView)
         }
         .onChange(of: isInputActive) { isInputActive in
             // Show and hide the list of joined users when the user focuses and unfocuses the keyboard

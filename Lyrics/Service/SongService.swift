@@ -509,9 +509,9 @@ class SongService {
 			}
 	}
 	
-	func updateSong(_ song: Song, title: String, key: String, artist: String, duration: String, completion: @escaping(Bool, String) -> Void) {
+	func updateSong(_ song: Song, title: String, key: String, artist: String, completion: @escaping(Bool, String) -> Void) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["title": title, "key": key, "artist": artist, "duration": duration]) { error in
+			.updateData(["title": title, "key": key, "artist": artist]) { error in
 				if let error = error {
 					completion(false, error.localizedDescription)
 				} else {
@@ -621,6 +621,17 @@ class SongService {
 			}
 	}
 	
+	func updateAutoscrollTimestamps(song: Song, timestamps: [String]) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+			.updateData(["autoscrollTimestamps": timestamps]) { error in
+				if let error = error {
+					print(error.localizedDescription)
+				}
+			}
+	}
+	
 	// UNUSED: will be implemented when folder detail views are created
 	func createSong(folder: Folder, lyrics: String, artist: String, title: String, key: String, completion: @escaping(Bool, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -711,7 +722,6 @@ class SongService {
 			"bpb": song.bpb,
 			"pinned": song.pinned,
 			"performanceMode": song.performanceMode,
-			"duration": song.duration,
 			"tags": song.tags
 		]
 		
@@ -844,7 +854,6 @@ class SongService {
 			"bpb": song.bpb,
 			"pinned": song.pinned,
 			"performanceMode": song.performanceMode,
-			"duration": song.duration,
 			"tags": song.tags
 		]
 		
@@ -873,11 +882,6 @@ class SongService {
 	}
 	
 	func moveSongToRecentlyDeleted(song: Song, from folder: Folder? = nil, completion: @escaping (Bool, String?) -> Void) {
-		guard let uid = Auth.auth().currentUser?.uid else {
-			completion(false, "User not authenticated.")
-			return
-		}
-		
 		let songData: [String: Any?] = [
 			"uid": song.uid,
 			"timestamp": song.timestamp,
@@ -896,7 +900,6 @@ class SongService {
 			"bpb": song.bpb,
 			"pinned": song.pinned,
 			"performanceMode": song.performanceMode,
-			"duration": song.duration,
 			"tags": song.tags
 		]
 		
@@ -979,10 +982,8 @@ class SongService {
 	}
 	
 	func updateTagsForSong(_ song: Song, tags: [TagSelectionEnum], completion: @escaping((Error?) -> Void)) {
-		guard let uid = Auth.auth().currentUser?.uid, let songId = song.id else { return }
-		
 		let filteredTags = tags.map { $0.rawValue }
-		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(songId).updateData(["tags": filteredTags.isEmpty ? FieldValue.delete() : filteredTags], completion: completion)
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).updateData(["tags": filteredTags.isEmpty ? FieldValue.delete() : filteredTags], completion: completion)
 	}
 	
 	func sendInviteToUser(request: ShareRequest, users: [ShareUser], includeDefault: Bool, completion: @escaping(Error?) -> Void) {
@@ -1231,7 +1232,7 @@ class SongService {
 				}
 				
 				if request.type == "collaborate" {
-					var sharedSong: [String: Any?] = [
+					let sharedSong: [String: Any?] = [
 						"from": request.from,
 						"songId": request.contentId,
 						"order": 0,
@@ -1279,8 +1280,7 @@ class SongService {
 						"artist": song.artist,
 						"bpm": song.bpm,
 						"bpb": song.bpb,
-						"performanceMode": song.performanceMode,
-						"duration": song.duration
+						"performanceMode": song.performanceMode
 					]
 					
 					if AuthViewModel.shared.currentUser?.hasPro != nil {

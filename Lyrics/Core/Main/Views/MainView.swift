@@ -1130,7 +1130,7 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $showSongEditSheet, onDismiss: checkToFetchSharedSongs) {
                         if let selectedSong = selectedSong {
-                            SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? ""), artist: .constant(selectedSong.artist ?? ""), duration: .constant(selectedSong.duration ?? ""))
+                            SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? ""), artist: .constant(selectedSong.artist ?? ""))
                         } else {
                             LoadingFailedView()
                         }
@@ -1196,41 +1196,39 @@ struct MainView: View {
                                     endPoint: .top
                                 ))
                                 .edgesIgnoringSafeArea(.all)
+                                .allowsHitTesting(false)
                         }
-                        VStack {
-                            Spacer()
-                            if notConnectedAndInPortrait {
-                                Button {
-                                    showOfflineAlert = true
-                                } label: {
-                                    HStack(spacing: 7) {
-                                        FAText(iconName: "wifi-slash", size: 18)
-                                        Text(NSLocalizedString("youre_offline", comment: ""))
-                                    }
-                                    .padding(15)
-                                    .background(Color.red.opacity(0.9))
-                                    .foregroundColor(.white)
-                                    .clipShape(Capsule())
-                                    .customShadow(color: .red, radius: 20, x: 6, y: 6)
-                                    .padding()
+                        if notConnectedAndInPortrait {
+                            Button {
+                                showOfflineAlert = true
+                            } label: {
+                                HStack(spacing: 7) {
+                                    FAText(iconName: "wifi-slash", size: 18)
+                                    Text(NSLocalizedString("youre_offline", comment: ""))
                                 }
-                            } else if mainViewModel.updateAvailable {
-                                Button {
-                                    if let url = URL(string: "https://apps.apple.com/app/id6449195237") {
-                                        UIApplication.shared.open(url)
-                                    }
-                                } label: {
-                                    HStack(spacing: 7) {
-                                        FAText(iconName: "download", size: 18)
-                                        Text(NSLocalizedString("update_available", comment: ""))
-                                    }
-                                    .padding(15)
-                                    .background(Color.blue.opacity(0.9))
-                                    .foregroundColor(.white)
-                                    .clipShape(Capsule())
-                                    .customShadow(color: .blue, radius: 20, x: 6, y: 6)
-                                    .padding()
+                                .padding(15)
+                                .background(Color.red.opacity(0.9))
+                                .foregroundColor(.white)
+                                .clipShape(Capsule())
+                                .customShadow(color: .red, radius: 20, x: 6, y: 6)
+                                .padding()
+                            }
+                        } else if mainViewModel.updateAvailable {
+                            Button {
+                                if let url = URL(string: "https://apps.apple.com/app/id6449195237") {
+                                    UIApplication.shared.open(url)
                                 }
+                            } label: {
+                                HStack(spacing: 7) {
+                                    FAText(iconName: "download", size: 18)
+                                    Text(NSLocalizedString("update_available", comment: ""))
+                                }
+                                .padding(15)
+                                .background(Color.blue.opacity(0.9))
+                                .foregroundColor(.white)
+                                .clipShape(Capsule())
+                                .customShadow(color: .blue, radius: 20, x: 6, y: 6)
+                                .padding()
                             }
                         }
                     }

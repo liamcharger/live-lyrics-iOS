@@ -24,40 +24,49 @@ struct PlayView: View {
     
     @State var song: Song
     
-    @State private var currentIndex = 0
+    @State private var currentSongSelection = 0
+    @State private var currentTime: Double = 0
+    @State private var autoscrollTimerTime: Double = 0
     
-    @State var lyrics = ""
-    @State var title = ""
-    @State var key = ""
-    @State var selectedTool = ""
+    @State private var lyrics = ""
+    @State private var title = ""
+    @State private var key = ""
+    @State private var selectedTool = ""
     
-    @State private var scrollPosition: Int = 0
+    @State private var timestamps = [String]()
+    
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
     @State private var countdownTimer: Timer?
+    @State private var syncLyricTimer: Timer?
     @State private var beatCounter: Int = 0
     @State private var pressedIndexId: Int = 0
     @State private var countdown: Int = 4
     
-    @State var isPlayingMetronome = false
-    @State var isPulsing = false
-    @State var isScrolling = false
-    @State var isUserScrolling = false
-    @State var isScrollingProgrammatically = true
-    @State var isPressed = false
-    @State var isShowingCountdown = false
+    @State private var isPlayingMetronome = false
+    @State private var isPulsing = false
+    @State private var isScrolling = false
+    @State private var isUserScrolling = false
+    @State private var isScrollingProgrammatically = true
+    @State private var isPressed = false
+    @State private var isShowingCountdown = false
+    @State private var isSyncing = false
+    @State private var isShowingSyncModeAlert = false
     
-    @State var proxy: ScrollViewProxy?
+    @State private var proxy: ScrollViewProxy?
     
-    @State var clickAudioPlayer: AVAudioPlayer?
-    @State var accentAudioPlayer: AVAudioPlayer?
+    @State private var clickAudioPlayer: AVAudioPlayer?
+    @State private var accentAudioPlayer: AVAudioPlayer?
+    
+    @State private var metronomeTimer: DispatchSourceTimer?
+    
+    @AppStorage("hasUsedSyncMode") var hasUsedSyncMode = false
     
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var viewModel = AuthViewModel.shared
     
     var songs: [Song]?
-    @State var metronomeTimer: DispatchSourceTimer?
     
     let size: Int
     let weight: Font.Weight
@@ -66,69 +75,98 @@ struct PlayView: View {
     
     let metronomeDispatchQueue = DispatchQueue(label: "com.chargertech.Lyrics.metronome", attributes: .concurrent)
     
-    @Binding var duration: String
-    
     var lines: [String] {
         return lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
     func swipeLeft() {
-        currentIndex += 1
-        if currentIndex >= songs!.count {
-            currentIndex = 0
+        currentSongSelection += 1
+        if currentSongSelection >= songs!.count {
+            currentSongSelection = 0
         }
         if let songs = songs {
-            self.song = songs[currentIndex]
+            self.song = songs[currentSongSelection]
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? ""
-        self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
-        if let proxy = proxy, isScrolling {
-            stopAutoscroll(scrollViewProxy: proxy)
+        if isScrolling {
+            pauseAutoscroll()
         }
     }
     func swipeRight() {
-        currentIndex -= 1
-        if currentIndex < 0 {
-            currentIndex = songs!.count - 1
+        currentSongSelection -= 1
+        if currentSongSelection < 0 {
+            currentSongSelection = songs!.count - 1
         }
         if let songs = songs {
-            self.song = songs[currentIndex]
+            self.song = songs[currentSongSelection]
         }
         self.lyrics = self.song.lyrics
         self.title = song.title
         self.key = song.key ?? ""
-        self.duration = song.duration ?? "2:00"
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
-        if let proxy = proxy, isScrolling {
-            stopAutoscroll(scrollViewProxy: proxy)
+        if isScrolling {
+            pauseAutoscroll()
         }
-    }
-    func durationStringToSeconds(_ duration: String) -> Double {
-        let components = duration.split(separator: ":")
-        if components.count == 2,
-           let minutes = Double(components[0]),
-           let seconds = Double(components[1]) {
-            print("Minutes: \(minutes), Seconds: \(seconds)")
-            return (minutes * 60) + seconds
-        }
-        return 0
     }
     func startAutoscroll(scrollViewProxy: ScrollViewProxy) {
+        guard !timestamps.isEmpty else { return }
+        
         isScrolling = true
         isScrollingProgrammatically = true
         
-        // FIXME: implement better way to enforce a default
-        var duration = "2:00"
-        if !self.duration.isEmpty {
-            duration = self.duration
+        if autoscrollTimerTime == 0 {
+            startCountdown()
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            stopCountdown()
+            
+            scrollTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                self.autoscrollTimerTime += 0.5
+                
+                if currentLineIndex < timestamps.count {
+                    let components = timestamps[currentLineIndex].split(separator: "_")
+                    if components.count == 2,
+                       let lineIndex = Int(components[0]),
+                       let targetTime = Double(components[1]),
+                       autoscrollTimerTime >= targetTime {
+                        DispatchQueue.main.async {
+                            withAnimation {
+                                scrollViewProxy.scrollTo(lineIndex, anchor: performanceMode ? .center : .top)
+                            }
+                        }
+                        self.currentLineIndex += 1
+                    }
+                } else {
+                    self.scrollTimer?.invalidate()
+                    self.scrollTimer = nil
+                    self.isScrolling = false
+                    self.autoscrollTimerTime = 0
+                    self.scrollTo(0)
+                }
+            }
+        }
+    }
+    func scrollTo(_ index: Int) {
+        if let scrollViewProxy = proxy {
+            withAnimation {
+                scrollViewProxy.scrollTo(index, anchor: performanceMode ? .center : .top)
+                currentLineIndex = index
+            }
+        }
+    }
+    func pauseAutoscroll() {
+        isScrolling = false
+        scrollTimer?.invalidate()
+        scrollTimer = nil
+    }
+    func startCountdown() {
         countdown = 3
         withAnimation(.smooth) {
             isShowingCountdown = true
@@ -139,52 +177,51 @@ struct PlayView: View {
                 countdown -= 1
             }
         }
+    }
+    func stopCountdown() {
+        withAnimation(.smooth) {
+            isShowingCountdown = false
+        }
+        
+        countdownTimer?.invalidate()
+        countdownTimer = nil
+    }
+    func recordTimestamp() {
+        isScrollingProgrammatically = true
+        guard currentLineIndex < lines.count else { return }
+        let timestamp = String(currentTime)
+        
+        print(timestamp)
+        
+        let timestampString = "\(currentLineIndex)_\(timestamp)"
+        timestamps.append(timestampString)
+        
+        if currentLineIndex < lines.count - 1 {
+            currentLineIndex += 1
+            scrollTo(currentLineIndex)
+        } else {
+            isSyncing = false
+            scrollTo(0)
+            syncLyricTimer?.invalidate()
+            syncLyricTimer = nil
+            songViewModel.updateAutoscrollTimestamps(for: song, with: timestamps)
+        }
+    }
+    func startSyncing() {
+        isSyncing = true
+        scrollTo(0)
+        
+        startCountdown()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            countdownTimer?.invalidate()
-            countdownTimer = nil
-            
-            withAnimation(.smooth) {
-                isShowingCountdown = false
-            }
-            
-            scrollTimer = Timer.scheduledTimer(withTimeInterval: durationStringToSeconds(duration) / Double(lines.count), repeats: true) { _ in
-                withAnimation {
-                    isScrollingProgrammatically = true
-                    
-                    if currentLineIndex >= lines.count {
-                        currentLineIndex = 0
-                        scrollTo(0)
-                        scrollTimer?.invalidate()
-                        isScrolling = false
-                    } else {
-                        scrollPosition = currentLineIndex + 1
-                        scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
-                        currentLineIndex += 1
-                    }
-                }
+            stopCountdown()
+            syncLyricTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                currentTime += 0.5
             }
         }
     }
-    func scrollTo(_ index: Int) {
-        if let scrollViewProxy = proxy {
-            withAnimation {
-                scrollPosition = index
-                scrollViewProxy.scrollTo(Int(scrollPosition), anchor: performanceMode ? .center : .top)
-                currentLineIndex = scrollPosition
-            }
-        }
-    }
-    func stopAutoscroll(scrollViewProxy: ScrollViewProxy) {
-        isScrolling = false
-        scrollTimer?.invalidate()
-        scrollTimer = nil
-        withAnimation {
-            scrollViewProxy.scrollTo(0, anchor: .top)
-        }
-    }
-    func startTimer() {
-        stopTimer()
+    func startMetronome() {
+        stopMetronome()
         
         isPlayingMetronome = true
         beatCounter = 0
@@ -220,7 +257,7 @@ struct PlayView: View {
         }
         metronomeTimer?.activate()
     }
-    func stopTimer() {
+    func stopMetronome() {
         isPlayingMetronome = false
         isPulsing = false
         beatCounter = 0
@@ -323,19 +360,19 @@ struct PlayView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     
-    init(song: Song, size: Int, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, duration: Binding<String>, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
+    init(song: Song, size: Int, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
         self.songs = songs
         self._key = State(initialValue: key)
-        self._currentIndex = State(initialValue: song.order ?? 0)
+        self._currentSongSelection = State(initialValue: song.order ?? 0)
         self._title = State(initialValue: title)
         self.alignment = alignment
         self.lineSpacing = lineSpacing
         self.weight = weight
         self.size = size
+        self.timestamps = song.autoscrollTimestamps ?? []
         self._bpb = bpb
         self._bpm = bpm
         self._performanceMode = performanceMode
-        self._duration = duration
         self._song = State(initialValue: song)
         self._lyrics = State(initialValue: lyrics)
         self._dismiss = dismiss
@@ -356,26 +393,28 @@ struct PlayView: View {
                                     .foregroundColor(Color.gray)
                                     .padding(.trailing, 6)
                             }
-                            Button {
-                                if selectedTool == "metronome" {
-                                    selectedTool = ""
-                                } else {
-                                    selectedTool = "metronome"
+                            if !isSyncing {
+                                Button {
+                                    if selectedTool == "metronome" {
+                                        selectedTool = ""
+                                    } else {
+                                        selectedTool = "metronome"
+                                    }
+                                } label: {
+                                    Image(systemName: "metronome")
+                                        .imageScale(.medium)
+                                        .padding(11)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(selectedTool == "metronome" ? .white : .primary)
+                                        .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
+                                        .clipShape(Circle())
                                 }
-                            } label: {
-                                Image(systemName: "metronome")
-                                    .imageScale(.medium)
-                                    .padding(11)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(selectedTool == "metronome" ? .white : .primary)
-                                    .background(selectedTool == "metronome" ? .blue : .materialRegularGray)
-                                    .clipShape(Circle())
                             }
                             CloseButton {
                                 if let proxy = proxy {
-                                    stopAutoscroll(scrollViewProxy: proxy)
+                                    pauseAutoscroll()
                                 }
-                                stopTimer()
+                                stopMetronome()
                                 dismiss = false
                             }
                         }
@@ -388,30 +427,37 @@ struct PlayView: View {
                                     ForEach(lines.indices, id: \.self) { index in
                                         let line = lines[index]
                                         
-                                        if !performanceMode {
-                                            Text(line)
-                                                .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
-                                                .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                                .font(.system(size: CGFloat(size), weight: weight))
-                                                .id(index)
-                                                .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
-                                        } else {
-                                            Button {
-                                                scrollTo(index)
-                                            } label: {
-                                                Text(line)
-                                                    .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
-                                                    .font(.system(size: 42, weight: .bold, design: .rounded))
-                                                    .foregroundColor(.primary)
-                                                    .padding(5)
-                                                    .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
-                                                    .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
-                                                    .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
-                                                    .id(index)
+                                        Group {
+                                            if !performanceMode {
+                                                Button {
+                                                    scrollTo(index)
+                                                } label: {
+                                                    Text(line)
+                                                        .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
+                                                        .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                                        .font(.system(size: CGFloat(size), weight: weight))
+                                                        .id(index)
+                                                        .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
+                                                }
+                                            } else {
+                                                Button {
+                                                    scrollTo(index)
+                                                } label: {
+                                                    Text(line)
+                                                        .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
+                                                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                                                        .foregroundColor(.primary)
+                                                        .padding(5)
+                                                        .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
+                                                        .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
+                                                        .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
+                                                        .id(index)
+                                                }
+                                                .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
+                                                .shadow(color: (currentLineIndex == index && isScrolling && !isPressed) ? Color.blue : Color.clear, radius: 10, y: 8)
                                             }
-                                            .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
-                                            .shadow(color: (currentLineIndex == index && isScrolling && !isPressed) ? Color.blue : Color.clear, radius: 10, y: 8)
                                         }
+                                        .disabled(isSyncing)
                                     }
                                 }
                                 .padding()
@@ -443,50 +489,17 @@ struct PlayView: View {
                                             .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
                                     .onChange(of: bpm) { bpm in
-                                        stopTimer()
+                                        stopMetronome()
                                         songViewModel.updateBpm(for: song, with: bpm)
                                     }
                                     .disabled(readOnly())
                                     Menu {
-                                        Button {
-                                            bpb = 1
-                                        } label: {
-                                            Label("1", systemImage: bpb == 1 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 2
-                                        } label: {
-                                            Label("2", systemImage: bpb == 2 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 3
-                                        } label: {
-                                            Label("3", systemImage: bpb == 3 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 4
-                                        } label: {
-                                            Label("4", systemImage: bpb == 4 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 5
-                                        } label: {
-                                            Label("5", systemImage: bpb == 5 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 6
-                                        } label: {
-                                            Label("6", systemImage: bpb == 6 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 7
-                                        } label: {
-                                            Label("7", systemImage: bpb == 7 ? "checkmark" : "")
-                                        }
-                                        Button {
-                                            bpb = 8
-                                        } label: {
-                                            Label("8", systemImage: bpb == 8 ? "checkmark" : "")
+                                        ForEach(1...8, id: \.self) { bpb in
+                                            Button {
+                                                self.bpb = bpb
+                                            } label: {
+                                                Label("\(bpb)", systemImage: self.bpb == bpb ? "checkmark" : "")
+                                            }
                                         }
                                     } label: {
                                         Text("\(bpb) BPB")
@@ -508,10 +521,10 @@ struct PlayView: View {
                                     }
                                     Button {
                                         if isPlayingMetronome {
-                                            stopTimer()
+                                            stopMetronome()
                                         } else {
                                             loadSounds()
-                                            startTimer()
+                                            startMetronome()
                                         }
                                     } label: {
                                         FAText(iconName: isPlayingMetronome ? "pause" : "play", size: 18)
@@ -543,7 +556,7 @@ struct PlayView: View {
                 }
                 Divider()
                 HStack {
-                    if songs != nil {
+                    if songs != nil && !isSyncing {
                         Button(action: {
                             DispatchQueue.main.async {
                                 swipeRight()
@@ -561,19 +574,40 @@ struct PlayView: View {
                     }
                     Spacer()
                     if lines.count > 1 {
-                        let buttons = HStack {
+                        HStack {
                             Button(action: {
-                                if let proxy = proxy {
-                                    if isScrolling {
-                                        stopAutoscroll(scrollViewProxy: proxy)
+                                if !timestamps.isEmpty && !isSyncing {
+                                    if let proxy = proxy {
+                                        if isScrolling {
+                                            pauseAutoscroll()
+                                        } else {
+                                            startAutoscroll(scrollViewProxy: proxy)
+                                        }
+                                    }
+                                } else {
+                                    if !isSyncing {
+                                        if hasUsedSyncMode {
+                                            startSyncing()
+                                        } else {
+                                            isShowingSyncModeAlert = true
+                                        }
                                     } else {
-                                        startAutoscroll(scrollViewProxy: proxy)
+                                        recordTimestamp()
                                     }
                                 }
                             }) {
                                 HStack {
-                                    Image(systemName: isScrolling ? "stop" : "play")
-                                    Text(isScrolling ? "Stop" : NSLocalizedString("autoscroll", comment: ""))
+                                    Image(systemName: isSyncing ? "chevron.down" : (isScrolling ? "pause" : "play"))
+                                    if isSyncing {
+                                        Text("Next Line")
+                                    } else {
+                                        if timestamps.isEmpty {
+                                            // The user isn't in sync mode and hasn't synced the song yet
+                                            Text("Sync Lyrics")
+                                        } else {
+                                            Text(isScrolling ? "Pause" : "Autoscroll")
+                                        }
+                                    }
                                 }
                                 .imageScale(.medium)
                                 .padding()
@@ -582,8 +616,17 @@ struct PlayView: View {
                                 .background(isScrolling ? .red : .blue)
                                 .clipShape(Capsule())
                             }
-                            if !readOnly() {
+                            if !readOnly() && !timestamps.isEmpty && !isSyncing {
                                 Menu {
+                                    Button {
+                                        if isScrolling {
+                                            pauseAutoscroll()
+                                            scrollTo(0)
+                                        }
+                                        
+                                    } label: {
+                                        Label("Re-sync Lyrics", systemImage: "arrow.trianglehead.2.counterclockwise.rotate.90")
+                                    }
                                     Button {
                                         performanceMode.toggle()
                                     } label: {
@@ -603,16 +646,9 @@ struct PlayView: View {
                                 }
                             }
                         }
-                        
-                        if #available(iOS 17, *) {
-                            buttons
-                                .showAutoscrollSpeedTip()
-                        } else {
-                            buttons
-                        }
                     }
                     Spacer()
-                    if songs != nil {
+                    if songs != nil && !isSyncing {
                         Button(action: {
                             DispatchQueue.main.async {
                                 swipeLeft()
@@ -640,6 +676,13 @@ struct PlayView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .alert(isPresented: $isShowingSyncModeAlert) {
+            Alert(title: Text("To sync your lyrics, first start the sync session with the button below, then use the same button to scroll the lyrics at the desired time."), dismissButton: .cancel(Text("OK"), action: {
+                isShowingSyncModeAlert = false
+                hasUsedSyncMode = true
+                startSyncing()
+            }))
+        }
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -666,5 +709,5 @@ struct ScaleButtonStyle: ButtonStyle {
 }
 
 #Preview {
-    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, size: 18, key: "the key of K", notes: nil, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, duration: nil, tags: nil, demoAttachments: nil, bandId: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, key: "da key of K", title: "Test Song", lyrics: "Testing line 1\nTesting line 1\nTesting line 2\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1", duration: .constant("0:30"), bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [Song.song], dismiss: .constant(false))
+    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, size: 18, key: "the key of K", notes: nil, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, tags: nil, demoAttachments: nil, bandId: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, key: "da key of K", title: "Test Song", lyrics: "Testing line 1\nTesting line 1\nTesting line 2\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1", bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [Song.song], dismiss: .constant(false))
 }

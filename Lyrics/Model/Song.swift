@@ -27,11 +27,10 @@ struct Song: Identifiable, Codable, Equatable {
     var bpb: Int?
     var pinned: Bool?
     var performanceMode: Bool?
-    var duration: String?
     var tags: [String]?
     var demoAttachments: [String]?
     var bandId: String?
-    
+    var autoscrollTimestamps: [String]?
     var joinedUsers: [String]?
     var variations: [String]?
     var readOnly: Bool?

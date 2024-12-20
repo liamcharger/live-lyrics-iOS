@@ -25,14 +25,12 @@ struct SongEditView: View {
     @Binding var isDisplayed: Bool
     @Binding var title: String
     @Binding var key: String
-    @Binding var duration: String
     @Binding var artist: String
     
     @State var errorMessage = ""
     @State var stateArtist = ""
     @State var stateKey = ""
     @State var stateTitle = ""
-    @State var stateDuration = ""
     
     @State var showError = false
     @State var showDemoEditSheet = false
@@ -42,27 +40,20 @@ struct SongEditView: View {
     @State var selectedDemo: DemoAttachment?
     
     var isEmpty: Bool {
-        let isTitleEmpty = title.trimmingCharacters(in: .whitespaces).isEmpty
-        let isDurationInvalid = !stateDuration.isEmpty && isInvalidFormat(stateDuration)
-        
-        return isTitleEmpty || isDurationInvalid
+        return title.trimmingCharacters(in: .whitespaces).isEmpty
     }
     func update() {
         self.title = stateTitle
         self.key = stateKey
         self.artist = stateArtist
-        self.duration = stateDuration
-        songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist, duration: stateDuration) { success, errorMessage in
+        
+        songViewModel.updateSong(song, title: stateTitle, key: stateKey, artist: stateArtist) { success, errorMessage in
             if !success {
                 self.showError = true
                 self.errorMessage = errorMessage
             }
         }
         dismiss()
-    }
-    func isInvalidFormat(_ duration: String) -> Bool {
-        let pattern = "^\\d+:\\d+\\d+$"
-        return !duration.isEmpty && !(duration.range(of: pattern, options: .regularExpression) != nil)
     }
     func dismiss() {
         if let folder = mainViewModel.selectedFolder {
@@ -73,18 +64,17 @@ struct SongEditView: View {
         }
     }
     
-    init(song: Song, isDisplayed: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>, duration: Binding<String>) {
+    init(song: Song, isDisplayed: Binding<Bool>, title: Binding<String>, key: Binding<String>, artist: Binding<String>) {
         self.song = song
         self._isDisplayed = isDisplayed
         self._title = title
         self._key = key
         self._artist = artist
-        self._duration = duration
         
+        // We use separate state vars to hold the values because if the user changes a property and doesn't save it, it will still change in the parent view
         self._stateTitle = State(initialValue: title.wrappedValue)
         self._stateArtist = State(initialValue: artist.wrappedValue)
         self._stateKey = State(initialValue: key.wrappedValue)
-        self._stateDuration = State(initialValue: duration.wrappedValue)
     }
     
     var body: some View {
@@ -105,7 +95,6 @@ struct SongEditView: View {
                         CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
                         CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
                         CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
-                        CustomTextField(text: $stateDuration, placeholder: NSLocalizedString("duration", comment: ""))
                     }
                     if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
                             VStack {
@@ -207,15 +196,6 @@ struct SongEditView: View {
                                     }
                                 }
                             }
-                    }
-                    if isInvalidFormat(stateDuration) {
-                        Group {
-                            Text("The duration is not formatted correctly. Correct formatting, e.g., ") +
-                            Text("2:33").font(.body.weight(.bold)) +
-                            Text(".")
-                        }
-                        .foregroundColor(.red)
-                        .padding(.horizontal, 8)
                     }
                 }
                 .padding()

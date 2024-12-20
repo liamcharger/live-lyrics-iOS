@@ -115,8 +115,8 @@ class SongViewModel: ObservableObject {
         }
     }
     
-    func updateSong(_ song: Song, title: String, key: String, artist: String, duration: String, completion: @escaping(Bool, String) -> Void) {
-        service.updateSong(song, title: title, key: key, artist: artist, duration: duration) { success, errorMessage in
+    func updateSong(_ song: Song, title: String, key: String, artist: String, completion: @escaping(Bool, String) -> Void) {
+        service.updateSong(song, title: title, key: key, artist: artist) { success, errorMessage in
             completion(success, errorMessage)
         }
     }
@@ -261,5 +261,9 @@ class SongViewModel: ObservableObject {
         }
         
         return input
+    }
+    
+    func updateAutoscrollTimestamps(for song: Song, with timestamps: [String]) {
+        service.updateAutoscrollTimestamps(song: song, timestamps: timestamps)
     }
 }

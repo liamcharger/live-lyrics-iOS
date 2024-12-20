@@ -29,6 +29,5 @@ struct RecentlyDeletedSong: Identifiable, Codable, Equatable {
     var bpm: Int?
     var pinned: Bool?
     var performanceMode: Bool?
-    var duration: String?
     var tags: [String]?
 }

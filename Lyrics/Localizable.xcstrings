@@ -173,6 +173,7 @@
       }
     },
     "1" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -203,6 +204,7 @@
       }
     },
     "2" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -213,6 +215,7 @@
       }
     },
     "2:33" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -243,6 +246,7 @@
       }
     },
     "3" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -263,6 +267,7 @@
       }
     },
     "4" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -273,6 +278,7 @@
       }
     },
     "5" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -283,6 +289,7 @@
       }
     },
     "6" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -293,6 +300,7 @@
       }
     },
     "7" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -303,6 +311,7 @@
       }
     },
     "8" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -758,6 +767,7 @@
     },
     "autoscroll" : {
       "comment" : "Autoscroll",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -772,6 +782,9 @@
           }
         }
       }
+    },
+    "Autoscroll" : {
+
     },
     "band_feature_description" : {
       "extractionState" : "manual",
@@ -1394,6 +1407,7 @@
       }
     },
     "duration" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2059,6 +2073,7 @@
       }
     },
     "Looking to adjust scroll speed?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2262,6 +2277,9 @@
           }
         }
       }
+    },
+    "Next Line" : {
+
     },
     "No account? " : {
       "localizations" : {
@@ -2506,6 +2524,9 @@
         }
       }
     },
+    "Pause" : {
+
+    },
     "Performance Mode" : {
       "localizations" : {
         "es" : {
@@ -2625,6 +2646,9 @@
       }
     },
     "PRO" : {
+
+    },
+    "Re-sync Lyrics" : {
 
     },
     "Read only:" : {
@@ -3179,6 +3203,9 @@
         }
       }
     },
+    "Sync Lyrics" : {
+
+    },
     "synonym_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3318,6 +3345,7 @@
       }
     },
     "The duration is not formatted correctly. Correct formatting, e.g., " : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -3384,6 +3412,7 @@
       }
     },
     "To adjust the scroll speed, update the song's duration field in its edit view." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -3402,6 +3431,9 @@
           }
         }
       }
+    },
+    "To sync your lyrics, first start the sync session with the button below, then use the same button to scroll the lyrics at the desired time." : {
+
     },
     "Top Results" : {
       "localizations" : {

@@ -9,27 +9,6 @@ import Foundation
 import TipKit
 
 @available(iOS 17, *)
-struct AutoscrollSpeedTip: Tip {
-    var title: Text {
-        Text("Looking to adjust scroll speed?")
-    }
-    
-    var message: Text? {
-        Text("To adjust the scroll speed, update the song's duration field in its edit view.")
-    }
-    
-    var image: Image? {
-        Image(systemName: "hare")
-    }
-    
-    var options: [TipOption] {
-        return [
-            Tips.MaxDisplayCount(1)
-        ]
-    }
-}
-
-@available(iOS 17, *)
 struct DatamuseRowViewTip: Tip {
     var title: Text {
         Text("Want to save a word?")
