@@ -13,9 +13,6 @@ struct BandMemberPopoverRowView: View {
     let showBadge: Bool
     let size: [CGFloat: CGFloat]
     
-    var small: Bool {
-        return size == [16: 12]
-    }
     var badgeDimensions: CGFloat {
         switch size {
         case [16: 12]:

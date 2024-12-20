@@ -69,7 +69,7 @@ struct EditPasswordView: View {
                 if password.count < 6 {
                     showError.toggle()
                 } else {
-                    profileViewModel.changePassword(user, newPassword: password, currentPassword: currentPassword) { success in
+                    profileViewModel.changePassword(newPassword: password, currentPassword: currentPassword) { success in
                         if success {
                             showProfileView = false
                         } else {

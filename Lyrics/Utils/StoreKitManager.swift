@@ -9,9 +9,9 @@ import SwiftUI
 import StoreKit
 import FirebaseFunctions
 
-public enum StoreError: Error {
+enum StoreError: Error {
     case failedVerification
-    case missingReceipt
+    /* case missingReceipt */
 }
 
 class StoreKitManager: ObservableObject {
@@ -203,14 +203,5 @@ class StoreKitManager: ObservableObject {
         default:
             return nil
         }
-    }
-    
-    func isPurchased(_ product: Product) async throws -> Bool {
-        if product.type == .nonConsumable {
-            return purchasedProducts.contains(product)
-        } else if product.type == .autoRenewable {
-            return activeSubscriptions.contains(product)
-        }
-        return false
     }
 }

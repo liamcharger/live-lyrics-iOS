@@ -50,7 +50,7 @@
 		E03A6F0F2C8E24F600CA16D0 /* DemoAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */; };
 		E03A7DFA2D0E8E02007A9209 /* LoadingFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */; };
 		E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BC0922B5C232B004261AF /* ChooseAuthView.swift */; };
-		E041055F2A90029900215FB0 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* HapticManager.swift */; };
+		E041055F2A90029900215FB0 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* Haptics.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
 		E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474F2A02EF4E00CA48B3 /* ContentView.swift */; };
 		E04247522A02EF4F00CA48B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E04247512A02EF4F00CA48B3 /* Assets.xcassets */; };
@@ -224,7 +224,7 @@
 		E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAttachment.swift; sourceTree = "<group>"; };
 		E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingFailedView.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
-		E041055E2A90029900215FB0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		E041055E2A90029900215FB0 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		E042474A2A02EF4E00CA48B3 /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsApp.swift; sourceTree = "<group>"; };
 		E042474F2A02EF4E00CA48B3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -632,7 +632,7 @@
 				E0176EA62A5491BB00B6AA69 /* NetworkManager.swift */,
 				E0A5A4AF2A0A8F9C00AF8EBF /* WebView.swift */,
 				E0F95C822A13C2E000C2D21C /* MailView.swift */,
-				E041055E2A90029900215FB0 /* HapticManager.swift */,
+				E041055E2A90029900215FB0 /* Haptics.swift */,
 				E06076B72A94BB5200ECB31F /* NotificationManager.swift */,
 				E00E845C2B222AEB00573A9F /* StoreKitManager.swift */,
 			);
@@ -1370,7 +1370,7 @@
 				E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */,
 				E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */,
 				E03A7DFA2D0E8E02007A9209 /* LoadingFailedView.swift in Sources */,
-				E041055F2A90029900215FB0 /* HapticManager.swift in Sources */,
+				E041055F2A90029900215FB0 /* Haptics.swift in Sources */,
 				E06133692C7B5D5A002016D3 /* TagSelectionEnum.swift in Sources */,
 				E01520E22A872EF4005C4F8C /* AddSongsView.swift in Sources */,
 				E0FD46262B1F7DBD00699587 /* BannerAd.swift in Sources */,

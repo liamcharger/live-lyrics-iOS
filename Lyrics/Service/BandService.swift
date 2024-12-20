@@ -34,7 +34,7 @@ struct BandService {
     func fetchUserBands(forUid: String? = nil, withListener: Bool = true, completion: @escaping([Band]) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        let ref = Firestore.firestore().collection("bands").whereField("members", arrayContains: uid)
+        let ref = Firestore.firestore().collection("bands").whereField("members", arrayContains: forUid ?? uid)
         
         if withListener {
             ref.addSnapshotListener { snapshot, error in
@@ -58,20 +58,6 @@ struct BandService {
                 
                 completion(bands)
             }
-        }
-    }
-    
-    func fetchBands(completion: @escaping([Band]) -> Void) {
-        Firestore.firestore().collection("bands").addSnapshotListener { snapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            guard let documents = snapshot?.documents else { return }
-            
-            let bands = documents.compactMap({ try? $0.data(as: Band.self) })
-            
-            completion(bands)
         }
     }
     
@@ -105,6 +91,8 @@ struct BandService {
         }
     }
     
+    // TODO: we'll need this function when we create custom roles
+    /*
     func fetchMemberRoles(band: Band, completion: @escaping([BandRole]) -> Void) {
         Firestore.firestore().collection("bands").document(band.id!).collection("roles").addSnapshotListener { snapshot, error in
             if let error = error {
@@ -118,6 +106,7 @@ struct BandService {
             completion(roles)
         }
     }
+     */
     
     func createBand(name: String, completion: @escaping() -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -130,13 +119,13 @@ struct BandService {
                 print(error.localizedDescription)
                 return
             }
-            createBandMember(from: user, admin: true, bandId: id) {
+            createBandMember(from: user, bandId: id) {
                 completion()
             }
         }
     }
     
-    func createBandMember(from user: User, admin: Bool, bandId: String, role: BandRole? = nil, completion: @escaping() -> Void) {
+    func createBandMember(from user: User, bandId: String, role: BandRole? = nil, completion: @escaping() -> Void) {
         let member: [String: Any?] = [
             "uid": user.id!,
             "fullname": user.fullname,
@@ -186,7 +175,7 @@ struct BandService {
                 print(error.localizedDescription)
                 return
             }
-            createBandMember(from: user, admin: admin ?? false, bandId: band.id!) {
+            createBandMember(from: user, bandId: band.id!) {
                 completion()
             }
         }

@@ -222,7 +222,7 @@ class SongService {
 		
 		Firestore.firestore()
 			.collection("users")
-			.document(userId)
+			.document(forUid ?? userId)
 			.collection("folders")
 			.document(folderId)
 			.collection("songs")
@@ -353,7 +353,7 @@ class SongService {
 		}
 	}
 	
-	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, folder: Folder? = nil, songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
+	func fetchSong(listen: Bool? = nil, forUser: String? = nil, withId id: String, /* folder: Folder? = nil, */ songCompletion: @escaping (Song?) -> Void, registrationCompletion: @escaping (ListenerRegistration?) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else {
 			songCompletion(nil)
 			registrationCompletion(nil)
@@ -633,7 +633,7 @@ class SongService {
 	}
 	
 	// UNUSED: will be implemented when folder detail views are created
-	func createSong(folder: Folder, lyrics: String, artist: String, title: String, key: String, completion: @escaping(Bool, String) -> Void) {
+	/* func createSong(folder: Folder, lyrics: String, artist: String, title: String, key: String, completion: @escaping(Bool, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		let id = UUID().uuidString
@@ -654,6 +654,7 @@ class SongService {
 					}
 			}
 	}
+	 */
 	
 	func createSong(lyrics: String, artist: String, key: String, title: String, completion: @escaping(Bool, String) -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -822,7 +823,8 @@ class SongService {
 	}
 	
 	// UNUSED: may be implemented to remove song refs from folders on delete
-	func deleteSongRef(id: String, folder: Folder) {
+	/*
+	 func deleteSongRef(id: String, folder: Folder) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("folders").document(folder.id!).collection("songs").document(id).delete { error in
@@ -833,6 +835,7 @@ class SongService {
 			}
 		}
 	}
+	 */
 	
 	func restoreSong(song: RecentlyDeletedSong) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }

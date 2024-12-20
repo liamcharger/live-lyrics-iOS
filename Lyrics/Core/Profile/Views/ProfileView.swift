@@ -56,9 +56,9 @@ struct ProfileView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading) {
-                    CustomTextField(text: $email, placeholder: "Email")
-                    CustomTextField(text: $fullname, placeholder: "Fullname")
-                    CustomTextField(text: $username, placeholder: "Username")
+                    CustomTextField(text: $email, placeholder: "Email", image: "envelope")
+                    CustomTextField(text: $fullname, placeholder: "Fullname", image: "person")
+                    CustomTextField(text: $username, placeholder: "Username", image: "person")
                     Button(action: {
                         showChangePasswordView.toggle()
                     }, label: {

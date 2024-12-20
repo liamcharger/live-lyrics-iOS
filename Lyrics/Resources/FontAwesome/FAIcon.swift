@@ -12,7 +12,7 @@ import SwiftUI
 // MARK: - Style Enum
 // ======================================================= //
 
-public enum FAStyle: String, Codable {
+enum FAStyle: String, Codable {
     case light
     case regular
     case solid
@@ -81,19 +81,19 @@ enum FACollection: String {
 // MARK: - Icon Struct
 // ======================================================= //
 
-public struct FAIcon: Identifiable, Decodable, Comparable {
+struct FAIcon: Identifiable, Decodable, Comparable {
 
     // ======================================================= //
     // MARK: - Properties
     // ======================================================= //
 
-    public var id: String?
-    public var label: String
-    public var unicode: String
-    public var styles: [FAStyle]
-    public var searchTerms: [String]
+    var id: String?
+    var label: String
+    var unicode: String
+    var styles: [FAStyle]
+    var searchTerms: [String]
     // FA6 changed many names. Old names stored in aliases array
-    public var aliasNames: [String]? = []
+    var aliasNames: [String]? = []
 
     var collection: FACollection {
         if styles.contains(.brands) {
@@ -126,7 +126,7 @@ public struct FAIcon: Identifiable, Decodable, Comparable {
     // MARK: - Initializer
     // ======================================================= //
 
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         label = try values.decode(String.self, forKey: .label)
         unicode = try values.decode(String.self, forKey: .unicode)
@@ -153,7 +153,7 @@ public struct FAIcon: Identifiable, Decodable, Comparable {
     // MARK: - Coding Keys
     // ======================================================= //
 
-    public enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case label
         case unicode
         case styles
@@ -162,11 +162,11 @@ public struct FAIcon: Identifiable, Decodable, Comparable {
         case aliases
     }
 
-    public enum SearchKeys: String, CodingKey {
+    enum SearchKeys: String, CodingKey {
         case terms
     }
     // FA6 changed many icon names and moved the old ones to an aliases array.
-    public enum AliasKeys: String, CodingKey {
+    enum AliasKeys: String, CodingKey {
         case names
     }
 
@@ -233,11 +233,11 @@ public struct FAIcon: Identifiable, Decodable, Comparable {
     // MARK: - Comparable
     // ======================================================= //
 
-    public static func < (lhs: FAIcon, rhs: FAIcon) -> Bool {
+    static func < (lhs: FAIcon, rhs: FAIcon) -> Bool {
         return lhs.id ?? lhs.label < lhs.id ?? rhs.label
     }
 
-    public static func == (lhs: FAIcon, rhs: FAIcon) -> Bool {
+    static func == (lhs: FAIcon, rhs: FAIcon) -> Bool {
         return lhs.id ?? lhs.label == lhs.id ?? rhs.label
     }
 }

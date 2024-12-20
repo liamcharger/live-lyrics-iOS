@@ -46,6 +46,8 @@ struct NewDemoAttachmentView: View {
                         presMode.wrappedValue.dismiss()
                     }
                 }
+                .disabled(url.trimmingCharacters(in: .whitespaces).isEmpty)
+                .opacity(url.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
                 .padding()
             }
         }

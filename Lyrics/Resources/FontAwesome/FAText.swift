@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-public struct FAText: View {
-    
+struct FAText: View {
     var iconName: String
     private var icon: FAIcon
     var size: CGFloat
@@ -18,7 +17,7 @@ public struct FAText: View {
         return style.weight
     }
     
-    public init(iconName: String, size: CGFloat, style: FAStyle? = nil) {
+    init(iconName: String, size: CGFloat, style: FAStyle? = nil) {
         self.size = size
         self.style = style ?? .regular
         self.iconName = iconName.hasPrefix("fa-") ? String(iconName.dropFirst(3)) : iconName
@@ -54,7 +53,7 @@ public struct FAText: View {
         }
     }
     
-    public var body: some View {
+    var body: some View {
         Text(icon.unicodeString)
             .font(Font.custom(icon.collection.rawValue, size: size))
             .fontWeight(weight)

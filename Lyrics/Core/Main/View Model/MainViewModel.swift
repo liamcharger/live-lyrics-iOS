@@ -300,14 +300,6 @@ class MainViewModel: ObservableObject {
         service.deleteSong(folder, song)
     }
     
-    func deleteSong(song: RecentlyDeletedSong) {
-        service.deleteSong(song: song)
-    }
-    
-//    func deleteSong(_ song: Song) {
-//        service.deleteSong(song)
-//    }
-    
     func deleteFolder(_ folder: Folder) {
         service.deleteFolder(folder)
     }

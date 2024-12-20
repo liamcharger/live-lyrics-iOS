@@ -209,6 +209,7 @@ struct PlayView: View {
     }
     func startSyncing() {
         isSyncing = true
+        isScrollingProgrammatically = true
         scrollTo(0)
         
         startCountdown()
@@ -311,26 +312,6 @@ struct PlayView: View {
             }
         }
     }
-    func alignment(from alignment: TextAlignment) -> Alignment {
-        switch alignment {
-        case .leading:
-            return .leading
-        case .center:
-            return .center
-        case .trailing:
-            return .trailing
-        }
-    }
-    func hAlignment(from alignment: TextAlignment) -> HorizontalAlignment {
-        switch alignment {
-        case .leading:
-            return .leading
-        case .center:
-            return .center
-        case .trailing:
-            return .trailing
-        }
-    }
     func getBlur(for index: Int) -> CGFloat {
         if performanceMode {
             if isScrollingProgrammatically && !isUserScrolling {
@@ -411,9 +392,7 @@ struct PlayView: View {
                                 }
                             }
                             CloseButton {
-                                if let proxy = proxy {
-                                    pauseAutoscroll()
-                                }
+                                pauseAutoscroll()
                                 stopMetronome()
                                 dismiss = false
                             }
@@ -423,7 +402,7 @@ struct PlayView: View {
                         Divider()
                         ScrollViewReader { proxy in
                             ScrollView {
-                                VStack(alignment: hAlignment(from: alignment), spacing: performanceMode ? 25 : lineSpacing) {
+                                VStack(alignment: .leading, spacing: performanceMode ? 25 : lineSpacing) {
                                     ForEach(lines.indices, id: \.self) { index in
                                         let line = lines[index]
                                         
@@ -434,7 +413,6 @@ struct PlayView: View {
                                                 } label: {
                                                     Text(line)
                                                         .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
-                                                        .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
                                                         .font(.system(size: CGFloat(size), weight: weight))
                                                         .id(index)
                                                         .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
@@ -444,7 +422,6 @@ struct PlayView: View {
                                                     scrollTo(index)
                                                 } label: {
                                                     Text(line)
-                                                        .frame(maxWidth: .infinity, alignment: alignment(from: alignment))
                                                         .font(.system(size: 42, weight: .bold, design: .rounded))
                                                         .foregroundColor(.primary)
                                                         .padding(5)
@@ -458,6 +435,7 @@ struct PlayView: View {
                                             }
                                         }
                                         .disabled(isSyncing)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
                                 .padding()
@@ -616,16 +594,19 @@ struct PlayView: View {
                                 .background(isScrolling ? .red : .blue)
                                 .clipShape(Capsule())
                             }
-                            if !readOnly() && !timestamps.isEmpty && !isSyncing {
+                            if !readOnly() && !isSyncing {
                                 Menu {
-                                    Button {
-                                        if isScrolling {
-                                            pauseAutoscroll()
-                                            scrollTo(0)
+                                    if !timestamps.isEmpty {
+                                        Button {
+                                            if isScrolling {
+                                                pauseAutoscroll()
+                                                scrollTo(0)
+                                            } else {
+                                                startSyncing()
+                                            }
+                                        } label: {
+                                            Label("Re-sync Lyrics", systemImage: "arrow.trianglehead.2.counterclockwise.rotate.90")
                                         }
-                                        
-                                    } label: {
-                                        Label("Re-sync Lyrics", systemImage: "arrow.trianglehead.2.counterclockwise.rotate.90")
                                     }
                                     Button {
                                         performanceMode.toggle()

@@ -18,10 +18,6 @@ struct BandRowView: View {
     @State var loadingMembers = true
     @State var loadingRoles = true
     
-    var uid: String {
-        return authViewModel.currentUser?.id ?? ""
-    }
-    
     var body: some View {
         VStack(spacing: 2) {
             HStack {

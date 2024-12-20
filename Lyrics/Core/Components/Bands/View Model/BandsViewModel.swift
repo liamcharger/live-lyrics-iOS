@@ -13,7 +13,6 @@ class BandsViewModel: ObservableObject {
     @Published var bands = [Band]()
     @Published var userBands = [Band]()
     @Published var isLoadingUserBands = true
-    @Published var isLoadingBands = true
     @Published var isCreatingBand = false
     @Published var isSavingMemberRole = false
     
@@ -38,13 +37,6 @@ class BandsViewModel: ObservableObject {
         }
     }
     
-    func fetchBands() {
-        service.fetchBands { bands in
-            self.isLoadingBands = false
-            self.bands = bands
-        }
-    }
-    
     func fetchBandMembers(_ band: Band, withListener: Bool = true, completion: @escaping([BandMember]) -> Void) {
         service.fetchBandMembers(band: band, withListener: withListener) { members in
             completion(members)
@@ -53,6 +45,8 @@ class BandsViewModel: ObservableObject {
     
     func fetchMemberRoles(_ band: Band, completion: @escaping([BandRole]) -> Void) {
         completion(memberRoles)
+        
+        // TODO: we'll need this function to fetch custom member roles
         /*
          service.fetchMemberRoles(band: band) { roles in
             completion(roles)

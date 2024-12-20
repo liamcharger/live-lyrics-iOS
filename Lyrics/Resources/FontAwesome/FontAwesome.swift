@@ -8,19 +8,19 @@
 
 import SwiftUI
 
-public class FontAwesome {
+class FontAwesome {
     
     // ======================================================= //
     // MARK: - Shared Instance
     // ======================================================= //
     
-    public static var shared: FontAwesome = FontAwesome()
+    static var shared: FontAwesome = FontAwesome()
     
     // ======================================================= //
     // MARK: - Published Properties
     // ======================================================= //
     
-    public private(set) var store: [String: FAIcon]
+    private(set) var store: [String: FAIcon]
     
     // ======================================================= //
     // MARK: - Initializer
@@ -42,12 +42,12 @@ public class FontAwesome {
     // MARK: - Methods
     // ======================================================= //
     
-    public func icon(byName name: String) -> FAIcon? {
+    func icon(byName name: String) -> FAIcon? {
         return store[name.lowercased()]
     }
     
     // icon(byAlias:) added to allow FA5 backwards compatibility where names have changed and moved to an aliases array
-    public func icon(byAlias name: String) -> FAIcon? {
+    func icon(byAlias name: String) -> FAIcon? {
         var iconName = ""
         for item in store {
             if let aliasNames = item.value.aliasNames, aliasNames.contains(name) {
@@ -58,21 +58,4 @@ public class FontAwesome {
         }
         return store[iconName.lowercased()]
     }
-    
-    public func search(query: String) -> [String: FAIcon] {
-        let filtered = store.filter() {
-            if $0.key.contains(query) {
-                return true
-            } else {
-                for term in $0.value.searchTerms {
-                    if term.contains(query) {
-                        return true
-                    }
-                }
-                return false
-            }
-        }
-        return filtered
-    }
-
 }

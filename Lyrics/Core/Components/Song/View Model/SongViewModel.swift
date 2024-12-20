@@ -40,7 +40,8 @@ class SongViewModel: ObservableObject {
     }
     
     // UNUSED: will be implemented when folder detail views are created
-    func createSong(folder: Folder, lyrics: String, artist: String, key: String, title: String, completion: @escaping(Bool, String) -> Void) {
+    /*
+     func createSong(folder: Folder, lyrics: String, artist: String, key: String, title: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(folder: folder, lyrics: lyrics, artist: artist, title: title, key: key) { success, errorMessage in
             if success {
                 completion(true, "Success!")
@@ -49,6 +50,7 @@ class SongViewModel: ObservableObject {
             }
         }
     }
+     */
     
     func createSong(lyrics: String, title: String, artist: String, key: String, completion: @escaping(Bool, String) -> Void) {
         service.createSong(lyrics: lyrics, artist: artist, key: key, title: title) { success, errorMessage in

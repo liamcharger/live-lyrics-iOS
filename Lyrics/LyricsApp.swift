@@ -81,6 +81,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     @Environment(\.scenePhase) var phase
     
     @ObservedObject var mainViewModel = MainViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     let gcmMessageIDKey = "gcm.message_id"
     
@@ -95,8 +96,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token:", deviceToken)
-        if let currentUser = AuthViewModel.shared.currentUser, !deviceToken.isEmpty {
-            UserService().updateFCMId(currentUser, id: deviceToken.values.first!)
+        if let currentUser = authViewModel.currentUser, !deviceToken.isEmpty {
+            authViewModel.updateFCMId(currentUser, id: deviceToken.values.first!)
         }
     }
     

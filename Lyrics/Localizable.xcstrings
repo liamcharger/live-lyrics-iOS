@@ -172,17 +172,6 @@
         }
       }
     },
-    "1" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1"
-          }
-        }
-      }
-    },
     "1.0" : {
       "localizations" : {
         "es" : {
@@ -199,28 +188,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1.5"
-          }
-        }
-      }
-    },
-    "2" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2"
-          }
-        }
-      }
-    },
-    "2:33" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2:33"
           }
         }
       }
@@ -245,78 +212,12 @@
         }
       }
     },
-    "3" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "3"
-          }
-        }
-      }
-    },
     "3.0" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "3.0"
-          }
-        }
-      }
-    },
-    "4" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "4"
-          }
-        }
-      }
-    },
-    "5" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "5"
-          }
-        }
-      }
-    },
-    "6" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "6"
-          }
-        }
-      }
-    },
-    "7" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "7"
-          }
-        }
-      }
-    },
-    "8" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "8"
           }
         }
       }
@@ -761,24 +662,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Audio"
-          }
-        }
-      }
-    },
-    "autoscroll" : {
-      "comment" : "Autoscroll",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autoscroll"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desplazamiento automático"
           }
         }
       }
@@ -1402,23 +1285,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don’t miss anything important!"
-          }
-        }
-      }
-    },
-    "duration" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración"
           }
         }
       }
@@ -2068,17 +1934,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cierre de sesión"
-          }
-        }
-      }
-    },
-    "Looking to adjust scroll speed?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Quieres ajustar la velocidad de desplazamiento?"
           }
         }
       }
@@ -3344,17 +3199,6 @@
         }
       }
     },
-    "The duration is not formatted correctly. Correct formatting, e.g., " : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La duración no está formateada correctamente. Formato correcto, p. ej, "
-          }
-        }
-      }
-    },
     "There was an unknown error while processing your request." : {
       "localizations" : {
         "es" : {
@@ -3407,17 +3251,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Título"
-          }
-        }
-      }
-    },
-    "To adjust the scroll speed, update the song's duration field in its edit view." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Para ajustar la velocidad de desplazamiento, actualice el campo de duración de la canción en su vista de edición."
           }
         }
       }

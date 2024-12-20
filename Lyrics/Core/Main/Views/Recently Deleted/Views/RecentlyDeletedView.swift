@@ -39,12 +39,6 @@ struct RecentlyDeletedView: View {
         }
     }
     
-    func delete(at offsets: IndexSet) {
-        for index in offsets {
-            let song = recentlyDeletedViewModel.songs[index]
-            recentlyDeletedViewModel.deleteSong(song: song)
-        }
-    }
     func performAction(for song: RecentlyDeletedSong) {
         selectedSong = song
         showDeleteSheet.toggle()

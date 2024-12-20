@@ -56,7 +56,6 @@ struct SongDetailView: View {
     @State private var showDatamuseSheet = false
     @State private var showUserPopover = false
     @State private var showJoinedUsers = true
-    @State private var showBackgroundBlur = false
     @State private var isLoadingSongData = true
     
     @State private var updatedLyricsTimer: Timer?
@@ -337,7 +336,7 @@ struct SongDetailView: View {
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
-                            .frame(height: 95)
+                            .frame(height: 90)
                             .frame(maxHeight: .infinity, alignment: .top)
                             .opacity(!showJoinedUsers ? 1 : 0)
                             .allowsHitTesting(false)

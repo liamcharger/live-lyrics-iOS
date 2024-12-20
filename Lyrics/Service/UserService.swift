@@ -12,7 +12,7 @@ import FirebaseAuth
 import Firebase
 
 struct UserService {
-    func changePassword(_ user: User, password: String, currentPassword: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
+    func changePassword(password: String, currentPassword: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
         let user = Auth.auth().currentUser
         
         let credential = EmailAuthProvider.credential(withEmail: user!.email!, password: currentPassword)
