@@ -669,6 +669,17 @@
     "Autoscroll" : {
 
     },
+    "autoscroll_update_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfectly time your song by syncing your lyrics yourself."
+          }
+        }
+      }
+    },
     "band_feature_description" : {
       "extractionState" : "manual",
       "localizations" : {
