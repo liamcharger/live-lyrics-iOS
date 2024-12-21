@@ -672,7 +672,7 @@
     "autoscroll_update_description" : {
       "extractionState" : "manual",
       "localizations" : {
-        "es" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perfectly time your song by syncing your lyrics yourself."
