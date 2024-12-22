@@ -73,7 +73,6 @@ struct SongDetailView: View {
     @ObservedObject var viewModel = AuthViewModel.shared
     
     @Environment(\.presentationMode) var presMode
-    @Environment(\.openURL) var openURL
     
     @FocusState var isInputActive: Bool
     
@@ -431,13 +430,13 @@ struct SongDetailView: View {
                                         
                                         Button {
                                             // Check if URL is valid before opening, and show an error if not
-                                            guard let url = URL(string: attachment) else {
+                                            guard let url = URL(string: "https://" + attachment) else {
                                                 activeAlert = .error
                                                 errorMessage = NSLocalizedString("url_cant_be_opened", comment: "")
                                                 return
                                             }
                                             
-                                            openURL(url)
+                                            UIApplication.shared.open(url)
                                         } label: {
                                             HStack(spacing: 8) {
                                                 songViewModel.getDemoIcon(from: demo.icon)
@@ -662,7 +661,6 @@ struct SongDetailView: View {
                 if let song = song {
                     // Assignment overwrites sharedSong properties, so reassign them
                     self.song = song
-                    print("Song updated")
                     self.song.readOnly = readOnly
                     self.song.variations = variations
                     self.song.performanceMode = performanceMode
