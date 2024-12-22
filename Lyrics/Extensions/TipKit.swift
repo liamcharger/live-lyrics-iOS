@@ -36,7 +36,7 @@ struct ExploreDetailViewTip: Tip {
     }
     
     var message: Text? {
-        Text("Click to add to your library.")
+        Text("Click to add to your library..")
     }
     
     var image: Image? {
@@ -70,24 +70,24 @@ struct LiveLyricsTipStyle: TipViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack {
             ZStack(alignment: .topTrailing) {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(alignment: .center, spacing: 10) {
-                        configuration.image?
-                            .font(.system(size: 26))
+                HStack(alignment: .center, spacing: 10) {
+                    configuration.image
+                        .font(.system(size: 26))
+                    VStack(alignment: .leading, spacing: 2) {
                         configuration.title?
-                            .font(.title3.weight(.bold))
+                            .fontWeight(.bold)
+                        configuration.message?
+                            .font(.system(size: 16))
+                            .foregroundStyle(.secondary)
                     }
-                    .padding(.trailing, 20)
-                    configuration.message?
-                        .font(.system(size: 16))
-                        .foregroundStyle(.secondary)
                 }
+                .padding(.trailing, 20)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Button(action: {
                     configuration.tip.invalidate(reason: .tipClosed)
                 }, label: {
                     Image(systemName: "xmark")
-                        .fontWeight(.semibold)
+                        .fontWeight(.medium)
                         .foregroundColor(.gray)
                 })
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -102,5 +102,32 @@ struct LiveLyricsTipStyle: TipViewStyle {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+#Preview {
+    if #available(iOS 17.0, *) {
+        VStack {
+            Text("Testing piece of multiline text. Here for a UI test.")
+                .font(.largeTitle.weight(.bold))
+                .padding()
+            Color.blue.frame(height: 70)
+            Text("Another piece of multiline text. Here for a UI test.")
+                .padding()
+                .popoverTip(ExploreDetailViewTip(), arrowEdge: .bottom)
+                .tipViewStyle(LiveLyricsTipStyle())
+        }
+        .multilineTextAlignment(.center)
+        .frame(maxHeight: .infinity)
+        .task {
+            do {
+                try Tips.configure([.displayFrequency(.immediate), .datastoreLocation(.applicationDefault)])
+                try Tips.resetDatastore()
+            } catch {
+                print(error)
+            }
+        }
+    } else {
+        EmptyView()
     }
 }
