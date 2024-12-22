@@ -41,7 +41,7 @@ class SongDetailViewModel: ObservableObject {
                     Label("Edit", systemImage: "pencil")
                 }
             }
-            if !songViewModel.isShared(song: song) {
+            if !songViewModel.isShared(song) {
                 Button {
                     self.showShareSheet = true
                 } label: {
@@ -94,13 +94,13 @@ class SongDetailViewModel: ObservableObject {
                 }
             }
             Button(role: .destructive, action: {
-                if !self.songViewModel.isShared(song: song) {
+                if !self.songViewModel.isShared(song) {
                     self.showDeleteSheet = true
                 } else {
                     self.showLeaveSheet = true
                 }
             }, label: {
-                if songViewModel.isShared(song: song) {
+                if songViewModel.isShared(song) {
                     Label("Leave", systemImage: "arrow.backward.square")
                 } else {
                     Label("Delete", systemImage: "trash")

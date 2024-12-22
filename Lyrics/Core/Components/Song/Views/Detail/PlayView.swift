@@ -17,7 +17,8 @@ enum BeatStyle {
 }
 
 struct PlayView: View {
-    @Binding var dismiss: Bool
+    @Environment(\.dismiss) var dismiss
+    
     @Binding var bpm: Int
     @Binding var bpb: Int
     @Binding var performanceMode: Bool
@@ -28,9 +29,6 @@ struct PlayView: View {
     @State private var currentTime: Double = 0
     @State private var autoscrollTimerTime: Double = 0
     
-    @State private var lyrics = ""
-    @State private var title = ""
-    @State private var key = ""
     @State private var selectedTool = ""
     
     @State private var timestamps = [String]()
@@ -76,7 +74,7 @@ struct PlayView: View {
     let metronomeDispatchQueue = DispatchQueue(label: "com.chargertech.Lyrics.metronome", attributes: .concurrent)
     
     var lines: [String] {
-        return lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
+        return song.lyrics.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
     func swipeLeft() {
         currentSongSelection += 1
@@ -86,9 +84,6 @@ struct PlayView: View {
         if let songs = songs {
             self.song = songs[currentSongSelection]
         }
-        self.lyrics = self.song.lyrics
-        self.title = song.title
-        self.key = song.key ?? ""
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
@@ -104,9 +99,6 @@ struct PlayView: View {
         if let songs = songs {
             self.song = songs[currentSongSelection]
         }
-        self.lyrics = self.song.lyrics
-        self.title = song.title
-        self.key = song.key ?? ""
         self.bpb = song.bpb ?? 4
         self.bpm = song.bpm ?? 120
         self.performanceMode = song.performanceMode ?? true
@@ -341,22 +333,19 @@ struct PlayView: View {
         return (song.readOnly ?? false) || (mainViewModel.selectedFolder?.readOnly ?? false)
     }
     
-    init(song: Song, size: Int, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, key: String, title: String, lyrics: String, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?, dismiss: Binding<Bool>) {
+    init(song: Song, size: Int, weight: Font.Weight, lineSpacing: Double, alignment: TextAlignment, bpm: Binding<Int>, bpb: Binding<Int>, performanceMode: Binding<Bool>, songs: [Song]?) {
         self.songs = songs
-        self._key = State(initialValue: key)
-        self._currentSongSelection = State(initialValue: song.order ?? 0)
-        self._title = State(initialValue: title)
         self.alignment = alignment
         self.lineSpacing = lineSpacing
         self.weight = weight
         self.size = size
         self.timestamps = song.autoscrollTimestamps ?? []
+        
+        self._song = State(initialValue: song)
+        self._currentSongSelection = State(initialValue: song.order ?? 0)
         self._bpb = bpb
         self._bpm = bpm
         self._performanceMode = performanceMode
-        self._song = State(initialValue: song)
-        self._lyrics = State(initialValue: lyrics)
-        self._dismiss = dismiss
     }
     
     var body: some View {
@@ -365,11 +354,11 @@ struct PlayView: View {
                 VStack(alignment: .leading) {
                     VStack(spacing: 0) {
                         HStack {
-                            Text(title)
+                            Text(song.title)
                                 .font(.title2.weight(.bold))
                                 .lineLimit(1).truncationMode(.tail)
                             Spacer()
-                            if key != "" {
+                            if let key = song.key, key != "" {
                                 Text("Key: " + key)
                                     .foregroundColor(Color.gray)
                                     .padding(.trailing, 6)
@@ -394,7 +383,7 @@ struct PlayView: View {
                             CloseButton {
                                 pauseAutoscroll()
                                 stopMetronome()
-                                dismiss = false
+                                dismiss()
                             }
                         }
                         .padding(hasHomeButton() ? .top : [])
@@ -690,5 +679,5 @@ struct ScaleButtonStyle: ButtonStyle {
 }
 
 #Preview {
-    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, size: 18, key: "the key of K", notes: nil, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, tags: nil, demoAttachments: nil, bandId: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, key: "da key of K", title: "Test Song", lyrics: "Testing line 1\nTesting line 1\nTesting line 2\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1\nTesting line 1", bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [Song.song], dismiss: .constant(false))
+    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, size: 18, key: "the key of K", notes: nil, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, tags: nil, demoAttachments: nil, bandId: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [Song.song])
 }

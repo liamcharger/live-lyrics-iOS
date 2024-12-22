@@ -66,10 +66,10 @@ struct NewSongView: View {
             Divider()
             ScrollView {
                 VStack {
-                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
                         .focused($isTitleFocused)
-                    CustomTextField(text: $artist, placeholder: NSLocalizedString("artist_optional", comment: ""))
-                    CustomTextField(text: $key, placeholder: NSLocalizedString("key_optional", comment: ""))
+                    CustomTextField(text: $artist, placeholder: NSLocalizedString("artist_optional", comment: ""), image: "person")
+                    CustomTextField(text: $key, placeholder: NSLocalizedString("key_optional", comment: ""), image: "arrow.up.arrow.down")
                 }
                 .padding()
             }

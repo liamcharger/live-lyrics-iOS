@@ -44,7 +44,7 @@ struct BandJoinView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""))
+            CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""), image: "link")
                 .focused($isCodeFocused)
                 .padding()
             Spacer()

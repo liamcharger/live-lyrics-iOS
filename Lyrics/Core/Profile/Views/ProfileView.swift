@@ -6,17 +6,15 @@
 //
 
 import SwiftUI
-#if os(iOS)
 import BottomSheet
-#endif
 
 
 struct ProfileView: View {
-    @ObservedObject var viewModel = AuthViewModel.shared
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     @Environment(\.presentationMode) var presMode
     
-    @Binding var showProfileView: Bool
+    @Binding var isPresented: Bool
     
     let user: User
     
@@ -28,18 +26,18 @@ struct ProfileView: View {
     @State var showError = false
     @State var showChangePasswordView = false
     @State var showDeleteSheet = false
-    @State var showDeleteConfirmation = false
     
     var isEmpty: Bool {
         fullname.trimmingCharacters(in: .whitespaces).isEmpty || username.trimmingCharacters(in: .whitespaces).isEmpty || email.trimmingCharacters(in: .whitespaces).isEmpty || user.fullname != fullname || user.username != username || user.email != email
     }
     
-    init(user: User, showProfileView: Binding<Bool>) {
+    init(user: User, isPresented: Binding<Bool>) {
         self.user = user
+        
         self._email = State(initialValue: user.email)
         self._fullname = State(initialValue: user.fullname)
         self._username = State(initialValue: user.username)
-        self._showProfileView = showProfileView
+        self._isPresented = isPresented
     }
     
     var body: some View {
@@ -49,7 +47,7 @@ struct ProfileView: View {
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 CloseButton {
-                    showProfileView = false
+                    isPresented = false
                 }
             }
             .padding()
@@ -59,63 +57,47 @@ struct ProfileView: View {
                     CustomTextField(text: $email, placeholder: "Email", image: "envelope")
                     CustomTextField(text: $fullname, placeholder: "Fullname", image: "person")
                     CustomTextField(text: $username, placeholder: "Username", image: "person")
-                    Button(action: {
-                        showChangePasswordView.toggle()
-                    }, label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack(spacing: 7) {
-                                    Text("Change Password")
-                                    Spacer()
-                                    FAText(iconName: "arrow-right", size: 20)
-                                        .imageScale(.medium)
-                                }
-                                .foregroundColor(.primary)
-                            }
+                    Button {
+                        showChangePasswordView = true
+                    } label: {
+                        HStack(spacing: 7) {
+                            Text("Change Password")
                             Spacer()
+                            FAText(iconName: "arrow-right", size: 20)
                         }
                         .padding()
-                        .background {
-                            Rectangle()
-                                .fill(.clear)
-                                .background(Material.regular)
-                                .mask { Capsule() }
-                        }
+                        .background(Material.regular)
+                        .clipShape(Capsule())
                         .foregroundColor(.primary)
-                    })
+                    }
                     .sheet(isPresented: $showChangePasswordView) {
                         ResetPasswordView(text: $email)
                     }
                     .padding(.top)
                     Button(role: .destructive) {
-                        showDeleteSheet.toggle()
+                        showDeleteSheet = true
                     } label: {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack(spacing: 7) {
-                                    Text("Delete Account")
-                                    Spacer()
-                                    FAText(iconName: "trash-can", size: 20)
-                                }
-                                .foregroundColor(.red)
-                            }
+                        HStack(spacing: 7) {
+                            Text("Delete Account")
+                            Spacer()
+                            FAText(iconName: "trash-can", size: 20)
                         }
                         .padding()
-                        .background {
-                            Rectangle()
-                                .fill(.clear)
-                                .background(Material.regular)
-                                .mask { Capsule() }
-                        }
+                        .background(Material.regular)
+                        .clipShape(Capsule())
+                        .foregroundColor(.red)
+                    }
+                    .sheet(isPresented: $showDeleteSheet) {
+                        DeleteAccountView(showError: $showError, errorMessage: $errorMessage)
                     }
                 }
                 .padding()
             }
             Divider()
             LiveLyricsButton("Save") {
-                viewModel.updateUser(withEmail: email, username: username, fullname: fullname) { success in
+                authViewModel.updateUser(email: email, username: username, fullname: fullname) { success in
                     if success {
-                        showProfileView = false
+                        isPresented = false
                     } else {
                         showError.toggle()
                     }
@@ -127,75 +109,87 @@ struct ProfileView: View {
             .disabled(!isEmpty)
             .padding()
         }
-        .sheet(isPresented: $showDeleteSheet) {
-            VStack(spacing: 10) {
-                HStack {
-                    Spacer()
-                    CloseButton {
-                        showDeleteSheet = false
-                    }
-                }
-                Spacer()
-                Image(systemName: "trash")
-                    .font(.system(size: 34).weight(.semibold))
-                    .foregroundColor(.red)
-                Text(NSLocalizedString("delete_account_confirmation_short", comment: ""))
-                    .font(.largeTitle.weight(.bold))
-                Text("WARNING: This action is permanant and cannot be undone!")
-                    .font(.title3.weight(.bold))
-                    .foregroundColor(.gray)
-                Spacer()
-                Button {
-                    showDeleteConfirmation = true
-                } label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 7) {
-                                Text("Delete Account")
-                                Spacer()
-                                Image(systemName: "trash")
-                            }
-                            .font(.body.weight(.semibold))
-                        }
-                    }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background {
-                        Rectangle()
-                            .fill(.clear)
-                            .background(Color.red)
-                            .mask { Capsule() }
-                    }
-                }
-                .padding(.top)
-            }
-            .multilineTextAlignment(.center)
-            .padding()
-            .confirmationDialog("Delete User Account", isPresented: $showDeleteConfirmation) {
-                Button("Delete", role: .destructive) {
-                    deleteAccount()
-                }
-                Button("Cancel", role: .cancel) {
-                    showDeleteConfirmation = false
-                }
-            } message: {
-                Text("Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!")
-            }
-        }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
         }
     }
+}
+
+struct DeleteAccountView: View {
+    @Environment(\.presentationMode) var presMode
+    
+    @Binding var showError: Bool
+    @Binding var errorMessage: String
+    
+    @State var showDeleteConfirmation = false
+    
+    @ObservedObject var authViewModel = AuthViewModel.shared
     
     func deleteAccount() {
-        viewModel.deleteUser { success, errorMessage in
+        authViewModel.deleteUser { success, errorMessage in
             if success {
-                showDeleteSheet = false
-                presMode.wrappedValue.dismiss()
+                self.presMode.wrappedValue.dismiss()
             } else {
-                showError = true
+                self.showError = true
                 self.errorMessage = errorMessage
             }
+        }
+    }
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            HStack {
+                Spacer()
+                CloseButton {
+                    presMode.wrappedValue.dismiss()
+                }
+            }
+            Spacer()
+            Image(systemName: "trash")
+                .font(.system(size: 34).weight(.semibold))
+                .foregroundColor(.red)
+            Text(NSLocalizedString("delete_account_confirmation_short", comment: ""))
+                .font(.largeTitle.weight(.bold))
+            Text("WARNING: This action is permanant and cannot be undone!")
+                .font(.title3.weight(.bold))
+                .foregroundColor(.gray)
+            Spacer()
+            Button {
+                showDeleteConfirmation = true
+            } label: {
+                HStack {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(spacing: 7) {
+                            Text("Delete Account")
+                            Spacer()
+                            Image(systemName: "trash")
+                        }
+                        .font(.body.weight(.semibold))
+                    }
+                }
+                .padding()
+                .foregroundColor(.white)
+                .background {
+                    Rectangle()
+                        .fill(.clear)
+                        .background(Color.red)
+                        .mask { Capsule() }
+                }
+            }
+            .padding(.top)
+        }
+        .multilineTextAlignment(.center)
+        .padding()
+        .confirmationDialog("Delete User Account", isPresented: $showDeleteConfirmation) {
+            Button("Delete", role: .destructive) {
+                self.deleteAccount()
+            }
+            Button("Cancel", role: .cancel) {
+                self.showDeleteConfirmation = false
+                self.presMode.wrappedValue.dismiss()
+            }
+        } message: {
+            Text("Are you sure you want to delete this user account? WARNING: THIS ACTION IS PERMANENT AND CANNOT BE UNDONE!")
         }
     }
 }

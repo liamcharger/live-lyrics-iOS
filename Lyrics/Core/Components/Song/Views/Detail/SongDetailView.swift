@@ -72,7 +72,7 @@ struct SongDetailView: View {
     @ObservedObject var songDetailViewModel = SongDetailViewModel.shared
     @ObservedObject var viewModel = AuthViewModel.shared
     
-    @Environment(\.presentationMode) var presMode
+    @Environment(\.dismiss) var dismiss
     
     @FocusState var isInputActive: Bool
     
@@ -183,124 +183,124 @@ struct SongDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack {
-                HStack {
-                    Button(action: {presMode.wrappedValue.dismiss()}, label: {
-                        Image(systemName: "chevron.left")
-                            .modifier(NavBarButtonViewModifier())
-                    })
-                    VStack(alignment: .leading, spacing: 3) {
-                        HStack(alignment: .center, spacing: 6) {
-                            Text(title)
-                                .font(.system(size: 20, design: .rounded).weight(.bold))
-                                .lineLimit(2)
-                            if tags.count > 0 {
-                                HStack(spacing: 5) {
-                                    ForEach(tags, id: \.self) { tag in
-                                        Circle()
-                                            .frame(width: 12, height: 12)
-                                            .foregroundColor(songViewModel.getColorForTag(tag))
-                                    }
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .modifier(NavBarButtonViewModifier())
+                }
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(alignment: .center, spacing: 6) {
+                        Text(title)
+                            .font(.system(size: 20, design: .rounded).weight(.bold))
+                            .lineLimit(2)
+                        if tags.count > 0 {
+                            HStack(spacing: 5) {
+                                ForEach(tags, id: \.self) { tag in
+                                    Circle()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundColor(songViewModel.getColorForTag(tag))
                                 }
                             }
-                        }
-                        // Only show the text if there is a key or an artist
-                        if !key.isEmpty || !artist.isEmpty {
-                            Text(key.isEmpty ? artist : "Key: \(key)")
-                                .font(.system(size: 15))
-                                .foregroundColor(Color.gray)
                         }
                     }
-                    Spacer()
-                    if !isInputActive {
-                        if songs != nil {
-                            Button {
-                                showPlayView.toggle()
-                            } label: {
-                                Image(systemName: "play")
-                                    .padding(13.5)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.blue)
-                                    .clipShape(Circle())
-                                    .overlay {
-                                        Circle()
-                                            .stroke(.blue, lineWidth: 2.5)
-                                    }
-                            }
-                            Button {
-                                songDetailViewModel.showNotesView = true
-                            } label: {
-                                FAText(iconName: "book", size: 18)
-                                    .modifier(NavBarButtonViewModifier())
-                                    .overlay {
-                                        // Show a badge when notes are present
-                                        if (song.notes ?? "") != "" {
-                                            Circle()
-                                                .frame(width: 11, height: 11)
-                                                .foregroundColor(.blue)
-                                                .offset(x: 17, y: -18)
-                                        }
-                                    }
-                            }
-                            .sheet(isPresented: $songDetailViewModel.showNotesView) {
-                                NotesView(song: song)
-                            }
-                            // Fetch ellipsis/actions button from view model to cut down on file size
-                            songDetailViewModel.optionsButton(song, lyrics: lyrics, isSongFromFolder: isSongFromFolder)
-                        } else {
-                            Button(action: {
-                                if let song = restoreSong {
-                                    recentlyDeletedViewModel.restoreSong(song: song)
-                                } else {
-                                    errorMessage = "There was an error restoring the song."
-                                    showAlert = true
-                                    activeAlert = .error
+                    // Only show the text if there is a key or an artist
+                    if !key.isEmpty || !artist.isEmpty {
+                        Text(key.isEmpty ? artist : "Key: \(key)")
+                            .font(.system(size: 15))
+                            .foregroundColor(Color.gray)
+                    }
+                }
+                Spacer()
+                if !isInputActive {
+                    if songs != nil {
+                        Button {
+                            showPlayView = true
+                        } label: {
+                            Image(systemName: "play")
+                                .padding(13.5)
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.blue)
+                                .clipShape(Circle())
+                                .overlay {
+                                    Circle()
+                                        .stroke(.blue, lineWidth: 2.5)
                                 }
-                                presMode.wrappedValue.dismiss()
-                            }, label: {
-                                FAText(iconName: "rotate-left", size: 18)
-                                    .padding()
-                                    .font(.body.weight(.semibold))
-                                    .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                            })
-                            Button(action: {
-                                self.showRestoreSongDeleteSheet = true
-                            }, label: {
-                                FAText(iconName: "trash-can", size: 18)
-                                    .padding()
-                                    .font(.body.weight(.semibold))
-                                    .background(Material.regular)
-                                    .foregroundColor(.primary)
-                                    .clipShape(Circle())
-                            })
-                            .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
-                                Button("Delete", role: .destructive) {
-                                    recentlyDeletedViewModel.deleteSong(song: restoreSong!)
-                                    presMode.wrappedValue.dismiss()
-                                }
-                                Button("Cancel", role: .cancel) { }
-                            } message: {
-                                Text("Are you sure you want to permanently delete \"\(restoreSong!.title)\"?")
-                            }
                         }
+                        Button {
+                            songDetailViewModel.showNotesView = true
+                        } label: {
+                            FAText(iconName: "book", size: 18)
+                                .modifier(NavBarButtonViewModifier())
+                                .overlay {
+                                    // Show a badge when notes are present
+                                    if (song.notes ?? "") != "" {
+                                        Circle()
+                                            .frame(width: 11, height: 11)
+                                            .foregroundColor(.blue)
+                                            .offset(x: 17, y: -18)
+                                    }
+                                }
+                        }
+                        .sheet(isPresented: $songDetailViewModel.showNotesView) {
+                            NotesView(song: song)
+                        }
+                        // Fetch ellipsis/actions button from view model to cut down on file size
+                        songDetailViewModel.optionsButton(song, lyrics: lyrics, isSongFromFolder: isSongFromFolder)
                     } else {
-                        Button(action: {
-                            isInputActive = false
-                        }, label: {
-                            Text("Done")
-                                .padding(14)
+                        Button {
+                            if let song = restoreSong {
+                                recentlyDeletedViewModel.restoreSong(song: song)
+                            } else {
+                                errorMessage = "There was an error restoring the song."
+                                showAlert = true
+                                activeAlert = .error
+                            }
+                            dismiss()
+                        } label: {
+                            FAText(iconName: "rotate-left", size: 18)
+                                .padding()
                                 .font(.body.weight(.semibold))
                                 .background(Material.regular)
                                 .foregroundColor(.primary)
-                                .clipShape(Capsule())
-                        })
+                                .clipShape(Circle())
+                        }
+                        Button {
+                            self.showRestoreSongDeleteSheet = true
+                        } label: {
+                            FAText(iconName: "trash-can", size: 18)
+                                .padding()
+                                .font(.body.weight(.semibold))
+                                .background(Material.regular)
+                                .foregroundColor(.primary)
+                                .clipShape(Circle())
+                        }
+                        .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
+                            Button("Delete", role: .destructive) {
+                                recentlyDeletedViewModel.deleteSong(song: restoreSong!)
+                                dismiss()
+                            }
+                            Button("Cancel", role: .cancel) { }
+                        } message: {
+                            Text("Are you sure you want to permanently delete \"\(restoreSong!.title)\"?")
+                        }
+                    }
+                } else {
+                    Button {
+                        isInputActive = false
+                    } label: {
+                        Text("Done")
+                            .padding(14)
+                            .font(.body.weight(.semibold))
+                            .background(Material.regular)
+                            .foregroundColor(.primary)
+                            .clipShape(Capsule())
                     }
                 }
-                .padding(.top, 8)
-                .padding([.horizontal, .bottom])
             }
+            .padding(.top, 8)
+            .padding([.horizontal, .bottom])
             Divider()
             if isLoadingSongData {
                 ProgressView()
@@ -557,15 +557,10 @@ struct SongDetailView: View {
                                     }
                                 }
                             }
-                            // Don't push elements left unless the word count or variation picker are absent
-                            if !getShowVariationCondition() || !wordCountBool {
-                                Spacer()
-                            }
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)
-                    .padding(.horizontal)
+                    .padding()
                 }
             }
         }
@@ -577,9 +572,7 @@ struct SongDetailView: View {
             if let activeAlert = activeAlert {
                 switch activeAlert {
                 case .kickedOut:
-                    return Alert(title: Text("You no longer have access to this song."), dismissButton: .cancel(Text("OK"), action: {
-                        presMode.wrappedValue.dismiss()
-                    }))
+                    return Alert(title: Text("You no longer have access to this song."), dismissButton: .cancel(Text("OK"), action: { dismiss() }))
                 case .error:
                     return Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
                 }
@@ -729,13 +722,13 @@ struct SongDetailView: View {
         .confirmationDialog("Delete Song", isPresented: $songDetailViewModel.showDeleteSheet) {
             Button("Delete", role: .destructive) {
                 self.songViewModel.moveSongToRecentlyDeleted(song)
-                self.presMode.wrappedValue.dismiss()
+                self.dismiss()
             }
             if let folder = folder {
                 Button("Remove from Folder") {
                     // Remove the song from the provided folder
                     self.songViewModel.moveSongToRecentlyDeleted(folder, song)
-                    self.presMode.wrappedValue.dismiss()
+                    self.dismiss()
                 }
             }
             Button("Cancel", role: .cancel) {
@@ -765,7 +758,7 @@ struct SongDetailView: View {
             SongEditView(song: song, isDisplayed: $songDetailViewModel.showEditView, title: $title, key: $key, artist: $artist)
         }
         .sheet(isPresented: $songDetailViewModel.showMoveView) {
-            SongMoveView(song: song, showProfileView: $songDetailViewModel.showMoveView, songTitle: song.title)
+            SongMoveView(song: song)
         }
         .sheet(isPresented: $showNewVariationView, onDismiss: {
             // When a new variation is created, switch the lyrics to it
@@ -785,7 +778,7 @@ struct SongDetailView: View {
             SongVariationManageView(song: song, isDisplayed: $showVariationsManagementSheet, lyrics: $lyrics, selectedVariation: $selectedVariation, songVariations: $songVariations)
         }
         .fullScreenCover(isPresented: $showPlayView) {
-            PlayView(song: song, size: fontSize, weight: weight, lineSpacing: lineSpacing, alignment: alignment, key: key, title: title, lyrics: lyrics, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [], dismiss: $showPlayView)
+            PlayView(song: song, size: fontSize, weight: weight, lineSpacing: lineSpacing, alignment: alignment, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [])
         }
         .onChange(of: isInputActive) { isInputActive in
             // Show and hide the list of joined users when the user focuses and unfocuses the keyboard

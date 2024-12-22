@@ -754,7 +754,7 @@
 		E06D77802A17B4240032332F /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				E06D77822A17B4390032332F /* ViewModel */,
+				E06D77822A17B4390032332F /* View Model */,
 				E06D77812A17B4300032332F /* Views */,
 			);
 			path = Settings;
@@ -768,12 +768,12 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		E06D77822A17B4390032332F /* ViewModel */ = {
+		E06D77822A17B4390032332F /* View Model */ = {
 			isa = PBXGroup;
 			children = (
 				E06D77882A17CF310032332F /* SettingsViewModel.swift */,
 			);
-			path = ViewModel;
+			path = "View Model";
 			sourceTree = "<group>";
 		};
 		E06D77852A17CD580032332F /* Views */ = {

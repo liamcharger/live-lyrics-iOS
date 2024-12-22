@@ -94,7 +94,7 @@ struct MenuView: View {
                             .clipShape(Circle())
                     }
                     .sheet(isPresented: $showProfileView) {
-                        ProfileView(user: user, showProfileView: $showProfileView)
+                        ProfileView(user: user, isPresented: $showProfileView)
                     }
                     CloseButton {
                         showMenu = false

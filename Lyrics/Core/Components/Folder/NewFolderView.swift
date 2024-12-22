@@ -36,7 +36,7 @@ struct NewFolderView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $title, placeholder: "title")
+            CustomTextField(text: $title, placeholder: "title", image: "character.cursor.ibeam")
                 .padding()
                 .focused($isFocused)
             Spacer()

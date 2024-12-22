@@ -37,8 +37,6 @@ class NotesViewModel: ObservableObject {
                 self.service.updateNotes(folder: folder, notes: notes)
             }
             
-            print("Updating \(folder == nil ? song?.title ?? "" : folder?.title ?? "") to \"\(notes)\"")
-            
             self.lastUpdatedNotes = notes
         }
     }

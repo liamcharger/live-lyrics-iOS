@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct SongMoveView: View {
+    @Environment(\.presentationMode) var presMode
+    
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     
-    @Binding var showProfileView: Bool
-    
     let song: Song
-    let songTitle: String
     
     @State var selectedFolders: [Folder] = []
     
@@ -45,20 +44,18 @@ struct SongMoveView: View {
         // Show "song already in folder" alert?
         dispatch.notify(queue: .main) {
             self.isLoading = false
-            self.showProfileView = false
+            self.presMode.wrappedValue.dismiss()
         }
     }
     
-    init(song: Song, showProfileView: Binding<Bool>, songTitle: String) {
+    init(song: Song) {
         self.song = song
-        self.songTitle = songTitle
-        self._showProfileView = showProfileView
     }
     
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
-                Text("Move \"\(songTitle)\"")
+                Text("Move \(song.title)")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {showNewFolderView = true}) {
@@ -74,7 +71,7 @@ struct SongMoveView: View {
                     NewFolderView(isDisplayed: $showNewFolderView)
                 }
                 CloseButton {
-                    showProfileView = false
+                    presMode.wrappedValue.dismiss()
                 }
                 if !selectedFolders.isEmpty {
                     Button(action: {

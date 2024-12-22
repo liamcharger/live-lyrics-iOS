@@ -88,7 +88,7 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func updateUser(withEmail email: String, username: String, fullname: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
+    func updateUser(email: String, username: String, fullname: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
         self.userSession?.updateEmail(to: email) { error in
             if let error = error {
                 completionBool(false)

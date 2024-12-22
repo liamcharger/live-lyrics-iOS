@@ -924,6 +924,7 @@
       }
     },
     "Click to add to your library." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -932,6 +933,9 @@
           }
         }
       }
+    },
+    "Click to add to your library.." : {
+
     },
     "Click to copy to your clipboard." : {
       "localizations" : {
@@ -2031,6 +2035,7 @@
       }
     },
     "Move \"%@\"" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -2039,6 +2044,9 @@
           }
         }
       }
+    },
+    "Move %@" : {
+
     },
     "multiple" : {
       "extractionState" : "manual",

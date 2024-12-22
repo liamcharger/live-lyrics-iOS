@@ -276,7 +276,7 @@ struct MainView: View {
                     Label("Edit", systemImage: "pencil")
                 }
             }
-            if !songViewModel.isShared(song: song) {
+            if !songViewModel.isShared(song) {
                 Button {
                     selectedSong = song
                     showShareSheet.toggle()
@@ -339,7 +339,7 @@ struct MainView: View {
                 selectedSong = song
                 showSongDeleteSheet.toggle()
             }, label: {
-                if songViewModel.isShared(song: song) {
+                if songViewModel.isShared(song) {
                     Label("Leave", systemImage: "arrow.backward.square")
                 } else {
                     Label("Delete", systemImage: "trash")
@@ -812,9 +812,6 @@ struct MainView: View {
                                                                             song.readOnly = folder.readOnly
                                                                             return song
                                                                         }()
-                                                                        let isShared: Bool = {
-                                                                            return mainViewModel.selectedFolder?.uid ?? uid() != uid()
-                                                                        }()
                                                                         
                                                                         if song.title == "noSongs" {
                                                                             Text("No Songs")
@@ -834,7 +831,7 @@ struct MainView: View {
                                                                                                 Label("Edit", systemImage: "pencil")
                                                                                             }
                                                                                         }
-                                                                                        if !isShared {
+                                                                                        if song.uid == uid() {
                                                                                             Button {
                                                                                                 selectedSong = song
                                                                                                 showShareSheet.toggle()
@@ -842,7 +839,7 @@ struct MainView: View {
                                                                                                 Label("Share", systemImage: "square.and.arrow.up")
                                                                                             }
                                                                                         }
-                                                                                        if !songViewModel.isShared(song: song) && folder.uid ?? "" == uid() {
+                                                                                        if !songViewModel.isShared(song) && folder.uid ?? "" == uid() {
                                                                                             Button {
                                                                                                 selectedSong = song
                                                                                                 showSongMoveSheet.toggle()
@@ -896,14 +893,14 @@ struct MainView: View {
                                                                                         Button(role: .destructive) {
                                                                                             selectedSong = song
                                                                                             mainViewModel.selectedFolder = folder
-                                                                                            showFolderSongDeleteSheet.toggle()
+                                                                                            showFolderSongDeleteSheet = true
                                                                                         } label: {
                                                                                             Label("Remove", systemImage: "trash")
                                                                                         }
                                                                                     }
-                                                                                    .confirmationDialog(isShared ? "Remove Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
-                                                                                        if let selectedSong = selectedSong {
-                                                                                            if !isShared {
+                                                                                    .confirmationDialog(songViewModel.isShared(song) ? "Remove Song" : "Delete Song", isPresented: $showFolderSongDeleteSheet) {
+                                                                                        if let selectedSong {
+                                                                                            if !songViewModel.isShared(selectedSong) {
                                                                                                 Button("Delete", role: .destructive) {
                                                                                                     songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                                                                                 }
@@ -914,8 +911,8 @@ struct MainView: View {
                                                                                             Button("Cancel", role: .cancel) {}
                                                                                         }
                                                                                     } message: {
-                                                                                        if let selectedSong = selectedSong {
-                                                                                            Text("Are you sure you want to \(isShared ? "remove" : "delete") \"\(selectedSong.title)\"?")
+                                                                                        if let selectedSong {
+                                                                                            Text("Are you sure you want to \(songViewModel.isShared(selectedSong) ? "remove" : "delete") \"\(selectedSong.title)\"?")
                                                                                         }
                                                                                     }
                                                                             }
@@ -1054,8 +1051,8 @@ struct MainView: View {
                                                             }
                                                             .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
                                                                 if let selectedSong = selectedSong {
-                                                                    Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
-                                                                        if songViewModel.isShared(song: selectedSong) {
+                                                                    Button(songViewModel.isShared(selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                                                        if songViewModel.isShared(selectedSong) {
                                                                             songViewModel.leaveSong(song: selectedSong)
                                                                         } else {
                                                                             songViewModel.moveSongToRecentlyDeleted(selectedSong)
@@ -1065,7 +1062,7 @@ struct MainView: View {
                                                                 }
                                                             } message: {
                                                                 if let selectedSong = selectedSong {
-                                                                    Text("Are you sure you want to \(songViewModel.isShared(song: selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
+                                                                    Text("Are you sure you want to \(songViewModel.isShared(selectedSong) ? "leave" : "delete") \"\(selectedSong.title)\"?")
                                                                 }
                                                             }
                                                     }
@@ -1123,7 +1120,7 @@ struct MainView: View {
                     }
                     .sheet(isPresented: $showSongMoveSheet) {
                         if let selectedSong = selectedSong {
-                            SongMoveView(song: selectedSong, showProfileView: $showSongMoveSheet, songTitle: selectedSong.title)
+                            SongMoveView(song: selectedSong)
                         } else {
                             LoadingFailedView()
                         }
@@ -1135,7 +1132,13 @@ struct MainView: View {
                             LoadingFailedView()
                         }
                     }
-                    .sheet(isPresented: $showTagSheet, onDismiss: checkToFetchSharedSongs) {
+                    .sheet(isPresented: $showTagSheet, onDismiss: {
+                        checkToFetchSharedSongs()
+                        
+                        if let selectedFolder {
+                            mainViewModel.fetchSongs(selectedFolder)
+                        }
+                    }) {
                         if let selectedSong = selectedSong {
                             let tags: [TagSelectionEnum] = selectedSong.tags?.compactMap { TagSelectionEnum(rawValue: $0) } ?? []
                             SongTagView(isPresented: $showTagSheet, tagsToUpdate: .constant([]), tags: tags, song: selectedSong)
@@ -1145,8 +1148,8 @@ struct MainView: View {
                     }
                     .confirmationDialog("\(selectedSong?.id ?? "" == uid() ? "Delete" : "Leave") Song", isPresented: $showSongDeleteSheet) {
                         if let selectedSong = selectedSong {
-                            Button(songViewModel.isShared(song: selectedSong) ? "Leave" : "Delete", role: .destructive) {
-                                if !songViewModel.isShared(song: selectedSong) {
+                            Button(songViewModel.isShared(selectedSong) ? "Leave" : "Delete", role: .destructive) {
+                                if !songViewModel.isShared(selectedSong) {
                                     songViewModel.moveSongToRecentlyDeleted(selectedSong)
                                 } else {
                                     songViewModel.leaveSong(song: selectedSong)

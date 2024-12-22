@@ -522,7 +522,6 @@ class SongService {
 	
 	func updateLyrics(forVariation: SongVariation? = nil, song: Song, lyrics: String) {
 		if let variation = forVariation {
-			print("Updating variation")
 			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!)
 				.updateData(["lyrics": lyrics]) { error in
 					if let error = error {
@@ -530,7 +529,6 @@ class SongService {
 					}
 				}
 		} else {
-			print("Updating default")
 			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 				.updateData(["lyrics": lyrics]) { error in
 					if let error = error {
@@ -562,8 +560,6 @@ class SongService {
 		return Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).addSnapshotListener { snapshot, error in
 			guard let snapshot = snapshot else { return }
 			guard let song = try? snapshot.data(as: Song.self) else { return }
-			
-			print(song)
 			
 			completion(song.notes ?? "")
 		}

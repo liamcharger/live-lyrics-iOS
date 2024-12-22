@@ -46,7 +46,7 @@ struct FolderEditView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $text, placeholder: NSLocalizedString("title", comment: ""))
+            CustomTextField(text: $text, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
                 .focused($isFocused)
                 .padding(.horizontal)
             Spacer()

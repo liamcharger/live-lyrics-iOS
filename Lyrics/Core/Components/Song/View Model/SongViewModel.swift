@@ -250,8 +250,8 @@ class SongViewModel: ObservableObject {
         return url.replacingOccurrences(of: https, with: "").replacingOccurrences(of: http, with: "")
     }
     
-    func isShared(song: Song) -> Bool {
-        return song.uid != authViewModel.currentUser?.id
+    func isShared(_ song: Song) -> Bool {
+        return song.uid != uid()
     }
     
     func removeFeatAndAfter(from input: String) -> String {

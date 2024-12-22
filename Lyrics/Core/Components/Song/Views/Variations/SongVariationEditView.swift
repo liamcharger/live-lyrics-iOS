@@ -57,7 +57,7 @@ struct SongVariationEditView: View {
             Divider()
             ScrollView {
                 VStack {
-                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""))
+                    CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
                     Button {
                         showAddRoleSheet = true
                     } label: {

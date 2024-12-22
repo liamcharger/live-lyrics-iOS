@@ -34,7 +34,7 @@ struct DemoAttachmentEditView: View {
             VStack(spacing: 4) {
                 Spacer()
                 HStack {
-                    CustomTextField(text: $url, placeholder: "URL")
+                    CustomTextField(text: $url, placeholder: "URL", image: "globe")
                         .autocorrectionDisabled()
                         .autocapitalization(.none)
                     Button {

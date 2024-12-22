@@ -92,9 +92,9 @@ struct SongEditView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     VStack {
-                        CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""))
-                        CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""))
-                        CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""))
+                        CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
+                        CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""), image: "arrow.up.arrow.down")
+                        CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""), image: "person")
                     }
                     if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
                             VStack {

@@ -1,0 +1,27 @@
+{
+  "deeplinks" : [
+    {
+      "url" : "live-lyrics:\/\/profile",
+      "identifier" : "668076E2-8B3E-49CB-A4B0-43D9A7808FF6",
+      "title" : "Menu"
+    }
+  ],
+  "bundleIdentifier" : "com.chargertech.Lyrics",
+  "title" : "Live Lyrics",
+  "identifier" : "EFF22AF1-E4DD-47C7-80E8-E083DB2172EF",
+  "pushNotifications" : [
+    {
+      "payload" : "{\n    \"aps\": {\n        \"alert\": {\n            \"title\": \"Song Accepted\",\n            \"body\": \"testingaccount accepted your share invite.\"\n        }\n    },\n    \"deep_link\": \"live-lyrics:\/\/profile\"\n}",
+      "title" : "Song Accepted",
+      "identifier" : "49D03BC4-9ACA-48FE-82B2-3A8FA34624E6"
+    },
+    {
+      "payload" : "{\n    \"aps\": {\n        \"alert\": {\n            \"title\": \"Song Declined\",\n            \"body\": \"testingaccount has declined your share invite.\"\n        }\n    },\n    \"deep_link\": \"live-lyrics:\/\/profile\"\n}",
+      "identifier" : "5EF69D60-D8F2-48E6-987D-D8AF178A4C5B",
+      "title" : "Song Declined"
+    }
+  ],
+  "locations" : [
+
+  ]
+}
