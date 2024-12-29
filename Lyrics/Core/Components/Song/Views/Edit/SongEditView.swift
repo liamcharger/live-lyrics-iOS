@@ -78,25 +78,26 @@ struct SongEditView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: 10) {
-                Text("Edit Song")
-                    .font(.title.weight(.bold))
-                Spacer()
-                CloseButton {
-                    presMode.wrappedValue.dismiss()
-                }
-            }
-            .padding()
-            Divider()
-            ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    VStack {
-                        CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
-                        CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""), image: "arrow.up.arrow.down")
-                        CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""), image: "person")
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                HStack(alignment: .center, spacing: 10) {
+                    Text("Edit Song")
+                        .font(.title.weight(.bold))
+                    Spacer()
+                    CloseButton {
+                        presMode.wrappedValue.dismiss()
                     }
-                    if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
+                }
+                .padding()
+                Divider()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 22) {
+                        VStack {
+                            CustomTextField(text: $stateTitle, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
+                            CustomTextField(text: $stateKey, placeholder: NSLocalizedString("Key", comment: ""), image: "arrow.up.arrow.down")
+                            CustomTextField(text: $stateArtist, placeholder: NSLocalizedString("Artist", comment: ""), image: "person")
+                        }
+                        if let user = authViewModel.currentUser, (!(user.hasPro ?? false) && !(song.demoAttachments ?? []).isEmpty) || (user.hasPro ?? false) {
                             VStack {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack(spacing: 8) {
@@ -122,6 +123,7 @@ struct SongEditView: View {
                                 }
                                 if (song.demoAttachments ?? []).isEmpty {
                                     EmptyStateView(state: .demoAttachments)
+                                        .frame(height: geo.size.height / 2.75)
                                 } else {
                                     if let demoAttachments = song.demoAttachments {
                                         LazyVGrid(columns: columns) {
@@ -156,7 +158,7 @@ struct SongEditView: View {
                                                         guard let url = URL(string: demoURL) else { return }
                                                         
                                                         openURL(url)
-                                                     } label: {
+                                                    } label: {
                                                         Label("Open", systemImage: "arrow.up.right.square")
                                                     }
                                                     Button {
@@ -196,20 +198,21 @@ struct SongEditView: View {
                                     }
                                 }
                             }
+                        }
                     }
+                    .padding()
+                }
+                Divider()
+                VStack(spacing: 16) {
+                    Text("These settings are not specific to song variations.")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.gray)
+                    LiveLyricsButton("Save", action: update)
+                        .opacity(isEmpty ? 0.5 : 1.0)
+                        .disabled(isEmpty)
                 }
                 .padding()
             }
-            Divider()
-            VStack(spacing: 16) {
-                Text("These settings are not specific to song variations.")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.gray)
-                LiveLyricsButton("Save", action: update)
-                    .opacity(isEmpty ? 0.5 : 1.0)
-                    .disabled(isEmpty)
-            }
-            .padding()
         }
         .alert(isPresented: $showError) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
