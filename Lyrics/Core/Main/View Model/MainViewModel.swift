@@ -83,6 +83,7 @@ class MainViewModel: ObservableObject {
     
     func fetchFolders() {
         self.service.fetchFolders { folders in
+            print("Fetched folders")
             DispatchQueue.main.async {
                 self.folders = folders
                 self.isLoadingFolders = false
@@ -105,9 +106,7 @@ class MainViewModel: ObservableObject {
         }
     }
     
-    // FIXME: shared songs loading state changes to false before they are appended to the songs variable in MainView
     func fetchSharedSongs(completion: @escaping() -> Void) {
-        self.isLoadingSharedSongs = true
         self.service.fetchSharedSongs { songs in
             DispatchQueue.main.async {
                 self.sharedSongs = songs
@@ -118,7 +117,6 @@ class MainViewModel: ObservableObject {
     }
     
     func fetchSharedFolders() {
-        self.isLoadingSharedFolders = false
         self.service.fetchSharedFolders { folders in
             DispatchQueue.main.async {
                 self.sharedFolders = folders
