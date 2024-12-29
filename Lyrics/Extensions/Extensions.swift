@@ -26,12 +26,13 @@ func uid() -> String {
 }
 
 func greeting(withName: Bool? = nil) -> String {
+    @AppStorage("fullname") var fullname: String?
+    
     let date = Date()
     let calendar = Calendar.current
     let currentHour = calendar.component(.hour, from: date)
     
     let withName = withName ?? false
-    let fullname: String? = AuthViewModel.shared.currentUser?.fullname
     
     var greetingText = "Hello."
     switch currentHour {

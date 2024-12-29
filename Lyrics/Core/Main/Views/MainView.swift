@@ -20,6 +20,7 @@ struct MainView: View {
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
     @AppStorage("showUpgradeSheet") var showUpgradeSheet = false
+    @AppStorage("fullname") var fullname: String?
     
     @State var selectedSong: Song?
     @State var selectedUser: User?

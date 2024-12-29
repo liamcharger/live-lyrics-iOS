@@ -8,6 +8,7 @@
 import FirebaseAuth
 import Firebase
 import FirebaseFirestore
+import SwiftUI
 
 class AuthViewModel: ObservableObject {
     @Published var users: [User] = []
@@ -16,6 +17,8 @@ class AuthViewModel: ObservableObject {
     @Published var isLoadingUsers = false
     @Published var currentUser: User?
     @Published var uniqueUserID: String = ""
+    
+    @AppStorage("fullname") var fullname: String?
     
     private var tempUserSession: FirebaseAuth.User?
     private let service = UserService()
@@ -136,7 +139,7 @@ class AuthViewModel: ObservableObject {
         
         service.fetchUser(withUid: uid) { user in
             self.currentUser = user
-            
+            self.fullname = user.fullname
             self.uniqueUserID = user.id!.prefix(4).uppercased()
         }
     }
