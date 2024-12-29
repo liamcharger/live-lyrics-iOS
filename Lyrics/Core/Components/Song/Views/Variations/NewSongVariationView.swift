@@ -11,22 +11,23 @@ import BottomSheet
 struct NewSongVariationView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     
-    @State var title = ""
-    @State var lyrics = ""
-    @State var errorMessage = ""
+    @State private var title = ""
+    @State private var lyrics = ""
+    @State private var errorMessage = ""
     
-    @State var view2 = false
-    @State var showError = false
-    @State var showInfo = false
-    @State var canDismissProgrammatically = false
-    @State var showAddRoleSheet = false
-    @State var selectedRole: BandRole?
-    @State var showProgressButton = false
+    @State private var showAddLyricsView = false
+    @State private var showError = false
+    @State private var showInfo = false
+    @State private var canDismissProgrammatically = false
+    @State private var showAddRoleSheet = false
+    @State private var showProgressButton = false
+    
+    @State private var selectedRole: BandRole?
     
     @Binding var isDisplayed: Bool
     @Binding var createdId: String
     
-    @FocusState var isFocused: Bool
+    @FocusState private var isFocused: Bool
     
     let song: Song
     
@@ -39,7 +40,7 @@ struct NewSongVariationView: View {
             } else {
                 self.createdId = createdId
                 self.canDismissProgrammatically = true
-                self.view2 = false
+                self.showAddLyricsView = false
             }
         }
     }
@@ -59,11 +60,7 @@ struct NewSongVariationView: View {
             Divider()
             Spacer()
             VStack {
-                TextField(NSLocalizedString("title", comment: ""), text: $title)
-                    .padding(14)
-                    .background(Material.regular)
-                    .clipShape(Capsule())
-                    .cornerRadius(10)
+                CustomTextField(text: $title, placeholder: NSLocalizedString("title", comment: ""), image: "character.cursor.ibeam")
                     .focused($isFocused)
                 Button {
                     showAddRoleSheet = true
@@ -82,11 +79,11 @@ struct NewSongVariationView: View {
             .padding()
             Spacer()
             Divider()
-            LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { view2 = true })
-                .sheet(isPresented: $view2) {
-                    nextView
+            LiveLyricsButton("Continue", showProgressIndicator: .constant(false), action: { showAddLyricsView = true })
+                .sheet(isPresented: $showAddLyricsView) {
+                    variationLyricsView
                 }
-                .onChange(of: view2) { newValue in
+                .onChange(of: showAddLyricsView) { newValue in
                     if !newValue {
                         if canDismissProgrammatically {
                             isDisplayed = false
@@ -105,7 +102,7 @@ struct NewSongVariationView: View {
         }
     }
     
-    var nextView: some View {
+    var variationLyricsView: some View {
         VStack(spacing: 0) {
             HStack {
                 Text("Enter the lyrics for the variation.")
@@ -113,7 +110,7 @@ struct NewSongVariationView: View {
                     .multilineTextAlignment(.leading)
                 Spacer()
                 CloseButton {
-                    view2 = false
+                    showAddLyricsView = false
                 }
             }
             .padding()

@@ -32,21 +32,6 @@ struct BandMemberAddRoleView: View {
                     Text("Choose a Role")
                         .font(.system(size: 28, design: .rounded).weight(.bold))
                     Spacer()
-                    if selectedRole != nil {
-                        Button(action: {
-                            selectedRole = nil
-                            if let member = member, let band = band {
-                                bandsViewModel.saveRole(to: member, for: band, role: nil)
-                            }
-                            dismiss()
-                        }) {
-                            FAText(iconName: "trash-can", size: 19)
-                                .padding(12)
-                                .foregroundColor(.red)
-                                .background(Material.regular)
-                                .clipShape(Circle())
-                        }
-                    }
                     Button(action: {dismiss()}) {
                         Image(systemName: "xmark")
                             .imageScale(.medium)
@@ -64,13 +49,17 @@ struct BandMemberAddRoleView: View {
                     LazyVGrid(columns: columns) {
                         ForEach(bandsViewModel.memberRoles, id: \.name) { role in
                             Button {
-                                selectedRole = role
+                                selectedRole = (selectedRole == nil ? role : nil)
+                                
                                 if let member = member, let band = band {
-                                    bandsViewModel.saveRole(to: member, for: band, role: role)
+                                    bandsViewModel.saveRole(to: member, for: band, role: selectedRole)
                                 }
-                                dismiss()
+                                
+                                if selectedRole != nil {
+                                    dismiss()
+                                }
                             } label: {
-                                ContentRowView(role.name, icon: role.icon ?? "star", actionIcon: selectedRole?.name == role.name ? "checkmark" : "")
+                                ContentRowView(role.name, icon: role.icon ?? "star", isSelected: (selectedRole?.name ?? "") == role.name, showChevron: false)
                             }
                         }
                         /*

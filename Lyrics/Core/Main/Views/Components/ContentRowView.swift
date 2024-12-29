@@ -10,26 +10,29 @@ import SwiftUI
 struct ContentRowView: View {
     let title: String
     let icon: String
-    let actionIcon: String
+    let isSelected: Bool
+    let showChevron: Bool
     let color: Color
     
-    init(_ title: String, icon: String, color: Color? = nil, actionIcon: String? = nil) {
+    init(_ title: String, icon: String, color: Color? = nil, isSelected: Bool = false, showChevron: Bool = true) {
         self.title = title
         self.icon = icon
         self.color = color ?? Color.primary
-        self.actionIcon = actionIcon ?? "chevron.right"
+        self.isSelected = isSelected
+        self.showChevron = showChevron
     }
     
     var body: some View {
         ZStack(alignment: .leading) {
             VStack(alignment: .leading, spacing: 12) {
+                // So far, this check is sufficient because the only non-fa icon we'll be using is "apple_music"
                 if icon == "apple_music" {
                     Image(icon)
                         .resizable()
                         .frame(width: 22, height: 22)
                 } else {
                     FAText(iconName: icon, size: 20)
-                        .foregroundColor(color)
+                        .foregroundColor(isSelected ? Color.blue : color)
                 }
                 Text(title)
                     .font(.system(size: 18).weight(.semibold))
@@ -38,17 +41,29 @@ struct ContentRowView: View {
                     .lineLimit(2)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            Image(systemName: actionIcon)
-                .font(.body.weight(.medium))
-                .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            Group {
+                if isSelected {
+                    Image(systemName: "checkmark")
+                } else if showChevron {
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .font(.body.weight(.medium))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
         .padding()
         .frame(maxHeight: .infinity)
         .frame(minHeight: 105)
-        .background(Material.thin)
-        .foregroundColor(.primary)
+        .background(Material.regular)
+        .foregroundStyle(isSelected ? Color.blue : Color.primary)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay {
+            if isSelected {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.blue, lineWidth: 2)
+            }
+        }
     }
 }
 

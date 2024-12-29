@@ -8,9 +8,13 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-struct BandRole: Identifiable, Codable {
+struct BandRole: Identifiable, Codable, Equatable {
     @DocumentID var id: String?
     let name: String
     let icon: String?
     let color: String?
+    
+    func rhs(_ rhs: BandRole) -> Bool {
+        id == rhs.id
+    }
 }
