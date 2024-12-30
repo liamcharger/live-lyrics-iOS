@@ -934,27 +934,19 @@ class SongService {
 		}
 	}
 	
-	func moveSongsToFolder(id: String, songs: [Song], completion: @escaping(Error?) -> Void) {
+	func moveSongsToFolder(_ folder: Folder, songs: [Song], completion: @escaping(Error?) -> Void) {
 		guard let userId = Auth.auth().currentUser?.uid else { return }
 		
-		let songsCollectionRef = Firestore.firestore().collection("users").document(userId).collection("folders").document(id).collection("songs")
+		let songsCollectionRef = Firestore.firestore().collection("users").document(folder.uid ?? userId).collection("folders").document(folder.id!).collection("songs")
 		
 		for song in songs {
 			let songDocumentRef = songsCollectionRef.document(song.id!)
 			
-			if !NetworkManager.shared.getNetworkState() {
-				songDocumentRef.setData(["order": 0, "uid": song.uid])
-				
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+			songDocumentRef.setData(["order": 0, "uid": song.uid]) { error in
+				if let error = error {
+					completion(error)
+				} else {
 					completion(nil)
-				}
-			} else {
-				songDocumentRef.setData(["order": 0, "uid": song.uid]) { error in
-					if let error = error {
-						completion(error)
-					} else {
-						completion(nil)
-					}
 				}
 			}
 		}
@@ -1185,7 +1177,7 @@ class SongService {
 								}
 							}
 							
-							self.moveSongsToFolder(id: folder.id!, songs: songs) { error in
+							self.moveSongsToFolder(folder, songs: songs) { error in
 								if let error = error {
 									print(error.localizedDescription)
 								}

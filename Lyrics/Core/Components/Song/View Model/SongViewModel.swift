@@ -69,7 +69,7 @@ class SongViewModel: ObservableObject {
     }
     
     func moveSongsToFolder(folder: Folder, songs: [Song], completion: @escaping(Error?) -> Void) {
-        service.moveSongsToFolder(id: folder.id ?? "", songs: songs) { error in
+        service.moveSongsToFolder(folder, songs: songs) { error in
             completion(error)
         }
     }
