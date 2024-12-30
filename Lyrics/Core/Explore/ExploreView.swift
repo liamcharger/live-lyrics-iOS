@@ -113,19 +113,22 @@ struct ExploreView: View {
                                     Text("popular_songs")
                                         .textCase(.uppercase)
                                         .font(.system(size: 14).weight(.bold))
-                                    LazyVGrid(columns: columns) {
+                                    LazyVGrid(columns: columns, alignment: .leading) {
                                         ForEach(musixmatchService.popularSongs, id: \.trackId) { track in
                                             NavigationLink {
                                                 SongExploreDetailView(track: track)
                                             } label: {
                                                 VStack(alignment: .leading) {
-                                                    Text("E")
-                                                        .font(.system(size: 12))
-                                                        .foregroundColor(Color(.lightGray))
-                                                        .padding(3)
-                                                        .background(Color.gray.opacity(0.3))
-                                                        .clipShape(RoundedRectangle(cornerRadius: 3))
-                                                        .opacity(track.explicit == 1 ? 1 : 0)
+                                                    HStack {
+                                                        Text("E")
+                                                            .font(.system(size: 12))
+                                                            .foregroundColor(Color(.lightGray))
+                                                            .padding(3)
+                                                            .background(Color.gray.opacity(0.3))
+                                                            .clipShape(RoundedRectangle(cornerRadius: 3))
+                                                            .opacity(track.explicit == 1 ? 1 : 0)
+                                                        Spacer() // Don't use .frame because it causes odd scroll behavior
+                                                    }
                                                     Spacer()
                                                     VStack(alignment: .leading, spacing: 6) {
                                                         Text(track.artistName)
@@ -138,7 +141,6 @@ struct ExploreView: View {
                                                     .multilineTextAlignment(.leading)
                                                 }
                                                 .padding(13)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
                                                 .frame(height: 175)
                                                 .background(Material.regular)
                                                 .foregroundColor(.primary)
@@ -151,7 +153,7 @@ struct ExploreView: View {
                                     Text("popular_artists")
                                         .textCase(.uppercase)
                                         .font(.system(size: 14).weight(.bold))
-                                    LazyVGrid(columns: columns) {
+                                    LazyVGrid(columns: columns, alignment: .leading) {
                                         ForEach(musixmatchService.popularArtists, id: \.artist_id) { artist in
                                             HStack {
                                                 Text(artist.artist_name)
@@ -161,7 +163,6 @@ struct ExploreView: View {
                                                 Spacer()
                                             }
                                             .padding(13)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
                                             .frame(height: 70)
                                             .background(Material.regular)
                                             .foregroundColor(.primary)
