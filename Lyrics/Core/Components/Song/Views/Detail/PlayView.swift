@@ -129,9 +129,7 @@ struct PlayView: View {
                        let targetTime = Double(components[1]),
                        autoscrollTimerTime >= targetTime {
                         DispatchQueue.main.async {
-                            withAnimation {
-                                scrollViewProxy.scrollTo(lineIndex, anchor: performanceMode ? .center : .top)
-                            }
+                            scrollTo(lineIndex, updateIndex: false)
                         }
                         self.currentLineIndex += 1
                     }
@@ -145,11 +143,16 @@ struct PlayView: View {
             }
         }
     }
-    func scrollTo(_ index: Int) {
+    func scrollTo(_ index: Int, updateIndex: Bool = true) {
+        isScrollingProgrammatically = true
+        
         if let scrollViewProxy = proxy {
-            withAnimation {
+            withAnimation(.smooth) {
                 scrollViewProxy.scrollTo(index, anchor: performanceMode ? .center : .top)
-                currentLineIndex = index
+                
+                if updateIndex {
+                    currentLineIndex = index
+                }
             }
         }
     }
@@ -406,6 +409,7 @@ struct PlayView: View {
                                                         .id(index)
                                                         .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                                 }
+                                                .disabled(isSyncing || isScrolling) // Disable until we can add support for skipping
                                             } else {
                                                 Button {
                                                     scrollTo(index)
@@ -419,11 +423,11 @@ struct PlayView: View {
                                                         .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                                         .id(index)
                                                 }
+                                                .disabled(isSyncing || isScrolling) // Disable until we can add support for skipping
                                                 .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
                                                 .shadow(color: (currentLineIndex == index && isScrolling && !isPressed) ? Color.blue : Color.clear, radius: 10, y: 8)
                                             }
                                         }
-                                        .disabled(isSyncing)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
@@ -647,7 +651,7 @@ struct PlayView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .alert(isPresented: $isShowingSyncModeAlert) {
-            Alert(title: Text("To sync your lyrics, first start the sync session with the button below, then use the same button to scroll the lyrics at the desired time."), dismissButton: .cancel(Text("OK"), action: {
+            Alert(title: Text("To sync your lyrics, use the button below to scroll the lyrics at the desired time."), dismissButton: .cancel(Text("OK"), action: {
                 isShowingSyncModeAlert = false
                 hasUsedSyncMode = true
                 startSyncing()
