@@ -64,7 +64,10 @@ struct NotesView: View {
             notesViewModel.fetchNotes(song: song, folder: folder)
         }
         .onDisappear {
-            notesViewModel.updateNotes(song: song, folder: folder, notes: notesViewModel.notes)
+            if notesViewModel.lastUpdatedNotes != notesViewModel.notes {
+                notesViewModel.updateNotes(song: song, folder: folder, notes: notesViewModel.notes)
+            }
+            
             notesViewModel.stopUpdatingNotes()
         }
     }
