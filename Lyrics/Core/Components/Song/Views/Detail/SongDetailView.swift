@@ -33,7 +33,6 @@ struct SongDetailView: View {
     @State private var title = ""
     @State private var artist = ""
     @State private var errorMessage = ""
-    @State private var wordCountStyle = ""
     @State private var createdVariationId = ""
     @State private var bpm = 120
     @State private var bpb = 4
@@ -41,13 +40,11 @@ struct SongDetailView: View {
     @State private var tags: [String] = []
     
     @State private var joinedUsersStrings = [String]()
-    @State private var lastFetchedJoined: Date?
     
     @State private var joinedUsers: [User]?
     
     @State private var songVariations = [SongVariation]()
     
-    @State private var wordCountBool = true
     @State private var showRestoreSongDeleteSheet = false
     @State private var showPlayView = false
     @State private var showAlert = false
@@ -74,7 +71,7 @@ struct SongDetailView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @FocusState var isInputActive: Bool
+    @FocusState var isLyricsFocused: Bool
     
     var songs: [Song]?
     let isSongFromFolder: Bool
@@ -104,22 +101,16 @@ struct SongDetailView: View {
         return songVariations.count > 1
     }
     func fetchUsers() {
-        // Prevent joined users from being fetched more than once
-        if lastFetchedJoined == nil || lastFetchedJoined!.timeIntervalSinceNow < -10 {
-            // User is not the owner, so add the owner to the array
-            if uid() != song.uid {
-                joinedUsersStrings.insert(song.uid, at: 0)
-            }
-            // User is not the admin but is a joined user, so remove their profile from the array
-            if joinedUsersStrings.contains(uid()) {
-                if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
-                    joinedUsersStrings.remove(at: index)
-                }
-            }
-            viewModel.fetchUsers(uids: joinedUsersStrings) { users in
-                self.lastFetchedJoined = Date()
-                self.joinedUsers = users
-            }
+        // User is not the owner, so add the owner to the array
+        if uid() != song.uid {
+            joinedUsersStrings.insert(song.uid, at: 0)
+        }
+        // Don't add the current user's profile in the array
+        if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
+            joinedUsersStrings.remove(at: index)
+        }
+        viewModel.fetchUsers(uids: joinedUsersStrings) { users in
+            self.joinedUsers = users
         }
     }
     func updateLyrics() {
@@ -213,7 +204,7 @@ struct SongDetailView: View {
                     }
                 }
                 Spacer()
-                if !isInputActive {
+                if !isLyricsFocused {
                     if songs != nil {
                         Button {
                             showPlayView = true
@@ -288,7 +279,7 @@ struct SongDetailView: View {
                     }
                 } else {
                     Button {
-                        isInputActive = false
+                        isLyricsFocused = false
                     } label: {
                         Text("Done")
                             .padding(14)
@@ -307,26 +298,33 @@ struct SongDetailView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ZStack {
-                    // Check if there are any joined users
-                    let showJoinedUsers = joinedUsers?.isEmpty ?? true
+                    // Determine whether to hide joined users
+                    let hideJoinedUsers = isLyricsFocused || (joinedUsers?.isEmpty ?? true)
                     
                     // Do not allow text editing if the song is read-only or in RecentlyDeleted
-                    TextEditor(text: songs == nil || (song.readOnly ?? false) ? .constant(lyrics) : $lyrics)
-                        .multilineTextAlignment(alignment)
-                        .font(.system(size: CGFloat(fontSize), weight: weight))
-                        .lineSpacing(lineSpacing)
-                        .focused($isInputActive)
-                        .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
-                            // Add padding to insides of TextEditor
-                            textEditor.textContainerInset = UIEdgeInsets(top: !showJoinedUsers ? 70 : 12, left: 12, bottom: 70, right: 12)
-                            
-                            // Get selected words to fetch rhymes, synonyms, etc.
-                            if let textRange = textEditor.selectedTextRange {
-                                DispatchQueue.main.async {
-                                    songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
-                                }
+                    TextEditor(
+                        text: songs == nil || (song.readOnly ?? false)
+                        ? .constant(lyrics)
+                        : $lyrics
+                    )
+                    .multilineTextAlignment(alignment)
+                    .font(.system(size: CGFloat(fontSize), weight: weight))
+                    .lineSpacing(lineSpacing)
+                    .focused($isLyricsFocused)
+                    .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
+                        textEditor.textContainerInset = UIEdgeInsets(
+                            top: hideJoinedUsers ? 12 : 70,
+                            left: 12,
+                            bottom: 70,
+                            right: 12
+                        )
+                        
+                        if let textRange = textEditor.selectedTextRange {
+                            DispatchQueue.main.async {
+                                songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
                             }
                         }
+                    }
                     if restoreSong == nil {
                         // Add "shadow" to avoid element conflicts
                         Color(.systemBackground)
@@ -337,25 +335,27 @@ struct SongDetailView: View {
                             ))
                             .frame(height: 90)
                             .frame(maxHeight: .infinity, alignment: .top)
-                            .opacity(!showJoinedUsers ? 1 : 0)
+                            .opacity(isLyricsFocused || joinedUsers?.isEmpty ?? true ? 0 : 1)
                             .allowsHitTesting(false)
                         VStack {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 6) {
-                                    if let joinedUsers = joinedUsers, !showJoinedUsers {
-                                        ForEach(joinedUsers, id: \.id) { user in
-                                            Button {
-                                                selectedUser = user
-                                                showUserPopover = true
-                                            } label: {
-                                                UserPopoverRowView(user: user, song: song)
+                            if !isLyricsFocused {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 6) {
+                                        if let joinedUsers = joinedUsers {
+                                            ForEach(joinedUsers, id: \.id) { user in
+                                                Button {
+                                                    selectedUser = user
+                                                    showUserPopover = true
+                                                } label: {
+                                                    UserPopoverRowView(user: user, song: song)
+                                                }
                                             }
                                         }
                                     }
+                                    .padding(10)
                                 }
-                                .padding(10)
+                                .frame(height: 70)
                             }
-                            .frame(height: 70)
                             Spacer()
                             // Only show the text style options when song is not read-only
                             if !songDetailViewModel.readOnly(song) {
@@ -384,7 +384,7 @@ struct SongDetailView: View {
             Divider()
             // Don't show dictionary options when the user is editing, no word is selected, or the song is in recently deleted
             if restoreSong == nil {
-                if isInputActive && !songDetailViewModel.selectedText.isEmpty {
+                if isLyricsFocused && !songDetailViewModel.selectedText.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             Button {
@@ -422,7 +422,7 @@ struct SongDetailView: View {
                     }
                 } else {
                     VStack(spacing: 14) {
-                        if !isInputActive, let demoAttachments = song.demoAttachments {
+                        if !isLyricsFocused, let demoAttachments = song.demoAttachments {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     ForEach(demoAttachments, id: \.self) { attachment in
@@ -463,23 +463,25 @@ struct SongDetailView: View {
                                 Spacer()
                             }
                             // Don't show word count if it's disabled in the user's settings
-                            if wordCountBool {
+                            if viewModel.currentUser?.wordCount ?? true {
+                                let style = viewModel.currentUser?.wordCountStyle ?? "words"
+                                
                                 Group {
-                                    if wordCountStyle == "Words" {
+                                    if style == "Words" {
                                         Text("\(wordCount) \((wordCount == 1) ? "Word" : "Words")")
-                                    } else if wordCountStyle == "Characters" {
+                                    } else if style == "Characters" {
                                         Text("\(characterCount) \((characterCount == 1) ? "Character" : "Characters")")
-                                    } else if wordCountStyle == "Spaces" {
+                                    } else if style == "Spaces" {
                                         Text("\(spaceCount) \((spaceCount == 1) ? "Space" : "Spaces")")
-                                    } else if wordCountStyle == "Paragraphs" {
+                                    } else if style == "Paragraphs" {
                                         Text("\(paragraphCount) \((paragraphCount == 1) ? "Paragraph" : "Paragraphs")")
                                     }
                                 }
                                 .foregroundColor(.primary)
                                 .font(.system(size: 16).weight(.semibold))
                             }
+                            Spacer()
                             if getShowVariationCondition() {
-                                Spacer()
                                 Group {
                                     if songViewModel.isLoadingVariations {
                                         ProgressView()
@@ -580,10 +582,6 @@ struct SongDetailView: View {
             return Alert(title: Text("Error"), message: Text("An unknown error has occured."), dismissButton: .cancel())
         })
         .onAppear {
-            // FIXME: why is this property being checked by a local variable?
-            // Check if the user has enabled the word counter or not
-            wordCountBool = viewModel.currentUser?.wordCount ?? true
-            wordCountStyle = viewModel.currentUser?.wordCountStyle ?? "words"
             songViewModel.fetchSongVariations(song: song) { variations in
                 // Initialize a variable to assign parsed variations to
                 var parsedVariations = [SongVariation]()
@@ -594,16 +592,16 @@ struct SongDetailView: View {
                     if let bandId = song.bandId, variationIds.contains(where: { $0 == "byRole" }) {
                         SongService().handleVariations(song, bandId: bandId) { handledVariations in
                             self.songVariations = handledVariations
-                            if !isInputActive {
+                            // Don't update the lyrics while the user is writing
+                            if !isLyricsFocused {
                                 // Only set the first variation if it's not the default variation
                                 if let variation = handledVariations.first, variation.title != SongVariation.defaultId {
-                                    selectedVariation = variation
+                                    self.selectedVariation = variation
                                     self.lyrics = variation.lyrics
                                 }
                             }
                             
-                            // Ensure that after this async operation, we set loading to false
-                            isLoadingSongData = false
+                            self.isLoadingSongData = false
                         }
                     } else {
                         // Default variation is allowed, add it to the array
@@ -623,13 +621,13 @@ struct SongDetailView: View {
                         // Set the initial lyrics
                         if let firstVariation = filteredVariations.first {
                             if firstVariation.title != SongVariation.defaultId {
-                                selectedVariation = firstVariation
-                                if !isInputActive {
+                                self.selectedVariation = firstVariation
+                                if !isLyricsFocused {
                                     self.lyrics = firstVariation.lyrics
                                 }
                             }
                         } else {
-                            if !isInputActive {
+                            if !isLyricsFocused {
                                 self.lyrics = song.lyrics
                             }
                         }
@@ -660,7 +658,7 @@ struct SongDetailView: View {
                     
                     self.title = song.title
                     // Don't set fetched lyrics if the user is editing
-                    if !isInputActive {
+                    if !isLyricsFocused {
                         if selectedVariation == nil {
                             self.lyrics = song.lyrics
                         }
@@ -677,13 +675,15 @@ struct SongDetailView: View {
                     self.alignment = songDetailViewModel.getAlignment(alignment: Int(song.alignment ?? 0))
                     self.fontSize = song.size ?? 18
                     self.lineSpacing = song.lineSpacing ?? 1
-                    if joinedUsers == nil {
-                        // Set the joinedUsersStrings var based on media type
-                        if let folder = folder, folder.id! != uid() {
-                            self.joinedUsersStrings = folder.joinedUsers ?? []
-                        } else {
-                            self.joinedUsersStrings = song.joinedUsers ?? []
-                        }
+                    
+                    // Set the joinedUsersStrings var based on media type
+                    if let folder = folder, folder.id! != uid() {
+                        self.joinedUsersStrings = folder.joinedUsers ?? []
+                    } else {
+                        self.joinedUsersStrings = song.joinedUsers ?? []
+                    }
+                    
+                    if !joinedUsersStrings.isEmpty {
                         // User's id is not in the song, the user has been removed from the song
                         if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
                             showAlert = true
@@ -779,16 +779,6 @@ struct SongDetailView: View {
         }
         .fullScreenCover(isPresented: $showPlayView) {
             PlayView(song: song, size: fontSize, weight: weight, lineSpacing: lineSpacing, alignment: alignment, bpm: $bpm, bpb: $bpb, performanceMode: $performanceMode, songs: songs ?? [])
-        }
-        .onChange(of: isInputActive) { isInputActive in
-            // Show and hide the list of joined users when the user focuses and unfocuses the keyboard
-            withAnimation(.bouncy(duration: 0.4)) {
-                if isInputActive {
-                    showJoinedUsers = false
-                } else {
-                    showJoinedUsers = true
-                }
-            }
         }
     }
 }
