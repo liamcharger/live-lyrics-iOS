@@ -793,16 +793,6 @@
         }
       }
     },
-    "By Role" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Por función"
-          }
-        }
-      }
-    },
     "By signing up, you're agree to our " : {
       "localizations" : {
         "es" : {
@@ -919,17 +909,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claro"
-          }
-        }
-      }
-    },
-    "Click to add to your library." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Haz clic para añadirlo a tu biblioteca."
           }
         }
       }
@@ -1787,6 +1766,9 @@
         }
       }
     },
+    "Join a band if you haven't already, select it below, then tap this menu to select \"Role\"." : {
+
+    },
     "Join Band" : {
       "localizations" : {
         "es" : {
@@ -1953,6 +1935,9 @@
         }
       }
     },
+    "Looking to share the song by band member roles?" : {
+
+    },
     "Lyrics" : {
       "localizations" : {
         "es" : {
@@ -2030,17 +2015,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mover"
-          }
-        }
-      }
-    },
-    "Move \"%@\"" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mover “%@”"
           }
         }
       }
@@ -2722,6 +2696,9 @@
           }
         }
       }
+    },
+    "Role" : {
+
     },
     "Role Name" : {
       "localizations" : {

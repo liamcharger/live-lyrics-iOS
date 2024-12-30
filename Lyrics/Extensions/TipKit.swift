@@ -66,6 +66,21 @@ struct JoinBandTip: Tip {
 }
 
 @available(iOS 17, *)
+struct ShareByRoleTip: Tip {
+    var title: Text {
+        Text("Looking to share the song by band member roles?")
+    }
+    
+    var message: Text? {
+        Text("Join a band if you haven't already, select it below, then tap this menu to select \"Role\".")
+    }
+    
+    var image: Image? {
+        Image(systemName: "square.and.arrow.up")
+    }
+}
+
+@available(iOS 17, *)
 struct LiveLyricsTipStyle: TipViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack {

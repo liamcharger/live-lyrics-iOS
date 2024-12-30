@@ -10,8 +10,8 @@ import Network
 
 class NetworkManager: ObservableObject {
     static let shared = NetworkManager()
-    
     private let monitor = NWPathMonitor()
+    
     @Published var connected = true
     
     init() {

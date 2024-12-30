@@ -231,7 +231,7 @@ struct ShareView: View {
                                 self.selectedVariations.removeAll()
                                 self.selectedVariations.append(SongVariation(id: "byRole", title: "byRole", lyrics: "", songUid: "", songId: ""))
                             } label: {
-                                Label(NSLocalizedString("By Role", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == "byRole"}) ? "checkmark" : "")
+                                Label(NSLocalizedString("Role", comment: ""), systemImage: selectedVariations.contains(where: { $0.title == "byRole"}) ? "checkmark" : "")
                             }
                         }
                         if folder == nil {
@@ -265,7 +265,7 @@ struct ShareView: View {
                                         if title == defaultVariationId {
                                             return NSLocalizedString("Main", comment: "")
                                         } else if title == "byRole" {
-                                            return NSLocalizedString("By Role", comment: "")
+                                            return NSLocalizedString("Role", comment: "")
                                         } else {
                                             return title
                                         }
@@ -277,6 +277,7 @@ struct ShareView: View {
                             Image(systemName: "chevron.up.chevron.down")
                         }
                     }
+                    .showByRoleTip()
                 }
                 .padding()
             }
@@ -419,15 +420,15 @@ struct ShareView: View {
                                 }
                             } else {
                                 FullscreenMessage(imageName: firstSearch ? "magnifyingglass" : "person.slash", title: {
-                                    let bandDesc = bandsViewModel.bands.isEmpty ? "" : NSLocalizedString("or_choose_band", comment: "")
+                                    let bandDesc = bandsViewModel.userBands.isEmpty ? "" : NSLocalizedString("or_choose_band", comment: "") + " "
                                     
                                     if firstSearch {
                                         if let song = song {
-                                            return "Search for a user by their username \(bandDesc) to share \"\(song.title)\"."
+                                            return "Search for a user by their username \(bandDesc)to share \"\(song.title)\"."
                                         } else if let folder = folder {
-                                            return "Search for a user by their username \(bandDesc) to share \"\(folder.title)\"."
+                                            return "Search for a user by their username \(bandDesc)to share \"\(folder.title)\"."
                                         } else {
-                                            return "Search for a user by their username \(bandDesc) to share."
+                                            return "Search for a user by their username \(bandDesc)to share."
                                         }
                                     } else {
                                         return "It doesn't look like there are any users with that username."

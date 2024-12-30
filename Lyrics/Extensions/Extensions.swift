@@ -90,6 +90,15 @@ extension View {
         }
     }
     
+    @ViewBuilder
+    func showByRoleTip() -> some View {
+        if #available(iOS 17, *) {
+            self
+                .popoverTip(ShareByRoleTip(), arrowEdge: .top)
+                .tipViewStyle(LiveLyricsTipStyle())
+        }
+    }
+    
     func customShadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) -> some View {
         self.modifier(ShadowModifier(color: color, radius: radius, x: x, y: y))
     }
