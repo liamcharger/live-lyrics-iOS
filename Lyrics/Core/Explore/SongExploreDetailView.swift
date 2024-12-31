@@ -124,14 +124,8 @@ struct SongExploreDetailView: View {
                                 }
                                 Text(track.trackName)
                                     .font(.largeTitle.weight(.bold))
-                                Group {
-                                    if let album = album {
-                                        Text(track.artistName + " • " + album.albumName)
-                                    } else {
-                                        Text(track.artistName)
-                                    }
-                                }
-                                .foregroundColor(.gray)
+                                Text(track.artistName)
+                                    .foregroundColor(.gray)
                             }
                             .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)

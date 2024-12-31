@@ -62,7 +62,14 @@
       }
     },
     "%lld" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
     },
     "%lld %@" : {
       "localizations" : {
@@ -116,6 +123,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$lld day%2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld día%@"
           }
         }
       }
@@ -433,7 +446,14 @@
       }
     },
     "Allow Notifications" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permitir notificaciones"
+          }
+        }
+      }
     },
     "already_joined_band" : {
       "localizations" : {
@@ -441,6 +461,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You’re already a member in this band."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya eres miembro de esta banda."
           }
         }
       }
@@ -667,7 +693,14 @@
       }
     },
     "Autoscroll" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desplazamiento automático"
+          }
+        }
+      }
     },
     "autoscroll_update_description" : {
       "extractionState" : "manual",
@@ -676,6 +709,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perfectly time your song by syncing your lyrics yourself."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cronometra perfectamente tu canción sincronizando tú mismo la letra."
           }
         }
       }
@@ -823,22 +862,22 @@
         }
       }
     },
-    "Cannot Open" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se puede abrir"
-          }
-        }
-      }
-    },
     "Cannot Purchase" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se puede comprar"
+          }
+        }
+      }
+    },
+    "Cannot Send Feedback" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pueden enviar comentarios"
           }
         }
       }
@@ -914,7 +953,14 @@
       }
     },
     "Click to add to your library.." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic para añadir a tu biblioteca.."
+          }
+        }
+      }
     },
     "Click to copy to your clipboard." : {
       "localizations" : {
@@ -1260,7 +1306,24 @@
       }
     },
     "Do you want to allow notifications?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Desea permitir notificaciones?"
+          }
+        }
+      }
+    },
+    "Doing cool things..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haciendo cosas guays..."
+          }
+        }
+      }
     },
     "Done" : {
       "localizations" : {
@@ -1273,12 +1336,17 @@
       }
     },
     "dont_miss_anything_important" : {
-      "comment" : "Don't miss anything important!",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don’t miss anything important!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pierda nada importante."
           }
         }
       }
@@ -1664,7 +1732,14 @@
       }
     },
     "Hmm...we had a problem loading what you requested." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hmm... tuvimos un problema cargando lo que solicitaste."
+          }
+        }
+      }
     },
     "home" : {
       "extractionState" : "manual",
@@ -1684,10 +1759,24 @@
       }
     },
     "I don't want notifications" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No quiero notificaciones"
+          }
+        }
+      }
     },
     "If you enable them, you'll be able to notified when someone shares you a song, or accepts or declines a shared song from you." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si las activas, podrás recibir notificaciones cuando alguien comparta contigo una canción, o acepte o rechace una canción compartida por ti."
+          }
+        }
+      }
     },
     "Including variation%@:" : {
       "localizations" : {
@@ -1737,7 +1826,14 @@
       }
     },
     "Invite" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite a"
+          }
+        }
+      }
     },
     "issue_deleting_account" : {
       "extractionState" : "manual",
@@ -1767,7 +1863,14 @@
       }
     },
     "Join a band if you haven't already, select it below, then tap this menu to select \"Role\"." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Únete a una banda si aún no lo has hecho, selecciónala a continuación y toca este menú para seleccionar «Rol»."
+          }
+        }
+      }
     },
     "Join Band" : {
       "localizations" : {
@@ -1936,7 +2039,14 @@
       }
     },
     "Looking to share the song by band member roles?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres compartir la canción por roles de los miembros de la banda?"
+          }
+        }
+      }
     },
     "Lyrics" : {
       "localizations" : {
@@ -2020,7 +2130,14 @@
       }
     },
     "Move %@" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover %@"
+          }
+        }
+      }
     },
     "multiple" : {
       "extractionState" : "manual",
@@ -2127,7 +2244,14 @@
       }
     },
     "Next Line" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Línea siguiente"
+          }
+        }
+      }
     },
     "No account? " : {
       "localizations" : {
@@ -2373,7 +2497,14 @@
       }
     },
     "Pause" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausa"
+          }
+        }
+      }
     },
     "Performance Mode" : {
       "localizations" : {
@@ -2494,10 +2625,34 @@
       }
     },
     "PRO" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PRO"
+          }
+        }
+      }
+    },
+    "Queuing everything up..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poniendo todo en cola..."
+          }
+        }
+      }
     },
     "Re-sync Lyrics" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-sync Lyrics"
+          }
+        }
+      }
     },
     "Read only:" : {
       "localizations" : {
@@ -2698,7 +2853,14 @@
       }
     },
     "Role" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Papel"
+          }
+        }
+      }
     },
     "Role Name" : {
       "localizations" : {
@@ -2738,7 +2900,14 @@
       }
     },
     "Search" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar en"
+          }
+        }
+      }
     },
     "search_and_add" : {
       "localizations" : {
@@ -3025,6 +3194,12 @@
             "state" : "translated",
             "value" : "Stay in the loop when a friend shares a song or folder. Click to enable notifications."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantente informado cuando un amigo comparta una canción o carpeta. Haz clic para activar las notificaciones."
+          }
         }
       }
     },
@@ -3055,7 +3230,14 @@
       }
     },
     "Sync Lyrics" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Lyrics"
+          }
+        }
+      }
     },
     "synonym_title" : {
       "extractionState" : "manual",
@@ -3185,6 +3367,16 @@
         }
       }
     },
+    "Talking with friends..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hablando con amigos..."
+          }
+        }
+      }
+    },
     "Tap to enter your notes..." : {
       "localizations" : {
         "es" : {
@@ -3262,7 +3454,14 @@
       }
     },
     "To sync your lyrics, use the button below to scroll the lyrics at the desired time." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para sincronizar la letra, utiliza el botón de abajo para desplazarte por la letra en el momento deseado."
+          }
+        }
+      }
     },
     "Top Results" : {
       "localizations" : {
@@ -3275,7 +3474,14 @@
       }
     },
     "Try again in a few minutes, and make sure you're online." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelve a intentarlo dentro de unos minutos y asegúrate de que estás conectado."
+          }
+        }
+      }
     },
     "Type:" : {
       "localizations" : {
@@ -3298,7 +3504,14 @@
       }
     },
     "Understood" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entendido"
+          }
+        }
+      }
     },
     "unknown_error_adding_songs" : {
       "localizations" : {
@@ -3498,6 +3711,16 @@
         }
       }
     },
+    "Working on it..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trabajando en ello..."
+          }
+        }
+      }
+    },
     "world_of_worlds_at_your_fingertips" : {
       "localizations" : {
         "en" : {
@@ -3551,6 +3774,12 @@
             "state" : "translated",
             "value" : "We didn’t find any songs here."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No encontramos ninguna canción aquí."
+          }
         }
       }
     },
@@ -3564,8 +3793,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No tienes carpetas."
+            "state" : "translated",
+            "value" : "No encontramos ninguna carpeta aquí."
           }
         }
       }
@@ -3580,8 +3809,8 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "No tienes canciones. Ve y crea algunas."
+            "state" : "translated",
+            "value" : "No hemos encontrado ninguna canción aquí. ¡Ve y crea algunas!"
           }
         }
       }

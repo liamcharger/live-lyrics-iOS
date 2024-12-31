@@ -14,19 +14,17 @@ struct FullscreenMessage: View {
     let isLoading: Bool
     
     func loadingText() -> Text {
-        let selection = Int.random(in: 0..3)
+        let selection = Int.random(in: 0...3) // We want to show just plain "Loading..." occasionally, so add an extra case
         
         switch selection {
         case 0:
-            Text("Working on it...")
+            return Text("Working on it...")
         case 1:
-            Text("Doing cool things...")
+            return Text("Doing cool things...")
         case 2:
-            Text("Queuing everything up...")
-        case 3:
-            Text("Talking with friends...")
+            return Text("Queuing everything up...")
         default:
-            Text("Loading")
+            return Text("Loading")
         }
     }
     
@@ -42,12 +40,11 @@ struct FullscreenMessage: View {
             Spacer()
             Group {
                 if isLoading {
-                    let image = Image(systemName: "arrow.clockwise")
-                    if #available(iOS 17.0, *) {
-                        image
-                    } else {
-                        image
+                    if #available(iOS 18.0, *) {
+                        Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
                             .symbolEffect(.rotate.wholeSymbol, options: .repeat(.periodic(delay: 0.5)), isActive: true)
+                    } else {
+                        Image(systemName: "clock")
                     }
                 } else {
                     Image(systemName: imageName)
