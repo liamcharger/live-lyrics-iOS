@@ -29,7 +29,7 @@ struct CustomTextField: View {
                     .frame(minWidth: 25)
             }
             TextField(NSLocalizedString(placeholder, comment: ""), text: $text)
-                .focused($isFocused) // TODO: we need to check if this breaks any other focused properties applied outside the view
+                .focused($isFocused)
         }
         .padding(14)
         .background(Material.regular)

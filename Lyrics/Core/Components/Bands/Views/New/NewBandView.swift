@@ -36,7 +36,6 @@ struct NewBandView: View {
             VStack {
                 CustomTextField(text: $name, placeholder: NSLocalizedString("Name", comment: ""), image: "character.cursor.ibeam")
                     .focused($isNameFocused)
-                // TODO: add more fields like icon (or members?)
             }
             .padding()
             Spacer()

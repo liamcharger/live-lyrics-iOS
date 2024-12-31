@@ -53,7 +53,6 @@ struct UpgradeView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.largeTitle.weight(.bold))
-                    // TODO: replace with variety of icons
                     HStack {
                         FAText(iconName: "rocket", size: 45)
                             .foregroundColor(.red)

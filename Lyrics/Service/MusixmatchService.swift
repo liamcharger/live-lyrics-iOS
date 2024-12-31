@@ -157,56 +157,6 @@ class MusixmatchService: ObservableObject {
         }.resume()
     }
     
-    func fetchAlbum(forAlbumId albumId: Int, completion: @escaping(Album) -> Void) {
-        self.isLoadingAlbum = true
-        
-        var components = URLComponents(string: MusixmatchService.endpoint + "album.get")
-        components?.queryItems = [
-            URLQueryItem(name: "album_id", value: String(albumId)),
-            URLQueryItem(name: "apikey", value: MusixmatchService.apiKey)
-        ]
-        guard let url = components?.url else {
-            print("Invalid URL.")
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data returned.")
-                return
-            }
-            
-//            do {
-//                if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-//                    let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-//                    if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                        print(jsonString)
-//                    }
-//                }
-//            } catch {
-//                print("Failed to parse JSON: \(error.localizedDescription)")
-//            }
-            
-            do {
-                let decoder = JSONDecoder()
-                let response = try decoder.decode(AlbumResponse.self, from: data)
-                
-                completion(response.message.body.album)
-                
-                DispatchQueue.main.async {
-                    self.isLoadingAlbum = false
-                }
-            } catch let decodingError {
-                print("Error decoding JSON for album: \(decodingError.localizedDescription)")
-            }
-        }.resume()
-    }
-    
     func searchForSongs(_ query: String) {
         self.isLoadingSongs = true
         

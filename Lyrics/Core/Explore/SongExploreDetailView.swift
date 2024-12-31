@@ -13,7 +13,6 @@ struct SongExploreDetailView: View {
     @ObservedObject var musixmatchService = MusixmatchService.shared
     @ObservedObject var songViewModel = SongViewModel.shared
     
-    @State var album: Album?
     @State var hasScrolledPastTitle = false
     @State var songWasAdded = false
     @State var showAddedAlert = false
@@ -98,37 +97,6 @@ struct SongExploreDetailView: View {
             if let lyrics = musixmatchService.lyrics {
                 ScrollView {
                     VStack(alignment: .leading) {
-                        /*
-                        if let album = album {
-                            let albumCoverURL = {
-                                if album.albumCoverart500x500.isEmpty {
-                                    if album.albumCoverart350x350.isEmpty {
-                                        return album.albumCoverart100x100
-                                    } else {
-                                        return album.albumCoverart350x350
-                                    }
-                                } else {
-                                    return album.albumCoverart500x500
-                                }
-                            }()
-                            
-                            AsyncImage(url: URL(string: albumCoverURL)!) { phase in
-                                switch phase {
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(maxWidth: 50, maxHeight: 50)
-                                case .failure:
-                                    EmptyView()
-                                case .empty:
-                                    EmptyView()
-                                @unknown default:
-                                    EmptyView()
-                                }
-                            }
-                        }
-                        */
                         GeometryReader { geo in
                             Color.clear
                                 .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
@@ -194,10 +162,6 @@ struct SongExploreDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             musixmatchService.fetchLyrics(forTrackId: track.trackId)
-            // FIXME: album art is not present in response
-            musixmatchService.fetchAlbum(forAlbumId: track.albumId) { album in
-                self.album = album
-            }
         }
     }
 }

@@ -310,12 +310,11 @@ class SongService {
 				}
 				
 				group.enter()
-				// TODO in future: add withListener property when roles are fetched from Firestore
 				BandsViewModel.shared.fetchMemberRoles(band) { roles in
 					group.leave()
 					guard let memberRoleId = roles.first(where: { $0.id == member.roleId })?.id else {
 						print("Member does not have a role")
-						completion([]) // If the role isn't found, return
+						completion([])
 						return
 					}
 					
@@ -1184,7 +1183,7 @@ class SongService {
 						dispatch.notify(queue: .main) {
 							if let currentUser = AuthViewModel.shared.currentUser, let tokens = request.notificationTokens {
 								UserService().sendNotificationToFCM(tokens: tokens, title: "Request Accepted", body: "\(currentUser.username) has accepted the folder \"\(request.contentName)\".", type: .accepted)
-								// TODO: double check logic
+								
 								if request.to.count > 1 {
 									for toUser in request.to {
 										Firestore.firestore().collection("users").document(toUser).collection("incoming-share-requests").document(request.id!).updateData(["to": FieldValue.arrayRemove([uid])]) { error in

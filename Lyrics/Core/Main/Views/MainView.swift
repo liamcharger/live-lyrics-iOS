@@ -399,7 +399,7 @@ struct MainView: View {
         VStack(spacing: 0) {
             CustomNavBar(title: NSLocalizedString("home", comment: ""), navType: .home, showBackButton: false, collapsed: $showCollapsedNavBar, collapsedTitle: $showCollapsedNavBarTitle)
                 .padding()
-            Divider() // TODO: fix divider showing before scroll on some devices
+            Divider()
                 .opacity(showCollapsedNavBarDivider ? 1 : 0)
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -562,7 +562,6 @@ struct MainView: View {
                                         .padding(.bottom)
                                     }
                                 }
-                                // TODO: conform folders to grid with a separate detail view
                                 if mainViewModel.isLoadingFolders || mainViewModel.isLoadingSharedFolders {
                                     LoadingView()
                                 } else {
@@ -620,8 +619,6 @@ struct MainView: View {
                                                                 
                                                                 if !readOnly {
                                                                     Button {
-                                                                        // TODO: verify line 613 not needed
-                                                                        mainViewModel.fetchSongs(folder)
                                                                         mainViewModel.selectedFolder = folder
                                                                         showAddSongSheet = true
                                                                     } label: {
@@ -1149,7 +1146,7 @@ struct MainView: View {
                         
                         DispatchQueue.main.async {
                             withAnimation(.easeInOut(duration: 0.1)) {
-                                showCollapsedNavBarDivider = (hasHomeButton() ? value <= 100 : value <= 145) // TODO: fix divider showing when it shouldn't
+                                showCollapsedNavBarDivider = (hasHomeButton() ? value <= 100 : value <= 145) // FIXME: fix divider showing when it shouldn't
                             }
                         }
                         DispatchQueue.main.async {

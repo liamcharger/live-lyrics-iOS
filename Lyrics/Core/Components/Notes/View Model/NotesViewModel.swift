@@ -43,15 +43,6 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    // FIXME: we aren't using this timer (we're using .onDisappear for now) because it's not being cancelled when it should be, causing multiple bugs
-    func startUpdatingNotes(song: Song? = nil, folder: Folder? = nil) {
-        self.updatedNotesTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { timer in
-            if self.notes != self.lastUpdatedNotes {
-                self.updateNotes(song: song, folder: folder, notes: self.notes)
-            }
-        }
-    }
-    
     func fetchNotes(song: Song? = nil, folder: Folder? = nil) {
         self.isLoading = true
         
