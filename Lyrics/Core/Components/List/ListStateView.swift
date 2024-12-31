@@ -7,38 +7,6 @@
 
 import SwiftUI
 
-// MARK: - FullscreenMessage: used in views without ScrollViews
-struct FullscreenMessage: View {
-    let imageName: String
-    let title: String
-    let spaceNavbar: Bool
-    
-    init(imageName: String, title: String, spaceNavbar: Bool = false) {
-        self.imageName = imageName
-        self.title = title
-        self.spaceNavbar = spaceNavbar
-    }
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            Spacer()
-            Image(systemName: imageName)
-                .font(.system(size: 32).weight(.semibold))
-            Text(NSLocalizedString(title, comment: ""))
-                .font(.title2.weight(.semibold))
-                .multilineTextAlignment(.center)
-            Spacer()
-            if spaceNavbar {
-                Spacer()
-                    .frame(height: 35)
-            }
-        }
-        .padding()
-        .foregroundColor(.gray)
-    }
-}
-
-// MARK: - EmptyStateView: used in views with ScrollViews
 enum EmptyState {
     case songs
     case folders

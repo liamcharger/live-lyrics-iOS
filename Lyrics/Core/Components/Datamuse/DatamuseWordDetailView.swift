@@ -67,53 +67,47 @@ struct DatamuseWordDetailView: View {
             }
             .padding()
             Divider()
-            if datamuseService.isLoadingWords {
-                Spacer()
-                ProgressView("Loading")
-                Spacer()
+            if datamuseService.isLoadingWords || (type == .rhyme ? (datamuseService.rhymes.isEmpty) : (datamuseService.words.isEmpty)) {
+                FullscreenMessage(imageName: "circle.slash", title: "Hmm, we couldn't find any results for that word.", isLoading: datamuseService.isLoadingWords)
             } else {
-                if type == .rhyme ? (datamuseService.rhymes.isEmpty) : (datamuseService.words.isEmpty) {
-                    FullscreenMessage(imageName: "circle.slash", title: "Hmm, we couldn't find any results for that word.")
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            if type == .rhyme {
-                                if !topResults.isEmpty {
-                                    Section(header: Text("Top Results").font(.headline)) {
-                                        LazyVGrid(columns: columns) {
-                                            ForEach(topResults.filter({ $0.word != selectedWord }), id: \.word) { rhyme in
-                                                wordRowView(word: rhyme.word, score: rhyme.score)
-                                            }
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        if type == .rhyme {
+                            if !topResults.isEmpty {
+                                Section(header: Text("Top Results").font(.headline)) {
+                                    LazyVGrid(columns: columns) {
+                                        ForEach(topResults.filter({ $0.word != selectedWord }), id: \.word) { rhyme in
+                                            wordRowView(word: rhyme.word, score: rhyme.score)
                                         }
-                                    }
-                                }
-                                ForEach(Array(groupedWords.keys.sorted()), id: \.self) { syllables in
-                                    Section(header: Text("\(syllables) Syllable\(syllables == 1 ? "" : "s")").font(.headline).padding(topResults.isEmpty ? [] : [.top])) {
-                                        LazyVGrid(columns: columns) {
-                                            ForEach(groupedWords[syllables]!.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord }), id: \.word) { rhyme in
-                                                wordRowView(word: rhyme.word, score: rhyme.score)
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                LazyVGrid(columns: columns) {
-                                    ForEach(datamuseService.words.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord })) { word in
-                                        wordRowView(word: word.word, score: word.score)
                                     }
                                 }
                             }
-                            Text("Powered by Datamuse")
-                                .font(.footnote)
-                                .foregroundColor(.gray)
-                                .frame(maxWidth: .infinity)
-                                .padding(.top)
+                            ForEach(Array(groupedWords.keys.sorted()), id: \.self) { syllables in
+                                Section(header: Text("\(syllables) Syllable\(syllables == 1 ? "" : "s")").font(.headline).padding(topResults.isEmpty ? [] : [.top])) {
+                                    LazyVGrid(columns: columns) {
+                                        ForEach(groupedWords[syllables]!.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord }), id: \.word) { rhyme in
+                                            wordRowView(word: rhyme.word, score: rhyme.score)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            LazyVGrid(columns: columns) {
+                                ForEach(datamuseService.words.sorted(by: { $0.score > $1.score }).filter({ $0.word != selectedWord })) { word in
+                                    wordRowView(word: word.word, score: word.score)
+                                }
+                            }
                         }
-                        .multilineTextAlignment(.center)
-                        .padding([.horizontal,
-                                  .bottom])
-                        .padding(.top, 14)
+                        Text("Powered by Datamuse")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top)
                     }
+                    .multilineTextAlignment(.center)
+                    .padding([.horizontal,
+                              .bottom])
+                    .padding(.top, 14)
                 }
             }
         }

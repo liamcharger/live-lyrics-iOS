@@ -296,6 +296,8 @@ struct SongDetailView: View {
             if isLoadingSongData {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if lyrics.isEmpty {
+                FullscreenMessage(imageName: "circle.slash", title: "There aren't any lyrics for this song.", spaceNavbar: true)
             } else {
                 ZStack {
                     // Determine whether to hide joined users
@@ -370,13 +372,6 @@ struct SongDetailView: View {
                                         }
                                 }
                             }
-                        }
-                    } else {
-                        if lyrics.isEmpty {
-                            FullscreenMessage(imageName: "circle.slash", title: "There aren't any lyrics for this song.", spaceNavbar: true)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.gray)
-                                .frame(maxHeight: .infinity)
                         }
                     }
                 }

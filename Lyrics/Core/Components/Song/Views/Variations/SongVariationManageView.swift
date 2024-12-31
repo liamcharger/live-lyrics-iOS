@@ -32,53 +32,49 @@ struct SongVariationManageView: View {
             }
             .padding()
             Divider()
-            if !songViewModel.isLoadingVariations && songVariations.isEmpty {
-                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_variations_for_song", comment: ""), spaceNavbar: true)
+            if songViewModel.isLoadingVariations || songVariations.isEmpty {
+                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_variations_for_song", comment: ""), spaceNavbar: true, isLoading: songViewModel.isLoadingVariations)
             } else {
                 ScrollView {
                     VStack {
-                        if songViewModel.isLoadingVariations {
-                            LoadingView()
-                        } else {
-                            ForEach(songVariations, id: \.id) { variation in
-                                if variation.title != SongVariation.defaultId {
-                                    HStack(spacing: 6) {
-                                        Text(variation.title)
-                                        Spacer()
-                                        Button {
-                                            selectedVariation = variation
-                                            showSongVariationEditView = true
-                                        } label: {
-                                            Image(systemName: "pencil")
-                                                .padding(12)
-                                                .font(.body.weight(.semibold))
-                                                .background(Color.blue)
-                                                .foregroundColor(.white)
-                                                .clipShape(Circle())
-                                        }
-                                        .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
-                                            if let variation = selectedVariation {
-                                                SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
-                                            } else {
-                                                LoadingFailedView()
-                                            }
-                                        }
-                                        Button {
-                                            selectedVariation = variation
-                                            showDeleteSheet = true
-                                        } label: {
-                                            Image(systemName: "trash")
-                                                .padding(12)
-                                                .font(.body.weight(.semibold))
-                                                .background(Color.red)
-                                                .foregroundColor(.white)
-                                                .clipShape(Circle())
+                        ForEach(songVariations, id: \.id) { variation in
+                            if variation.title != SongVariation.defaultId {
+                                HStack(spacing: 6) {
+                                    Text(variation.title)
+                                    Spacer()
+                                    Button {
+                                        selectedVariation = variation
+                                        showSongVariationEditView = true
+                                    } label: {
+                                        Image(systemName: "pencil")
+                                            .padding(12)
+                                            .font(.body.weight(.semibold))
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .clipShape(Circle())
+                                    }
+                                    .sheet(isPresented: $showSongVariationEditView, onDismiss: {selectedVariation = nil}) {
+                                        if let variation = selectedVariation {
+                                            SongVariationEditView(song: song, variation: variation, isDisplayed: $showSongVariationEditView)
+                                        } else {
+                                            LoadingFailedView()
                                         }
                                     }
-                                    .padding(12)
-                                    .background(Material.regular)
-                                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                                    Button {
+                                        selectedVariation = variation
+                                        showDeleteSheet = true
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .padding(12)
+                                            .font(.body.weight(.semibold))
+                                            .background(Color.red)
+                                            .foregroundColor(.white)
+                                            .clipShape(Circle())
+                                    }
                                 }
+                                .padding(12)
+                                .background(Material.regular)
+                                .clipShape(RoundedRectangle(cornerRadius: 18))
                             }
                         }
                     }

@@ -46,14 +46,10 @@ struct BandsView: View {
                         HeaderView(NSLocalizedString("Bands", comment: ""), icon: "guitar", color: .blue, geo: geo, counter: "\(bandsViewModel.userBands.count) band\(bandsViewModel.userBands.count == 1 ? "" : "s")".uppercased())
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/9327503401", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                         Group {
-                            if !NetworkManager.shared.getNetworkState() {
-                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true)
+                            if bandsViewModel.isLoadingUserBands || !NetworkManager.shared.getNetworkState() {
+                                FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("connect_to_internet_to_view_bands", comment: ""), spaceNavbar: true, isLoading: bandsViewModel.isLoadingUserBands)
                                     .frame(maxWidth: .infinity)
                                     .frame(height: geo.size.height / 2.2, alignment: .bottom)
-                            } else if bandsViewModel.isLoadingUserBands {
-                                ProgressView("Loading")
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
                             } else {
                                 VStack(spacing: 18) {
                                     HeaderActionsView([
@@ -65,7 +61,6 @@ struct BandsView: View {
                                         })
                                     ])
                                     if bandsViewModel.userBands.isEmpty {
-                                        // TODO: add "what are bands?" button or tip
                                         FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
                                             .frame(maxWidth: .infinity)
                                             .frame(height: geo.size.height / 2.2, alignment: .bottom)

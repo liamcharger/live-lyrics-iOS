@@ -50,6 +50,7 @@
 		E03A6F0F2C8E24F600CA16D0 /* DemoAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */; };
 		E03A7DFA2D0E8E02007A9209 /* LoadingFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */; };
 		E03BC0932B5C232B004261AF /* ChooseAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BC0922B5C232B004261AF /* ChooseAuthView.swift */; };
+		E03EFA2C2D23B1F000B0EA73 /* FullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03EFA2B2D23B1F000B0EA73 /* FullscreenMessage.swift */; };
 		E041055F2A90029900215FB0 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E041055E2A90029900215FB0 /* Haptics.swift */; };
 		E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */; };
 		E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042474F2A02EF4E00CA48B3 /* ContentView.swift */; };
@@ -224,6 +225,7 @@
 		E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAttachment.swift; sourceTree = "<group>"; };
 		E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingFailedView.swift; sourceTree = "<group>"; };
 		E03BC0922B5C232B004261AF /* ChooseAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAuthView.swift; sourceTree = "<group>"; };
+		E03EFA2B2D23B1F000B0EA73 /* FullscreenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenMessage.swift; sourceTree = "<group>"; };
 		E041055E2A90029900215FB0 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		E042474A2A02EF4E00CA48B3 /* Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E042474D2A02EF4E00CA48B3 /* LyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsApp.swift; sourceTree = "<group>"; };
@@ -941,6 +943,7 @@
 				E03A7DF92D0E8E01007A9209 /* LoadingFailedView.swift */,
 				E0106C832A1EA1A0007D99DF /* RowView.swift */,
 				E0705FD62C5C874600BC7AD6 /* HeaderView.swift */,
+				E03EFA2B2D23B1F000B0EA73 /* FullscreenMessage.swift */,
 				E0E20D762C991B0D003B2D4D /* HeaderActionsView.swift */,
 			);
 			path = Components;
@@ -989,8 +992,8 @@
 				E0CA85292B081D5100188CD0 /* ListIconButtonView.swift */,
 				E0CA852A2B081D5100188CD0 /* ListEditButtonView.swift */,
 				E0CA852B2B081D5100188CD0 /* ListHeaderView.swift */,
-				E00773132C97D8A90083A0FA /* ListRowView.swift */,
 				E00773152C97D8BE0083A0FA /* ListStateView.swift */,
+				E00773132C97D8A90083A0FA /* ListRowView.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -1394,6 +1397,7 @@
 				E0258A722C82713900648582 /* DatamuseWord.swift in Sources */,
 				E04247982A02F5FB00CA48B3 /* RegistrationView.swift in Sources */,
 				E0CA85392B081D5100188CD0 /* LoadingView.swift in Sources */,
+				E03EFA2C2D23B1F000B0EA73 /* FullscreenMessage.swift in Sources */,
 				E06D77842A17CAA50032332F /* EditPasswordView.swift in Sources */,
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,

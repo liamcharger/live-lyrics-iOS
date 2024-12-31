@@ -99,62 +99,55 @@ struct SongMoveView: View {
             }
             .padding()
             Divider()
-            if mainViewModel.isLoadingSharedFolders || mainViewModel.isLoadingFolders {
-                LoadingView()
-                    .padding()
-                    .frame(maxHeight: .infinity, alignment: .top)
+            if mainViewModel.isLoadingSharedFolders || mainViewModel.isLoadingFolders || folders.isEmpty {
+                FullscreenMessage(imageName: "circle.slash", title: "you_dont_have_any_folders", spaceNavbar: true, isLoading: (mainViewModel.isLoadingSharedFolders || mainViewModel.isLoadingFolders))
             } else {
-                if folders.isEmpty {
-                    FullscreenMessage(imageName: "circle.slash", title: "you_dont_have_any_folders", spaceNavbar: true)
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            ForEach(folders) { folder in
-                                if folder.title == "noFolders" {
-                                    Text("No Folders")
-                                        .foregroundColor(Color.gray)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                } else {
-                                    Button(action: {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        ForEach(folders) { folder in
+                            if folder.title == "noFolders" {
+                                Text("No Folders")
+                                    .foregroundColor(Color.gray)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            } else {
+                                Button(action: {
+                                    if selectedFolders.contains(where: { $0.id == folder.id }) {
+                                        selectedFolders.removeAll(where: { $0.id == folder.id })
+                                    } else {
+                                        selectedFolders.append(folder)
+                                    }
+                                }, label: {
+                                    HStack {
+                                        FAText(iconName: "folder-closed", size: 18)
+                                        HStack(spacing: 7) {
+                                            Text(folder.title)
+                                                .lineLimit(1)
+                                                .multilineTextAlignment(.leading)
+                                            if folder.uid ?? "" != uid() {
+                                                Image(systemName: "person.2")
+                                                    .font(.system(size: 16).weight(.medium))
+                                            }
+                                        }
+                                        Spacer()
                                         if selectedFolders.contains(where: { $0.id == folder.id }) {
-                                            selectedFolders.removeAll(where: { $0.id == folder.id })
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.blue)
+                                                .imageScale(.large)
                                         } else {
-                                            selectedFolders.append(folder)
+                                            Image(systemName: "circle")
+                                                .imageScale(.large)
                                         }
-                                    }, label: {
-                                        HStack {
-                                            FAText(iconName: "folder-closed", size: 18)
-                                            HStack(spacing: 7) {
-                                                Text(folder.title)
-                                                    .lineLimit(1)
-                                                    .multilineTextAlignment(.leading)
-                                                if folder.uid ?? "" != uid() {
-                                                    Image(systemName: "person.2")
-                                                        .font(.system(size: 16).weight(.medium))
-                                                }
-                                            }
-                                            Spacer()
-                                            if selectedFolders.contains(where: { $0.id == folder.id }) {
-                                                Image(systemName: "checkmark.circle.fill")
-                                                    .foregroundColor(.blue)
-                                                    .imageScale(.large)
-                                            } else {
-                                                Image(systemName: "circle")
-                                                    .imageScale(.large)
-                                            }
-                                        }
-                                        .padding()
-                                        .background(Material.regular)
-                                        .foregroundColor(.primary)
-                                        .clipShape(Capsule())
-                                    })
-                                    .disabled(isLoading)
-                                }
+                                    }
+                                    .padding()
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(Capsule())
+                                })
+                                .disabled(isLoading)
                             }
-                            Spacer()
                         }
-                        .padding()
                     }
+                    .padding()
                 }
             }
         }

@@ -201,11 +201,7 @@ class SongService {
 					}
 				}
 				
-				if songs.isEmpty {
-					completion([RecentlyDeletedSong(uid: "", timestamp: Date(), folderIds: [], deletedTimestamp: Date.now, title: "noSongs", lyrics: "", order: 0)])
-				} else {
-					completion(songs)
-				}
+				completion(songs)
 			}
 	}
 	

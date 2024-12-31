@@ -26,59 +26,54 @@ struct SongShareDetailView: View {
                 CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true, collapsed: .constant(false), collapsedTitle: $collapsedTitle)
                     .padding()
                 Divider()
-                if mainViewModel.isLoadingInvites {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            GeometryReader { geo in
-                                Color.clear
-                                    .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
-                            }
-                            .frame(height: 0)
-                            HeaderView("Share \nInvites", icon: "users", color: .blue, geo: geo, counter: "\(mainViewModel.incomingShareRequests.count) incoming, \(mainViewModel.outgoingShareRequests.count) outgoing".uppercased())
-                            AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
-                            VStack(spacing: 18) {
-                                if !NetworkManager.shared.getNetworkState() {
-                                    FullscreenMessage(imageName: "wifi.slash", title: "connect_to_internet_to_view_share_invites")
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: geo.size.height / 2.2, alignment: .bottom)
-                                } else if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty{
-                                    FullscreenMessage(imageName: "circle.slash", title: "no_share_invites")
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: geo.size.height / 2.2, alignment: .bottom)
-                                } else {
-                                    VStack {
-                                        ListHeaderView(title: NSLocalizedString("outgoing", comment: ""))
-                                        ForEach(mainViewModel.outgoingShareRequests) { request in
-                                            rowView(request: request, type: .outgoing)
-                                        }
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        GeometryReader { geo in
+                            Color.clear
+                                .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
+                        }
+                        .frame(height: 0)
+                        HeaderView("Share \nInvites", icon: "users", color: .blue, geo: geo, counter: "\(mainViewModel.incomingShareRequests.count) incoming, \(mainViewModel.outgoingShareRequests.count) outgoing".uppercased())
+                        AdBannerView(unitId: "ca-app-pub-5671219068273297/7596037220", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
+                        VStack(spacing: 18) {
+                            if mainViewModel.isLoadingInvites || !NetworkManager.shared.getNetworkState() {
+                                FullscreenMessage(imageName: "wifi.slash", title: "connect_to_internet_to_view_share_invites", isLoading: mainViewModel.isLoadingInvites)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                            } else if mainViewModel.outgoingShareRequests.isEmpty && mainViewModel.incomingShareRequests.isEmpty{
+                                FullscreenMessage(imageName: "circle.slash", title: "no_share_invites")
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                            } else {
+                                VStack {
+                                    ListHeaderView(title: NSLocalizedString("outgoing", comment: ""))
+                                    ForEach(mainViewModel.outgoingShareRequests) { request in
+                                        rowView(request: request, type: .outgoing)
                                     }
-                                    VStack {
-                                        ListHeaderView(title: NSLocalizedString("incoming", comment: ""))
-                                        ForEach(mainViewModel.incomingShareRequests) { request in
-                                            rowView(request: request, type: .incoming)
-                                        }
+                                }
+                                VStack {
+                                    ListHeaderView(title: NSLocalizedString("incoming", comment: ""))
+                                    ForEach(mainViewModel.incomingShareRequests) { request in
+                                        rowView(request: request, type: .incoming)
                                     }
                                 }
                             }
                         }
-                        .padding()
-                        .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
-                            let animation = Animation.easeInOut(duration: 0.22)
-                            
-                            if value.first ?? 0 >= -40 {
-                                DispatchQueue.main.async {
-                                    withAnimation(animation) {
-                                        collapsedTitle = false
-                                    }
+                    }
+                    .padding()
+                    .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                        let animation = Animation.easeInOut(duration: 0.22)
+                        
+                        if value.first ?? 0 >= -40 {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
+                                    collapsedTitle = false
                                 }
-                            } else {
-                                DispatchQueue.main.async {
-                                    withAnimation(animation) {
-                                        collapsedTitle = true
-                                    }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                withAnimation(animation) {
+                                    collapsedTitle = true
                                 }
                             }
                         }

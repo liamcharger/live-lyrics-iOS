@@ -12,7 +12,7 @@ struct RecentlyDeletedView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var authViewModel = AuthViewModel.shared
     
-    @State var text = ""
+    @State var searchText = ""
     
     @State var showMenu = false
     @State var showNewSong = false
@@ -23,16 +23,11 @@ struct RecentlyDeletedView: View {
     @State private var selectedSong: RecentlyDeletedSong?
     @State private var showDeleteSheet = false
     
-    var recentlyDeletedSongs: [RecentlyDeletedSong] {
-        return recentlyDeletedViewModel.songs.filter { song in
-            return song.title != "noSongs"
-        }
-    }
     var searchableSongs: [RecentlyDeletedSong] {
-        if text.isEmpty {
+        if searchText.isEmpty {
             return recentlyDeletedViewModel.songs
         } else {
-            let lowercasedQuery = text.lowercased()
+            let lowercasedQuery = searchText.lowercased()
             return recentlyDeletedViewModel.songs.filter ({
                 $0.title.lowercased().contains(lowercasedQuery)
             })
@@ -57,64 +52,58 @@ struct RecentlyDeletedView: View {
                                 .preference(key: ScrollViewOffsetPreferenceKey.self, value: [geo.frame(in: .global).minY])
                         }
                         .frame(height: 0)
-                        HeaderView("Recently \nDeleted", icon: "trash-can", color: .red, geo: geo, counter: "\(recentlyDeletedSongs.count) song\(recentlyDeletedSongs.count == 1 ? "" : "s")".uppercased())
+                        HeaderView("Recently \nDeleted", icon: "trash-can", color: .red, geo: geo, counter: "\(recentlyDeletedViewModel.songs.count) song\(recentlyDeletedViewModel.songs.count == 1 ? "" : "s")".uppercased())
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
-                        if !recentlyDeletedViewModel.isLoadingSongs {
-                            if !searchableSongs.contains(where: { $0.title == "noSongs" }) {
-                                Text("Deleted songs are stored for thirty days before being permanently removed.")
-                                    .foregroundColor(Color.gray)
-                                    .deleteDisabled(true)
-                                    .padding(.horizontal, 10)
-                                Divider()
-                                    .padding(.horizontal, -16)
-                            }
+                        if recentlyDeletedViewModel.isLoadingSongs || searchableSongs.isEmpty {
+                            FullscreenMessage(imageName: "circle.slash", title: "You don't have any recently deleted songs \(searchText.isEmpty ? "" : "that matched your search").", isLoading: recentlyDeletedViewModel.isLoadingSongs)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: geo.size.height / 2.2, alignment: .bottom)
+                        } else {
+                            Text("Deleted songs are stored for thirty days before being permanently removed.")
+                                .foregroundColor(Color.gray)
+                                .deleteDisabled(true)
+                                .padding(.horizontal, 10)
+                            Divider()
+                                .padding(.horizontal, -16)
                             ForEach(searchableSongs, id: \.id) { song in
-                                if song.title == "noSongs" {
-                                    FullscreenMessage(imageName: "circle.slash", title: "You don't have any recently deleted songs.")
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: geo.size.height / 2.2, alignment: .bottom)
-                                } else {
-                                    let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
-                                    
-                                    NavigationLink(destination: SongDetailView(song: songData, songs: nil, restoreSong: song, folder: nil), label: {
-                                        VStack(alignment: .leading, spacing: 6) {
-                                            HStack {
-                                                Text(song.title)
-                                                    .multilineTextAlignment(.leading)
-                                                Spacer()
-                                                Image(systemName: "chevron.right")
-                                                    .foregroundColor(.gray)
-                                            }
-                                            let daysLeft = 30 - Calendar.current.dateComponents([.day], from: song.deletedTimestamp, to: Date()).day!
-                                            if daysLeft <= 7 {
-                                                Text("\(daysLeft) day\(daysLeft == 1 ? "" : "s")")
-                                                    .font(.body.weight(.semibold))
-                                                    .foregroundColor(.red)
-                                            }
-                                            Text("\(song.deletedTimestamp.formatted())").foregroundColor(Color.gray)
+                                let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
+                                
+                                NavigationLink(destination: SongDetailView(song: songData, songs: nil, restoreSong: song)) {
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        HStack {
+                                            Text(song.title)
+                                                .multilineTextAlignment(.leading)
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                                .foregroundColor(.gray)
                                         }
-                                        .padding()
-                                        .background(Material.regular)
-                                        .foregroundColor(.primary)
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                                        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
-                                        .contextMenu {
-                                            Button {
-                                                recentlyDeletedViewModel.restoreSong(song: song)
-                                            } label: {
-                                                Label("Restore", systemImage: "clock.arrow.circlepath")
-                                            }
-                                            Button(role: .destructive) {
-                                                performAction(for: song)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
+                                        let daysLeft = 30 - Calendar.current.dateComponents([.day], from: song.deletedTimestamp, to: Date()).day!
+                                        if daysLeft <= 7 {
+                                            Text("\(daysLeft) day\(daysLeft == 1 ? "" : "s")")
+                                                .font(.body.weight(.semibold))
+                                                .foregroundColor(.red)
                                         }
-                                    })
+                                        Text("\(song.deletedTimestamp.formatted())").foregroundColor(Color.gray)
+                                    }
+                                    .padding()
+                                    .background(Material.regular)
+                                    .foregroundColor(.primary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                                    .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
+                                    .contextMenu {
+                                        Button {
+                                            recentlyDeletedViewModel.restoreSong(song: song)
+                                        } label: {
+                                            Label("Restore", systemImage: "clock.arrow.circlepath")
+                                        }
+                                        Button(role: .destructive) {
+                                            performAction(for: song)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
                                 }
                             }
-                        } else {
-                            LoadingView()
                         }
                     }
                     .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
@@ -153,7 +142,7 @@ struct RecentlyDeletedView: View {
                 }
             }
             .overlay {
-                if recentlyDeletedSongs.count >= 1 {
+                if recentlyDeletedViewModel.songs.count >= 1 {
                     VStack {
                         Spacer()
                         ZStack {
