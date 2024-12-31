@@ -264,7 +264,7 @@ struct SongDetailView: View {
                                 .padding()
                                 .font(.body.weight(.semibold))
                                 .background(Material.regular)
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.red)
                                 .clipShape(Circle())
                         }
                         .confirmationDialog("Delete Song", isPresented: $showRestoreSongDeleteSheet) {
