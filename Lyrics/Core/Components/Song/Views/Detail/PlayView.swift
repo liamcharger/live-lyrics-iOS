@@ -128,10 +128,7 @@ struct PlayView: View {
                        let lineIndex = Int(components[0]),
                        let targetTime = Double(components[1]),
                        autoscrollTimerTime >= targetTime {
-                        DispatchQueue.main.async {
-                            scrollTo(lineIndex, updateIndex: false)
-                        }
-                        self.currentLineIndex += 1
+                        self.scrollTo(lineIndex + 1)
                     }
                 } else {
                     self.scrollTimer?.invalidate()
@@ -143,14 +140,29 @@ struct PlayView: View {
             }
         }
     }
-    func scrollTo(_ index: Int, updateIndex: Bool = true) {
-        isScrollingProgrammatically = true
+    func skipToLine(_ index: Int) {
+        let components = timestamps[index].split(separator: "_")
         
-        if let scrollViewProxy = proxy {
-            withAnimation(.smooth) {
-                scrollViewProxy.scrollTo(index, anchor: performanceMode ? .center : .top)
-                
-                if updateIndex {
+        if components.count == 2,
+           let lineIndex = Int(components[0]),
+           let targetTime = Double(components[1]) {
+            print(autoscrollTimerTime, targetTime)
+            print(targetTime - autoscrollTimerTime)
+            
+            // FIXME: when skipping, the selected line is briefly highlighted before being switched to the next
+            
+            self.autoscrollTimerTime += targetTime - autoscrollTimerTime
+            self.scrollTo(lineIndex)
+        }
+    }
+    func scrollTo(_ index: Int) {
+        DispatchQueue.main.async {
+            self.isScrollingProgrammatically = true
+            
+            if let scrollViewProxy = proxy {
+                withAnimation(.smooth) {
+                    scrollViewProxy.scrollTo(index, anchor: self.performanceMode ? .center : .top)
+                    
                     currentLineIndex = index
                 }
             }
@@ -182,18 +194,17 @@ struct PlayView: View {
         countdownTimer = nil
     }
     func recordTimestamp() {
-        isScrollingProgrammatically = true
+        self.isScrollingProgrammatically = true
+        
         guard currentLineIndex < lines.count else { return }
+        
         let timestamp = String(currentTime)
-        
-        print(timestamp)
-        
         let timestampString = "\(currentLineIndex)_\(timestamp)"
+        
         timestamps.append(timestampString)
         
         if currentLineIndex < lines.count - 1 {
-            currentLineIndex += 1
-            scrollTo(currentLineIndex)
+            scrollTo(currentLineIndex + 1)
         } else {
             isSyncing = false
             scrollTo(0)
@@ -401,7 +412,11 @@ struct PlayView: View {
                                         Group {
                                             if !performanceMode {
                                                 Button {
-                                                    scrollTo(index)
+                                                    if isScrolling {
+                                                        skipToLine(index)
+                                                    } else {
+                                                        scrollTo(index)
+                                                    }
                                                 } label: {
                                                     Text(line)
                                                         .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
@@ -409,10 +424,14 @@ struct PlayView: View {
                                                         .id(index)
                                                         .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                                 }
-                                                .disabled(isSyncing || isScrolling) // Disable until we can add support for skipping
+                                                .disabled(isSyncing)
                                             } else {
                                                 Button {
-                                                    scrollTo(index)
+                                                    if isScrolling {
+                                                        skipToLine(index)
+                                                    } else {
+                                                        scrollTo(index)
+                                                    }
                                                 } label: {
                                                     Text(line)
                                                         .font(.system(size: 42, weight: .bold, design: .rounded))
@@ -423,7 +442,7 @@ struct PlayView: View {
                                                         .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                                         .id(index)
                                                 }
-                                                .disabled(isSyncing || isScrolling) // Disable until we can add support for skipping
+                                                .disabled(isSyncing)
                                                 .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
                                                 .shadow(color: (currentLineIndex == index && isScrolling && !isPressed) ? Color.blue : Color.clear, radius: 10, y: 8)
                                             }
