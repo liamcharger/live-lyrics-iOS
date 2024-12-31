@@ -25,11 +25,8 @@ struct BandJoinView: View {
     var body: some View {
         VStack {
             HStack {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Join a Band")
-                        .font(.system(size: 28, design: .rounded).weight(.bold))
-                    Text("To join a band, enter the six digit code from a band administrator.")
-                }
+                Text("Join a Band")
+                    .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
                 Button(action: {isPresented = false}) {
                     Image(systemName: "xmark")
@@ -44,9 +41,13 @@ struct BandJoinView: View {
             .padding()
             Divider()
             Spacer()
-            CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""), image: "link")
-                .focused($isCodeFocused)
-                .padding()
+            VStack(alignment: .leading) {
+                CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""), image: "link")
+                    .focused($isCodeFocused)
+                Text("To join a band, enter the six digit code from a band administrator.")
+                    .foregroundStyle(.gray)
+            }
+            .padding()
             Spacer()
             Divider()
             LiveLyricsButton("Join", showProgressIndicator: $isButtonLoading) {

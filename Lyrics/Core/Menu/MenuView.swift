@@ -117,32 +117,6 @@ struct MenuView: View {
                 Divider()
                 Group {
                     VStack(spacing: 10) {
-                        // FIXME: ad squishes FullscreenMessage (especially on smaller iPhones)
-//                        AdBannerView(unitId: "ca-app-pub-5671219068273297/9309817108", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 6, paddingRight: 0)
-                        /* Button(action: {
-                            showWebView.toggle()
-                        }, label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 10) {
-                                    HStack(spacing: 7) {
-                                        Text("Privacy Policy")
-                                            .fontWeight(.semibold)
-                                        Spacer()
-                                        FAText(iconName: "files", size: 20)
-                                            .font(.body.weight(.semibold))
-                                    }
-                                    .foregroundColor(.primary)
-                                }
-                                Spacer()
-                            }
-                            .padding()
-                            .background(Material.regular)
-                            .foregroundColor(.primary)
-                            .clipShape(Capsule())
-                        })
-                        .sheet(isPresented: $showWebView) {
-                            WebView()
-                        } */
                         if user.showAds ?? true, !(user.hasPro ?? false), let product = storeKitManager.storeProducts.first(where: { $0.id == "remove_ads" }) {
                             Button(action: {
                                 if isAuthorizedForPayments {
@@ -264,7 +238,7 @@ struct MenuView: View {
                 Alert(title: Text("Cannot Purchase"), message: Text("This item cannot be purchased due to device restrictions."), dismissButton: .default(Text("OK")))
             }
             .alert(isPresented: $showCannotSendFeedbackAlert) {
-                Alert(title: Text("Cannot Open"), message: Text("A mail client could not be opened."), dismissButton: .default(Text("Cancel")))
+                Alert(title: Text("Cannot Send Feedback"), message: Text("A mail client could not be opened."), dismissButton: .default(Text("Cancel")))
             }
         }
     }
