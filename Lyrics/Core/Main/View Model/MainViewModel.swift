@@ -83,7 +83,6 @@ class MainViewModel: ObservableObject {
     
     func fetchFolders() {
         self.service.fetchFolders { folders in
-            print("Fetched folders")
             DispatchQueue.main.async {
                 self.folders = folders
                 self.isLoadingFolders = false

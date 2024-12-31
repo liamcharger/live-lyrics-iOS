@@ -45,9 +45,6 @@ struct MainView: View {
     @State var showSongEditSheet = false
     @State var showSongMoveSheet = false
     @State var showAllSongs = false
-    @State var isEditingFolders = false
-    @State var isEditingSongs = false
-    @State var isEditingFolderSongs = false
     @State var isSongsCollapsed = false
     @State var isFoldersCollapsed = false
     @State var isSharedSongsCollapsed = false
@@ -680,7 +677,6 @@ struct MainView: View {
                                                                 )
                                                             )
                                                         }
-                                                        .disabled(isEditingFolders)
                                                         .confirmationDialog(mainViewModel.selectedFolder?.uid ?? "" == uid() ? "Delete Folder" : "Leave Folder", isPresented: $showDeleteSheet) {
                                                             if let selectedFolder = mainViewModel.selectedFolder {
                                                                 Button(selectedFolder.uid ?? "" == uid() ? "Delete" : "Leave", role: .destructive) {
@@ -702,22 +698,8 @@ struct MainView: View {
                                                                 }
                                                             }
                                                         }
-                                                        if isEditingFolders {
-                                                            Button {
-                                                                showEditSheet = true
-                                                                mainViewModel.selectedFolder = folder
-                                                            } label: {
-                                                                ListIconButtonView(imageName: "pencil", color: .blue)
-                                                            }
-                                                            Button {
-                                                                showDeleteSheet = true
-                                                                mainViewModel.selectedFolder = folder
-                                                            } label: {
-                                                                ListIconButtonView(imageName: "trash", color: .red)
-                                                            }
-                                                        }
                                                     }
-                                                    if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !isEditingFolders && !showEditSheet && !mainViewModel.folderSongs.isEmpty {
+                                                    if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !showEditSheet && !mainViewModel.folderSongs.isEmpty {
                                                         VStack {
                                                             if mainViewModel.isLoadingFolderSongs {
                                                                 LoadingView()
