@@ -449,7 +449,6 @@ struct MainView: View {
                                         .multilineTextAlignment(.leading)
                                     }
                                     .padding()
-                                    .padding(.horizontal, 2)
                                     .background(Material.regular)
                                     .clipShape(RoundedRectangle(cornerRadius: 20))
                                 }
