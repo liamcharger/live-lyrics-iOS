@@ -3367,16 +3367,6 @@
         }
       }
     },
-    "Talking with friends..." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hablando con amigos..."
-          }
-        }
-      }
-    },
     "Tap to enter your notes..." : {
       "localizations" : {
         "es" : {
