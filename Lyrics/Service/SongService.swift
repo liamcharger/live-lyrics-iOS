@@ -718,7 +718,7 @@ class SongService {
 		]
 		
 		completion(nil)
-		documentRef.setData(songData) { error in
+		documentRef.setData(songData as [String : Any]) { error in
 			if error != nil {
 				completion(error)
 				return
@@ -851,7 +851,7 @@ class SongService {
 			"tags": song.tags
 		]
 		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id!).setData(songData) { error in
+		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id!).setData(songData as [String : Any]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 				return
@@ -920,7 +920,7 @@ class SongService {
 			}
 		}
 		
-		recentlyDeletedRef.setData(songData) { error in
+		recentlyDeletedRef.setData(songData as [String : Any]) { error in
 			if let error = error {
 				completion(false, error.localizedDescription)
 			} else {
@@ -997,7 +997,7 @@ class SongService {
 			"fromNotificationToken": request.fromNotificationToken
 		]
 		
-		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(id).setData(requestData) { error in
+		Firestore.firestore().collection("users").document(request.from).collection("outgoing-share-requests").document(id).setData(requestData as [String : Any]) { error in
 			if let error = error {
 				completion(error)
 				print(error.localizedDescription)
@@ -1021,7 +1021,7 @@ class SongService {
 				]
 				
 				dispatch.enter()
-				Firestore.firestore().collection("users").document(user.uid).collection("incoming-share-requests").document(id).setData(requestData) { error in
+				Firestore.firestore().collection("users").document(user.uid).collection("incoming-share-requests").document(id).setData(requestData as [String : Any]) { error in
 					if let error = error {
 						completion(error)
 						print(error.localizedDescription)
@@ -1129,7 +1129,7 @@ class SongService {
 						]
 						
 						dispatch.enter()
-						Firestore.firestore().collection("users").document(uid).collection("shared-folders").document(folder.id!).setData(sharedFolder) { error in
+						Firestore.firestore().collection("users").document(uid).collection("shared-folders").document(folder.id!).setData(sharedFolder as [String : Any]) { error in
 							dispatch.leave()
 							if let error = error {
 								print("Error: \(error.localizedDescription)")
@@ -1228,7 +1228,7 @@ class SongService {
 					]
 					
 					dispatch.enter()
-					Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id!).setData(sharedSong) { error in
+					Firestore.firestore().collection("users").document(uid).collection("shared-songs").document(song.id!).setData(sharedSong as [String : Any]) { error in
 						dispatch.leave()
 						if let error = error {
 							print("Error: \(error.localizedDescription)")
@@ -1276,7 +1276,7 @@ class SongService {
 					let id = UUID().uuidString
 					
 					dispatch.enter()
-					Firestore.firestore().collection("users").document(uid).collection("songs").document(id).setData(songData) { error in
+					Firestore.firestore().collection("users").document(uid).collection("songs").document(id).setData(songData as [String : Any]) { error in
 						if let error = error {
 							print(error.localizedDescription)
 						}

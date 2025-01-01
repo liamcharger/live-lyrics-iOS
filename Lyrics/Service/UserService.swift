@@ -126,14 +126,11 @@ struct UserService {
             "body": body
         ]
         
-        if type == .incoming {
+        switch type {
+        case .accepted, .declined, .left:
+            data["deep_link"] = "live-lyrics://profile"
+        default:
             data["deep_link"] = "live-lyrics://share-invites"
-        } else if type == .accepted {
-            data["deep_link"] = "live-lyrics://profile"
-        } else if type == .declined {
-            data["deep_link"] = "live-lyrics://profile"
-        } else if type == .left {
-            data["deep_link"] = "live-lyrics://profile"
         }
         
         Functions.functions().httpsCallable("sendNotification").call(data) { result, error in

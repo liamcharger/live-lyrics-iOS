@@ -134,7 +134,7 @@ struct BandService {
             "roleColor": role?.color,
             "roleIcon": role?.icon
         ]
-        Firestore.firestore().collection("bands").document(bandId).collection("members").document(user.id!).setData(member) { error in
+        Firestore.firestore().collection("bands").document(bandId).collection("members").document(user.id!).setData(member as [String : Any]) { error in
             if let error = error {
                 print(error.localizedDescription)
             }
