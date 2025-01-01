@@ -96,8 +96,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token:", deviceToken)
-        if let currentUser = authViewModel.currentUser, !deviceToken.isEmpty {
-            authViewModel.updateFCMId(currentUser, id: deviceToken.values.first!)
+        if let currentUser = authViewModel.currentUser, let token = deviceToken.values.first, !deviceToken.isEmpty && token != currentUser.fcmId ?? "" { // Avoid unnecessary writes by checking if we really need to update the FCM id
+            authViewModel.updateFCMId(currentUser, id: token)
         }
     }
     
