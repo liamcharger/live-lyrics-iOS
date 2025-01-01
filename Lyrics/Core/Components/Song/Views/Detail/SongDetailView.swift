@@ -293,89 +293,91 @@ struct SongDetailView: View {
             .padding(.top, 8)
             .padding([.horizontal, .bottom])
             Divider()
-            if isLoadingSongData {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if lyrics.isEmpty {
-                FullscreenMessage(imageName: "circle.slash", title: "There aren't any lyrics for this song.", spaceNavbar: true)
-            } else {
-                ZStack {
-                    // Determine whether to hide joined users
-                    let hideJoinedUsers = isLyricsFocused || (joinedUsers?.isEmpty ?? true)
-                    
-                    // Do not allow text editing if the song is read-only or in RecentlyDeleted
-                    TextEditor(
-                        text: songs == nil || (song.readOnly ?? false)
-                        ? .constant(lyrics)
-                        : $lyrics
-                    )
-                    .multilineTextAlignment(alignment)
-                    .font(.system(size: CGFloat(fontSize), weight: weight))
-                    .lineSpacing(lineSpacing)
-                    .focused($isLyricsFocused)
-                    .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
-                        textEditor.textContainerInset = UIEdgeInsets(
-                            top: hideJoinedUsers ? 12 : 70,
-                            left: 12,
-                            bottom: 70,
-                            right: 12
-                        )
+            Group {
+                if isLoadingSongData {
+                    ProgressView()
+                } else if lyrics.isEmpty {
+                    FullscreenMessage(imageName: "circle.slash", title: "There aren't any lyrics for this song.", spaceNavbar: true)
+                } else {
+                    ZStack {
+                        // Determine whether to hide joined users
+                        let hideJoinedUsers = isLyricsFocused || (joinedUsers?.isEmpty ?? true)
                         
-                        if let textRange = textEditor.selectedTextRange {
-                            DispatchQueue.main.async {
-                                songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
+                        // Do not allow text editing if the song is read-only or in RecentlyDeleted
+                        TextEditor(
+                            text: songs == nil || (song.readOnly ?? false)
+                            ? .constant(lyrics)
+                            : $lyrics
+                        )
+                        .multilineTextAlignment(alignment)
+                        .font(.system(size: CGFloat(fontSize), weight: weight))
+                        .lineSpacing(lineSpacing)
+                        .focused($isLyricsFocused)
+                        .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
+                            textEditor.textContainerInset = UIEdgeInsets(
+                                top: hideJoinedUsers ? 12 : 70,
+                                left: 12,
+                                bottom: 70,
+                                right: 12
+                            )
+                            
+                            if let textRange = textEditor.selectedTextRange {
+                                DispatchQueue.main.async {
+                                    songDetailViewModel.selectedText = textEditor.text(in: textRange) ?? ""
+                                }
                             }
                         }
-                    }
-                    if restoreSong == nil {
-                        // Add "shadow" to avoid element conflicts
-                        Color(.systemBackground)
-                            .mask(LinearGradient(
-                                gradient: Gradient(colors: [Color.black, Color.clear]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                            .frame(height: 90)
-                            .frame(maxHeight: .infinity, alignment: .top)
-                            .opacity(isLyricsFocused || joinedUsers?.isEmpty ?? true ? 0 : 1)
-                            .allowsHitTesting(false)
-                        VStack {
-                            if !isLyricsFocused {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 6) {
-                                        if let joinedUsers = joinedUsers {
-                                            ForEach(joinedUsers, id: \.id) { user in
-                                                Button {
-                                                    selectedUser = user
-                                                    showUserPopover = true
-                                                } label: {
-                                                    UserPopoverRowView(user: user, song: song)
+                        if restoreSong == nil {
+                            // Add "shadow" to avoid element conflicts
+                            Color(.systemBackground)
+                                .mask(LinearGradient(
+                                    gradient: Gradient(colors: [Color.black, Color.clear]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .frame(height: 90)
+                                .frame(maxHeight: .infinity, alignment: .top)
+                                .opacity(isLyricsFocused || joinedUsers?.isEmpty ?? true ? 0 : 1)
+                                .allowsHitTesting(false)
+                            VStack {
+                                if !isLyricsFocused {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 6) {
+                                            if let joinedUsers = joinedUsers {
+                                                ForEach(joinedUsers, id: \.id) { user in
+                                                    Button {
+                                                        selectedUser = user
+                                                        showUserPopover = true
+                                                    } label: {
+                                                        UserPopoverRowView(user: user, song: song)
+                                                    }
                                                 }
                                             }
                                         }
+                                        .padding(10)
                                     }
-                                    .padding(10)
+                                    .frame(height: 70)
                                 }
-                                .frame(height: 70)
-                            }
-                            Spacer()
-                            // Only show the text style options when song is not read-only
-                            if !songDetailViewModel.readOnly(song) {
-                                HStack {
-                                    Spacer()
-                                    SongDetailMenuView(value: $fontSize, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
-                                        .padding(12)
-                                        .background {
-                                            // Add shadow to avoid element conflicts
-                                            VisualEffectBlur(blurStyle: .dark)
-                                                .blur(radius: 20)
-                                        }
+                                Spacer()
+                                // Only show the text style options when song is not read-only
+                                if !songDetailViewModel.readOnly(song) {
+                                    HStack {
+                                        Spacer()
+                                        SongDetailMenuView(value: $fontSize, weight: $weight, lineSpacing: $lineSpacing, alignment: $alignment, song: song)
+                                            .padding(12)
+                                            .background {
+                                                // Add shadow to avoid element conflicts
+                                                VisualEffectBlur(blurStyle: .dark)
+                                                    .blur(radius: 20)
+                                            }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             Divider()
             // Don't show dictionary options when the user is editing, no word is selected, or the song is in recently deleted
             if restoreSong == nil {
