@@ -92,7 +92,7 @@ class AuthViewModel: ObservableObject {
     }
     
     func updateUser(email: String, username: String, fullname: String, completionBool: @escaping(Bool) -> Void, completionString: @escaping(String) -> Void) {
-        self.userSession?.updateEmail(to: email) { error in
+        self.userSession?.sendEmailVerification(beforeUpdatingEmail: email) { error in // TODO: verify updated method does not change functionality
             if let error = error {
                 completionBool(false)
                 completionString(error.localizedDescription)
@@ -109,7 +109,7 @@ class AuthViewModel: ObservableObject {
                 .updateData(data) { _ in
                     self.fetchUser()
                     completionBool(true)
-            }
+                }
         }
     }
     
