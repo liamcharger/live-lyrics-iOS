@@ -1852,6 +1852,9 @@
         }
       }
     },
+    "It doesn't look like you have any new messages." : {
+
+    },
     "Join a Band" : {
       "localizations" : {
         "es" : {
@@ -2078,6 +2081,9 @@
           }
         }
       }
+    },
+    "Make sure you're online and try again in a few minutes." : {
+
     },
     "Manage" : {
       "localizations" : {
@@ -2355,13 +2361,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hmm, it doesn’t look like you have any joined bands."
+            "value" : "It doesn’t look like you have any joined bands."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hmm, no parece que tengas bandas unidas."
+            "value" : "No parece que tengas bandas unidas."
           }
         }
       }
@@ -3459,16 +3465,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los mejores resultados"
-          }
-        }
-      }
-    },
-    "Try again in a few minutes, and make sure you're online." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vuelve a intentarlo dentro de unos minutos y asegúrate de que estás conectado."
           }
         }
       }

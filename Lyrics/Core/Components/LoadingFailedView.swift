@@ -11,7 +11,7 @@ struct LoadingFailedView: View {
     @Environment(\.presentationMode) var presMode
     
     var body: some View {
-        let alert = AlertViewAlert(title: NSLocalizedString("Hmm...we had a problem loading what you requested.", comment: ""), subtitle: NSLocalizedString("Try again in a few minutes, and make sure you're online.", comment: ""), icon: "warning", accent: .yellow)
+        let alert = AlertViewAlert(title: NSLocalizedString("Hmm...we had a problem loading what you requested.", comment: ""), subtitle: NSLocalizedString("Make sure you're online and try again in a few minutes.", comment: ""), icon: "warning", accent: .yellow)
         let primary = AlertButton(title: NSLocalizedString("Understood", comment: "")) {
             presMode.wrappedValue.dismiss()
         }
