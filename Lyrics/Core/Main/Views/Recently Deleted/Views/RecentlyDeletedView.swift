@@ -12,7 +12,7 @@ struct RecentlyDeletedView: View {
     @ObservedObject var songViewModel = SongViewModel.shared
     @ObservedObject var authViewModel = AuthViewModel.shared
     
-    @State var searchText = ""
+    @State var searchText = "" // FIXME: implement search, or remove references
     
     @State var showMenu = false
     @State var showNewSong = false
@@ -55,7 +55,7 @@ struct RecentlyDeletedView: View {
                         HeaderView("Recently \nDeleted", icon: "trash-can", color: .red, geo: geo, counter: "\(recentlyDeletedViewModel.songs.count) song\(recentlyDeletedViewModel.songs.count == 1 ? "" : "s")".uppercased())
                         AdBannerView(unitId: "ca-app-pub-5671219068273297/5562143788", height: 80, paddingTop: 0, paddingLeft: 0, paddingBottom: 10, paddingRight: 0)
                         if recentlyDeletedViewModel.isLoadingSongs || searchableSongs.isEmpty {
-                            FullscreenMessage(imageName: "circle.slash", title: "You don't have any recently deleted songs \(searchText.isEmpty ? "" : "that matched your search").", isLoading: recentlyDeletedViewModel.isLoadingSongs)
+                            FullscreenMessage(imageName: "circle.slash", title: "You don't have any recently deleted songs\(searchText.isEmpty ? "" : " that matched your search").", isLoading: recentlyDeletedViewModel.isLoadingSongs)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: geo.size.height / 2.2, alignment: .bottom)
                         } else {

@@ -120,8 +120,7 @@ struct BandDetailView: View {
                                 }
                                 .padding(.horizontal, -16)
                             }
-                            // TODO: Should this section be included? Will require logic implementation to add and remove bandId when it has been added and removed from the band
-                            if !songs.isEmpty {
+                            if !songs.isEmpty { // TODO: verify this section works properly
                                 VStack(spacing: 2) {
                                     ListHeaderView(title: NSLocalizedString("shared_songs", comment: ""))
                                     VStack {

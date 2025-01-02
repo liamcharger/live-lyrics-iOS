@@ -60,6 +60,12 @@ struct BandsView: View {
                                             showNewBandSheet = true
                                         })
                                     ])
+                                    .sheet(isPresented: $showNewBandSheet) {
+                                        NewBandView(isPresented: $showNewBandSheet)
+                                    }
+                                    .sheet(isPresented: $showJoinBandSheet) {
+                                        BandJoinView(isPresented: $showJoinBandSheet)
+                                    }
                                     if bandsViewModel.userBands.isEmpty {
                                         FullscreenMessage(imageName: "circle.slash", title: NSLocalizedString("no_user_bands", comment: ""), spaceNavbar: true)
                                             .frame(maxWidth: .infinity)
@@ -98,12 +104,6 @@ struct BandsView: View {
                         }
                     }
                 }
-            }
-            .sheet(isPresented: $showNewBandSheet) {
-                NewBandView(isPresented: $showNewBandSheet)
-            }
-            .sheet(isPresented: $showJoinBandSheet) {
-                BandJoinView(isPresented: $showJoinBandSheet)
             }
             .sheet(item: $selectedBand) { band in
                 BandDetailView(band: Binding(get: {

@@ -41,7 +41,7 @@ struct BandJoinView: View {
             .padding()
             Divider()
             Spacer()
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 9) {
                 CustomTextField(text: $code, placeholder: NSLocalizedString("Code", comment: ""), image: "link")
                     .focused($isCodeFocused)
                 Text("To join a band, enter the six digit code from a band administrator.")
