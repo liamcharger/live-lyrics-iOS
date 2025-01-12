@@ -7,14 +7,18 @@
 
 </div>
 
+> [!NOTE]
+> This project has been made available for [High Seas](highseas.hackclub.com). As it is already on the App Store, please use the source code for this project for personal use only.
+
 ## Key Features:
-- Effortlessly showcase lyrics in real-time during your on-stage performances. Stay focused on your artistry while Live Lyrics dynamically handles your lyrics display.
-- Tailored for musicians and performers, our app boasts a user-friendly interface. Enjoy a streamlined design that ensures a smooth and intuitive experience throughout your live shows.
-- Personalize your lyrics display to match your preferences and stage conditions. Adjust font size, design, and weight to optimize visibility under various lighting conditions.
-- Efficiently create and manage setlists to organize your performance seamlessly. Utilize folders to categorize songs, allowing for easy navigation and smooth transitions between tracks.
-- Experience a dedicated "Play View" feature for an immersive on-stage experience. Enhance your connection with the audience by effortlessly navigating songs while performing.
-- Keep track of important notes for each song, ensuring you never miss a beat during rehearsals or performances.
-- Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more.
-- Easily collaborate on songs and folders with friends and band members.
+- Create folders to organize your performance and manage your setlists
+- Experience the Play View, the home of autoscroll and a metronome
+- Don't forget about how many times you should be playing the intro of your song, or how you should be strumming, with notes
+- Keep versions of your song organized by creating variations for guitar chords, vocal parts, and more
+- Easily collaborate on songs and folders with friends and band members
+- Effortlessly find lyrics for songs and add them to your library, with a Musixmatch integration*
+- With demo attachments, you can give collaborators links to media outside of the app, like a cover on YouTube you want them to learn*
+- Take control of collaboration with Bands, a new way to share songs and folders, tailored to a member in your band
+- With a Datamuse integration, you can find synonyms, antynoms, and rhymes to add to your song*
 
 <sup>*</sup> *Requires premium subscription*
