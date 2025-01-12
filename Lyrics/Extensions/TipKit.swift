@@ -36,7 +36,7 @@ struct ExploreDetailViewTip: Tip {
     }
     
     var message: Text? {
-        Text("Click to add to your library..")
+        Text("Click to add to your library.")
     }
     
     var image: Image? {

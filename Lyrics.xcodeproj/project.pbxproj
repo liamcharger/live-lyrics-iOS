@@ -24,7 +24,6 @@
 		E0239E592BE9C133007796BE /* SongVariationManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0239E582BE9C133007796BE /* SongVariationManageView.swift */; };
 		E0258A722C82713900648582 /* DatamuseWord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0258A712C82713900648582 /* DatamuseWord.swift */; };
 		E0258A742C83772700648582 /* DatamuseWordRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0258A732C83772700648582 /* DatamuseWordRowView.swift */; };
-		E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */; };
 		E02A0AE62C33561800105365 /* BandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AE52C33561800105365 /* BandService.swift */; };
 		E02A0AE82C33563C00105365 /* BandsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AE72C33563C00105365 /* BandsView.swift */; };
 		E02A0AEC2C33565300105365 /* BandsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02A0AEB2C33565300105365 /* BandsViewModel.swift */; };
@@ -207,7 +206,6 @@
 		E0239E582BE9C133007796BE /* SongVariationManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongVariationManageView.swift; sourceTree = "<group>"; };
 		E0258A712C82713900648582 /* DatamuseWord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatamuseWord.swift; sourceTree = "<group>"; };
 		E0258A732C83772700648582 /* DatamuseWordRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatamuseWordRowView.swift; sourceTree = "<group>"; };
-		E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E02A0AE52C33561800105365 /* BandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandService.swift; sourceTree = "<group>"; };
 		E02A0AE72C33563C00105365 /* BandsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandsView.swift; sourceTree = "<group>"; };
 		E02A0AEB2C33565300105365 /* BandsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandsViewModel.swift; sourceTree = "<group>"; };
@@ -517,7 +515,6 @@
 				E04247512A02EF4F00CA48B3 /* Assets.xcassets */,
 				E01EB4442B20CA3A009C48F2 /* remote_config_defaults.plist */,
 				E0C3D6C12C84CC1100A5ECDE /* InAppPurchases.plist */,
-				E02735A42B1FD4D70010C77D /* GoogleService-Info.plist */,
 				E0986BE72B2B50C400CE938B /* icons.json */,
 				E00E845B2B22290100573A9F /* Live Lyrics.storekit */,
 				E04247532A02EF4F00CA48B3 /* Lyrics.entitlements */,
@@ -1295,7 +1292,6 @@
 				E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */,
 				E0986BF62B2B516900CE938B /* Font Awesome 6 Sharp-Solid-900.otf in Resources */,
 				E0986BFB2B2B516900CE938B /* Font Awesome 6 Sharp-Regular-400.otf in Resources */,
-				E02735A52B1FD4D70010C77D /* GoogleService-Info.plist in Resources */,
 				E0019D272BC6E68100DABECB /* hi_click.wav in Resources */,
 				E0986BE82B2B50C400CE938B /* icons.json in Resources */,
 				E04247522A02EF4F00CA48B3 /* Assets.xcassets in Resources */,

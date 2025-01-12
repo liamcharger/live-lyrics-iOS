@@ -18,7 +18,7 @@ struct FeaturesView: View {
         FeaturesSection(title: "Song Catalog", subtitle: "access_to_worlds_largest_lyric_database", imageName: "music-magnifying-glass", pro: true),
         FeaturesSection(title: "Demo Attachments", subtitle: "access_to_demo_attachments", imageName: "file-audio", pro: true),
         FeaturesSection(title: "Word Assistant", subtitle: "world_of_worlds_at_your_fingertips", imageName: "hand-pointer", pro: true),
-        FeaturesSection(title: "Tuner", subtitle: "access_to_tuner", imageName: "sliders", pro: true),
+        // FeaturesSection(title: "Tuner", subtitle: "access_to_tuner", imageName: "sliders", pro: true),
         FeaturesSection(title: "And More", subtitle: "This update also includes several bug fixes and other improvements.", imageName: "circle-ellipsis", pro: false)
     ]
     

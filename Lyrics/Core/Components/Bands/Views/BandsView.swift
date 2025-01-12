@@ -24,7 +24,7 @@ struct BandsView: View {
             content
         } else {
             NewFeatureView(feature: NewFeature(title: "Bands", sections: [
-                NewFeatureSection(id: 1, title: "An New Way to Collaborate", icon: "users", subtitle: "band_feature_description"),
+                NewFeatureSection(id: 1, title: "A New Way to Collaborate", icon: "users", subtitle: "band_feature_description"),
                 NewFeatureSection(id: 2, title: "Member Roles", icon: "users", subtitle: "Assign a role to a member to give them access to a variation specifically created for that role, like piano chords for a keyboardist, or special lyrics for a backup singer.")
             ]))
         }
