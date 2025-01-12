@@ -183,6 +183,8 @@ enum QuickAction {
     ]
     
     static func addQuickItems() {
-        UIApplication.shared.shortcutItems = QuickAction.shortcutItems
+        if AuthViewModel.shared.userSession != nil {
+            UIApplication.shared.shortcutItems = QuickAction.shortcutItems
+        }
     }
 }

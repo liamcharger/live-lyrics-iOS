@@ -312,7 +312,7 @@ struct ShareView: View {
                     ScrollView {
                         VStack {
                             // Show bands if searchText is empty
-                            if firstSearch || searchText.isEmpty {
+                            if firstSearch || searchText.isEmpty && !bandsViewModel.userBands.isEmpty {
                                 VStack(spacing: 2) {
                                     ListHeaderView(title: NSLocalizedString("bands", comment: ""))
                                         .frame(maxWidth: .infinity, alignment: .leading)
