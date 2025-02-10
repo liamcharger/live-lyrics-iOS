@@ -146,7 +146,3 @@ struct ListViewModifier: ViewModifier {
         }
     }
 }
-
-#Preview {
-    ListRowView(title: "Favorites", navArrow: nil, imageName: "pin.fill", icon: "folder", song: Song.song)
-}

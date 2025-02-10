@@ -315,16 +315,6 @@
         }
       }
     },
-    "A mail client could not be opened." : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se ha podido abrir un cliente de correo."
-          }
-        }
-      }
-    },
     "access_to_demo_attachments" : {
       "localizations" : {
         "en" : {
@@ -872,16 +862,6 @@
         }
       }
     },
-    "Cannot Send Feedback" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se pueden enviar comentarios"
-          }
-        }
-      }
-    },
     "Center" : {
       "localizations" : {
         "es" : {
@@ -954,17 +934,6 @@
     },
     "Click to add to your library." : {
 
-    },
-    "Click to add to your library.." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Haz clic para añadir a tu biblioteca.."
-          }
-        }
-      }
     },
     "Click to copy to your clipboard." : {
       "localizations" : {
@@ -2892,6 +2861,9 @@
         }
       }
     },
+    "Scrolling may be timed incorrectly." : {
+
+    },
     "search" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3804,6 +3776,9 @@
           }
         }
       }
+    },
+    "Your lyrics were updated after the last sync." : {
+
     },
     "Your password must be at least 6 characters long." : {
       "localizations" : {

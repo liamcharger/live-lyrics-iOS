@@ -97,8 +97,3 @@ struct SongVariationEditView: View {
         }
     }
 }
-
-
-#Preview {
-    SongVariationEditView(song: Song.song, variation: SongVariation.variation, isDisplayed: .constant(true))
-}

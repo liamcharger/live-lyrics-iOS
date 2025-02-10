@@ -143,7 +143,7 @@ struct SongDetailView: View {
         case kickedOut, error
     }
     
-    init(song inputSong: Song, songs: [Song]?, restoreSong: RecentlyDeletedSong? = nil, folder: Folder? = nil, joinedUsers: [User]? = nil, isSongFromFolder: Bool? = nil) {
+    init(song inputSong: Song, songs: [Song]? = nil, restoreSong: RecentlyDeletedSong? = nil, folder: Folder? = nil, joinedUsers: [User]? = nil, isSongFromFolder: Bool? = nil) {
         self.songs = songs
         self.isSongFromFolder = isSongFromFolder ?? false
         self._joinedUsers = State(initialValue: joinedUsers)
@@ -579,130 +579,136 @@ struct SongDetailView: View {
             return Alert(title: Text("Error"), message: Text("An unknown error has occured."), dismissButton: .cancel())
         })
         .onAppear {
-            songViewModel.fetchSongVariations(song: song) { variations in
-                // Initialize a variable to assign parsed variations to
-                var parsedVariations = [SongVariation]()
-                
-                // Check if there are any variations
-                if let variationIds = song.variations, !variationIds.isEmpty {
-                    // Handle band-specific variations if applicable
-                    if let bandId = song.bandId, variationIds.contains(where: { $0 == "byRole" }) {
-                        SongService().handleVariations(song, bandId: bandId) { handledVariations in
-                            self.songVariations = handledVariations
-                            // Don't update the lyrics while the user is writing
-                            if !isLyricsFocused {
-                                // Only set the first variation if it's not the default variation
-                                if let variation = handledVariations.first, variation.title != SongVariation.defaultId {
-                                    self.selectedVariation = variation
-                                    self.lyrics = variation.lyrics
+            if restoreSong == nil {
+                songViewModel.fetchSongVariations(song: song) { variations in
+                    // Initialize a variable to assign parsed variations to
+                    var parsedVariations = [SongVariation]()
+                    
+                    // Check if there are any variations
+                    if let variationIds = song.variations, !variationIds.isEmpty {
+                        // Handle band-specific variations if applicable
+                        if let bandId = song.bandId, variationIds.contains(where: { $0 == "byRole" }) {
+                            SongService().handleVariations(song, bandId: bandId) { handledVariations in
+                                self.songVariations = handledVariations
+                                // Don't update the lyrics while the user is writing
+                                if !isLyricsFocused {
+                                    // Only set the first variation if it's not the default variation
+                                    if let variation = handledVariations.first, variation.title != SongVariation.defaultId {
+                                        self.selectedVariation = variation
+                                        self.lyrics = variation.lyrics
+                                    }
+                                }
+                                
+                                self.isLoadingSongData = false
+                            }
+                        } else {
+                            // Default variation is allowed, add it to the array
+                            if variationIds.contains(SongVariation.defaultId) {
+                                parsedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
+                            }
+                            
+                            // Filter allowed variations
+                            let filteredVariations = variations.filter { variation in
+                                if let variationId = variation.id {
+                                    return variationIds.contains(variationId)
+                                }
+                                return false
+                            }
+                            parsedVariations.append(contentsOf: filteredVariations)
+                            
+                            // Set the initial lyrics
+                            if let firstVariation = filteredVariations.first {
+                                if firstVariation.title != SongVariation.defaultId {
+                                    self.selectedVariation = firstVariation
+                                    if !isLyricsFocused {
+                                        self.lyrics = firstVariation.lyrics
+                                    }
+                                }
+                            } else {
+                                if !isLyricsFocused {
+                                    self.lyrics = song.lyrics
                                 }
                             }
                             
-                            self.isLoadingSongData = false
+                            self.songVariations = parsedVariations
+                            // Now that everything has been processed, set loading to false
+                            isLoadingSongData = false
                         }
                     } else {
-                        // Default variation is allowed, add it to the array
-                        if variationIds.contains(SongVariation.defaultId) {
-                            parsedVariations.append(SongVariation(title: SongVariation.defaultId, lyrics: "", songUid: "", songId: ""))
-                        }
+                        // No restrictions are set, allow all variations
+                        self.songVariations = variations
+                        // After finishing, stop showing the progress view
+                        isLoadingSongData = false
+                    }
+                }
+                songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
+                    // Save shared song properties to reassign
+                    let readOnly = self.song.readOnly
+                    let variations = self.song.variations
+                    let performanceMode = self.song.performanceMode
+                    
+                    if let song = song {
+                        // Assignment overwrites sharedSong properties, so reassign them
+                        self.song = song
+                        self.song.readOnly = readOnly
+                        self.song.variations = variations
+                        self.song.performanceMode = performanceMode
                         
-                        // Filter allowed variations
-                        let filteredVariations = variations.filter { variation in
-                            if let variationId = variation.id {
-                                return variationIds.contains(variationId)
-                            }
-                            return false
-                        }
-                        parsedVariations.append(contentsOf: filteredVariations)
-                        
-                        // Set the initial lyrics
-                        if let firstVariation = filteredVariations.first {
-                            if firstVariation.title != SongVariation.defaultId {
-                                self.selectedVariation = firstVariation
-                                if !isLyricsFocused {
-                                    self.lyrics = firstVariation.lyrics
-                                }
-                            }
-                        } else {
-                            if !isLyricsFocused {
+                        self.title = song.title
+                        // Don't set fetched lyrics if the user is editing
+                        if !isLyricsFocused {
+                            if selectedVariation == nil {
                                 self.lyrics = song.lyrics
                             }
                         }
+                        self.key = {
+                            if let key = song.key, !key.isEmpty {
+                                return key
+                            }
+                            return ""
+                        }()
+                        self.artist = song.artist ?? ""
+                        self.tags = song.tags ?? []
+                        self.weight = songDetailViewModel.getWeight(weight: Int(song.weight ?? 0))
+                        self.alignment = songDetailViewModel.getAlignment(alignment: Int(song.alignment ?? 0))
+                        self.fontSize = song.size ?? 18
+                        self.lineSpacing = song.lineSpacing ?? 1
                         
-                        self.songVariations = parsedVariations
-                        // Now that everything has been processed, set loading to false
-                        isLoadingSongData = false
-                    }
-                } else {
-                    // No restrictions are set, allow all variations
-                    self.songVariations = variations
-                    // After finishing, stop showing the progress view
-                    isLoadingSongData = false
-                }
-            }
-            songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
-                // Save shared song properties to reassign
-                let readOnly = self.song.readOnly
-                let variations = self.song.variations
-                let performanceMode = self.song.performanceMode
-                
-                if let song = song {
-                    // Assignment overwrites sharedSong properties, so reassign them
-                    self.song = song
-                    self.song.readOnly = readOnly
-                    self.song.variations = variations
-                    self.song.performanceMode = performanceMode
-                    
-                    self.title = song.title
-                    // Don't set fetched lyrics if the user is editing
-                    if !isLyricsFocused {
-                        if selectedVariation == nil {
-                            self.lyrics = song.lyrics
-                        }
-                    }
-                    self.key = {
-                        if let key = song.key, !key.isEmpty {
-                            return key
-                        }
-                        return ""
-                    }()
-                    self.artist = song.artist ?? ""
-                    self.tags = song.tags ?? []
-                    self.weight = songDetailViewModel.getWeight(weight: Int(song.weight ?? 0))
-                    self.alignment = songDetailViewModel.getAlignment(alignment: Int(song.alignment ?? 0))
-                    self.fontSize = song.size ?? 18
-                    self.lineSpacing = song.lineSpacing ?? 1
-                    
-                    // Set the joinedUsersStrings var based on media type
-                    if let folder = folder, folder.id! != uid() {
-                        self.joinedUsersStrings = folder.joinedUsers ?? []
-                    } else {
-                        self.joinedUsersStrings = song.joinedUsers ?? []
-                    }
-                    
-                    if !joinedUsersStrings.isEmpty {
-                        // User's id is not in the song, the user has been removed from the song
-                        if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
-                            showAlert = true
-                            activeAlert = .kickedOut
+                        // Set the joinedUsersStrings var based on media type
+                        if let folder = folder, folder.id! != uid() {
+                            self.joinedUsersStrings = folder.joinedUsers ?? []
                         } else {
-                            fetchUsers()
+                            self.joinedUsersStrings = song.joinedUsers ?? []
+                        }
+                        
+                        if !joinedUsersStrings.isEmpty {
+                            // User's id is not in the song, the user has been removed from the song
+                            if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {
+                                showAlert = true
+                                activeAlert = .kickedOut
+                            } else {
+                                fetchUsers()
+                            }
                         }
                     }
+                } regCompletion: { listener in
+                    // Assign a registration listener
+                    self.fetchListener = listener
                 }
-            } regCompletion: { reg in
-                // Assign a registration listener
-                self.fetchListener = reg
+                checkForUpdatedLyrics()
+                
+                // Do not allow device to fall asleep
+                UIApplication.shared.isIdleTimerDisabled = true
+            } else {
+                isLoadingSongData = false
             }
-            checkForUpdatedLyrics()
-            // Do not allow device to fall asleep
-            UIApplication.shared.isIdleTimerDisabled = true
         }
         .onDisappear {
             // Deinitalize timers and registration listeners
             updatedLyricsTimer?.invalidate()
             updatedLyricsTimer = nil
             fetchListener?.remove()
+            
             // Allow device to fall asleep
             UIApplication.shared.isIdleTimerDisabled = false
         }

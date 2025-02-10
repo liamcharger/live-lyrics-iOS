@@ -110,7 +110,7 @@ struct ProfileView: View {
             .padding()
         }
         .alert(isPresented: $showError) {
-            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel())
+            Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .cancel()) // FIXME: button is locked after error
         }
     }
 }

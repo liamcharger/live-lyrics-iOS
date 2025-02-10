@@ -596,17 +596,12 @@ struct MainView: View {
                                                                     }
                                                                 }
                                                                 Spacer()
-                                                                if selectedFolder?.id == folder.id {
-                                                                    if isLoadingFolderSongs || mainViewModel.folderSongs.isEmpty {
-                                                                        ProgressView()
-                                                                    } else {
-                                                                        Image(systemName: "chevron.right")
-                                                                            .foregroundColor(.gray)
-                                                                            .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolder?.id == folder.id ? 90 : 0))
-                                                                    }
+                                                                if isLoadingFolderSongs && selectedFolder?.id == folder.id {
+                                                                    ProgressView()
                                                                 } else {
                                                                     Image(systemName: "chevron.right")
                                                                         .foregroundColor(.gray)
+                                                                        .rotationEffect(Angle(degrees: !isLoadingFolderSongs && selectedFolder?.id == folder.id ? 90 : 0))
                                                                 }
                                                             }
                                                             .padding()
@@ -696,7 +691,7 @@ struct MainView: View {
                                                             }
                                                         }
                                                     }
-                                                    if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !showEditSheet && !mainViewModel.folderSongs.isEmpty {
+                                                    if !isLoadingFolderSongs && selectedFolder?.id == folder.id && !showEditSheet {
                                                         VStack {
                                                             if mainViewModel.isLoadingFolderSongs {
                                                                 LoadingView()

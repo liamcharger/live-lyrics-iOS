@@ -459,7 +459,7 @@ class SongService {
 	
 	func updateBpb(song: Song, bpb: Int) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["bpb": bpb]) { error in
+			.updateData(["bpb": bpb, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -468,7 +468,7 @@ class SongService {
 	
 	func updateBpm(song: Song, bpm: Int) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["bpm": bpm]) { error in
+			.updateData(["bpm": bpm, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -486,7 +486,7 @@ class SongService {
 			ref = Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 		}
 		
-		ref.updateData(["performanceMode": performanceMode]) { error in
+		ref.updateData(["performanceMode": performanceMode, "lastEdited": Date()]) { error in
 			if let error = error {
 				print(error.localizedDescription)
 			}
@@ -495,7 +495,7 @@ class SongService {
 	
 	func updateTitle(folder: Folder, title: String, completion: @escaping(Bool, String) -> Void) {
 		Firestore.firestore().collection("users").document(folder.uid!).collection("folders").document(folder.id!)
-			.updateData(["title": title]) { error in
+			.updateData(["title": title, "lastEdited": Date()]) { error in
 				if let error = error {
 					completion(false, error.localizedDescription)
 				} else {
@@ -506,7 +506,7 @@ class SongService {
 	
 	func updateSong(_ song: Song, title: String, key: String, artist: String, completion: @escaping(Bool, String) -> Void) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["title": title, "key": key, "artist": artist]) { error in
+			.updateData(["title": title, "key": key, "artist": artist, "lastEdited": Date()]) { error in
 				if let error = error {
 					completion(false, error.localizedDescription)
 				} else {
@@ -518,14 +518,14 @@ class SongService {
 	func updateLyrics(forVariation: SongVariation? = nil, song: Song, lyrics: String) {
 		if let variation = forVariation {
 			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!).collection("variations").document(variation.id!)
-				.updateData(["lyrics": lyrics]) { error in
+				.updateData(["lyrics": lyrics, "lastEdited": Date(), "lastLyricsEdited": Date()]) { error in
 					if let error = error {
 						print(error.localizedDescription)
 					}
 				}
 		} else {
 			Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-				.updateData(["lyrics": lyrics]) { error in
+				.updateData(["lyrics": lyrics, "lastEdited": Date(), "lastLyricsEdited": Date()]) { error in
 					if let error = error {
 						print(error.localizedDescription)
 					}
@@ -535,7 +535,7 @@ class SongService {
 	
 	func updateNotes(song: Song, notes: String) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["notes": notes]) { error in
+			.updateData(["notes": notes, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -544,7 +544,7 @@ class SongService {
 	
 	func updateNotes(folder: Folder, notes: String) {
 		Firestore.firestore().collection("users").document(folder.uid!).collection("folders").document(folder.id!)
-			.updateData(["notes": notes]) { error in
+			.updateData(["notes": notes, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -578,7 +578,7 @@ class SongService {
 	
 	func updateTextProperties(song: Song, size: Int) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["size": size]) { error in
+			.updateData(["size": size, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -587,7 +587,7 @@ class SongService {
 	
 	func updateTextProperties(song: Song, weight: Double) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["weight": weight]) { error in
+			.updateData(["weight": weight, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -596,7 +596,7 @@ class SongService {
 	
 	func updateTextProperties(song: Song, lineSpacing: Double) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["lineSpacing": lineSpacing]) { error in
+			.updateData(["lineSpacing": lineSpacing, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -605,7 +605,7 @@ class SongService {
 	
 	func updateTextProperties(song: Song, alignment: Double) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["alignment": alignment]) { error in
+			.updateData(["alignment": alignment, "lastEdited": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -616,7 +616,7 @@ class SongService {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		
 		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
-			.updateData(["autoscrollTimestamps": timestamps]) { error in
+			.updateData(["autoscrollTimestamps": timestamps, "lastEdited": Date(), "lastSynced": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)
 				}
@@ -682,7 +682,7 @@ class SongService {
 	
 	func createNewDemoAttachment(from url: String, for song: Song, completion: @escaping() -> Void) {
 		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
-			.updateData(["demoAttachments": FieldValue.arrayUnion([url])]) { error in
+			.updateData(["demoAttachments": FieldValue.arrayUnion([url]), "lastEdited": Date()]) { error in
 				if let error = error {
 					print("Error creating song demo attachment: \(error.localizedDescription)")
 					completion()

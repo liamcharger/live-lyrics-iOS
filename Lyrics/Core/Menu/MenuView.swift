@@ -27,7 +27,6 @@ struct MenuView: View {
     @State var showDeleteSheet = false
     @State var showRefreshDialog = false
     @State var showCannotPurchaseAlert = false
-    @State var showCannotSendFeedbackAlert = false
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     
@@ -56,7 +55,7 @@ struct MenuView: View {
                 VStack(spacing: 0) {
                     HStack(alignment: .center, spacing: 10) {
                         VStack(alignment: .leading, spacing: 8) {
-                            HStack {
+                            HStack(alignment: .bottom) {
                                 Text(user.fullname)
                                     .font(.title2.weight(.semibold))
                                 if hasPro(user) {
@@ -171,28 +170,26 @@ struct MenuView: View {
                             .sheet(isPresented: $showSettingsView) {
                                 SettingsView(user: user)
                             }
-                            Button {
-                                if MFMailComposeViewController.canSendMail() {
+                            if MFMailComposeViewController.canSendMail() {
+                                Button {
                                     showMailView = true
-                                } else {
-                                    showCannotSendFeedbackAlert = true
+                                } label: {
+                                    HStack(spacing: 7) {
+                                        Text("Send Feeback")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                        FAText(iconName: "envelope", size: 20)
+                                            .font(.body.weight(.semibold))
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundColor(Color.white)
+                                    .background(Color.blue)
+                                    .clipShape(Capsule())
                                 }
-                            } label: {
-                                HStack(spacing: 7) {
-                                    Text("Send Feeback")
-                                        .fontWeight(.semibold)
-                                    Spacer()
-                                    FAText(iconName: "envelope", size: 20)
-                                        .font(.body.weight(.semibold))
+                                .sheet(isPresented: $showMailView) {
+                                    MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
                                 }
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(Color.white)
-                                .background(Color.blue)
-                                .clipShape(Capsule())
-                            }
-                            .sheet(isPresented: $showMailView) {
-                                MailView(subject: "Live Lyrics Feedback", to: "chargertech.help@gmail.com", result: self.$result)
                             }
                             Button {
                                 showDeleteSheet.toggle()
@@ -229,9 +226,6 @@ struct MenuView: View {
                 .navigationBarHidden(true)
                 .alert(isPresented: $showCannotPurchaseAlert) {
                     Alert(title: Text("Cannot Purchase"), message: Text("This item cannot be purchased due to device restrictions."), dismissButton: .default(Text("OK")))
-                }
-                .alert(isPresented: $showCannotSendFeedbackAlert) {
-                    Alert(title: Text("Cannot Send Feedback"), message: Text("A mail client could not be opened."), dismissButton: .default(Text("Cancel")))
                 }
             } else {
                 LoadingFailedView()

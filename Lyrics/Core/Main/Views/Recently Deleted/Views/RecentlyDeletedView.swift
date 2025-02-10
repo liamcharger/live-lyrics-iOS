@@ -65,25 +65,53 @@ struct RecentlyDeletedView: View {
                                 .padding(.horizontal, 10)
                             Divider()
                                 .padding(.horizontal, -16)
-                            ForEach(searchableSongs, id: \.id) { song in
-                                let songData = Song(id: song.id ?? "", uid: song.uid, timestamp: song.timestamp, title: song.title, lyrics: song.lyrics, order: song.order)
+                            ForEach(searchableSongs, id: \.id) { recentlyDeletedSong in
+                                let song = Song(
+                                    id: recentlyDeletedSong.id!,
+                                    uid: recentlyDeletedSong.uid,
+                                    timestamp: recentlyDeletedSong.timestamp,
+                                    lastSynced: nil,
+                                    lastEdited: nil,
+                                    lastLyricsEdited: nil,
+                                    title: recentlyDeletedSong.title,
+                                    lyrics: recentlyDeletedSong.lyrics,
+                                    order: recentlyDeletedSong.order,
+                                    key: recentlyDeletedSong.key,
+                                    notes: recentlyDeletedSong.notes,
+                                    size: recentlyDeletedSong.size,
+                                    weight: recentlyDeletedSong.weight,
+                                    alignment: recentlyDeletedSong.alignment,
+                                    lineSpacing: recentlyDeletedSong.lineSpacing,
+                                    artist: recentlyDeletedSong.artist,
+                                    bpm: recentlyDeletedSong.bpm,
+                                    bpb: recentlyDeletedSong.bpb,
+                                    pinned: recentlyDeletedSong.pinned,
+                                    performanceMode: recentlyDeletedSong.performanceMode,
+                                    tags: recentlyDeletedSong.tags,
+                                    demoAttachments: nil,
+                                    bandId: nil,
+                                    autoscrollTimestamps: nil,
+                                    joinedUsers: nil,
+                                    variations: nil,
+                                    readOnly: nil
+                                )
                                 
-                                NavigationLink(destination: SongDetailView(song: songData, songs: nil, restoreSong: song)) {
+                                NavigationLink(destination: SongDetailView(song: song, restoreSong: recentlyDeletedSong)) {
                                     VStack(alignment: .leading, spacing: 6) {
                                         HStack {
-                                            Text(song.title)
+                                            Text(recentlyDeletedSong.title)
                                                 .multilineTextAlignment(.leading)
                                             Spacer()
                                             Image(systemName: "chevron.right")
                                                 .foregroundColor(.gray)
                                         }
-                                        let daysLeft = 30 - Calendar.current.dateComponents([.day], from: song.deletedTimestamp, to: Date()).day!
+                                        let daysLeft = 30 - Calendar.current.dateComponents([.day], from: recentlyDeletedSong.deletedTimestamp, to: Date()).day!
                                         if daysLeft <= 7 {
                                             Text("\(daysLeft) day\(daysLeft == 1 ? "" : "s")")
                                                 .font(.body.weight(.semibold))
                                                 .foregroundColor(.red)
                                         }
-                                        Text("\(song.deletedTimestamp.formatted())").foregroundColor(Color.gray)
+                                        Text("\(recentlyDeletedSong.deletedTimestamp.formatted())").foregroundColor(Color.gray)
                                     }
                                     .padding()
                                     .background(Material.regular)
@@ -92,12 +120,12 @@ struct RecentlyDeletedView: View {
                                     .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
                                     .contextMenu {
                                         Button {
-                                            recentlyDeletedViewModel.restoreSong(song: song)
+                                            recentlyDeletedViewModel.restoreSong(song: recentlyDeletedSong)
                                         } label: {
                                             Label("Restore", systemImage: "clock.arrow.circlepath")
                                         }
                                         Button(role: .destructive) {
-                                            performAction(for: song)
+                                            performAction(for: recentlyDeletedSong)
                                         } label: {
                                             Label("Delete", systemImage: "trash")
                                         }
@@ -189,7 +217,7 @@ struct RecentlyDeletedView: View {
         RecentlyDeletedView()
             .onAppear {
                 RecentlyDeletedViewModel.shared.isLoadingSongs = false
-                RecentlyDeletedViewModel.shared.songs.append(RecentlyDeletedSong(uid: "", timestamp: Date.distantPast, folderIds: [], deletedTimestamp: Date.distantFuture, title: "Test", lyrics: ""))
+                RecentlyDeletedViewModel.shared.songs.append(RecentlyDeletedSong(uid: "", timestamp: Date.distantPast, deletedTimestamp: Date.distantFuture, title: "Test", lyrics: ""))
             }
     }
 }

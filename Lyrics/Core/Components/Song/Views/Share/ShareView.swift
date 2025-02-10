@@ -462,7 +462,3 @@ struct ShareView: View {
         }
     }
 }
-
-#Preview {
-    ShareView(isDisplayed: .constant(true), song: Song.song)
-}

@@ -116,10 +116,6 @@ struct VisualEffectBlur: UIViewRepresentable {
     }
 }
 
-extension Song {
-    static let song = Song(id: "noSongs", uid: "", timestamp: Date(), title: "noSongs", lyrics: "", order: 0, size: 0, key: "", notes: "", lineSpacing: 1.0)
-}
-
 extension Folder {
     static let folder = Folder(uid: "", timestamp: Date(), title: "noFolders", order: 0)
 }

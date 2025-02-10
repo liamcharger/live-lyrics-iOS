@@ -106,7 +106,12 @@ struct PlayView: View {
             pauseAutoscroll()
         }
     }
-    func startAutoscroll(scrollViewProxy: ScrollViewProxy) {
+    func startAutoscroll() {
+        // FIXME: noted bugs
+        /// - When toggling performance view after pausing the autoscroll, the timer continues and scrolls
+        /// - Lines should be highlighted even when paused when not in performance view
+        /// - LInes not being highlighted when syncing when not in performance view
+        
         guard !timestamps.isEmpty else { return }
         
         isScrolling = true
@@ -123,6 +128,7 @@ struct PlayView: View {
                 self.autoscrollTimerTime += 0.5
                 
                 if currentLineIndex < timestamps.count {
+                    print("DEBUG:", currentLineIndex, autoscrollTimerTime)
                     let components = timestamps[currentLineIndex].split(separator: "_")
                     if components.count == 2,
                        let lineIndex = Int(components[0]),
@@ -131,6 +137,7 @@ struct PlayView: View {
                         self.scrollTo(lineIndex + 1)
                     }
                 } else {
+                    print("INVALIDATE")
                     self.scrollTimer?.invalidate()
                     self.scrollTimer = nil
                     self.isScrolling = false
@@ -141,17 +148,27 @@ struct PlayView: View {
         }
     }
     func skipToLine(_ index: Int) {
-        let components = timestamps[index].split(separator: "_")
+        func scrollToTop() {
+            self.autoscrollTimerTime = 0
+            self.scrollTo(0)
+        }
         
-        if components.count == 2,
-           let lineIndex = Int(components[0]),
-           let targetTime = Double(components[1]) {
-            print(autoscrollTimerTime, targetTime)
-            print(targetTime - autoscrollTimerTime)
-            
-            // FIXME: when skipping, the selected line is briefly highlighted before being switched to the next
-            
-            self.autoscrollTimerTime += targetTime - autoscrollTimerTime
+        // The user tapped the top line, so scroll there
+        guard index != 0 else {
+            scrollToTop()
+            return
+        }
+        // Make sure there is a line before the current one
+        guard let previousIndex = Double(timestamps[index - 1].split(separator: "_").last ?? "") else {
+            scrollToTop()
+            return
+        }
+        
+        let components = timestamps[index].split(separator: "_")
+        if let lineIndex = Int(components[0]) {
+            // Assign the time before the current index
+            self.autoscrollTimerTime = previousIndex
+            // Scroll to the user requested line
             self.scrollTo(lineIndex)
         }
     }
@@ -194,7 +211,7 @@ struct PlayView: View {
         countdownTimer = nil
     }
     func recordTimestamp() {
-        self.isScrollingProgrammatically = true
+        isScrollingProgrammatically = true
         
         guard currentLineIndex < lines.count else { return }
         
@@ -411,20 +428,20 @@ struct PlayView: View {
                                         
                                         Group {
                                             if !performanceMode {
-                                                Button {
-                                                    if isScrolling {
-                                                        skipToLine(index)
-                                                    } else {
-                                                        scrollTo(index)
+                                                Text(line)
+                                                    .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
+                                                    .font(.system(size: CGFloat(size), weight: weight))
+                                                    .id(index)
+                                                    .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
+                                                    .onTapGesture {
+                                                        if !isSyncing {
+                                                            if isScrolling {
+                                                                skipToLine(index)
+                                                            } else {
+                                                                scrollTo(index)
+                                                            }
+                                                        }
                                                     }
-                                                } label: {
-                                                    Text(line)
-                                                        .foregroundStyle((currentLineIndex == index && isScrolling) ? Color.blue : .primary)
-                                                        .font(.system(size: CGFloat(size), weight: weight))
-                                                        .id(index)
-                                                        .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
-                                                }
-                                                .disabled(isSyncing)
                                             } else {
                                                 Button {
                                                     if isScrolling {
@@ -543,6 +560,27 @@ struct PlayView: View {
                         }
                     }
                     .padding(12)
+                } else if let lastEdited = song.lastLyricsEdited, let lastSynced = song.lastSynced, lastEdited > lastSynced {
+                    Divider()
+                    // TODO: create component
+                    HStack(spacing: 9) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.system(size: 26).weight(.semibold))
+                            .foregroundStyle(Color.orange)
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("Your lyrics were updated after the last sync.")
+                                .font(.system(size: 18.5).weight(.semibold))
+                            Text("Scrolling may be timed incorrectly.")
+                        }
+                    }
+                    .padding()
+                    .background(Color.orange.opacity(0.2))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.orange, lineWidth: 2)
+                    }
+                    .padding(8)
                 }
                 Divider()
                 HStack {
@@ -567,12 +605,10 @@ struct PlayView: View {
                         HStack {
                             Button(action: {
                                 if !timestamps.isEmpty && !isSyncing {
-                                    if let proxy = proxy {
-                                        if isScrolling {
-                                            pauseAutoscroll()
-                                        } else {
-                                            startAutoscroll(scrollViewProxy: proxy)
-                                        }
+                                    if isScrolling {
+                                        pauseAutoscroll()
+                                    } else {
+                                        startAutoscroll()
                                     }
                                 } else {
                                     if !isSyncing {
@@ -702,5 +738,5 @@ struct ScaleButtonStyle: ButtonStyle {
 }
 
 #Preview {
-    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, size: 18, key: "the key of K", notes: nil, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, tags: nil, demoAttachments: nil, bandId: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [Song.song])
+    PlayView(song: Song(id: "idddd", uid: "uiddd", timestamp: Date(), lastSynced: Date(), lastEdited: Date(), lastLyricsEdited: Date(), title: "Test Song", lyrics: "" /* TODO: verify that we can remove all the extra view params now that the song param is updated from an event listener in SongDetailView */, order: 0, key: "the key of K", notes: nil, size: 18, weight: nil, alignment: nil, lineSpacing: nil, artist: nil, bpm: nil, bpb: nil, pinned: nil, performanceMode: nil, tags: nil, demoAttachments: nil, bandId: nil, autoscrollTimestamps: nil, joinedUsers: nil, variations: nil, readOnly: nil), size: 18, weight: .regular, lineSpacing: 1, alignment: .leading, bpm: .constant(120), bpb: .constant(4), performanceMode: .constant(true), songs: [])
 }
