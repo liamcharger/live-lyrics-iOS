@@ -59,13 +59,9 @@ struct MenuView: View {
                                 Text(user.fullname)
                                     .font(.title2.weight(.semibold))
                                 if hasPro(user) {
-                                    Text("PRO")
-                                        .foregroundStyle(.white)
-                                        .font(.system(size: 12).weight(.semibold))
-                                        .padding(6)
-                                        .padding(.horizontal, 2)
-                                        .background(Color.blue)
-                                        .clipShape(Capsule())
+                                    FAText(iconName: "crown", size: 18, style: .solid)
+                                        .foregroundStyle(.orange)
+                                        .padding(.bottom, 4)
                                 }
                             }
                             HStack(spacing: 4) {

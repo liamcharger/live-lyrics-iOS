@@ -24,7 +24,8 @@ struct Song: Identifiable, Codable, Equatable {
     let title: String
     let lyrics: String
     /// The current order of the song in the library/folder
-    let order: Int?
+    /// This needs to be a var when updating the current folder song order
+    var order: Int?
     /// The song performance key (i.e., G, G#, D)
     let key: String?
     /// The notes assigned to the song

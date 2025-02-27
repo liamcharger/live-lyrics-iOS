@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+enum NavBarEnum {
+    case home
+    case detail
+    case recentlyDeleted
+    case auth
+}
+
 struct CustomNavBar: View {
     @ObservedObject var mainViewModel = MainViewModel.shared
     

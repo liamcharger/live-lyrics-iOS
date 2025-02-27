@@ -21,14 +21,16 @@ struct FolderSongDropViewDelegate: DropDelegate {
     }
     
     func performDrop(info: DropInfo) -> Bool {
-        draggedItem = nil
-        self.mainViewModel.folderSongs = items
-        self.mainViewModel.updateSongOrder(folder: folder)
+        self.draggedItem = nil
+        self.mainViewModel.updateSongOrder(folder, updatedList: items)
+        
         return true
     }
     
     func dropEntered(info: DropInfo) {
         if let draggedItem {
+            guard !(draggedItem.pinned ?? false) else { return }
+            
             let fromIndex = items.firstIndex(of: draggedItem)
             if let fromIndex {
                 let toIndex = items.firstIndex(of: destinationItem)

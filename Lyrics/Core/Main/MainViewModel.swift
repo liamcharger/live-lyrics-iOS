@@ -246,16 +246,15 @@ class MainViewModel: ObservableObject {
 //        }
 //    }
     
-    func updateSongOrder(folder: Folder) {
+    func updateSongOrder(_ folder: Folder, updatedList: [Song]) {
         let batch = Firestore.firestore().batch()
         
-        guard let folderUid = folder.uid, !folderUid.isEmpty,
-              let folderId = folder.id, !folderId.isEmpty else {
-            print("Invalid folder UID or ID")
-            return
-        }
+        guard let folderUid = folder.uid, let folderId = folder.id else { return }
         
-        for (index, song) in folderSongs.enumerated() {
+        print("Current list: \(folderSongs.map({ $0.title }).enumerated())")
+        print("Updated list: \(updatedList.map({ $0.title }).enumerated())")
+        
+        for (index, song) in updatedList.enumerated() {
             guard let songId = song.id else { continue }
             
             let document = Firestore.firestore()
@@ -266,14 +265,15 @@ class MainViewModel: ObservableObject {
                 .collection("songs")
                 .document(songId)
             
-            batch.updateData(["order": index], forDocument: document)
+            if let firstIndex = folderSongs.firstIndex(where: { $0.id == song.id }) {
+                folderSongs[firstIndex].order = index
+            }
+//            batch.updateData(["order": index], forDocument: document)
         }
         
         batch.commit { error in
             if let error = error {
                 print("Error updating song order: \(error.localizedDescription)")
-            } else {
-                print("Song order updated successfully")
             }
         }
     }
