@@ -16,11 +16,10 @@ enum AnimState {
 }
 
 struct ShowWhatsNew: View {
-    @State var animState: AnimState = .first
+    @State private var animState: AnimState = .first
+    @State private var isLoading = false
     
     @Binding var isDisplayed: Bool
-    
-    @State var isLoading = false
     
     var body: some View {
         ZStack {

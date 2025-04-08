@@ -26,8 +26,7 @@ struct ExploreView: View {
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
-                CustomNavBar(title: NSLocalizedString("explore", comment: ""), collapsed: .constant(true), collapsedTitle: .constant(true))
-                    .padding()
+                CustomNavBar(NSLocalizedString("explore", comment: ""), collapsed: .constant(true), collapsedTitle: .constant(true))
                 Divider()
                 ScrollView {
                     VStack(spacing: 22) {

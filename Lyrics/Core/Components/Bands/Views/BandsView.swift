@@ -33,8 +33,7 @@ struct BandsView: View {
     var content: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
-                CustomNavBar(title: NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: $collapsedNavbarTitle)
-                    .padding()
+                CustomNavBar(NSLocalizedString("bands", comment: ""), showBackButton: true, collapsed: .constant(true), collapsedTitle: $collapsedNavbarTitle)
                 Divider()
                 ScrollView {
                     VStack(alignment: .leading) {

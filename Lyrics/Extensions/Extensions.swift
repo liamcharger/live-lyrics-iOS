@@ -99,8 +99,13 @@ extension View {
         }
     }
     
-    func customShadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat) -> some View {
-        self.modifier(ShadowModifier(color: color, radius: radius, x: x, y: y))
+    func rowCapsule() -> some View {
+        self
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Material.regular)
+            .foregroundColor(.primary)
+            .clipShape(Capsule())
     }
 }
 
@@ -199,18 +204,6 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
             .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17, .v18)) { scrollView in
                 scrollView.delegate = delegate
             }
-    }
-}
-
-struct ShadowModifier: ViewModifier {
-    var color: Color
-    var radius: CGFloat
-    var x: CGFloat
-    var y: CGFloat
-    
-    func body(content: Content) -> some View {
-        content
-            .shadow(color: color, radius: radius, x: x, y: y)
     }
 }
 

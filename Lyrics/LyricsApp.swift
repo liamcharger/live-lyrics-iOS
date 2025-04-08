@@ -11,7 +11,7 @@ struct LyricsApp: App {
     @Environment(\.scenePhase) var phase
     
     @StateObject var viewModel = AuthViewModel.shared
-    @StateObject var storeKitManager = StoreKitManager()
+    @ObservedObject var mainViewModel = MainViewModel.shared
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
@@ -30,14 +30,14 @@ struct LyricsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(viewModel)
-                .environmentObject(storeKitManager)
                 .onOpenURL { url in
                     if viewModel.currentUser != nil {
                         if url.absoluteString == "live-lyrics://profile" {
-                            MainViewModel.shared.showProfileView = true
+                            // Presents the menu sheet
+                            mainViewModel.showProfileView = true
                         } else if url.absoluteString == "live-lyrics://share-invites" {
-                            MainViewModel.shared.showShareInvites = true
+                            // Activates the share invites navigation link
+                            mainViewModel.showShareInvites = true
                         }
                     }
                 }

@@ -12,8 +12,8 @@ import BottomSheet
 
 struct MenuView: View {
     @Environment(\.presentationMode) var presMode
-    @EnvironmentObject var storeKitManager: StoreKitManager
     
+    @ObservedObject var storeKitManager = StoreKitManager.shared
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var viewModel = AuthViewModel.shared
     
@@ -41,9 +41,7 @@ struct MenuView: View {
     }
     func purchase(product: Product) async {
         do {
-            if try await storeKitManager.purchase(product) != nil {
-                print("\(product.id) purchased successfully")
-            }
+            let _ = try await storeKitManager.purchase(product)
         } catch {
             print(error.localizedDescription)
         }

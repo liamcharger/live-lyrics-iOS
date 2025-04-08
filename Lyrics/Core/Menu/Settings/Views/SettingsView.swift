@@ -9,20 +9,25 @@ import SwiftUI
 import StoreKit
 
 struct SettingsView: View {
-    @Environment(\.presentationMode) var presMode
+    @Environment(\.dismiss) private var dismiss
     
-    @State var user: User
+    @State private var user: User
+    @State private var errorMessage = ""
+    @State private var showError = false
+    @State private var enableWordCount: Bool
+    @State private var isExplicit: Bool
+    @State private var songSubtitle: String?
+    @State private var wordCountStyle: String?
+    @State private var metronomeStyle: [String] = []
     
-    @State var errorMessage = ""
+    @ObservedObject private var settingsViewModel = SettingsViewModel.shared
     
-    @State var showError = false
-    @State var enableWordCount: Bool
-    @State var isExplicit: Bool
-    @State var songSubtitle: String?
-    @State var wordCountStyle: String?
-    @State var metronomeStyle: [String] = []
-    
-    @ObservedObject var settingsViewModel = SettingsViewModel.shared
+    private func footerText(_ text: LocalizedStringKey) -> some View {
+        Text(text)
+            .font(.system(size: 16))
+            .foregroundStyle(.gray)
+            .padding(.horizontal)
+    }
     
     init(user: User) {
         self.user = user
@@ -34,14 +39,15 @@ struct SettingsView: View {
         self._metronomeStyle = State(initialValue: user.metronomeStyle ?? ["Audio", "Vibrations"])
     }
     
-    
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .center, spacing: 10) {
                 Text("Settings")
                     .font(.system(size: 28, design: .rounded).weight(.bold))
                 Spacer()
-                Button(action: { presMode.wrappedValue.dismiss() }) {
+                Button {
+                    dismiss()
+                } label: {
                     Image(systemName: "xmark")
                         .imageScale(.medium)
                         .padding(12)
@@ -54,8 +60,8 @@ struct SettingsView: View {
             .padding()
             Divider()
             ScrollView {
-                VStack(spacing: 16) {
-                    VStack {
+                VStack(spacing: 20) {
+                    VStack(alignment: .leading) {
                         HStack(spacing: 7) {
                             Text("Enable\nWord Count")
                             Spacer()
@@ -87,40 +93,36 @@ struct SettingsView: View {
                                         .foregroundColor(.blue)
                                 }
                             }
-                            .padding()
-                            .background(Material.regular)
-                            .foregroundColor(.primary)
-                            .clipShape(Capsule())
+                            .rowCapsule()
                         }
                     }
-                    VStack {
+                    VStack(alignment: .leading) {
                         HStack(spacing: 7) {
                             Text("Song Subtitle")
                             Spacer()
                             Menu {
-                                Button(action: { songSubtitle = "Show Date" }) {
-                                    Label("Date", systemImage: songSubtitle == "Show Date" ? "checkmark" : "")
-                                }
-                                Button(action: { songSubtitle = "Show Lyrics" }) {
-                                    Label("Lyrics", systemImage: songSubtitle == "Show Lyrics" ? "checkmark" : "")
-                                }
-                                Button(action: { songSubtitle = "Show Artist" }) {
-                                    Label("Artist", systemImage: songSubtitle == "Show Artist" ? "checkmark" : "")
-                                }
                                 Button(action: { songSubtitle = "None" }) {
                                     Label("None", systemImage: songSubtitle == "None" ? "checkmark" : "")
                                 }
-                            } label: {
-                                HStack {
-                                    Text(songSubtitle ?? "Choose an Option")
+                                Divider()
+                                Button(action: { songSubtitle = "Lyrics" }) {
+                                    Label("Lyrics", systemImage: songSubtitle == "Lyrics" ? "checkmark" : "")
                                 }
-                                .foregroundColor(.blue)
+                                Button(action: { songSubtitle = "Artist" }) {
+                                    Label("Artist", systemImage: songSubtitle == "Artist" ? "checkmark" : "")
+                                }
+                                Button(action: { songSubtitle = "Date" }) {
+                                    Label("Date", systemImage: songSubtitle == "Date" ? "checkmark" : "")
+                                }
+                            } label: {
+                                Text(songSubtitle ?? "Choose an Option")
+                                    .foregroundColor(.blue)
                             }
                         }
-                        .padding()
-                        .background(Material.regular)
-                        .clipShape(Capsule())
-                        .foregroundColor(.primary)
+                        .rowCapsule()
+                        footerText("The song subtitle is the text that appears under each song title when in a list.")
+                    }
+                    VStack(alignment: .leading) {
                         HStack(spacing: 7) {
                             Text("Metronome Style")
                             Spacer()
@@ -160,25 +162,21 @@ struct SettingsView: View {
                                 .foregroundColor(.blue)
                             }
                         }
-                        .padding()
-                        .background(Material.regular)
-                        .foregroundColor(.primary)
-                        .clipShape(Capsule())
+                        .rowCapsule()
+                        footerText("Customize the metronome. Checking \"audio\" will enable a click sound, and checking \"vibrations\" will enable beat vibrations.")
                     }
-                    VStack {
+                    VStack(alignment: .leading) {
                         Button {
                             Task {
                                 try? await AppStore.sync()
-                                presMode.wrappedValue.dismiss()
+                                
+                                dismiss()
                             }
                         } label: {
                             Text("Restore In-App Purchases")
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Material.regular)
-                                .foregroundColor(.primary)
-                                .clipShape(Capsule())
+                                .rowCapsule()
                         }
+                        footerText("If you've previously made a purchase in Live Lyrics and it's not taking effect, try restoring purchases with the button above.")
                     }
                 }
                 .autocorrectionDisabled()
@@ -189,7 +187,7 @@ struct SettingsView: View {
             LiveLyricsButton("Save", action: {
                 settingsViewModel.updateSettings(user, wordCount: enableWordCount, songSubtitle: songSubtitle ?? "None", wordCountStyle: wordCountStyle ?? "Words", showsExplicitSongs: isExplicit, metronomeStyle: metronomeStyle) { success, errorMessage in
                     if success {
-                        presMode.wrappedValue.dismiss()
+                        dismiss()
                     } else {
                         self.showError = true
                         self.errorMessage = errorMessage

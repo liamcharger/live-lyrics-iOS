@@ -588,7 +588,7 @@ struct SongDetailView: View {
                     if let variationIds = song.variations, !variationIds.isEmpty {
                         // Handle band-specific variations if applicable
                         if let bandId = song.bandId, variationIds.contains(where: { $0 == "byRole" }) {
-                            SongService().handleVariations(song, bandId: bandId) { handledVariations in
+                            SongService().handleVariationsForBand(song, bandId: bandId) { handledVariations in
                                 self.songVariations = handledVariations
                                 // Don't update the lyrics while the user is writing
                                 if !isLyricsFocused {

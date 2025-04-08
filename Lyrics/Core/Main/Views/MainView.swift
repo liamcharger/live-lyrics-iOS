@@ -9,75 +9,79 @@ import SwiftUI
 import MobileCoreServices
 import BottomSheet
 
+enum SearchTarget {
+    case song
+    case folderSong
+    case folder
+}
+
 struct MainView: View {
-    @ObservedObject var mainViewModel = MainViewModel.shared
-    @ObservedObject var songViewModel = SongViewModel.shared
-    @ObservedObject var sortViewModel = SortViewModel.shared
-    @ObservedObject var notificationManager = NotificationManager.shared
-    @ObservedObject var networkManager = NetworkManager.shared
-    @ObservedObject var authViewModel = AuthViewModel.shared
+    @ObservedObject private var mainViewModel = MainViewModel.shared
+    @ObservedObject private var songViewModel = SongViewModel.shared
+    @ObservedObject private var sortViewModel = SortViewModel.shared
+    @ObservedObject private var notificationManager = NotificationManager.shared
+    @ObservedObject private var networkManager = NetworkManager.shared
+    @ObservedObject private var authViewModel = AuthViewModel.shared
     
-    @AppStorage(showNewSongKey) var showNewSong = false
-    @AppStorage(showNewFolderKey) var showNewFolder = false
-    @AppStorage("showUpgradeSheet") var showUpgradeSheet = false
-    @AppStorage("fullname") var fullname: String?
+    @AppStorage(showNewSongKey) private var showNewSong = false
+    @AppStorage(showNewFolderKey) private var showNewFolder = false
+    @AppStorage("showUpgradeSheet") private var showUpgradeSheet = false
+    @AppStorage("fullname") private var fullname: String?
     
-    @State var selectedSong: Song?
-    @State var selectedUser: User?
-    @State var draggedSong: Song?
-    @State var draggedFolder: Folder?
+    @State private var selectedSong: Song?
+    @State private var selectedUser: User?
+    @State private var draggedSong: Song?
+    @State private var draggedFolder: Folder?
     // Property allows folder to check if it should be displaying its songs or not. selectedFolder in the MainViewModel is used for external views, such as SongMoveView, SongEditView, etc..
-    @State var selectedFolder: Folder?
+    @State private var selectedFolder: Folder?
+    @State private var joinedUsers: [User]?
     
-    @State var joinedUsers: [User]?
+    @State private var hasFirestoreStartedListening = false
+    @State private var showNotificationAuthView = false
+    @State private var showMenu = false
+    @State private var showDeleteSheet = false
+    @State private var showAddSongSheet = false
+    @State private var showEditSheet = false
+    @State private var showTagSheet = false
+    @State private var showShareSheet = false
+    @State private var showFolderSongDeleteSheet = false
+    @State private var showSongDeleteSheet = false
+    @State private var showSongEditSheet = false
+    @State private var showSongMoveSheet = false
+    @State private var showAllSongs = false
+    @State private var isSongsCollapsed = false
+    @State private var isFoldersCollapsed = false
+    @State private var isSharedSongsCollapsed = false
+    @State private var showSongSearch = false
+    @State private var showFolderSearch = false
+    @State private var showFolderSongSearch = false
+    @State private var showFolderNotesView = false
+    @State private var showSharedSongsSearch = false
+    @State private var isLoadingFolderSongs = false
+    @State private var displayFolderSongsSheet = false
+    @State private var openedFolder = false
+    @State private var showSortSheet = false
+    @State private var isJoinedUsersLoading = false
+    @State private var showUserPopover = false
+    @State private var showCollapsedNavBar = true
+    @State private var showCollapsedNavBarTitle = false
+    @State private var showCollapsedNavBarDivider = false
+    @State private var showShareInvitesShadow = false
+    @State private var isUpdatingSharedSongs = false
     
-    @State var hasFirestoreStartedListening = false
-    @State var showNotificationAuthView = false
-    @State var showMenu = false
-    @State var showOfflineAlert = false
-    @State var showDeleteSheet = false
-    @State var showAddSongSheet = false
-    @State var showEditSheet = false
-    @State var showTagSheet = false
-    @State var showShareSheet = false
-    @State var showFolderSongDeleteSheet = false
-    @State var showSongDeleteSheet = false
-    @State var showSongEditSheet = false
-    @State var showSongMoveSheet = false
-    @State var showAllSongs = false
-    @State var isSongsCollapsed = false
-    @State var isFoldersCollapsed = false
-    @State var isSharedSongsCollapsed = false
-    @State var showSongSearch = false
-    @State var showFolderSearch = false
-    @State var showFolderSongSearch = false
-    @State var showFolderNotesView = false
-    @State var showSharedSongsSearch = false
-    @State var isLoadingFolderSongs = false
-    @State var displayFolderSongsSheet = false
-    @State var openedFolder = false
-    @State var showSortSheet = false
-    @State var isJoinedUsersLoading = false
-    @State var showUserPopover = false
-    @State var showCollapsedNavBar = true
-    @State var showCollapsedNavBarTitle = false
-    @State var showCollapsedNavBarDivider = false
-    @State var showShareInvitesShadow = false
-    @State var isUpdatingSharedSongs = false
+    @State private var folderSearchText = ""
+    @State private var songSearchText = ""
+    @State private var folderSongSearchText = ""
+    @State private var sharedSongSearchText = ""
+    @State private var newFolder = ""
     
-    @State var folderSearchText = ""
-    @State var songSearchText = ""
-    @State var folderSongSearchText = ""
-    @State var sharedSongSearchText = ""
-    @State var newFolder = ""
+    @State private var sortSelection: SortSelectionEnum = .noSelection
     
-    @State var sortSelection: SortSelectionEnum = .noSelection
+    @FocusState private var isFolderSongSearchFocused: Bool
+    @FocusState private var isFolderSearchFocused: Bool
+    @FocusState private var isSongSearchFocused: Bool
     
-    @FocusState var isFolderSongSearchFocused: Bool
-    @FocusState var isFolderSearchFocused: Bool
-    @FocusState var isSongSearchFocused: Bool
-    
-    var searchableFolders: [Folder] {
+    private var searchableFolders: [Folder] {
         let folders = mainViewModel.sharedFolders + mainViewModel.folders
         if folderSearchText.isEmpty {
             return folders
@@ -88,7 +92,7 @@ struct MainView: View {
             })
         }
     }
-    var searchableSongs: [Song] {
+    private var searchableSongs: [Song] {
         let lowercasedQuery = songSearchText.lowercased()
         let songs = mainViewModel.sharedSongs + mainViewModel.songs
         
@@ -96,6 +100,7 @@ struct MainView: View {
             .sorted(by: { (song1, song2) -> Bool in
                 switch sortSelection {
                 case .noSelection:
+                    // Don't give any songs sort priority
                     return false
                 case .name:
                     return song1.title.lowercased() < song2.title.lowercased()
@@ -103,10 +108,13 @@ struct MainView: View {
                     return (song1.artist ?? "").lowercased() < (song2.artist ?? "").lowercased()
                 case .key:
                     if let key1 = song1.key, let key2 = song2.key {
+                        // Both songs have keys, sort alphabetically
                         return key1 < key2
                     } else if song1.key != nil {
+                        // The second song doesn't have a key, sort the first song above it
                         return true
                     } else {
+                        // The first song doesn't have a key, don't change the order
                         return false
                     }
                 case .dateCreated:
@@ -116,20 +124,28 @@ struct MainView: View {
                     let tags2Exist = song2.tags != nil && !song2.tags!.isEmpty
                     
                     if tags1Exist && !tags2Exist {
+                        // If there are tags on the first song, sort it above the second
                         return true
                     } else if !tags1Exist && tags2Exist {
+                        // If there are tags on the second song, sort it above the first
                         return false
                     } else if tags1Exist && tags2Exist {
+                        // Create a set of tags and ensure they'll match the color order array by lowercasing
                         let tags1Colors = Set(song1.tags!.map { $0.lowercased() })
                         let tags2Colors = Set(song2.tags!.map { $0.lowercased() })
+                        // This is the order tags will be sorted in
                         let colorOrder: [String] = ["red", "blue", "green", "yellow", "orange"]
                         
+                        // Get the tag for each song
                         let firstColor1 = colorOrder.first { tags1Colors.contains($0) }
                         let firstColor2 = colorOrder.first { tags2Colors.contains($0) }
                         
                         if let index1 = firstColor1, let index2 = firstColor2 {
+                            // Sort based on which tag comes first
                             return colorOrder.firstIndex(of: index1)! < colorOrder.firstIndex(of: index2)!
                         } else {
+                            // Currently, there won't be more than one tag present at one time
+                            // But if it is eventually supported, this will sort based on which song has more tags
                             return tags1Colors.count < tags2Colors.count
                         }
                     } else {
@@ -137,56 +153,57 @@ struct MainView: View {
                     }
                 }
             })
-            .sorted(by: { song1, song2 in
-                return (song1.pinned ?? false) && !(song2.pinned ?? false)
-            })
             .filter { item in
+                // When the user is searching, filter songs by title and artist
                 if !songSearchText.isEmpty {
+                    let titleMatch = item.title.lowercased().contains(lowercasedQuery)
                     if let artist = item.artist {
-                        return item.title.lowercased().contains(lowercasedQuery) || artist.lowercased().contains(lowercasedQuery)
+                        return titleMatch || artist.lowercased().contains(lowercasedQuery)
                     } else {
-                        return item.title.lowercased().contains(lowercasedQuery)
+                        return titleMatch
                     }
                 } else {
                     return true
                 }
             }
     }
-    func searchableFolderSongs(_ songs: [Song]) -> [Song] {
+    private var isLoadingSongs: Bool {
+        return mainViewModel.isLoadingSongs || (mainViewModel.isLoadingSharedSongs && !isUpdatingSharedSongs)
+    }
+    
+    private let pasteboard = UIPasteboard.general
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    private func sortedSongs(songs: [Song]) -> [Song] {
+        return songs.sorted(by: { (song1, song2) -> Bool in
+            let song1Pinned = song1.pinned ?? false
+            let song2Pinned = song2.pinned ?? false
+            
+            // Additionally, move all the pinned songs to the top
+            return song1Pinned && !song2Pinned
+        })
+    }
+    private func searchableFolderSongs(_ songs: [Song]) -> [Song] {
         let lowercasedQuery = folderSongSearchText.lowercased()
         
         return songs.filter { item in
             if !folderSongSearchText.isEmpty {
+                // When the user is searching, filter based on title and artist
+                let titleMatch = item.title.lowercased().contains(lowercasedQuery)
                 if let artist = item.artist {
-                    return item.title.lowercased().contains(lowercasedQuery) || artist.lowercased().contains(lowercasedQuery)
+                    return titleMatch || artist.lowercased().contains(lowercasedQuery)
                 } else {
-                    return item.title.lowercased().contains(lowercasedQuery)
+                    return titleMatch
                 }
             } else {
                 return true
             }
         }
     }
-    
-    let pasteboard = UIPasteboard.general
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-    
-    func sortedSongs(songs: [Song]) -> [Song] {
-        return songs.sorted(by: { (song1, song2) -> Bool in
-            return song1.pinned ?? false && !(song2.pinned ?? false)
-        })
-    }
-    // We need to find a place to put this
-    enum SearchTarget {
-        case song
-        case folderSong
-        case folder
-    }
-    
-    func clearSearch(for search: SearchTarget) {
+    private func clearSearch(for search: SearchTarget) {
         if search == .song {
             self.songSearchText = ""
             self.isSongSearchFocused = false
@@ -201,7 +218,7 @@ struct MainView: View {
             self.isFolderSearchFocused = false
         }
     }
-    func openFolder(_ folder: Folder) {
+    private func openFolder(_ folder: Folder) {
         self.clearSearch(for: .folderSong)
         
         self.openedFolder = true
@@ -221,7 +238,7 @@ struct MainView: View {
             }
         }
     }
-    func closeFolder() {
+    private func closeFolder() {
         withAnimation(.bouncy) {
             self.clearSearch(for: .folderSong)
             
@@ -231,15 +248,17 @@ struct MainView: View {
             self.isLoadingFolderSongs = false
         }
     }
-    func fetchJoinedUsers(folder: Folder, completion: @escaping([User]) -> Void) {
+    private func fetchJoinedUsers(folder: Folder, completion: @escaping([User]) -> Void) {
         var joinedUsersStrings = folder.joinedUsers ?? []
         var users = [User]()
         let group = DispatchGroup()
         
         if uid() != folder.uid ?? "" {
+            // If the current user is not the owner of the folder, add the owner to the list
             joinedUsersStrings.insert(folder.uid ?? "", at: 0)
         }
         if joinedUsersStrings.contains(uid()) {
+            // We never want to show the current user, so remove them if they're there
             if let index = joinedUsersStrings.firstIndex(where: { $0 == uid() }) {
                 joinedUsersStrings.remove(at: index)
             }
@@ -256,15 +275,7 @@ struct MainView: View {
             self.isJoinedUsersLoading = false
         }
     }
-    func checkToFetchSharedSongs() {
-        if let selectedSong = selectedSong, selectedSong.uid != uid() {
-            isUpdatingSharedSongs = true
-            mainViewModel.fetchSharedSongs {
-                isUpdatingSharedSongs = false
-            }
-        }
-    }
-    func songContextMenu(song: Song) -> some View {
+    private func songContextMenu(song: Song) -> some View {
         return VStack {
             if !(song.readOnly ?? false) {
                 Button {
@@ -311,12 +322,10 @@ struct MainView: View {
                 Label("Copy", systemImage: "doc.on.doc")
             }
             Button {
-                DispatchQueue.main.async {
-                    if song.pinned ?? false {
-                        songViewModel.unpinSong(song)
-                    } else {
-                        songViewModel.pinSong(song)
-                    }
+                if song.pinned ?? false {
+                    songViewModel.unpinSong(song)
+                } else {
+                    songViewModel.pinSong(song)
                 }
             } label: {
                 if song.pinned ?? false {
@@ -333,16 +342,16 @@ struct MainView: View {
                     Label("Tags", systemImage: "tag")
                 }
             }
-            Button(role: .destructive, action: {
+            Button(role: .destructive) {
                 selectedSong = song
                 showSongDeleteSheet.toggle()
-            }, label: {
+            } label: {
                 if songViewModel.isShared(song) {
                     Label("Leave", systemImage: "arrow.backward.square")
                 } else {
                     Label("Delete", systemImage: "trash")
                 }
-            })
+            }
         }
     }
     
@@ -361,11 +370,6 @@ struct MainView: View {
                             self.mainViewModel.fetchNotificationStatus()
                             self.hasFirestoreStartedListening = true
                         }
-                    }
-                    // Show alert instead of displaying badge on bottom edge of the display when the device is not in portrait mode to save space
-                    if !NetworkManager.shared.getNetworkState() && UIDeviceOrientation.portrait.isLandscape && !mainViewModel.hasShownOfflineAlert {
-                        showOfflineAlert = true
-                        mainViewModel.hasShownOfflineAlert = true
                     }
                     // Check if we should show notification auth prompt
                     UNUserNotificationCenter.current().getNotificationSettings { settings in
@@ -397,8 +401,7 @@ struct MainView: View {
     
     var content: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: NSLocalizedString("home", comment: ""), navType: .home, showBackButton: false, collapsed: $showCollapsedNavBar, collapsedTitle: $showCollapsedNavBarTitle)
-                .padding()
+            CustomNavBar(NSLocalizedString("home", comment: ""), for: .home, showBackButton: false, collapsed: $showCollapsedNavBar, collapsedTitle: $showCollapsedNavBarTitle)
             Divider()
                 .opacity(showCollapsedNavBarDivider ? 1 : 0)
             ScrollViewReader { scrollViewProxy in
@@ -460,7 +463,7 @@ struct MainView: View {
                                     NavigationLink(destination: SongShareDetailView(), isActive: $mainViewModel.showShareInvites, label: {
                                         ZStack {
                                             ContentRowView(NSLocalizedString("share_invites", comment: ""), icon: "users", color: .blue)
-                                                .customShadow(color: showShareInvitesShadow ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
+                                                .shadow(color: showShareInvitesShadow ? .blue.opacity(0.8) : .clear, radius: 20, x: 6, y: 6)
                                                 .onChange(of: mainViewModel.incomingShareRequests.count >= 1) { _ in
                                                     withAnimation(.easeInOut) {
                                                         showShareInvitesShadow = mainViewModel.incomingShareRequests.count >= 1
@@ -671,8 +674,10 @@ struct MainView: View {
                                                         }
                                                         .confirmationDialog(mainViewModel.selectedFolder?.uid ?? "" == uid() ? "Delete Folder" : "Leave Folder", isPresented: $showDeleteSheet) {
                                                             if let selectedFolder = mainViewModel.selectedFolder {
-                                                                Button(selectedFolder.uid ?? "" == uid() ? "Delete" : "Leave", role: .destructive) {
-                                                                    if selectedFolder.uid ?? "" == uid() {
+                                                                let hasOwnership = selectedFolder.uid ?? "" == uid()
+                                                                
+                                                                Button(hasOwnership ? "Delete" : "Leave", role: .destructive) {
+                                                                    if hasOwnership {
                                                                         mainViewModel.deleteFolder(selectedFolder)
                                                                     } else {
                                                                         mainViewModel.leaveCollabFolder(folder: selectedFolder)
@@ -943,30 +948,16 @@ struct MainView: View {
                                                 .font(.system(size: 13).weight(.semibold))
                                             }
                                         }
-                                        if mainViewModel.songs.filter({ song in
-                                            if song.title != "noSongs" {
-                                                return false
-                                            }
-                                            return true
-                                        }).count < 1 {
+                                        if mainViewModel.songs.count > 1 && !isLoadingSongs {
                                             Button {
                                                 showSortSheet.toggle()
                                             } label: {
-                                                if sortSelection == .noSelection {
-                                                    Image(systemName: "line.3.horizontal.decrease")
-                                                        .padding(12)
-                                                        .foregroundColor(Color.blue)
-                                                        .background(Material.regular)
-                                                        .clipShape(Circle())
-                                                        .font(.system(size: 18).weight(.bold))
-                                                } else {
-                                                    Image(systemName: "line.3.horizontal.decrease")
-                                                        .padding(12)
-                                                        .foregroundColor(Color.white)
-                                                        .background(Color.blue)
-                                                        .clipShape(Circle())
-                                                        .font(.system(size: 18).weight(.bold))
-                                                }
+                                                Image(systemName: "line.3.horizontal.decrease")
+                                                    .padding(12)
+                                                    .foregroundColor(sortSelection == .noSelection ? Color.blue : Color.white)
+                                                    .background(sortSelection == .noSelection ? AnyShapeStyle(Material.regular) : AnyShapeStyle(Color.blue))
+                                                    .clipShape(Circle())
+                                                    .font(.system(size: 18).weight(.bold))
                                             }
                                             .bottomSheet(isPresented: $showSortSheet, detents: [.medium()]) {
                                                 SortView(isPresented: $showSortSheet, sortSelection: $sortSelection)
@@ -1009,14 +1000,14 @@ struct MainView: View {
                                     }
                                 }
                                 if !isSongsCollapsed {
-                                    if mainViewModel.isLoadingSongs || (mainViewModel.isLoadingSharedSongs && !isUpdatingSharedSongs) {
+                                    if isLoadingSongs {
                                         LoadingView()
                                     } else {
                                         if searchableSongs.isEmpty {
                                             EmptyStateView(state: .songs)
                                                 .moveDisabled(true)
                                         } else {
-                                            ForEach(searchableSongs) { song in
+                                            ForEach(sortedSongs(songs: searchableSongs)) { song in
                                                 HStack {
                                                     NavigationLink(destination: SongDetailView(song: song, songs: mainViewModel.songs)) {
                                                         ListRowView(title: song.title, navArrow: "chevron.right", imageName: song.pinned ?? false ? "thumbtack" : "", song: song)
@@ -1099,7 +1090,7 @@ struct MainView: View {
                             LoadingFailedView()
                         }
                     }
-                    .sheet(isPresented: $showSongEditSheet, onDismiss: checkToFetchSharedSongs) {
+                    .sheet(isPresented: $showSongEditSheet) {
                         if let selectedSong = selectedSong {
                             SongEditView(song: selectedSong, isDisplayed: $showEditSheet, title: .constant(selectedSong.title), key: .constant(selectedSong.key ?? ""), artist: .constant(selectedSong.artist ?? ""))
                         } else {
@@ -1107,8 +1098,8 @@ struct MainView: View {
                         }
                     }
                     .sheet(isPresented: $showTagSheet, onDismiss: {
-                        checkToFetchSharedSongs()
-                        
+                        // FIXME: this method is an addSnapshotListener, so is it necessary?
+                        // When the tags change, we want to immediately update the folder songs which will not happen due to the way they're fetched
                         if let selectedFolder {
                             mainViewModel.fetchSongs(selectedFolder)
                         }
@@ -1137,84 +1128,24 @@ struct MainView: View {
                         let animation = Animation.easeInOut(duration: 0.22)
                         let value = (value.first ?? 0)
                         
-                        print(value)
-                        
                         DispatchQueue.main.async {
-                            withAnimation(.easeInOut(duration: 0.1)) {
+//                            withAnimation(.easeInOut(duration: 0.1)) {
                                 showCollapsedNavBarDivider = (hasHomeButton() ? value <= 100 : value <= 145) // FIXME: fix divider showing when it shouldn't
-                            }
+//                            }
                         }
                         DispatchQueue.main.async {
-                            withAnimation(animation) {
+//                            withAnimation(animation) {
                                 showCollapsedNavBarTitle = value <= 80
-                            }
+//                            }
                         }
                         DispatchQueue.main.async {
-                            withAnimation(animation) {
+//                            withAnimation(animation) {
                                 showCollapsedNavBar = !(value <= -12)
-                            }
+//                            }
                         }
                     }
                 }
             }
-        }
-        .overlay {
-            if !NetworkManager.shared.getNetworkState() || mainViewModel.updateAvailable {
-                let notConnectedAndInPortrait = !NetworkManager.shared.getNetworkState() && UIDeviceOrientation.portrait.isPortrait
-                
-                VStack {
-                    Spacer()
-                    ZStack {
-                        if notConnectedAndInPortrait {
-                            VisualEffectBlur(blurStyle: .systemMaterial)
-                                .mask(LinearGradient(
-                                    gradient: Gradient(colors: [Color.white, Color.clear]),
-                                    startPoint: .bottom,
-                                    endPoint: .top
-                                ))
-                                .edgesIgnoringSafeArea(.all)
-                                .allowsHitTesting(false)
-                        }
-                        if notConnectedAndInPortrait {
-                            Button {
-                                showOfflineAlert = true
-                            } label: {
-                                HStack(spacing: 7) {
-                                    FAText(iconName: "wifi-slash", size: 18)
-                                    Text(NSLocalizedString("youre_offline", comment: ""))
-                                }
-                                .padding(15)
-                                .background(Color.red.opacity(0.9))
-                                .foregroundColor(.white)
-                                .clipShape(Capsule())
-                                .customShadow(color: .red, radius: 20, x: 6, y: 6)
-                                .padding()
-                            }
-                        } else if mainViewModel.updateAvailable {
-                            Button {
-                                if let url = URL(string: "https://apps.apple.com/app/id6449195237") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                HStack(spacing: 7) {
-                                    FAText(iconName: "download", size: 18)
-                                    Text(NSLocalizedString("update_available", comment: ""))
-                                }
-                                .padding(15)
-                                .background(Color.blue.opacity(0.9))
-                                .foregroundColor(.white)
-                                .clipShape(Capsule())
-                                .customShadow(color: .blue, radius: 20, x: 6, y: 6)
-                                .padding()
-                            }
-                        }
-                    }
-                    .frame(height: 80)
-                }
-            }
-        }
-        .alert(isPresented: $showOfflineAlert) {
-            Alert(title: Text("youre_offline"), message: Text("some_features_may_not_work_expectedly"), dismissButton: .cancel(Text("OK")))
         }
     }
 }

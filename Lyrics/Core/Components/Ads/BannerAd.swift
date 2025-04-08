@@ -19,12 +19,8 @@ struct BannerAd: UIViewRepresentable {
         adView.rootViewController = UIApplication.shared.windows.first?.rootViewController
         adView.load(GADRequest())
         
-        print(adView)
-        
         return adView
     }
     
-    func updateUIView(_ uiView: GADBannerView, context: Context) {
-        
-    }
+    func updateUIView(_ uiView: GADBannerView, context: Context) {}
 }

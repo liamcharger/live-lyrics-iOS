@@ -107,6 +107,7 @@
 		E0986BFC2B2B516900CE938B /* Font Awesome 6 Sharp-Light-300.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEF2B2B512400CE938B /* Font Awesome 6 Sharp-Light-300.otf */; };
 		E0986BFD2B2B516900CE938B /* Font Awesome 6 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BED2B2B512300CE938B /* Font Awesome 6 Duotone-Solid-900.otf */; };
 		E0986BFE2B2B516900CE938B /* Font Awesome 6 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0986BEC2B2B512300CE938B /* Font Awesome 6 Brands-Regular-400.otf */; };
+		E09952AB2DA4BEA500FA7D17 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09952AA2DA4BEA500FA7D17 /* DeleteAccountView.swift */; };
 		E09C612D2C35D4220061986F /* BandChooseRoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C612C2C35D4220061986F /* BandChooseRoleView.swift */; };
 		E09C612F2C35E1430061986F /* BandChooseRoleIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C612E2C35E1430061986F /* BandChooseRoleIcon.swift */; };
 		E0A392F02C5D3B4500AB07D7 /* SongDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A392EF2C5D3B4500AB07D7 /* SongDetailViewModel.swift */; };
@@ -285,6 +286,7 @@
 		E0986BF12B2B512400CE938B /* Font Awesome 6 Sharp-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Regular-400.otf"; sourceTree = "<group>"; };
 		E0986BF22B2B512500CE938B /* Font Awesome 6 Sharp-Thin-100.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Sharp-Thin-100.otf"; sourceTree = "<group>"; };
 		E0986BF42B2B512500CE938B /* Font Awesome 6 Pro-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 6 Pro-Solid-900.otf"; sourceTree = "<group>"; };
+		E09952AA2DA4BEA500FA7D17 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
 		E09C612C2C35D4220061986F /* BandChooseRoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandChooseRoleView.swift; sourceTree = "<group>"; };
 		E09C612E2C35E1430061986F /* BandChooseRoleIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandChooseRoleIcon.swift; sourceTree = "<group>"; };
 		E0A392EF2C5D3B4500AB07D7 /* SongDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailViewModel.swift; sourceTree = "<group>"; };
@@ -547,8 +549,6 @@
 				E0F70B332C876330006A9867 /* Explore */,
 				E0CC33172A03FF8800CC38C6 /* Main */,
 				E0CA85112B081D5100188CD0 /* Components */,
-				E06D77802A17B4240032332F /* Settings */,
-				E0F95C842A13C74100C2D21C /* Profile */,
 				E050D1552A030303004CC45E /* Menu */,
 				E050D14B2A02FD3D004CC45E /* Onboarding */,
 				E04247902A02F5FA00CA48B3 /* Authentication */,
@@ -668,6 +668,8 @@
 		E050D1552A030303004CC45E /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				E06D77802A17B4240032332F /* Settings */,
+				E0F95C842A13C74100C2D21C /* Profile */,
 				E050D1582A03031B004CC45E /* MenuView.swift */,
 			);
 			path = Menu;
@@ -748,6 +750,7 @@
 			isa = PBXGroup;
 			children = (
 				E0F95C852A13C74C00C2D21C /* ProfileView.swift */,
+				E09952AA2DA4BEA500FA7D17 /* DeleteAccountView.swift */,
 				E06D77832A17CAA50032332F /* EditPasswordView.swift */,
 			);
 			path = Views;
@@ -1286,6 +1289,7 @@
 				E04CB96A2BCB5FE100F2831B /* SongShareDetailView.swift in Sources */,
 				E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */,
 				E0258A742C83772700648582 /* DatamuseWordRowView.swift in Sources */,
+				E09952AB2DA4BEA500FA7D17 /* DeleteAccountView.swift in Sources */,
 				E0CA85342B081D5100188CD0 /* CloseButton.swift in Sources */,
 				E0BE613D2BFD373A003757A5 /* UserPopover.swift in Sources */,
 				E05B9A7C2BCED9CB000292FA /* SharedFolder.swift in Sources */,

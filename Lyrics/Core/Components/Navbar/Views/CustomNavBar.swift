@@ -15,14 +15,16 @@ enum NavBarEnum {
 }
 
 struct CustomNavBar: View {
-    @ObservedObject var mainViewModel = MainViewModel.shared
+    @Environment(\.dismiss) private var dismiss
     
-    @Environment(\.presentationMode) var presMode
-    @EnvironmentObject var storeKitManager: StoreKitManager
+    @ObservedObject private var mainViewModel = MainViewModel.shared
+    @ObservedObject private var networkManager = NetworkManager.shared
     
-    let title: String
-    let navType: NavBarEnum
-    let showBackButton: Bool
+    private let title: String
+    private let view: NavBarEnum
+    private let showBackButton: Bool
+    
+    @State private var showOfflineAlert = false
     
     @Binding var showCollapsedNavBar: Bool
     @Binding var showCollapsedNavBarTitle: Bool
@@ -30,9 +32,9 @@ struct CustomNavBar: View {
     @AppStorage(showNewSongKey) var showNewSong = false
     @AppStorage(showNewFolderKey) var showNewFolder = false
     
-    init(title: String, navType: NavBarEnum? = nil, showBackButton: Bool = true, collapsed: Binding<Bool>, collapsedTitle: Binding<Bool>) {
+    init(_ title: String, for view: NavBarEnum = .detail, showBackButton: Bool = true, collapsed: Binding<Bool>, collapsedTitle: Binding<Bool>) {
         self.title = title
-        self.navType = navType ?? .detail
+        self.view = view
         self.showBackButton = showBackButton
         self._showCollapsedNavBar = collapsed
         self._showCollapsedNavBarTitle = collapsedTitle
@@ -41,29 +43,76 @@ struct CustomNavBar: View {
     var body: some View {
         HStack(spacing: 12) {
             if showBackButton {
-                Button(action: {
-                    presMode.wrappedValue.dismiss()
-                }, label: {
+                Button {
+                    dismiss()
+                } label: {
                     Image(systemName: "chevron.left")
                         .padding()
                         .font(.body.weight(.semibold))
                         .background(Material.regular)
                         .foregroundColor(.primary)
                         .clipShape(Circle())
-                })
+                }
             }
-            Text(title)
-                .lineLimit(2)
-                .multilineTextAlignment(.leading)
-                .font(.system(size: 28, design: .rounded).weight(.bold))
-                .opacity(showCollapsedNavBarTitle ? 1 : 0)
+            Group {
+                if showCollapsedNavBarTitle {
+                    HStack(spacing: 9) {
+                        Text(title)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                            .font(.system(size: 28, design: .rounded).weight(.bold))
+                        /*
+                         if !networkManager.getNetworkState() && navType == .home { // Only show in the home view
+                         Button {
+                         showOfflineAlert = true
+                         } label: {
+                         Image(systemName: "wifi.slash")
+                         .font(.system(size: 16).weight(.medium))
+                         .foregroundStyle(Color.red)
+                         }
+                         }
+                         */
+                    }
+                } else if view == .home && !networkManager.getNetworkState() || mainViewModel.updateAvailable {
+                    if !networkManager.getNetworkState() {
+                        Button {
+                            showOfflineAlert = true
+                        } label: {
+                            HStack(spacing: 7) {
+                                FAText(iconName: "wifi-slash", size: 18)
+                                Text(NSLocalizedString("youre_offline", comment: ""))
+                            }
+                            .padding(13)
+                            .background(Color.red.opacity(0.9))
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                        }
+                    } else if mainViewModel.updateAvailable {
+                        Button {
+                            if let url = URL(string: "https://apps.apple.com/app/id6449195237") {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
+                            HStack(spacing: 7) {
+                                FAText(iconName: "download", size: 18)
+                                Text(NSLocalizedString("update_available", comment: ""))
+                            }
+                            .padding(13)
+                            .background(Color.blue.opacity(0.9))
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                        }
+                    }
+                }
+            }
+            .transition(.opacity)
             Spacer()
             HStack(spacing: 8) {
-                switch navType {
+                switch view {
                 case .home:
                     if showCollapsedNavBar {
                         Button {
-                            mainViewModel.showProfileView.toggle()
+                            mainViewModel.showProfileView = true
                         } label: {
                             FAText(iconName: "user", size: 20)
                                 .frame(width: 23, height: 23)
@@ -87,17 +136,16 @@ struct CustomNavBar: View {
                         }
                         .sheet(isPresented: $mainViewModel.showProfileView) {
                             MenuView(showMenu: $mainViewModel.showProfileView)
-                                .environmentObject(storeKitManager)
                         }
                     } else {
                         Button {
-                            showNewFolder.toggle()
+                            showNewFolder = true
                         } label: {
                             FAText(iconName: "folder-plus", size: 20)
                                 .modifier(NavBarRowViewModifier())
                         }
                         Button {
-                            showNewSong.toggle()
+                            showNewSong = true
                         } label: {
                             FAText(iconName: "pen-to-square", size: 20)
                                 .modifier(NavBarRowViewModifier())
@@ -129,17 +177,21 @@ struct CustomNavBar: View {
                         }
                         .sheet(isPresented: $mainViewModel.showProfileView) {
                             MenuView(showMenu: $mainViewModel.showProfileView)
-                                .environmentObject(storeKitManager)
                         }
                     }
                 case .recentlyDeleted, .auth, .detail:
                     EmptyView()
                 }
             }
+            .transition(.opacity)
+        }
+        .padding()
+        .alert(isPresented: $showOfflineAlert) {
+            Alert(title: Text("youre_offline"), message: Text("some_features_may_not_work_expectedly"), dismissButton: .cancel(Text("OK")))
         }
     }
 }
 
 #Preview {
-    CustomNavBar(title: "Home", navType: .home, showBackButton: true, collapsed: .constant(false), collapsedTitle: .constant(true))
+    CustomNavBar("Home", for: .home, showBackButton: true, collapsed: .constant(false), collapsedTitle: .constant(true))
 }

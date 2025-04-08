@@ -37,7 +37,7 @@ struct SongExploreDetailView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                CustomNavBar(title: track.trackName, collapsed: .constant(true), collapsedTitle: $hasScrolledPastTitle)
+                CustomNavBar(track.trackName, collapsed: .constant(true), collapsedTitle: $hasScrolledPastTitle)
                 Spacer()
                 Button {
                     self.isLoading = true
@@ -72,8 +72,8 @@ struct SongExploreDetailView: View {
                         }
                         .showExploreDetailTip()
                 }
+                .padding()
             }
-            .padding()
             .alert(isPresented: .constant(showAddedAlert || showErrorAlert)) {
                 if showAddedAlert {
                     return Alert(

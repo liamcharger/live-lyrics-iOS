@@ -45,12 +45,12 @@ class MusixmatchService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching popular songs: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No popular song data returned")
                 return
             }
             
@@ -88,12 +88,12 @@ class MusixmatchService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching popular artists: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No popular artist data returned")
                 return
             }
             
@@ -131,12 +131,12 @@ class MusixmatchService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching lyrics: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No lyrics data returned")
                 return
             }
             
@@ -173,12 +173,12 @@ class MusixmatchService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching song data: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No song data found")
                 return
             }
             

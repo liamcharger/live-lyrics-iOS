@@ -33,7 +33,6 @@ class MainViewModel: ObservableObject {
     @Published var showProfileView = false
     @Published var showShareInvites = false
     @Published var updateAvailable = false
-    @Published var hasShownOfflineAlert = false
     
     @Published var notifications = [Notification]()
     @Published var notification: Notification?

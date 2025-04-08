@@ -42,8 +42,7 @@ struct RecentlyDeletedView: View {
     var body: some View {
         GeometryReader { geo in
             VStack(alignment: .leading, spacing: 0) {
-                CustomNavBar(title: NSLocalizedString("recently_deleted", comment: ""), showBackButton: true, collapsed: .constant(false), collapsedTitle: $collapsedTitle)
-                    .padding()
+                CustomNavBar(NSLocalizedString("recently_deleted", comment: ""), showBackButton: true, collapsed: .constant(false), collapsedTitle: $collapsedTitle)
                 Divider()
                 ScrollView {
                     VStack(alignment: .leading) {
@@ -192,7 +191,7 @@ struct RecentlyDeletedView: View {
                                 .background(Color.red.opacity(0.9))
                                 .foregroundColor(.white)
                                 .clipShape(Capsule())
-                                .customShadow(color: .red, radius: 20, x: 6, y: 6)
+                                .shadow(color: .red, radius: 20, x: 6, y: 6)
                                 .padding()
                             }
                             .alert(isPresented: $showDeleteAllConfirmation) {

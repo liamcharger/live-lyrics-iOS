@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ChooseAuthView: View {
-    @State var showLoginView = false
-    @State var showRegisterView = false
-    @State var areContentsHidden = true
-    @State var scaleEffectDecor1: CGFloat = 7
-    @State var scaleEffectDecor2: CGFloat = 4
-    @State var scaleEffectActions: CGFloat = 3.5
-    @State var scaleEffectLogo: CGFloat = 4.5
-    @State var blurDecor1: CGFloat = 70
-    @State var blurDecor2: CGFloat = 70
-    @State var blurActions: CGFloat = 70
-    @State var blurLogo: CGFloat = 70
+    @State private var showLoginView = false
+    @State private var showRegisterView = false
+    @State private var areContentsHidden = true
+    @State private var scaleEffectDecor1: CGFloat = 7
+    @State private var scaleEffectDecor2: CGFloat = 4
+    @State private var scaleEffectActions: CGFloat = 3.5
+    @State private var scaleEffectLogo: CGFloat = 4.5
+    @State private var blurDecor1: CGFloat = 70
+    @State private var blurDecor2: CGFloat = 70
+    @State private var blurActions: CGFloat = 70
+    @State private var blurLogo: CGFloat = 70
     
     func dismissToAuth(login: Bool) {
         withAnimation(.bouncy(duration: 1.1)) {
@@ -122,7 +122,7 @@ struct ChooseAuthView: View {
                         Image("Logo")
                             .resizable()
                             .frame(width: 110, height: 110)
-                            .customShadow(color: .gray.opacity(0.7), radius: 30, x: -8, y: 2)
+                            .shadow(color: .gray.opacity(0.7), radius: 30, x: -8, y: 2)
                             .scaleEffect(scaleEffectLogo)
                             .blur(radius: blurLogo)
                             .offset(y: -(geo.size.height / 4))
@@ -242,7 +242,7 @@ struct ChooseAuthView: View {
         .foregroundColor(.white)
         .background(Color.blue)
         .clipShape(RoundedRectangle(cornerRadius: 20))
-        .customShadow(color: .white.opacity(0.7), radius: 20, x: -10, y: 8)
+        .shadow(color: .white.opacity(0.7), radius: 20, x: -10, y: 8)
     }
 }
 

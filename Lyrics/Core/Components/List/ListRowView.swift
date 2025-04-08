@@ -67,14 +67,19 @@ struct ListRowView: View {
                 if let song = song, let user = viewModel.currentUser {
                     if user.showDataUnderSong != "None" {
                         switch user.showDataUnderSong {
-                        case "Show Lyrics":
-                            Text(!song.lyrics.isEmpty ? song.lyrics : "No lyrics")
+                        case "Lyrics":
+                            let lyrics = song.lyrics
+                                .trimmingCharacters(in: .whitespacesAndNewlines)
+                            
+                            Text(!lyrics.isEmpty ? lyrics : "No lyrics")
                                 .modifier(SubtitleViewModifier())
-                        case "Show Date":
+                        case "Date":
                             Text(song.timestamp.formatted())
                                 .modifier(SubtitleViewModifier())
-                        case "Show Artist":
+                        case "Artist":
                             if let artist = song.artist {
+                                let artist = artist.trimmingCharacters(in: .whitespacesAndNewlines)
+                                
                                 Text(!artist.isEmpty ? artist : "No artist")
                                     .modifier(SubtitleViewModifier())
                             } else {
@@ -88,11 +93,9 @@ struct ListRowView: View {
                 }
             }
             Spacer()
-            if let imageName = imageName {
-                if imageName != "" {
-                    FAText(iconName: imageName, size: 18)
-                        .foregroundColor(.yellow)
-                }
+            if let imageName = imageName, !imageName.isEmpty {
+                FAText(iconName: imageName, size: 18)
+                    .foregroundColor(.yellow)
             }
             if let navArrow = navArrow {
                 Image(systemName: navArrow)

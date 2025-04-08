@@ -23,8 +23,7 @@ struct SongShareDetailView: View {
     var body: some View {
         GeometryReader { geo in
             VStack(alignment: .leading, spacing: 0) {
-                CustomNavBar(title: NSLocalizedString("share_invites", comment: ""), navType: .detail, showBackButton: true, collapsed: .constant(false), collapsedTitle: $collapsedTitle)
-                    .padding()
+                CustomNavBar(NSLocalizedString("share_invites", comment: ""), for: .detail, showBackButton: true, collapsed: .constant(false), collapsedTitle: $collapsedTitle)
                 Divider()
                 ScrollView {
                     VStack(alignment: .leading) {

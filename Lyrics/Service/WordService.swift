@@ -79,12 +79,12 @@ class WordService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching synonyms: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No synonyms returned")
                 return
             }
             
@@ -122,12 +122,12 @@ class WordService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching antonyms: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No antonyms returned")
                 return
             }
             
@@ -165,12 +165,12 @@ class WordService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching related words: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No related word data returned")
                 return
             }
             
@@ -208,12 +208,12 @@ class WordService: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching data: \(error.localizedDescription)")
+                print("Error fetching words starting with \"\(word)\": \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("No data returned.")
+                print("No words starting with \"\(word)\" returned")
                 return
             }
             

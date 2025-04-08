@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: AuthViewModel
-    @ObservedObject var notificationManager = NotificationManager.shared
-    @ObservedObject var mainViewModel = MainViewModel()
+    @StateObject private var viewModel = AuthViewModel.shared
+    @ObservedObject private var notificationManager = NotificationManager.shared
     
     @State private var showWhatsNew = false
     
-    @AppStorage(showNewSongKey) var showNewSong = false
-    @AppStorage(showNewFolderKey) var showNewFolder = false
+    // Use AppStorage as an easy way to update these vars from outside the view
+    @AppStorage(showNewSongKey) private var showNewSong = false
+    @AppStorage(showNewFolderKey) private var showNewFolder = false
     
     var body: some View {
         VStack {
@@ -26,7 +26,7 @@ struct ContentView: View {
                     ChooseAuthView()
                 } else {
                     MainView()
-                        .environmentObject(viewModel)
+                        // Add these sheets at the top level so they can be called from other views
                         .sheet(isPresented: $showNewFolder) {
                             NewFolderView(isDisplayed: $showNewFolder)
                         }
@@ -37,6 +37,7 @@ struct ContentView: View {
             }
         }
         .onAppear {
+            // Check if the user has just updated the app or has just opened the app for the first time
             notificationManager.checkForUpdate { isNewVersion in
                 if isNewVersion {
                     showWhatsNew = true
