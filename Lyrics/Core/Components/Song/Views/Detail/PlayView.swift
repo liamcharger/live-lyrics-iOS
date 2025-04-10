@@ -26,13 +26,11 @@ struct PlayView: View {
     @State var song: Song
     
     @State private var currentSongSelection = 0
-    @State private var currentTime: Double = 0
+    @State private var currentSyncingTime: Double = 0
     @State private var autoscrollTimerTime: Double = 0
     
     @State private var selectedTool = ""
-    
     @State private var timestamps = [String]()
-    
     @State private var currentLineIndex: Int = 0
     @State private var scrollTimer: Timer?
     @State private var countdownTimer: Timer?
@@ -46,10 +44,10 @@ struct PlayView: View {
     @State private var isScrolling = false
     @State private var isUserScrolling = false
     @State private var isScrollingProgrammatically = true
-    @State private var isPressed = false
+    @State private var isLyricPressed = false
     @State private var isShowingCountdown = false
     @State private var isSyncing = false
-    @State private var isShowingSyncModeAlert = false
+    @State private var isPaused = false
     
     @State private var proxy: ScrollViewProxy?
     
@@ -57,8 +55,6 @@ struct PlayView: View {
     @State private var accentAudioPlayer: AVAudioPlayer?
     
     @State private var metronomeTimer: DispatchSourceTimer?
-    
-    @AppStorage("hasUsedSyncMode") var hasUsedSyncMode = false
     
     @ObservedObject var mainViewModel = MainViewModel.shared
     @ObservedObject var songViewModel = SongViewModel.shared
@@ -111,24 +107,25 @@ struct PlayView: View {
         /// - When toggling performance view after pausing the autoscroll, the timer continues and scrolls
         /// - Lines should be highlighted even when paused when not in performance view
         /// - LInes not being highlighted when syncing when not in performance view
+        ///  - Chevron buttons switch to unpredicted selections
         
         guard !timestamps.isEmpty else { return }
         
         isScrolling = true
         isScrollingProgrammatically = true
+        isPaused = false
         
         if autoscrollTimerTime == 0 {
             startCountdown()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (autoscrollTimerTime == 0 ? 3 : 0)) {
             stopCountdown()
             
             scrollTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                 self.autoscrollTimerTime += 0.5
                 
                 if currentLineIndex < timestamps.count {
-                    print("DEBUG:", currentLineIndex, autoscrollTimerTime)
                     let components = timestamps[currentLineIndex].split(separator: "_")
                     if components.count == 2,
                        let lineIndex = Int(components[0]),
@@ -137,7 +134,6 @@ struct PlayView: View {
                         self.scrollTo(lineIndex + 1)
                     }
                 } else {
-                    print("INVALIDATE")
                     self.scrollTimer?.invalidate()
                     self.scrollTimer = nil
                     self.isScrolling = false
@@ -187,6 +183,7 @@ struct PlayView: View {
     }
     func pauseAutoscroll() {
         isScrolling = false
+        isPaused = true
         scrollTimer?.invalidate()
         scrollTimer = nil
     }
@@ -215,7 +212,7 @@ struct PlayView: View {
         
         guard currentLineIndex < lines.count else { return }
         
-        let timestamp = String(currentTime)
+        let timestamp = String(currentSyncingTime)
         let timestampString = "\(currentLineIndex)_\(timestamp)"
         
         timestamps.append(timestampString)
@@ -240,7 +237,7 @@ struct PlayView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             stopCountdown()
             syncLyricTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                currentTime += 0.5
+                currentSyncingTime += 0.5
             }
         }
     }
@@ -298,11 +295,13 @@ struct PlayView: View {
         }
         
         guard let clickUrl = Bundle.main.url(forResource: "lo_click", withExtension: "wav") else {
-            fatalError("click sound not found.")
+            print("Low click sound not found.")
+            return
         }
         
         guard let accentUrl = Bundle.main.url(forResource: "hi_click", withExtension: "wav") else {
-            fatalError("accent sound not found.")
+            print("Hi click sound not found")
+            return
         }
         
         do {
@@ -312,7 +311,7 @@ struct PlayView: View {
             accentAudioPlayer = try AVAudioPlayer(contentsOf: accentUrl)
             accentAudioPlayer?.prepareToPlay()
         } catch {
-            fatalError("unable to load click sound: \(error)")
+            print("unable to load click sound: \(error)")
         }
     }
     func playBeat(style: BeatStyle) {
@@ -454,14 +453,13 @@ struct PlayView: View {
                                                         .font(.system(size: 42, weight: .bold, design: .rounded))
                                                         .foregroundColor(.primary)
                                                         .padding(5)
-                                                        .scaleEffect((isPressed && pressedIndexId == index) ? 0.85 : 1)
-                                                        .blur(radius: (isPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
+                                                        .scaleEffect((isLyricPressed && pressedIndexId == index) ? 0.85 : 1)
+                                                        .blur(radius: (isLyricPressed && pressedIndexId == index) ? 0 : getBlur(for: index))
                                                         .animation(.spring(dampingFraction: 1.0), value: currentLineIndex)
                                                         .id(index)
                                                 }
                                                 .disabled(isSyncing)
-                                                .buttonStyle(ScaleButtonStyle(isPressed: $isPressed, pressedIndexId: $pressedIndexId, index: index))
-                                                .shadow(color: (currentLineIndex == index && isScrolling && !isPressed) ? Color.blue : Color.clear, radius: 10, y: 8)
+                                                .buttonStyle(ScaleButtonStyle(isLyricPressed: $isLyricPressed, pressedIndexId: $pressedIndexId, index: index))
                                             }
                                         }
                                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -584,7 +582,7 @@ struct PlayView: View {
                 }
                 Divider()
                 HStack {
-                    if songs != nil && !isSyncing {
+                    if songs != nil && !isSyncing && !isScrolling && !isPaused {
                         Button(action: {
                             DispatchQueue.main.async {
                                 swipeRight()
@@ -599,10 +597,29 @@ struct PlayView: View {
                                 .background(Material.regular)
                                 .clipShape(Circle())
                         }
+                    } else if isSyncing || isPaused || isScrolling {
+                        HStack(spacing: 7) {
+                            Text({
+                                let time = isSyncing ? currentSyncingTime : autoscrollTimerTime
+                                let minutes = Int(time) / 60
+                                let seconds = Int(time) % 60
+                                
+                                return String(format: "%02d:%02d", minutes, seconds)
+                            }())
+                            .font(.system(size: 21).weight(.semibold))
+                            if lines.count > 1 && isSyncing {
+                                Text("•")
+                                    .font(.system(size: 19).weight(.medium))
+                                Text("\(Int((Double(currentLineIndex) / Double(lines.count)) * 100))%")
+                                    .font(.system(size: 21).weight(.semibold))
+                                    .transition(.identity)
+                            }
+                        }
                     }
                     Spacer()
                     if lines.count > 1 {
                         HStack {
+                            // TODO: "cancel sync" button
                             Button(action: {
                                 if !timestamps.isEmpty && !isSyncing {
                                     if isScrolling {
@@ -612,18 +629,14 @@ struct PlayView: View {
                                     }
                                 } else {
                                     if !isSyncing {
-                                        if hasUsedSyncMode {
-                                            startSyncing()
-                                        } else {
-                                            isShowingSyncModeAlert = true
-                                        }
+                                        startSyncing()
                                     } else {
                                         recordTimestamp()
                                     }
                                 }
                             }) {
                                 HStack {
-                                    Image(systemName: isSyncing ? "chevron.down" : (isScrolling ? "pause" : "play"))
+                                    Image(systemName: isSyncing ? "chevron.down" : (isScrolling ? "pause" : isPaused ? "play" : "playpause"))
                                     if isSyncing {
                                         Text("Next Line")
                                     } else {
@@ -631,7 +644,7 @@ struct PlayView: View {
                                             // The user isn't in sync mode and hasn't synced the song yet
                                             Text("Sync Lyrics")
                                         } else {
-                                            Text(isScrolling ? "Pause" : "Autoscroll")
+                                            Text(isScrolling ? "Pause" : isPaused ? "Play" : "Autoscroll")
                                         }
                                     }
                                 }
@@ -642,16 +655,16 @@ struct PlayView: View {
                                 .background(isScrolling ? .red : .blue)
                                 .clipShape(Capsule())
                             }
-                            if !readOnly() && !isSyncing {
+                            .transition(.slide)
+                            if !readOnly() && !isSyncing && !isScrolling && !isPaused {
                                 Menu {
                                     if !timestamps.isEmpty {
                                         Button {
                                             if isScrolling {
                                                 pauseAutoscroll()
                                                 scrollTo(0)
-                                            } else {
-                                                startSyncing()
                                             }
+                                            startSyncing()
                                         } label: {
                                             Label("Re-sync Lyrics", systemImage: "arrow.trianglehead.2.counterclockwise.rotate.90")
                                         }
@@ -675,9 +688,10 @@ struct PlayView: View {
                                 }
                             }
                         }
+                        .transition(.slide)
                     }
-                    Spacer()
-                    if songs != nil && !isSyncing {
+                    if songs != nil && !isSyncing && !isScrolling && !isPaused {
+                        Spacer()
                         Button(action: {
                             DispatchQueue.main.async {
                                 swipeLeft()
@@ -705,13 +719,6 @@ struct PlayView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .alert(isPresented: $isShowingSyncModeAlert) {
-            Alert(title: Text("To sync your lyrics, use the button below to scroll the lyrics at the desired time."), dismissButton: .cancel(Text("OK"), action: {
-                isShowingSyncModeAlert = false
-                hasUsedSyncMode = true
-                startSyncing()
-            }))
-        }
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -722,7 +729,7 @@ struct PlayView: View {
 }
 
 struct ScaleButtonStyle: ButtonStyle {
-    @Binding var isPressed: Bool
+    @Binding var isLyricPressed: Bool
     @Binding var pressedIndexId: Int
     let index: Int
     
@@ -730,7 +737,7 @@ struct ScaleButtonStyle: ButtonStyle {
         configuration.label
             .onChange(of: configuration.isPressed) { isPressed in
                 withAnimation(.smooth) {
-                    self.isPressed = isPressed
+                    self.isLyricPressed = isPressed
                     self.pressedIndexId = index
                 }
             }

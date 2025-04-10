@@ -33,7 +33,7 @@ struct NewDemoAttachmentView: View {
             VStack {
                 Spacer()
                 VStack(spacing: 4) {
-                    CustomTextField(text: $url, placeholder: "URL")
+                    CustomTextField(text: $url, placeholder: "URL", image: "link")
                         .autocorrectionDisabled()
                         .autocapitalization(.none)
                         .focused($isFocused)

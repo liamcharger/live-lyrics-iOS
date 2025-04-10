@@ -605,9 +605,7 @@ class SongService {
 	}
 	
 	func updateAutoscrollTimestamps(song: Song, timestamps: [String]) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		
-		Firestore.firestore().collection("users").document(uid).collection("songs").document(song.id ?? "")
+		Firestore.firestore().collection("users").document(song.uid).collection("songs").document(song.id!)
 			.updateData(["autoscrollTimestamps": timestamps, "lastEdited": Date(), "lastSynced": Date()]) { error in
 				if let error = error {
 					print(error.localizedDescription)

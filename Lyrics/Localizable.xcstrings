@@ -249,6 +249,12 @@
         }
       }
     },
+    "%lld%%" : {
+
+    },
+    "•" : {
+
+    },
     "0.0" : {
       "localizations" : {
         "es" : {
@@ -3760,6 +3766,9 @@
         }
       }
     },
+    "Play" : {
+
+    },
     "popular_artists" : {
       "localizations" : {
         "en" : {
@@ -5001,6 +5010,7 @@
       }
     },
     "To sync your lyrics, use the button below to scroll the lyrics at the desired time." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
