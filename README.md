@@ -22,3 +22,9 @@
 - With a Datamuse integration, you can find synonyms, antynoms, and rhymes to add to your song*
 
 <sup>*</sup> *Requires premium subscription*
+
+<div align="center">
+  
+###### Copyright © 2025 Liam Willey. All rights reserved.
+
+</div>
