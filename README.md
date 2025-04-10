@@ -7,9 +7,6 @@
 
 </div>
 
-> [!NOTE]
-> This project has been made available for [Cider](cider.hackclub.com). As it is already on the App Store, please use the source code for this project for personal use only.
-
 ## Key Features:
 - Create folders to organize your performance and manage your setlists
 - Experience the Play View, the home of autoscroll and a metronome
