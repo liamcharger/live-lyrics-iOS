@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import SwiftUIIntrospect
+@_spi(Advanced) import SwiftUIIntrospect
 
 let showNewSongKey = "showNewSongKey"
 let showNewFolderKey = "showNewFolderKey"
@@ -107,6 +107,10 @@ extension View {
             .foregroundColor(.primary)
             .clipShape(Capsule())
     }
+    
+    func scrollStatusByIntrospect(isScrolling: Binding<Bool>, isScrollingProgrammatically: Binding<Bool>) -> some View {
+        modifier(ScrollStatusByIntrospectModifier(isScrolling: isScrolling, isScrollingProgrammatically: isScrollingProgrammatically))
+    }
 }
 
 struct VisualEffectBlur: UIViewRepresentable {
@@ -185,11 +189,6 @@ final class ScrollDelegate: NSObject, UITableViewDelegate, UIScrollViewDelegate 
     }
 }
 
-extension View {
-    func scrollStatusByIntrospect(isScrolling: Binding<Bool>, isScrollingProgrammatically: Binding<Bool>) -> some View {
-        modifier(ScrollStatusByIntrospectModifier(isScrolling: isScrolling, isScrollingProgrammatically: isScrollingProgrammatically))
-    }
-}
 struct ScrollStatusByIntrospectModifier: ViewModifier {
     @State var delegate = ScrollDelegate()
     @Binding var isScrolling: Bool
@@ -201,7 +200,7 @@ struct ScrollStatusByIntrospectModifier: ViewModifier {
                 self.delegate.isScrolling = $isScrolling
                 self.delegate.isScrollingProgrammatically = $isScrollingProgrammatically
             }
-            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17, .v18)) { scrollView in
+            .introspect(.scrollView, on: .iOS(.v16...)) { scrollView in
                 scrollView.delegate = delegate
             }
     }

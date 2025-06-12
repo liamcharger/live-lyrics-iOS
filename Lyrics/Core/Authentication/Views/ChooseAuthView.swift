@@ -119,7 +119,7 @@ struct ChooseAuthView: View {
                             .offset(x: -(geo.size.width / 4.5), y: 40)
                             .scaleEffect(scaleEffectDecor1)
                             .blur(radius: blurDecor2)
-                        Image("Logo")
+                        Image(.logo)
                             .resizable()
                             .frame(width: 110, height: 110)
                             .shadow(color: .gray.opacity(0.7), radius: 30, x: -8, y: 2)

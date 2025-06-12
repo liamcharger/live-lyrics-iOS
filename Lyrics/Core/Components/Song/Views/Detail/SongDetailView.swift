@@ -7,7 +7,7 @@
 
 import SwiftUI
 import BottomSheet
-import SwiftUIIntrospect
+@_spi(Advanced) import SwiftUIIntrospect
 import FirebaseFirestore
 import TipKit
 
@@ -313,7 +313,7 @@ struct SongDetailView: View {
                         .font(.system(size: CGFloat(fontSize), weight: weight))
                         .lineSpacing(lineSpacing)
                         .focused($isLyricsFocused)
-                        .introspect(.textEditor, on: .iOS(.v14, .v15, .v16, .v17, .v18)) { textEditor in
+                        .introspect(.textEditor, on: .iOS(.v16...)) { textEditor in
                             textEditor.textContainerInset = UIEdgeInsets(
                                 top: hideJoinedUsers ? 12 : 70,
                                 left: 12,
@@ -598,8 +598,6 @@ struct SongDetailView: View {
                                         self.lyrics = variation.lyrics
                                     }
                                 }
-                                
-                                self.isLoadingSongData = false
                             }
                         } else {
                             // Default variation is allowed, add it to the array
@@ -631,15 +629,13 @@ struct SongDetailView: View {
                             }
                             
                             self.songVariations = parsedVariations
-                            // Now that everything has been processed, set loading to false
-                            isLoadingSongData = false
                         }
                     } else {
                         // No restrictions are set, allow all variations
                         self.songVariations = variations
-                        // After finishing, stop showing the progress view
-                        isLoadingSongData = false
                     }
+                    // Now that everything has been processed, set loading to false
+                    isLoadingSongData = false
                 }
                 songViewModel.fetchSong(listen: true, forUser: song.uid, song.id!) { song in
                     // Save shared song properties to reassign
@@ -674,13 +670,7 @@ struct SongDetailView: View {
                         self.fontSize = song.size ?? 18
                         self.lineSpacing = song.lineSpacing ?? 1
                         
-                        // Set the joinedUsersStrings var based on media type
-                        if let folder = folder, folder.id! != uid() {
-                            self.joinedUsersStrings = folder.joinedUsers ?? []
-                        } else {
-                            self.joinedUsersStrings = song.joinedUsers ?? []
-                        }
-                        
+                        self.joinedUsersStrings = song.joinedUsers ?? []
                         if !joinedUsersStrings.isEmpty {
                             // User's id is not in the song, the user has been removed from the song
                             if !joinedUsersStrings.contains(where: { $0 == uid() }) && song.uid != uid() {

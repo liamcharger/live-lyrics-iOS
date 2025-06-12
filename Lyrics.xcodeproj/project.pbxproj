@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		E0019D272BC6E68100DABECB /* hi_click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E0019D252BC6E68100DABECB /* hi_click.wav */; };
 		E0019D282BC6E68100DABECB /* lo_click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E0019D262BC6E68100DABECB /* lo_click.wav */; };
-		E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */; };
 		E004F4262A69C2D40089B6DF /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E004F4252A69C2D40089B6DF /* PlayView.swift */; };
 		E006A0572A2146EE00CE468A /* RecentlyDeletedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0562A2146EE00CE468A /* RecentlyDeletedView.swift */; };
 		E006A0592A214CAA00CE468A /* RecentlyDeletedSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E006A0582A214CAA00CE468A /* RecentlyDeletedSong.swift */; };
@@ -147,6 +146,7 @@
 		E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF12D2A18074C00DE8265 /* NewFolderView.swift */; };
 		E0CDF1382A181D2500DE8265 /* SongEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CDF1372A181D2500DE8265 /* SongEditView.swift */; };
 		E0D21B912C1E833800476B3C /* UserPopoverRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D21B902C1E833800476B3C /* UserPopoverRowView.swift */; };
+		E0D2C6E22DFB268600DD2109 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = E0D2C6E12DFB268600DD2109 /* SwiftUIIntrospect */; };
 		E0D3AA8E2BBC6B44005650F5 /* SongTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D3AA8D2BBC6B44005650F5 /* SongTagView.swift */; };
 		E0D411BE2A9FF12300859E4E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D411BD2A9FF12300859E4E /* Notification.swift */; };
 		E0D47AD22D0FE0C9008242B6 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D47AD12D0FE0C9008242B6 /* AlertView.swift */; };
@@ -363,12 +363,12 @@
 				E02A0AF22C339DE300105365 /* FirebaseFunctions in Frameworks */,
 				E03541052BC05A3400273830 /* FirebaseRemoteConfigSwift in Frameworks */,
 				E03540F92BC05A3400273830 /* FirebaseAnalytics in Frameworks */,
-				E0019D2B2BC7257000DABECB /* SwiftUIIntrospect in Frameworks */,
 				E03540FD2BC05A3400273830 /* FirebaseFirestore in Frameworks */,
 				E03540FB2BC05A3400273830 /* FirebaseAuth in Frameworks */,
 				E03540FF2BC05A3400273830 /* FirebaseFirestoreSwift in Frameworks */,
 				E0867CF12BD5989B005605CD /* BottomSheet in Frameworks */,
 				E03541032BC05A3400273830 /* FirebaseRemoteConfig in Frameworks */,
+				E0D2C6E22DFB268600DD2109 /* SwiftUIIntrospect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1099,10 +1099,10 @@
 				E03541002BC05A3400273830 /* FirebaseMessaging */,
 				E03541022BC05A3400273830 /* FirebaseRemoteConfig */,
 				E03541042BC05A3400273830 /* FirebaseRemoteConfigSwift */,
-				E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */,
 				E0867CF02BD5989B005605CD /* BottomSheet */,
 				E02A0AF12C339DE300105365 /* FirebaseFunctions */,
 				E0F0F2DF2CA322F8006ADF02 /* FluidGradient */,
+				E0D2C6E12DFB268600DD2109 /* SwiftUIIntrospect */,
 			);
 			productName = Lyrics;
 			productReference = E042474A2A02EF4E00CA48B3 /* Lyrics.app */;
@@ -1181,9 +1181,9 @@
 			packageReferences = (
 				E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				E0867CEF2BD5989B005605CD /* XCRemoteSwiftPackageReference "BottomSheet" */,
 				E0F0F2DE2CA322F7006ADF02 /* XCRemoteSwiftPackageReference "FluidGradient" */,
+				E0D2C6E02DFB268600DD2109 /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			productRefGroup = E042474B2A02EF4E00CA48B3 /* Products */;
 			projectDirPath = "";
@@ -1767,14 +1767,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.3;
-			};
-		};
 		E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1799,6 +1791,14 @@
 				minimumVersion = 11.2.0;
 			};
 		};
+		E0D2C6E02DFB268600DD2109 /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = exactVersion;
+				version = "1.4.0-beta.1";
+			};
+		};
 		E0F0F2DE2CA322F7006ADF02 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Cindori/FluidGradient";
@@ -1810,11 +1810,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E0019D2A2BC7257000DABECB /* SwiftUIIntrospect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E0019D292BC7257000DABECB /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
-			productName = SwiftUIIntrospect;
-		};
 		E02A0AF12C339DE300105365 /* FirebaseFunctions */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E03540F72BC05A3400273830 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -1864,6 +1859,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E0C138DE2BBCAB12003C0D10 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
+		};
+		E0D2C6E12DFB268600DD2109 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0D2C6E02DFB268600DD2109 /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 		E0F0F2DF2CA322F8006ADF02 /* FluidGradient */ = {
 			isa = XCSwiftPackageProductDependency;
