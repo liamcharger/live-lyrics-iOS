@@ -94,7 +94,7 @@ struct NewSongVariationView: View {
                 .opacity(title.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
                 .padding()
         }
-        .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium()]) {
+        .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium(), .large()]) {
             BandMemberAddRoleView(member: nil, band: nil, selectedRole: $selectedRole)
         }
         .onAppear {

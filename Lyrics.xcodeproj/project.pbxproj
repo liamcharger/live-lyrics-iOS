@@ -160,10 +160,6 @@
 		E0F0F2DB2CA2F6B1006ADF02 /* BandMemberRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0F2DA2CA2F6B1006ADF02 /* BandMemberRowView.swift */; };
 		E0F0F2DD2CA30552006ADF02 /* NewFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0F2DC2CA30552006ADF02 /* NewFeatureView.swift */; };
 		E0F0F2E02CA322F8006ADF02 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = E0F0F2DF2CA322F8006ADF02 /* FluidGradient */; };
-		E0F70B362C876344006A9867 /* SongExploreDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B352C876344006A9867 /* SongExploreDetailView.swift */; };
-		E0F70B372C876344006A9867 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B342C876344006A9867 /* ExploreView.swift */; };
-		E0F70B392C876361006A9867 /* Musixmatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B382C876361006A9867 /* Musixmatch.swift */; };
-		E0F70B3B2C876455006A9867 /* MusixmatchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F70B3A2C876455006A9867 /* MusixmatchService.swift */; };
 		E0F95C832A13C2E000C2D21C /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F95C822A13C2E000C2D21C /* MailView.swift */; };
 		E0F95C862A13C74C00C2D21C /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F95C852A13C74C00C2D21C /* ProfileView.swift */; };
 		E0FC1E212BC47618008D8549 /* FAIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC1E1E2BC47617008D8549 /* FAIcon.swift */; };
@@ -339,10 +335,6 @@
 		E0E79D4E2B5F01330030186C /* SongDropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDropViewDelegate.swift; sourceTree = "<group>"; };
 		E0F0F2DA2CA2F6B1006ADF02 /* BandMemberRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandMemberRowView.swift; sourceTree = "<group>"; };
 		E0F0F2DC2CA30552006ADF02 /* NewFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFeatureView.swift; sourceTree = "<group>"; };
-		E0F70B342C876344006A9867 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
-		E0F70B352C876344006A9867 /* SongExploreDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongExploreDetailView.swift; sourceTree = "<group>"; };
-		E0F70B382C876361006A9867 /* Musixmatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Musixmatch.swift; sourceTree = "<group>"; };
-		E0F70B3A2C876455006A9867 /* MusixmatchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusixmatchService.swift; sourceTree = "<group>"; };
 		E0F95C822A13C2E000C2D21C /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		E0F95C852A13C74C00C2D21C /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		E0FC1E1E2BC47617008D8549 /* FAIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAIcon.swift; sourceTree = "<group>"; };
@@ -546,7 +538,6 @@
 		E04247782A02EF6C00CA48B3 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				E0F70B332C876330006A9867 /* Explore */,
 				E0CC33172A03FF8800CC38C6 /* Main */,
 				E0CA85112B081D5100188CD0 /* Components */,
 				E050D1552A030303004CC45E /* Menu */,
@@ -584,7 +575,6 @@
 				E08063D52C39C9F600B598B0 /* ShareUser.swift */,
 				E0CC166C2C752744003F3703 /* Rhyme.swift */,
 				E0258A712C82713900648582 /* DatamuseWord.swift */,
-				E0F70B382C876361006A9867 /* Musixmatch.swift */,
 				E03A6F0E2C8E24F600CA16D0 /* DemoAttachment.swift */,
 			);
 			path = Model;
@@ -629,7 +619,6 @@
 				E0CC33202A04064500CC38C6 /* SongService.swift */,
 				E04247AB2A02F6B500CA48B3 /* UserService.swift */,
 				E02A0AE52C33561800105365 /* BandService.swift */,
-				E0F70B3A2C876455006A9867 /* MusixmatchService.swift */,
 				E0CC166A2C752707003F3703 /* WordService.swift */,
 			);
 			path = Service;
@@ -1046,15 +1035,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E0F70B332C876330006A9867 /* Explore */ = {
-			isa = PBXGroup;
-			children = (
-				E0F70B342C876344006A9867 /* ExploreView.swift */,
-				E0F70B352C876344006A9867 /* SongExploreDetailView.swift */,
-			);
-			path = Explore;
-			sourceTree = "<group>";
-		};
 		E0F95C842A13C74100C2D21C /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -1152,7 +1132,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					E04247492A02EF4E00CA48B3 = {
 						CreatedOnToolsVersion = 14.3;
@@ -1264,7 +1244,6 @@
 				E065D20F2B449E4500F035F7 /* SortViewModel.swift in Sources */,
 				E0CDF12E2A18074C00DE8265 /* NewFolderView.swift in Sources */,
 				E0CC166B2C752707003F3703 /* WordService.swift in Sources */,
-				E0F70B3B2C876455006A9867 /* MusixmatchService.swift in Sources */,
 				E0CC33212A04064500CC38C6 /* SongService.swift in Sources */,
 				E04247502A02EF4E00CA48B3 /* ContentView.swift in Sources */,
 				E04247972A02F5FB00CA48B3 /* AuthViewModel.swift in Sources */,
@@ -1324,8 +1303,6 @@
 				E0CC33192A03FF8F00CC38C6 /* MainView.swift in Sources */,
 				E0CC331D2A0405CE00CC38C6 /* MainViewModel.swift in Sources */,
 				E02A0AEC2C33565300105365 /* BandsViewModel.swift in Sources */,
-				E0F70B362C876344006A9867 /* SongExploreDetailView.swift in Sources */,
-				E0F70B372C876344006A9867 /* ExploreView.swift in Sources */,
 				E05B9A7B2BCED9CB000292FA /* SharedSong.swift in Sources */,
 				E04B27372C8A436A00EB5724 /* NewDemoAttachmentView.swift in Sources */,
 				E0E79D4F2B5F01330030186C /* SongDropViewDelegate.swift in Sources */,
@@ -1354,7 +1331,6 @@
 				E042474E2A02EF4E00CA48B3 /* LyricsApp.swift in Sources */,
 				E0705FD72C5C874600BC7AD6 /* HeaderView.swift in Sources */,
 				E065D20C2B449BF900F035F7 /* SortSelectionEnum.swift in Sources */,
-				E0F70B392C876361006A9867 /* Musixmatch.swift in Sources */,
 				E0B02B952AF572F8002E10D4 /* TipKit.swift in Sources */,
 				E073A99A2C77A63700BF2E9F /* NotificationRowView.swift in Sources */,
 				E04247992A02F5FB00CA48B3 /* LoginView.swift in Sources */,
@@ -1445,6 +1421,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Y22PRZL3N4;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1469,6 +1446,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC ";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1512,6 +1490,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Y22PRZL3N4;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1529,6 +1508,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC ";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1547,8 +1527,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Lyrics/Preview Content\"";
-				DEVELOPMENT_TEAM = Y22PRZL3N4;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
@@ -1597,8 +1579,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Lyrics/Preview Content\"";
-				DEVELOPMENT_TEAM = Y22PRZL3N4;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Lyrics/Info.plist;
@@ -1642,7 +1626,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = Y22PRZL3N4;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -1665,7 +1648,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = Y22PRZL3N4;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -1687,7 +1669,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = Y22PRZL3N4;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -1709,7 +1690,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = Y22PRZL3N4;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;

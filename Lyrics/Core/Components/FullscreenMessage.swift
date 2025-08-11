@@ -24,7 +24,7 @@ struct FullscreenMessage: View {
         case 2:
             return Text("Queuing everything up...")
         default:
-            return Text("Loading")
+            return Text("Loading...")
         }
     }
     

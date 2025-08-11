@@ -718,6 +718,7 @@ struct PlayView: View {
                     .font(.system(size: 80).weight(.bold))
             }
         }
+        .background(Color(.systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true

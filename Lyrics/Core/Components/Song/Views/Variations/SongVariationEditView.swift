@@ -84,7 +84,7 @@ struct SongVariationEditView: View {
             .disabled(isEmpty)
             .padding()
         }
-        .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium()]) {
+        .bottomSheet(isPresented: $showAddRoleSheet, detents: [.medium(), .large()]) {
             BandMemberAddRoleView(member: nil, band: nil, selectedRole: $selectedRole)
         }
         .alert(isPresented: $showError) {

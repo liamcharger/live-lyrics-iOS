@@ -107,7 +107,7 @@ struct BandMemberPopover: View {
             }
         }
         .padding(12)
-        .bottomSheet(isPresented: $showAddRoleView, detents: [.medium()], onDismiss: {}) {
+        .bottomSheet(isPresented: $showAddRoleView, detents: [.medium(), .large()], onDismiss: {}) {
             BandMemberAddRoleView(member: member, band: band, selectedRole: $role)
         }
         .confirmationDialog("Remove Band Member?", isPresented: $showRemoveSheet) {

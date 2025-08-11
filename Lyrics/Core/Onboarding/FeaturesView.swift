@@ -13,7 +13,7 @@ struct FeaturesView: View {
     @State private var selectedTab = 0
     
     var features: [FeaturesSection] = [
-        FeaturesSection(title: "Bands", subtitle: "band_feature_description", imageName: "guitar", pro: false),
+//        FeaturesSection(title: "Bands", subtitle: "band_feature_description", imageName: "guitar", pro: false),
         FeaturesSection(title: "Self-Synced Autoscroll", subtitle: "autoscroll_update_description", imageName: "rotate", pro: false),
         FeaturesSection(title: "Song Catalog", subtitle: "access_to_worlds_largest_lyric_database", imageName: "music-magnifying-glass", pro: true),
         FeaturesSection(title: "Demo Attachments", subtitle: "access_to_demo_attachments", imageName: "file-audio", pro: true),

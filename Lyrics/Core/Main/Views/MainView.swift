@@ -487,20 +487,11 @@ struct MainView: View {
                                             .padding()
                                         }
                                     })
-                                    NavigationLink(destination: {
-                                        BandsView()
-                                    }) {
-                                        ContentRowView(NSLocalizedString("bands", comment: ""), icon: "guitar", color: .blue)
-                                    }
-                                    NavigationLink(destination: {
-                                        if let user = authViewModel.currentUser, user.hasPro ?? false {
-                                            ExploreView()
-                                        } else {
-                                            UpgradeView()
-                                        }
-                                    }) {
-                                        ContentRowView(NSLocalizedString("find_songs", comment: ""), icon: "magnifying-glass", color: .gray)
-                                    }
+//                                    NavigationLink(destination: {
+//                                        BandsView()
+//                                    }) {
+//                                        ContentRowView(NSLocalizedString("bands", comment: ""), icon: "guitar", color: .blue)
+//                                    }
                                 }
                             }
                             VStack {

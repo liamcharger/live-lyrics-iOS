@@ -1,27 +1,27 @@
 {
-  "pushNotifications" : [
-    {
-      "payload" : "{\n    \"aps\": {\n        \"alert\": {\n            \"title\": \"Song Declined\",\n            \"body\": \"testingaccount has declined your share invite.\"\n        }\n    },\n    \"deep_link\": \"live-lyrics:\/\/profile\"\n}",
-      "identifier" : "FAE4AE49-0ED6-497E-8BAB-A1FB65CC56F8",
-      "title" : "Song Declined"
-    },
-    {
-      "identifier" : "2E53937F-83B0-4208-B222-7B757F216151",
-      "title" : "Song Accepted",
-      "payload" : "{\n    \"aps\": {\n        \"alert\": {\n            \"title\": \"Song Accepted\",\n            \"body\": \"testingaccount accepted your share invite.\"\n        }\n    },\n    \"deep_link\": \"live-lyrics:\/\/profile\"\n}"
-    }
-  ],
-  "identifier" : "599454A6-43B1-41EF-9FAF-BF6C02CB0C63",
-  "title" : "Live Lyrics",
   "bundleIdentifier" : "com.chargertech.Lyrics",
-  "locations" : [
-
-  ],
   "deeplinks" : [
     {
       "identifier" : "247A7ED4-1292-443B-832F-ECECF98AB936",
       "title" : "Menu",
       "url" : "live-lyrics:\/\/profile"
     }
-  ]
+  ],
+  "identifier" : "599454A6-43B1-41EF-9FAF-BF6C02CB0C63",
+  "locations" : [
+
+  ],
+  "pushNotifications" : [
+    {
+      "identifier" : "FAE4AE49-0ED6-497E-8BAB-A1FB65CC56F8",
+      "payload" : "{\n    \"aps\": {\n        \"alert\": {\n            \"title\": \"Song Declined\",\n            \"body\": \"testingaccount has declined your share invite.\"\n        }\n    },\n    \"deep_link\": \"live-lyrics:\/\/profile\"\n}",
+      "title" : "Song Declined"
+    },
+    {
+      "identifier" : "2E53937F-83B0-4208-B222-7B757F216151",
+      "payload" : "{\n    \"aps\": {\n        \"alert\": {\n            \"title\": \"Song Accepted\",\n            \"body\": \"testingaccount accepted your share invite.\"\n        }\n    },\n    \"deep_link\": \"live-lyrics:\/\/profile\"\n}",
+      "title" : "Song Accepted"
+    }
+  ],
+  "title" : "Live Lyrics"
 }

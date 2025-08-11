@@ -2262,6 +2262,7 @@
       }
     },
     "explore" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2278,6 +2279,7 @@
       }
     },
     "find_songs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3001,6 +3003,9 @@
           }
         }
       }
+    },
+    "Loading..." : {
+
     },
     "Login" : {
       "localizations" : {
@@ -3770,6 +3775,7 @@
 
     },
     "popular_artists" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3786,6 +3792,7 @@
       }
     },
     "popular_songs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3824,6 +3831,7 @@
       }
     },
     "powered_by_musixmatch" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4335,6 +4343,7 @@
       }
     },
     "search_and_add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4604,6 +4613,7 @@
       }
     },
     "song_successfully_add_to_library" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5073,6 +5083,7 @@
       }
     },
     "unknown_error_adding_songs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
